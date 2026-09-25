@@ -1,0 +1,49 @@
+name: Code Task
+description: A feature, bug fix, or other code change. Automatically added to the Code project board.
+title: "[Code] "
+projects: ["arjunkarthik123/4"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Feature
+        - Bug
+        - Refactor
+        - Tests
+        - Tooling / CI
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be built or fixed, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce (bugs only)
+      placeholder: |
+        1. ...
+        2. ...
+        Expected: ...
+        Actual: ...
+  - type: input
+    id: requirements
+    attributes:
+      label: Related requirements / modules
+      description: SRS requirement IDs or design modules this traces to.
+      placeholder: e.g. FR3, M5
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "- [ ] ..."
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
