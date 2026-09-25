@@ -1,0 +1,49 @@
+name: Documentation Task
+description: Work on a project document. Automatically added to the Docs project board.
+title: "[Docs] "
+labels: ["documentation"]
+projects: ["arjunkarthik123/3"]
+body:
+  - type: dropdown
+    id: document
+    attributes:
+      label: Document
+      description: Which document does this affect?
+      options:
+        - Problem Statement and Goals
+        - Development Plan
+        - SRS
+        - Hazard Analysis
+        - VnV Plan
+        - Software Architecture (MG)
+        - Detailed Design (MIS)
+        - VnV Report
+        - User Guide
+        - Reflection and Traceability
+        - Presentation / Demo
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: sections
+    attributes:
+      label: Section(s)
+      placeholder: e.g. 3.2 Functional Requirements
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be written or changed, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know this is done?
+      placeholder: "- [ ] ..."
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Related issues, rubric items, TA feedback, etc.

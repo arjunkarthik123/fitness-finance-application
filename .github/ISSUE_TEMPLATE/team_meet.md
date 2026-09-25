@@ -11,11 +11,11 @@ assignees: ''
 
 **Attendance**
 
-- [ ] team member1
-- [ ] team member2
-- [ ] team member3
-- [ ] team member4
-- [ ] team member5
+- [ ] Arjun Karthik
+- [ ] Daniel Franze-Da Silva
+- [ ] Daniel Hu
+- [ ] Noah Goldschmied
+- [ ] Peter DeForest
 
 **Agenda**
 
