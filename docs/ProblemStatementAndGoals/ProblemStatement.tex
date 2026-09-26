@@ -11,6 +11,7 @@
 
 \input{../Comments.text}
 \input{../Common.text}
+\newcommand{\productname}{[Fitness Finance Application]}
 
 \begin{document}
 
@@ -32,7 +33,7 @@ Date2 & Name(s) & Description of changes\\
 \section{Problem Statement}
 
 \wss{You should check your problem statement with the
-\href{https://smiths.github.io/capTemplate/Checklists/ProbState-Checklist.pdf}
+\href{https://smiuths.github.io/capTemplate/Checklists/ProbState-Checklist.pdf}
 {problem statement checklist}}. 
 
 \wss{You can change the section headings, as long as you include the required
@@ -45,6 +46,61 @@ about how you will solve the problem, only what the problem is.  AI is rarely
 part of the problem.  The problem is ``what'' you want to do, not ``how'' you
 want to do it.  The problem statement should be written in a way that is
 understandable to a non-technical audience.}
+
+Personal finance and fitness follow the same pattern: the payoff for effort put
+in today shows up years later. Someone who invests \$100 a month from age 25,
+assuming a 7\% annual return, contributes \$48,000 over 40 years and ends up with
+roughly \$262,000. Waiting until 35 to start the same plan leaves them with about
+\$122,000. The same logic applies to exercise. A single walk or workout changes
+very little, but the habit, kept up for years, is what separates a healthy
+40-year-old from an unhealthy one. In both cases the early actions matter most,
+and in both cases they are the easiest to skip, because the reward is too far
+away to feel real.
+
+The concepts behind this are not widely understood, and young people understand
+them the least. A 2012 survey of 6,911 Canadians asked three basic questions
+covering compound interest, inflation, and risk diversification~\cite{boisclair2017}. Only 42\% of respondents answered all three correctly.
+Among respondents under 35, that number fell to about 30\%, the lowest of any
+age group, and 44\% of them answered ``don't know'' to at least one question.
+Only about half of respondents under 35 knew that buying a single company's
+stock is usually riskier than buying a stock mutual fund. The same study found
+that respondents who answered all three questions correctly were 10 percentage
+points more likely to have retirement savings, which suggests that this gap in
+knowledge carries through to real financial outcomes.
+
+Tools for practising each skill already exist, but separately. Stock market
+simulators let people trade with fake money, and fitness apps reward steps with
+points and badges. A market simulator only helps someone who is already
+motivated to learn about investing, which excludes most of the young adults the
+survey shows are furthest behind. Fitness rewards, meanwhile, rarely lead to
+anything beyond the app itself. No product currently connects the two so that a
+habit a user is already building (or wants to build) becomes their way into
+learning how money grows.
+
+\subsection{Proposed Project}
+
+\productname{} is a mobile app that turns physical activity into virtual
+currency, and virtual currency into an investment portfolio. Steps are tracked
+automatically through the phone's health data rather than entered by hand, and
+users earn currency by meeting fitness goals such as a daily step count or a
+completed workout. Users can spend that currency on real financial assets,
+including stocks, bonds, and ETFs, at their current market prices. The value of
+the portfolio rises and falls with the real-world prices of the assets it
+holds. Users can view their holdings, their history of purchases and sales, and
+a graph that separates the currency they contributed from the gains and losses
+the market produced. That graph is the core of the learning experience, since it
+shows compounding happening to the user's own portfolio over weeks and months.
+Users can also choose to share their fitness and portfolio statistics with
+friends to compare progress.
+
+\productname{} will first target young adults aged 18 to 25, including users who
+are comfortable with fitness but new to investing, users who know finance but
+rarely exercise, and users who are new to both. Once the core app is working, 
+the project can be expanded to tailor the
+experience to each user's level of knowledge, to use AI to generate simulated
+market scenarios, and to offer real-world incentives, such as free trials, from
+partners like gyms and banks. A comprehensive overview of the project goals is
+presented in Sections~\ref{sec:goals} and~\ref{sec:stretch}.
 
 \subsection{Inputs and Outputs}
 
@@ -59,8 +115,10 @@ Use abstraction so that you can avoid details.}
 is summarized as part of the developer plan.}
 
 \section{Goals}
+\label{sec:goals}
 
 \section{Stretch Goals}
+\label{sec:stretch}
 
 \wss{Goals you hope to get to, but not necessary.  They are also helpful if the
 scope of the original project needs to be expanded.}
@@ -78,6 +136,16 @@ outline and in Lecture 02.) Normally the number of CDs will be two (one per
 term).  Approval of the CDs will be part of the discussion with the instructor
 for approving the project. The CDs, with the approval (or request) of the
 instructor, can be modified over the course of the term.}
+
+\begin{thebibliography}{9}
+
+\bibitem{boisclair2017}
+D.~Boisclair, A.~Lusardi, and P.-C. Michaud, ``Financial literacy and
+retirement planning in Canada,'' \emph{Journal of Pension Economics and
+Finance}, vol.~16, no.~3, pp.~277--296, 2017,
+doi: 10.1017/S1474747215000311.
+
+\end{thebibliography}
 
 \newpage{}
 
