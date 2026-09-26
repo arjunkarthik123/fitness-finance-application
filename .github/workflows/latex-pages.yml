@@ -4,13 +4,17 @@ on:
   push:
     branches: main
     paths: [docs/**, refs/**, Makefile, .github/scripts/**, .github/workflows/latex-pages.yml]
+  # No paths filter: `build` is a required check on main, so it has to report
+  # on every pull request. A required check that never runs leaves the PR
+  # blocked. PRs that change no documents skip the TeX steps and pass quickly.
   pull_request:
     branches: main
-    paths: [docs/**, refs/**, Makefile, .github/scripts/**, .github/workflows/latex-pages.yml]
   workflow_dispatch:
 
+# GITHUB_TOKEN only reads. The PDF commit is pushed with the PDF bot App's
+# token, which the main branch ruleset allows to bypass protection.
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -18,10 +22,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate PDF bot token
+        id: app-token
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.PDF_BOT_APP_ID }}
+          private-key: ${{ secrets.PDF_BOT_PRIVATE_KEY }}
       - name: Checkout repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          # The checkout's credentials are what the later git push uses.
+          token: ${{ steps.app-token.outputs.token || github.token }}
       - name: Restore PDF cache
         uses: actions/cache@v5
         with:
@@ -85,11 +98,13 @@ jobs:
       # texlive-full is avoided deliberately; it is far larger than needed.
       # pandoc drives the Markdown -> PDF rule in the Makefile.
       - name: Install TeX Live and pandoc
+        if: env.BUILD_DOCS != ''
         uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
         with:
           packages: texlive-latex-extra texlive-science texlive-fonts-extra texlive-fonts-recommended texlive-latex-recommended lmodern pandoc
           version: 1.1
       - name: Verify the TeX toolchain is usable
+        if: env.BUILD_DOCS != ''
         run: |
           # A restored cache that skipped texlive's postinst would leave
           # pdflatex unable to find packages. Fail here, loudly, rather than
