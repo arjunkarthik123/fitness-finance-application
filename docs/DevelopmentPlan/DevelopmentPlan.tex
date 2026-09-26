@@ -91,11 +91,43 @@ likely change throughout the year.}
 
 \section{Workflow Plan}
 
+\section{Git Workflow Plan}
+
+The project workflow will be managed using Git, with our code and documentation hosted in our GitHub repository. Our \texttt{main} branch will serve as the primary codebase and will be the branch used for product deployments. To make contributions, developers are required to create branches directly from \texttt{main} and commit any initial changes to their respective branch.
+
+\subsection{Branching Strategy}
+We will utilize the following branch categories:
 \begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classification, etc.?
-  \item Use of CI/CD
+    \item \textbf{feat (feature):} For development on a new feature.
+    \item \textbf{bugfix:} For addressing and fixing identified issues within the codebase.
+    \item \textbf{chore:} For code changes that support later development, such as refactoring or clean-up work.
+\end{itemize}
+Additionally, each branch must have a descriptive name that clearly indicates which issue in the GitHub project is being addressed.
+
+\subsection{Issue Tracking and Project Management}
+Issues will be categorized based on urgency, from \textbf{P0} (highest priority) to \textbf{P2} (lowest priority), ensuring that critical tasks are addressed promptly. 
+
+The GitHub project board has been configured with the following setup: \textbf{Backlog} $\rightarrow$ \textbf{In Progress} $\rightarrow$ \textbf{Review} $\rightarrow$ \textbf{Closed}. As development progresses, it is the developer's responsibility to keep their assigned issues updated to maintain team visibility on project status.
+
+\subsection{Pull Requests and CI/CD Pipeline}
+As part of the new code added to a branch, developers are required to implement test cases to ensure adequate code coverage. Once code is committed, a Pull Request (PR) must be raised to merge the branch into \texttt{main}. 
+
+Our Continuous Integration/Continuous Deployment (CI/CD) pipeline will enforce the following checks before a merge is permitted:
+\begin{itemize}
+    \item Automated testing and deployment checks.
+    \item Linter execution to ensure code meets formatting and quality standards.
+    \item Verification that the feature branch is up-to-date with \texttt{main}.
+\end{itemize}
+
+\subsection{Code Review Process}
+In addition to passing all CI/CD checks, each PR requires a manual review and approval from at least one other group member. The PR comments section will be utilized to trace the iterative process of feedback and the subsequent code changes made to address said feedback.
+
+\subsection{Pull Request Template Requirements}
+Each PR must be directly linked to its corresponding issue in the GitHub Project board to maintain traceability. Furthermore, all PRs must adhere to a standardized template that includes:
+\begin{itemize}
+    \item A comprehensive summary of the changes made.
+    \item Sample test cases and step-by-step instructions for the reviewer to verify the code.
+    \item Screenshots of the updated UI (if the PR includes user interface modifications).
 \end{itemize}
 
 \section{Project Decomposition and Scheduling}
