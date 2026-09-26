@@ -2,6 +2,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{array}
 
 \title{Development Plan\\\progname}
 
@@ -100,14 +102,86 @@ likely change throughout the year.}
 
 \section{Project Decomposition and Scheduling}
 
+For aiding in documenting and tracing our project deliverables, we will be making use of two GitHub projects that will handle our code and our documentation deliverables. They are linked below: 
+
 \begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project
+    \item \textbf{Code Project:} \url{https://github.com/users/arjunkarthik123/projects/4/views/1}
+    \item \textbf{Documentation Project:} \url{https://github.com/users/arjunkarthik123/projects/3}
 \end{itemize}
 
-\wss{How will the project be scheduled?  This is the big picture schedule, not
-details. You will need to reproduce information that is in the course outline
-for deadlines.}
+Both projects are split into four sections: Backlog, In Progress, In Review, and Done. As the project progresses, we will come up with items that need to be addressed for both our documentation and later on our codebase. Whenever any team member thinks of an item that needs to be worked on, it will be added to the backlog of the respective projects. Depending on what the team decides, someone will be assigned the new issue, and whenever the person works on it, it will be under the In Progress section. In order to complete the deliverable, it first needs to be reviewed, hence the In Review section. For either the code or documentation, a pull request will be created and linked to the respective issue being addressed, and only when it gets approved will the issue move to the Done section. 
+
+If the issues seem to be larger than anticipated, we will split up the issue using sub-issues and have them assigned accordingly. This is to ensure no single issue is too big to handle by one person alone. 
+
+Table~\ref{TblDeliverables} provides a high-level overview of the key deliverables throughout the academic year (please note that these items were taken directly from the course schedule in the course outline): 
+
+\begin{xltabular}{\textwidth}{lll>{\raggedright\arraybackslash}X}
+\caption{Key Deliverables Schedule} \label{TblDeliverables}\\
+\toprule
+\textbf{Term} & \textbf{Week} & \textbf{Date} & \textbf{Tasks / Deliverables}\\
+\midrule
+\endfirsthead
+
+\caption[]{Key Deliverables Schedule (Continued)}\\
+\toprule
+\textbf{Term} & \textbf{Week} & \textbf{Date} & \textbf{Tasks / Deliverables}\\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+Term 1 & Week 2  & Week of Sep 14, 2026 & \textbf{Deliverable:} Deadline for teams formation, projects selection (end of week)\\
+\addlinespace
+Term 1 & Week 3  & Week of Sep 21, 2026 & \textbf{Deliverable:} Biosketches due to Avenue dropbox \newline \textbf{TA Meeting:} Review of prob state, PoC plan, dev plan and team charter\\
+\addlinespace
+Term 1 & Week 4  & Week of Sep 28, 2026 & \textbf{Deliverable:} Problem Statement, Proof of Concept Plan, Development Plan, Team Charter Rev 0 \newline \textbf{Peer Review:} Prob State + PoC plan + Dev Plan + Team Charter peer review\\
+\addlinespace
+Term 1 & Week 5  & Week of Oct 05, 2026 & \textbf{TA Meeting:} Review SRS+Haz Analysis\\
+\addlinespace
+Term 1 & Week 6  & Week of Oct 19, 2026 & \textbf{Deliverable:} SRS + Haz Analysis Rev 0 \newline \textbf{Peer Review:} SRS + Haz Analysis peer review\\
+\addlinespace
+Term 1 & Week 7  & Week of Oct 26, 2026 & \textbf{TA Meeting:} Review VnV Plan\\
+\addlinespace
+Term 1 & Week 8  & Week of Nov 02, 2026 & \textbf{Deliverable:} VnV Plan Rev 0 \newline \textbf{Peer Review:} VnV Plan peer review\\
+\addlinespace
+Term 1 & Week 9  & Week of Nov 09, 2026 & \textbf{TA Meeting:} Review Des Doc Rev-1 and CD-Fall\\
+\addlinespace
+Term 1 & Week 10 & Week of Nov 16, 2026 & \textbf{Deliverable:} Des Doc Rev -1 and CD-Fall \newline \textbf{Peer Review:} Des Doc Rev-1 Peer Review\\
+\addlinespace
+Term 1 & Week 11 & Week of Nov 23, 2026 & \textbf{Presentation/Demo:} Proof of Concept Demos\\
+\addlinespace
+Term 1 & Week 12 & Week of Nov 30, 2026 & \textbf{Presentation/Demo:} Proof of Concept Demos\\
+\addlinespace
+Term 1 & Week 13 & Week of Dec 07, 2026 & \textbf{Presentation/Demo:} Code review interviews\\
+\midrule
+Term 2 & Week 15 & Week of Jan 11, 2027 & \textbf{TA Meeting:} Review of Des Doc\\
+\addlinespace
+Term 2 & Week 16 & Week of Jan 18, 2027 & \textbf{Deliverable:} Design Document Rev 0 \newline \textbf{Peer Review:} Module Implementation due\\
+\addlinespace
+Term 2 & Week 17 & Week of Jan 25, 2027 & \textbf{Peer Review:} Des Document peer review (module implementation reflection)\\
+\addlinespace
+Term 2 & Week 18 & Week of Feb 01, 2027 & \textbf{Presentation/Demo:} Rev 0 Demo\\
+\addlinespace
+Term 2 & Week 19 & Week of Feb 08, 2027 & \textbf{Presentation/Demo:} Rev 0 Demo\\
+\addlinespace
+Term 2 & Week 20 & Week of Feb 22, 2027 & \textbf{Presentation/Demo:} Code review interviews\\
+\addlinespace
+Term 2 & Week 21 & Week of Mar 01, 2027 & \textbf{TA Meeting:} Review VnV Report+CD-Winter\\
+\addlinespace
+Term 2 & Week 22 & Week of Mar 08, 2027 & \textbf{Deliverable:} VnV Report + CD-Winter \newline \textbf{Peer Review:} VnV Report + CD-Winter peer review\\
+\addlinespace
+Term 2 & Week 23 & Week of Mar 15, 2027 & \textbf{Presentation/Demo:} Final Demos\\
+\addlinespace
+Term 2 & Week 25 & Week of Mar 29, 2027 & \textbf{Deliverable:} EXPO poster pdf and video due; Final Documentation (Rev 1)\\
+\addlinespace
+Term 2 & Week 26 & Week of Apr 05, 2027 & \textbf{Presentation/Demo:} Capstone EXPO\\
+\end{xltabular}
 
 \section{Proof of Concept Demonstration Plan}
 
