@@ -284,5 +284,5 @@ TSWLatexianTemp*
 __pycache__/
 *.pyc
 
-# intelliJ generated files
+# IntelliJ generated files
 .idea
