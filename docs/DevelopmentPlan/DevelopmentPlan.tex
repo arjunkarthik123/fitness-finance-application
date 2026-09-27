@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{float}
 
 \title{Development Plan\\\progname}
 
@@ -102,10 +103,33 @@ project:
 
 \section{Team Member Roles}
 
-\wss{You should identify the types of roles you anticipate, like notetaker,
-leader, meeting chair, reviewer.  Assigning specific people to those roles is
-not necessary at this stage.  In a student team the role of the individuals will
-likely change throughout the year.}
+All team members will be responsible for contributing to the development of the project 
+(this includes coding, documentation, testing, reviewing, etc.). In addition to 
+this contribution, each team member will be assigned the following roles (roles can 
+be modified if necessary): 
+
+\begin{table}[H]
+\caption{Team Member Role Assignment} \label{TblTeamMemberRoleAssignment}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Team Member} & \textbf{Role(s)} & \textbf{Responsibilities}\\
+\midrule
+Daniel Franze-Da Silva & Scribe & Take thorough notes during meetings\\
+ & UI/UX Design Lead & In charge of ensuring the UI and UX meet the high standards of the end users\\
+Noah Goldschmied & Team Liason & Act as the main point of contact for the team when communicating with external individuals relevant to the project (i.e. TAs, supervisors, professors, potential partnering companies, etc.)\\
+ & Chairman & Lead team meetings, set the agenda for upcoming meetings and guide discussions\\
+Arjun Karthik & Github Manager & In charge of managing the GitHub repository, managing and creating issues, and ensuring that the GitHub project is organized and complete\\
+ & CI/CD Lead & In charge of ensuring that the CI/CD pipeline is set up and functioning properly, and that all team members are adhering to the regulations put into place (i.e. branching, pull requests and approvals, proper naming conventions, etc.)\\
+Peter Deforest & Testing Lead & In charge of ensuring that proper tests are conducted, regression testing is upheld when new logic is introduced, and that the testing process is properly integrated into the development\\
+Shao (Daniel) Hu & Lead Developer & In charge of leading the development efforts and technical design, and helping teammates overcome technical roadblocks\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% \wss{You should identify the types of roles you anticipate, like notetaker,
+% leader, meeting chair, reviewer.  Assigning specific people to those roles is
+% not necessary at this stage.  In a student team the role of the individuals will
+% likely change throughout the year.}
 
 \section{Workflow Plan}
 
