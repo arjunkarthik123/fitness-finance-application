@@ -1,6 +1,97 @@
 <This is where you put your License.  A sample license is shown below.>
 
-MIT License
+PROPRIETARY SOFTWARE LICENSE
+Version 1.0
+
+Copyright (c) 2026 Arjun Karthik, Shao (Daniel) Hu, Noah Goldschmied, Peter Deforest, Daniel Franze-Da Silva
+
+All Rights Reserved.
+
+1. OWNERSHIP
+
+This software, including but not limited to all source code,
+object code, algorithms, architectures, designs, workflows,
+documentation, user interfaces, graphics, data models, and
+associated materials (collectively, the "Software"), is the
+exclusive property of the Copyright Holder.
+
+No ownership rights are granted under this License.
+
+2. RESTRICTIONS
+
+Except as expressly authorized in writing by the Copyright
+Holder, no person or entity may:
+
+(a) copy the Software in whole or in part;
+
+(b) modify, adapt, translate, decompile, disassemble,
+reverse engineer, or otherwise derive source code,
+ideas, processes, structures, or underlying logic
+from the Software;
+
+(c) create derivative works based upon the Software;
+
+(d) distribute, sublicense, lease, rent, sell,
+commercialize, publish, disclose, or otherwise make
+the Software available to any third party;
+
+(e) use any portion of the Software for commercial
+purposes;
+
+(f) use, reproduce, extract, analyze, scrape, train,
+fine-tune, validate, benchmark, or otherwise utilize
+the Software or any portion thereof for artificial
+intelligence, machine learning, or data-mining
+purposes;
+
+(g) remove, alter, obscure, or circumvent any copyright,
+trademark, proprietary notice, security feature, or
+access-control mechanism.
+
+3. NO LICENSE GRANTED
+
+No express or implied license is granted under any patent,
+copyright, trade secret, trademark, or other intellectual
+property right of the Copyright Holder.
+
+All rights not expressly granted are reserved.
+
+4. CONFIDENTIALITY
+
+To the extent access to the Software is granted, the Software
+shall be considered confidential and proprietary information.
+Recipients shall take all reasonable measures to prevent
+unauthorized disclosure, copying, or use.
+
+5. TERMINATION
+
+Any violation of this License automatically and immediately
+terminates any rights granted hereunder.
+
+Upon termination, all copies of the Software and related
+materials must be permanently deleted and destroyed.
+
+6. ENFORCEMENT
+
+The Copyright Holder reserves all legal and equitable
+remedies available under applicable law for violations
+of this License, including damages, injunctive relief,
+and recovery of legal costs where permitted.
+
+7. DISCLAIMER
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+NON-INFRINGEMENT, ACCURACY, OR PERFORMANCE.
+
+8. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
+CLAIMS, DAMAGES, OR OTHER LIABILITY ARISING FROM OR RELATED
+TO THE SOFTWARE.
+
+<!-- Sample MIT License
 
 Copyright (c) 2022 Spencer Smith
 
@@ -20,4 +111,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE. -->
