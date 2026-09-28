@@ -2,6 +2,9 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{float}
 
 \title{Development Plan\\\progname}
 
@@ -22,98 +25,359 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+September 26th, 2026 & Arjun & Added workflow plan and project decomposition and scheduling\\
+September 26th, 2026 & Daniel F. & Added team member roles, team communication plan, team meeting plan and team charter (external goals, attendance, acceptable excuses, in case of emergency, quality and attitude)\\
+September 26th, 2026 & Daniel H. & Added use of AI/LLMs: code development, documentation development and verification of LLM output\\
+September 26th, 2026 & Noah & Added proof of concept demonstration plan\\
+September 27th, 2026 & Daniel F. & Added team charter (stay on track, decision making and team building); grammar fixes to team charter and team meeting plan\\
+September 27th, 2026 & Arjun & Fixed typo in project scheduling\\
+September 27th, 2026 & Noah & Added another risk to proof of concept demonstration plan\\
+September 27th, 2026 & Team & Call to review documents\\
+September 27th, 2026 & Daniel F. & Added introduction, confidential information, IP to protect, and copyright license\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \newpage{}
 
-\wss{Put your introductory blurb here.  Often the blurb is a brief roadmap of
-what is contained in the report.}
+\section{Introduction}
 
-\wss{Additional information on the development plan can be found in the
-\href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
-{lecture slides}.}
+This document outlines the development plan for the fitness and financial learning app 
+designed to teach users the benefits of incremental investments in both your health and finances. 
+This document includes legal information, internal team plans and roles throughout the 
+project, workflow plans and deadline schedules, proof of concept plans, and technologies to be 
+utilized for development.
+
+% \wss{Put your introductory blurb here.  Often the blurb is a brief roadmap of
+% what is contained in the report.}
+
+% \wss{Additional information on the development plan can be found in the
+% \href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
+% {lecture slides}.}
 
 \section{Confidential Information?}
 
-\wss{State whether your project has confidential information from industry, or
-not.  If there is confidential information, point to the agreement you have in
-place.}
+There is no confidential information to protect from industry partners.
 
-\wss{For most teams this section will just state that there is no confidential
-information to protect.}
+\noindent\textbf{Note:} This app will deal with personal user data that may be deemed 
+confidential. This data will be secured and more thoroughly disclosed in the 
+requirements documentation. This data will be accumulated and is not coming from 
+an industry partner.
+
+% \wss{State whether your project has confidential information from industry, or
+% not.  If there is confidential information, point to the agreement you have in
+% place.}
+
+% \wss{For most teams this section will just state that there is no confidential
+% information to protect.}
 \section{IP to Protect}
 
-\wss{State whether there is IP to protect.  If there is, point to the agreement.
-All students who are working on a project that requires an IP agreement are also
-required to sign the ``Intellectual Property Guide Acknowledgement.''}
+Any software and documentation associated with this project are protected by copyright 
+(see copyright license section below). The copyright license \underline{prohibits}  
+any individuals or groups the rights to use, modify, or copy the software or its documentation 
+without explicit permission granted by the copyright holders. Any unauhthorized use of the project's 
+artifacts will result in legal action. 
+
+% \wss{State whether there is IP to protect.  If there is, point to the agreement.
+% All students who are working on a project that requires an IP agreement are also
+% required to sign the ``Intellectual Property Guide Acknowledgement.''}
 
 \section{Copyright License}
 
-\wss{What copyright license is your team adopting.  Point to the license in your
-repo.}
+The team will be adopting a proprietary license that reserves all rights to the 
+copyright holders. The license can be found in the \href{LICENSE}{LICENSE} file.
+
+% \wss{What copyright license is your team adopting.  Point to the license in your
+% repo.}
 
 \section{Team Meeting Plan}
 
-\wss{This section is for meetings between the team members, and meetings between 
-the team and their supervisor/advisor (as appropriate).}
+When a lecture is held (where the professor is delivering material - primarily 
+until October 1st, and a few times throughout the winter 2027 semester), the team 
+will spend 5-10 minutes, post-lecture, informally meeting to touch base on the
+progress made, and any roadblocks that may need to be addressed. These informal 
+meetings will act as 'stand-up' style meetings where the team can hold each other
+accountable for the continuous work they have completed and identify any roadblocks
+in the development early so that they can be addressed with the help of other team 
+members ahead of project deadlines. On days where there is no lecture, due to 
+this time already being reserved in our calendars, the team will hold more formal  
+meetings during these time slots to discuss in greater depth progress made, resolving 
+any road blocks, and action items for each team member ahead of next meeting. These 
+meetings will be held in-person on campus or virtually over Microsoft Teams. The 
+exact location will be discussed and determined by the team on the Sunday at the 
+start of each week, in order to best accommodate the schedules of all team members 
+and to account for necessary accomodations for commuters. The scheduled lecture 
+time used for meetings will occur every week on Mondays, Wednesdays, and Thursdays from 
+5:30-6:20 PM.
 
-\wss{How often will the team meet? where? when?}
+During scheduled tutorial time (weekly on Wednesdays from 2:30-4:20 PM in the fall semester, 
+and Tuesdays from 2:30-4:20 PM in the winter semester), the team will meet in person. 
+The first 5-10 minutes will be spent preparing and reviewing the agenda for our 
+discussion with the TA, 20 minutes will be dedicated to the discussion with the 
+TA to receive feedback and ask any pending questions (note: our TA is also our 
+supervisor, thus this time will also be served to address any requirements based 
+questions), and then any remaining time will be dedicated to development time 
+where the team will work on dicussing and/or implementing critical logic that requires 
+extra attention and alignment on.
 
-\wss{If the meeting is a physical location (not virtual), out of an abundance of
-caution for safety reasons you shouldn't put the location online}
+In addition, the team will hold weekly meetings outside of class time (lectures and 
+tutorials) every Tuesday from 10:00-11:00 AM. These meetings will be held virtually 
+over Microsoft Teams. The puropse of these meetings will be to discuss upcoming 
+deliverables and planning for the week ahead (i.e. this may include assigning action 
+items for a project artifact).
 
-\wss{To help schedule meetings, you can use the lecture/tutorial time when we do 
-not have anything else scheduled.}
+All meetings are subject to rescheduling and/or cancellation based on discussion 
+where all team members are in agreement, and will be communicated to all team 
+members at least 24 hours in advance. Meeting rescheduling and/or cancellation 
+may be due to holidays, McMaster University shutdown days, or group consensus to 
+postpone a meeting (\textbf{excpetion}: tutorial meetings \underline{cannot} be rescheduled 
+and/or cancelled due to group consenus as meeting with the TA is a mandatory and 
+beneficial part of the development feedback process).
 
-\wss{How often will you meet with your supervisor/advisor?  when?  where?}
+For each of the meetings mentioned above, an agenda will be determined at the 
+end of the previous meeting. Each meeting will closely follow this agenda, leaving 
+time at the end for any questions to be addressed. The roles for each meeting 
+will remain consistent, as to maintain efficiency in the meetings. Each meeting 
+Noah will serve as the meeting chair, responsible for leading the meeting, Daniel F. 
+will serve as the notetaker, responsible for capturing talking points and recording 
+action items, and Arjun and Daniel F. will be responsible for capturing meeting attendance as 
+issues on GitHub. The meeting template (\href{pdfs/MeetingMinutesTemplate.pdf}{MeetingMinutesTemplate.pdf}) will be used to capture meeting minutes, 
+agendas, action items, and other details about each meeting. These meeting records 
+will be stored on the shared Microsoft Teams channel for the team for later reference.
 
-\wss{Will meetings be virtual?  At least some meetings should likely be
-in-person.}
+% \wss{This section is for meetings between the team members, and meetings between 
+% the team and their supervisor/advisor (as appropriate).}
 
-\wss{How will the meetings be structured?  There should be a chair for all meetings.  
-There should be an agenda for all meetings.}
+% \wss{How often will the team meet? where? when?}
+
+% \wss{If the meeting is a physical location (not virtual), out of an abundance of
+% caution for safety reasons you shouldn't put the location online}
+
+% \wss{To help schedule meetings, you can use the lecture/tutorial time when we do 
+% not have anything else scheduled.}
+
+% \wss{How often will you meet with your supervisor/advisor?  when?  where?}
+
+% \wss{Will meetings be virtual?  At least some meetings should likely be
+% in-person.}
+
+% \wss{How will the meetings be structured?  There should be a chair for all meetings.  
+% There should be an agenda for all meetings.}
 
 \section{Team Communication Plan}
 
-\wss{Issues on GitHub should be part of your communication plan.}
+The following outlines the communication tools that will be used throughout the 
+project:
+
+\begin{itemize}
+	\item \textbf{GitHub:} a main repository will be used for version control and 
+  issue tracking. As well, a separate GitHub project will be used for project 
+  management, where issues will be tracked using a Kanban board with 4 states: 
+  To Do, In Progress, In Review, and Done.
+	\item \textbf{Microsoft Teams:} Microsoft Teams will be used as the main source 
+	of communication between team members. A Microsoft Teams group chat will be 
+  used for adhoc messaging and communication. A Microsoft Teams Channel will be 
+  used for conducting virtual team meetings, storing any shared files that do not 
+  belong in the code repository, and posting communication regarding pull requests 
+  and their reviews.
+  \item \textbf{Email:} our McMaster emails will be used for communication with our 
+  supervisor/TA and professors.
+\end{itemize}
+
+% \wss{Issues on GitHub should be part of your communication plan.}
 
 \section{Team Member Roles}
 
-\wss{You should identify the types of roles you anticipate, like notetaker,
-leader, meeting chair, reviewer.  Assigning specific people to those roles is
-not necessary at this stage.  In a student team the role of the individuals will
-likely change throughout the year.}
+All team members will be responsible for contributing to the development of the project 
+(this includes coding, documentation, testing, reviewing, etc.). In addition to 
+this contribution, each team member will be assigned the following roles (roles can 
+be modified if necessary): 
+
+\begin{table}[H]
+\caption{Team Member Role Assignment} \label{TblTeamMemberRoleAssignment}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Team Member} & \textbf{Role(s)} & \textbf{Responsibilities}\\
+\midrule
+Daniel Franze-Da Silva & Scribe & Take thorough notes during meetings\\
+ & UI/UX Design Lead & In charge of ensuring the UI and UX meet the high standards of the end users\\
+Noah Goldschmied & Team Liason & Act as the main point of contact for the team when communicating with external individuals relevant to the project (i.e. TAs, supervisors, professors, potential partnering companies, etc.)\\
+ & Chairman & Lead team meetings, set the agenda for upcoming meetings and guide discussions\\
+Arjun Karthik & Github Manager & In charge of managing the GitHub repository, managing and creating issues, and ensuring that the GitHub project is organized and complete\\
+ & CI/CD Lead & In charge of ensuring that the CI/CD pipeline is set up and functioning properly, and that all team members are adhering to the regulations put into place (i.e. branching, pull requests and approvals, proper naming conventions, etc.)\\
+Peter Deforest & Testing Lead & In charge of ensuring that proper tests are conducted, regression testing is upheld when new logic is introduced, and that the testing process is properly integrated into the development\\
+Shao (Daniel) Hu & Lead Developer & In charge of leading the development efforts and technical design, and helping teammates overcome technical roadblocks\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% \wss{You should identify the types of roles you anticipate, like notetaker,
+% leader, meeting chair, reviewer.  Assigning specific people to those roles is
+% not necessary at this stage.  In a student team the role of the individuals will
+% likely change throughout the year.}
 
 \section{Workflow Plan}
 
+The project workflow will be managed using Git, with our code and documentation hosted in our GitHub repository. Our \texttt{main} branch will serve as the primary codebase and will be the branch used for product deployments. To make contributions, developers are required to create branches directly from \texttt{main} and commit any initial changes to their respective branch.
+
+\subsection{Branching Strategy}
+We will utilize the following branch categories:
 \begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classification, etc.?
-  \item Use of CI/CD
+    \item \textbf{feat (feature):} For development on a new feature.
+    \item \textbf{bugfix:} For addressing and fixing identified issues within the codebase.
+    \item \textbf{chore:} For code changes that support later development, such as refactoring or clean-up work.
+\end{itemize}
+Additionally, each branch must have a descriptive name that clearly indicates which issue in the GitHub project is being addressed.
+
+\subsection{Issue Tracking and Project Management}
+Issues will be categorized based on urgency, from \textbf{P0} (highest priority) to \textbf{P2} (lowest priority), ensuring that critical tasks are addressed promptly. 
+
+The GitHub project board has been configured with the following setup: \textbf{Backlog} $\rightarrow$ \textbf{In Progress} $\rightarrow$ \textbf{Review} $\rightarrow$ \textbf{Closed}. As development progresses, it is the developer's responsibility to keep their assigned issues updated to maintain team visibility on project status.
+
+\subsection{Pull Requests and CI/CD Pipeline}
+As part of the new code added to a branch, developers are required to implement test cases to ensure adequate code coverage. Once code is committed, a Pull Request (PR) must be raised to merge the branch into \texttt{main}. 
+
+Our Continuous Integration/Continuous Deployment (CI/CD) pipeline will enforce the following checks before a merge is permitted:
+\begin{itemize}
+    \item Automated testing and deployment checks.
+    \item Linter execution to ensure code meets formatting and quality standards.
+    \item Verification that the feature branch is up-to-date with \texttt{main}.
+\end{itemize}
+
+\subsection{Code Review Process}
+In addition to passing all CI/CD checks, each PR requires a manual review and approval from at least one other group member. The PR comments section will be utilized to trace the iterative process of feedback and the subsequent code changes made to address said feedback.
+
+\subsection{Pull Request Template Requirements}
+Each PR must be directly linked to its corresponding issue in the GitHub Project board to maintain traceability. Furthermore, all PRs must adhere to a standardized template that includes:
+\begin{itemize}
+    \item A comprehensive summary of the changes made.
+    \item Sample test cases and step-by-step instructions for the reviewer to verify the code.
+    \item Screenshots of the updated UI (if the PR includes user interface modifications).
 \end{itemize}
 
 \section{Project Decomposition and Scheduling}
 
+For aiding in documenting and tracing our project deliverables, we will be making use of two GitHub projects that will handle our code and our documentation deliverables. They are linked below: 
+
 \begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project
+    \item \textbf{Code Project:} \url{https://github.com/users/arjunkarthik123/projects/4/views/1}
+    \item \textbf{Documentation Project:} \url{https://github.com/users/arjunkarthik123/projects/3}
 \end{itemize}
 
-\wss{How will the project be scheduled?  This is the big picture schedule, not
-details. You will need to reproduce information that is in the course outline
-for deadlines.}
+Both projects are split into four sections: Backlog, In Progress, In Review, and Done. As the project progresses, we will come up with items that need to be addressed for both our documentation and later on our codebase. Whenever any team member thinks of an item that needs to be worked on, it will be added to the backlog of the respective projects. Depending on what the team decides, someone will be assigned the new issue, and whenever the person works on it, it will be under the In Progress section. In order to complete the deliverable, it first needs to be reviewed, hence the In Review section. For either the code or documentation, a pull request will be created and linked to the respective issue being addressed, and only when it gets approved will the issue move to the Done section. 
+
+If the issues seem to be larger than anticipated, we will split up the issue using sub-issues and have them assigned accordingly. This is to ensure no single issue is too big to handle by one person alone. 
+
+Table~\ref{TblDeliverables} provides a high-level overview of the key deliverables throughout the academic year (please note that these items were taken directly from the course schedule in the course outline): 
+
+\begin{xltabular}{\textwidth}{lll>{\raggedright\arraybackslash}X}
+\caption{Key Deliverables Schedule} \label{TblDeliverables}\\
+\toprule
+\textbf{Term} & \textbf{Week} & \textbf{Date} & \textbf{Tasks / Deliverables}\\
+\midrule
+\endfirsthead
+
+\caption[]{Key Deliverables Schedule (Continued)}\\
+\toprule
+\textbf{Term} & \textbf{Week} & \textbf{Date} & \textbf{Tasks / Deliverables}\\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+Term 1 & Week 2  & Week of Sep 14, 2026 & \textbf{Deliverable:} Deadline for teams formation, projects selection (end of week)\\
+\addlinespace
+Term 1 & Week 3  & Week of Sep 21, 2026 & \textbf{Deliverable:} Biosheets due to Avenue dropbox \newline \textbf{TA Meeting:} Review of prob state, PoC plan, dev plan and team charter\\
+\addlinespace
+Term 1 & Week 4  & Week of Sep 28, 2026 & \textbf{Deliverable:} Problem Statement, Proof of Concept Plan, Development Plan, Team Charter Rev 0 \newline \textbf{Peer Review:} Prob State + PoC plan + Dev Plan + Team Charter peer review\\
+\addlinespace
+Term 1 & Week 5  & Week of Oct 05, 2026 & \textbf{TA Meeting:} Review SRS+Haz Analysis\\
+\addlinespace
+Term 1 & Week 6  & Week of Oct 19, 2026 & \textbf{Deliverable:} SRS + Haz Analysis Rev 0 \newline \textbf{Peer Review:} SRS + Haz Analysis peer review\\
+\addlinespace
+Term 1 & Week 7  & Week of Oct 26, 2026 & \textbf{TA Meeting:} Review VnV Plan\\
+\addlinespace
+Term 1 & Week 8  & Week of Nov 02, 2026 & \textbf{Deliverable:} VnV Plan Rev 0 \newline \textbf{Peer Review:} VnV Plan peer review\\
+\addlinespace
+Term 1 & Week 9  & Week of Nov 09, 2026 & \textbf{TA Meeting:} Review Des Doc Rev-1 and CD-Fall\\
+\addlinespace
+Term 1 & Week 10 & Week of Nov 16, 2026 & \textbf{Deliverable:} Des Doc Rev -1 and CD-Fall \newline \textbf{Peer Review:} Des Doc Rev-1 Peer Review\\
+\addlinespace
+Term 1 & Week 11 & Week of Nov 23, 2026 & \textbf{Presentation/Demo:} Proof of Concept Demos\\
+\addlinespace
+Term 1 & Week 12 & Week of Nov 30, 2026 & \textbf{Presentation/Demo:} Proof of Concept Demos\\
+\addlinespace
+Term 1 & Week 13 & Week of Dec 07, 2026 & \textbf{Presentation/Demo:} Code review interviews\\
+\midrule
+Term 2 & Week 15 & Week of Jan 11, 2027 & \textbf{TA Meeting:} Review of Des Doc\\
+\addlinespace
+Term 2 & Week 16 & Week of Jan 18, 2027 & \textbf{Deliverable:} Design Document Rev 0 \newline \textbf{Peer Review:} Module Implementation due\\
+\addlinespace
+Term 2 & Week 17 & Week of Jan 25, 2027 & \textbf{Peer Review:} Des Document peer review (module implementation reflection)\\
+\addlinespace
+Term 2 & Week 18 & Week of Feb 01, 2027 & \textbf{Presentation/Demo:} Rev 0 Demo\\
+\addlinespace
+Term 2 & Week 19 & Week of Feb 08, 2027 & \textbf{Presentation/Demo:} Rev 0 Demo\\
+\addlinespace
+Term 2 & Week 20 & Week of Feb 22, 2027 & \textbf{Presentation/Demo:} Code review interviews\\
+\addlinespace
+Term 2 & Week 21 & Week of Mar 01, 2027 & \textbf{TA Meeting:} Review VnV Report+CD-Winter\\
+\addlinespace
+Term 2 & Week 22 & Week of Mar 08, 2027 & \textbf{Deliverable:} VnV Report + CD-Winter \newline \textbf{Peer Review:} VnV Report + CD-Winter peer review\\
+\addlinespace
+Term 2 & Week 23 & Week of Mar 15, 2027 & \textbf{Presentation/Demo:} Final Demos\\
+\addlinespace
+Term 2 & Week 25 & Week of Mar 29, 2027 & \textbf{Deliverable:} EXPO poster pdf and video due; Final Documentation (Rev 1)\\
+\addlinespace
+Term 2 & Week 26 & Week of Apr 05, 2027 & \textbf{Presentation/Demo:} Capstone EXPO\\
+\end{xltabular}
 
 \section{Proof of Concept Demonstration Plan}
 
-What is the main risk, or risks, for the success of your project?  What will you
-demonstrate during your proof of concept demonstration to convince yourself that
-you will be able to overcome this risk?
+At the time of the proof of concept, the application will be able to perform the below actions:
+\begin{itemize}
+    \item Allow users to set fitness and financial goals
+    \item Integrate with fitness technologies to accurately track users' activities
+    \item Award users virtual currency based on their activity in an accurate manner
+    \item Allow users to invest said virtual currency in a financial market
+    \item Provide the user with tooltips and terminology that will help them succeed in real world investing
+\end{itemize}
+
+\bigbreak
+\noindent The main risks that could hinder the success of the proof of concept are:
+\begin{enumerate}
+    \item An inability to properly gamify or incentivize compounding habits by rewarding healthy long-term thinking
+    \begin{itemize}
+        \item To address this risk, the team will be conducting a design thinking exercise.
+        This will help with the development of these incentives to make sure that this risk is minimized, as it is critical to the success of the project.
+        To prove that this risk is handled, the PoC will implement the incentives discovered by the design thinking exercise to demonstrate that the core thesis of the product is functional.
+    \end{itemize}
+    \item Improper workout verification leading to any of the following:
+    \begin{enumerate}
+        \item Rewarding not enough virtual currency
+        \item Rewarding too much virtual currency
+        \item Users exploiting the tracking system
+    \end{enumerate}
+    \begin{itemize}
+        \item This risk stems from an improper calibration of both the inputs from workout technology, and an improper weighting of the currency system.
+        R\&D will be required to fine tune this system and remove this risk
+    \end{itemize}
+    \item Users being unable to invest the virtual currency that they earn
+    \item Failure to integrate with physical fitness technologies
+    \item Improper guardrails and teaching points in place
+\end{enumerate}
+
+\bigbreak
+\noindent If the application is unable to complete the above steps, the team may need to re-analyze the scope of the project.
+The single most important risk to meet is the gamification and incentivization of compounding habits.
+All other risks are secondary, and the PoC should prioritize the development of the incentives.
+In the case that either workouts or investments are being improperly tracked, the team will look into simplifying the system, while keeping the incentives intact.
 
 \section{Expected Technology}
 
@@ -209,6 +473,8 @@ Github Copilot was used to verify and validation our pull requests, as one of ou
 It was also used to generate an overview of each pull request to help reviewers understand the changes.
 Finally, it was used to generate our proprietary license in the LICENSE file.
 
+Claude was used in the creation of the contribution table for both the Development Plan and the Problem Statement.
+
 \subsection{Verification of AI-Generated Content}
 
 \wss{\begin{itemize}
@@ -247,74 +513,234 @@ whether material was generated by a human or an AI system.}
 
 \section*{Appendix --- Team Charter}
 
-\wss{borrows from
-\href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
-{University of Portland Team Charter}}
+% \wss{borrows from
+% \href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
+% {University of Portland Team Charter}}
 
 \subsection*{External Goals}
 
-\wss{What are your team's external goals for this project? These are not the
-goals related to the functionality or quality fo the project.  These are the
-goals on what the team wishes to achieve with the project.  Potential goals are
-to win a prize at the Capstone EXPO, or to have something to talk about in
-interviews, or to get an A+, etc.}
+\begin{itemize}
+    \item Develop a finalized and working solution that we can be proud of and 
+    use as a strong project reference on resumes and in interviews.
+    \item Develop a solution in a topic of interest that we enjoy and can relate 
+    to, so that we can maintain motivation and genuine enjoyment during 
+    development of the solution.
+    \item Achieve a grade of at least an A (11 on McMaster's 12-point scale) in the capstone course
+    \item Make it to the Capstone EXPO and standout positively among the other software projects
+    \item Grow our professional skills, project management skills, and problem solving skills while working through a real world problem
+\end{itemize}
+
+% \wss{What are your team's external goals for this project? These are not the
+% goals related to the functionality or quality fo the project.  These are the
+% goals on what the team wishes to achieve with the project.  Potential goals are
+% to win a prize at the Capstone EXPO, or to have something to talk about in
+% interviews, or to get an A+, etc.}
 
 \subsection*{Attendance}
 
 \subsubsection*{Expectations}
 
-\wss{What are your team's expectations regarding meeting attendance (being on
-time, leaving early, missing meetings, etc.)?}
+\begin{itemize}
+    \item All team members are expected to attend all scheduled meetings, unless they 
+    have an acceptable excuse for missing the meeting
+    \item Arrive at least 10 minutes before to the agreed upon location if the 
+    meeting is held in person, and at arrive at least 5 minutes before any scheduled 
+    virtual meetings to ensure prepardness and that the full meeting time may be 
+    utilized effectively
+    \item If a team member is unable to attend a meeting, they are expected to notify 
+    the rest of the team in the Microsoft Teams groupchat at least 24 hours in advance, unless it is an emergency situation 
+    and out of their control
+    \item If a team member misses a meeting or misses part of a meeting, they are expected 
+    to review the meeting notes and any relevant documents before the next meeting 
+    to get caught up on what they missed
+    \item If a team member misses 2 meetings in a row without an acceptable excuse or 
+    proper communication with the rest of the team, the team will schedule an
+    emergency meeting to address this issue. If the issue persists, it will be escalated to the 
+    TA and/or instructor for further action
+    \item Arriving late to a meeting or leaving early without an acceptable excuse will 
+    result in a warning. If this happens more than 3 times, the team will schedule an 
+    emergency meeting to address this issue. If the issue persists, it will be escalated to the 
+    TA and/or instructor for further action
+\end{itemize}
+
+% \wss{What are your team's expectations regarding meeting attendance (being on
+% time, leaving early, missing meetings, etc.)?}
 
 \subsubsection*{Acceptable Excuse}
 
-\wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
-What types of excuses will not be considered acceptable?}
+Acceptable Excuses:
+
+\begin{itemize}
+    \item Unforseen circumstances that are out of the teammate's control (i.e. 
+    car breaks down on the way to a meeting)
+    \item Medical appointments that were scheduled in advance and cannot be rescheduled
+    \item Medical, personal, or family emergencies
+    \item Personal ilness or injury that hinders the teammate's ability from attending
+    and or providing meaningfull contributions
+\end{itemize}
+
+\noindent Unacceptable Excuses:
+
+\begin{itemize}
+    \item Technical difficulties during virtual meetings (i.e. internet issues, 
+    computer issues, etc.). These can and should be resolved before the meeting 
+    starts
+    \item Forgetting about a meeting or forgetting to notify the team about 
+    a prior conflict
+    \item Other course deliverables. These meetings are scheduled in advance and 
+    thus should be planned around in order to meet deadlines for all courses
+\end{itemize}
+
+% \wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
+% What types of excuses will not be considered acceptable?}
 
 \subsubsection*{In Case of Emergency}
 
-\wss{What process will team members follow if they have an emergency and cannot
-attend a team meeting or complete their individual work promised for a team
-deliverable?}
+\begin{enumerate}
+  \item Contact the rest of the team immediately about the emergency (the specific details 
+  of the emergency are not required to be shared as they may be personal)
+  \item Assess the situation and determine how long this emergency will hinder your 
+  progress (i.e. will just miss one meeting, will miss a deliverable deadline, 
+  will miss extended time)
+  \item Find a replacement/backup team member with extra capacity to cover for you 
+  \begin{enumerate}
+    \item Meetings - if you have a prominent role in the meeting(s) (i.e. scribe) 
+    find and contact a team member that can fill the role of scribe for the missed 
+    meeting(s)
+    \item Deliverables - if your assigned task is yet to be completed, communicate 
+    your progress with the team so they can delegate that responsibility to another 
+    team member with extra capacity to complete the task
+  \end{enumerate}
+  \item When the emergency is resolved and you are able to get back into the project,
+  catch up on what you have missed
+\end{enumerate}
+
+% \wss{What process will team members follow if they have an emergency and cannot
+% attend a team meeting or complete their individual work promised for a team
+% deliverable?}
 
 \subsection*{Accountability and Teamwork}
 
 \subsubsection*{Quality} 
 
-\wss{What are your team's expectations regarding the quality
-of team members' preparation for team meetings and the quality of the
-deliverables that members bring to the team?}
+In order to maintain consistent quality in our work, the following are expected 
+of all team members:
+
+\begin{itemize}
+  \item Meeting Preparation
+  \begin{itemize}
+    \item Team members are expected to come to meetings fully prepared reading any 
+    necessary materials
+    \item Team members are expected to come to meetings with their assigned tasks 
+    completed and ready to discuss their progress with the team
+  \end{itemize}
+  \item Deliverables
+  \begin{itemize}
+    \item Each deliverable should be thoroughly reviewed by all team members before 
+    submission to ensure that it meets the quality standards of the team
+    \item Team members should strive to produce work that meets the level 4 criteria 
+    in each deliverable rubric
+  \end{itemize}
+\end{itemize}
+
+% \wss{What are your team's expectations regarding the quality
+% of team members' preparation for team meetings and the quality of the
+% deliverables that members bring to the team?}
 
 \subsubsection*{Attitude}
 
-\wss{What are your team's expectations regarding team members' ideas,
-interactions with the team, cooperation, attitudes, and anything else regarding
-team member contributions?  Do you want to introduce a code of conduct?  Do you
-want a conflict resolution plan?  Can adopt existing codes of conduct.}
+\begin{itemize}
+  \item Team members are expected and encouraged to provide constructive feedback
+  \item Team members are expected to be positive and respectful when interacting 
+  with other team members, TAs, instructors, and any other stakeholders
+  \item Team members should be open to new ideas and willing to compromise 
+  when necessary
+  \item Team members shuold be patient and maintain professionalism when conflict 
+  arises
+  \item Team members should feel as though they can openly approach any other team member 
+  with questions, concerns, or ideas
+  \item Team members should welcome all ideas for consideration, instead of shutting 
+  down ideas without discussion
+  \item Team members should be willing to contribute their fair share of the workload
+\end{itemize}
+
+% \wss{What are your team's expectations regarding team members' ideas,
+% interactions with the team, cooperation, attitudes, and anything else regarding
+% team member contributions?  Do you want to introduce a code of conduct?  Do you
+% want a conflict resolution plan?  Can adopt existing codes of conduct.}
 
 \subsubsection*{Stay on Track}
 
-\wss{What methods will be used to keep the team on track? How will your team
-ensure that members contribute as expected to the team and that the team
-performs as expected? How will your team reward members who do well and manage
-members whose performance is below expectations?  What are the consequences for
-someone not contributing their fair share?}
+\begin{itemize}
+  \item The team will leverage the Kanban board in our GitHub Documentation Project 
+  Tracker to track the status of our tasks and deliverables. Each team member is
+  responsible for keeping their assigned issues up-to-date on the Kanban board
+  \item The team will also leverage Avenue to Learn and the Google calendar 
+  provided by the instructor to track deadlines for deliverables
+  \item During scheduled lecture time slots (meeting held regardless whether the 
+  lecture is running or not - meeting held after lecture if necessary), 'stand-up' 
+  style meetings will occur to monitor incremental progress to ensure that all 
+  team members stay on track to meet deliverable deadlines
+  \item The team will leverage performance metrics on the Github repository to 
+  monitor attendance records, and contributions (i.e. commits, pull requests, etc.)
+  \item No target contribution metrics per deliverable as workload may vary. However, 
+  by the conclusion of the project, contributions should be relatively equal among all team members 
+  ranging from 20-30\% of the total contributions per team member
+  \begin{itemize}
+    \item If contribution targets are not met for an individual team member by the 
+    end of the project, the team will escalate this issue to the TA and/or instructor 
+    to have the capstone grade adjusted accordingly
+    \item If the team notices the decline in contributions of a team member during the project, 
+    the team will adjust future workloads accordingly to balance out contributions throughout the 
+    entirety of the project and enforce fairness
+  \end{itemize}
+  \item For attendance, it is expected that all team members attend at least 90\% 
+  of all scheduled meetings
+\end{itemize}
 
-\wss{You may wish to use the project management metrics collected for the TA and
-instructor for this.}
+% \wss{What methods will be used to keep the team on track? How will your team
+% ensure that members contribute as expected to the team and that the team
+% performs as expected? How will your team reward members who do well and manage
+% members whose performance is below expectations?  What are the consequences for
+% someone not contributing their fair share?}
 
-\wss{You can set target metrics for attendance, commits, etc.  What are the
-consequences if someone doesn't hit their targets?  Do they need to bring the
-coffee to the next team meeting?  Does the team need to make an appointment with
-their TA, or the instructor?  Are there incentives for reaching targets early?}
+% \wss{You may wish to use the project management metrics collected for the TA and
+% instructor for this.}
+
+% \wss{You can set target metrics for attendance, commits, etc.  What are the
+% consequences if someone doesn't hit their targets?  Do they need to bring the
+% coffee to the next team meeting?  Does the team need to make an appointment with
+% their TA, or the instructor?  Are there incentives for reaching targets early?}
 
 \subsubsection*{Team Building}
 
-\wss{How will you build team cohesion (fun time, group rituals, etc.)? }
+\begin{itemize}
+  \item The team will engage in icebreakers and non-project related discussions for a 
+  few minutes before each meeting to better get to know each other and build meaningful 
+  relationships
+  \item The team will get together after successfull deadline submissions and project 
+  milestones to celebrate a job well done
+  \item The team will hold social meetings that are not project related at the start of 
+  the project, halfway through the project (end of fall term), and at the very conclusion 
+  of the project (end of winter term after the Capstone EXPO)
+\end{itemize}
+
+% \wss{How will you build team cohesion (fun time, group rituals, etc.)? }
 
 \subsubsection*{Decision Making} 
 
-\wss{How will you make decisions in your group? Consensus?  Vote? How will you
-handle disagreements? }
+\begin{enumerate}
+  \item All ideas will be considered and discussed by the team before a decision is reached
+  \item The team will first attempt to come to a consensus on a decision as we 
+  should all be in agreement and aligned before making impactful decisions
+  \item If a consensus cannot be reached, the team will hold a vote on the decision. For an 
+  idea to be passed a majority vote of 3 out of 5 members is required
+  \item If the team is struggling to decide between options (i.e. they cannot clearly 
+  decide where to cast their votes), an unbiased third party will be involved to 
+  help the team come to a final decision
+\end{enumerate}
+
+% \wss{How will you make decisions in your group? Consensus?  Vote? How will you
+% handle disagreements? }
 
 \end{document}
