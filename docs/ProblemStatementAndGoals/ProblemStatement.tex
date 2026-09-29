@@ -11,6 +11,7 @@
 
 \input{../Comments.text}
 \input{../Common.text}
+\newcommand{\productname}{Flexin}
 
 \begin{document}
 
@@ -52,6 +53,51 @@ part of the problem.  The problem is ``what'' you want to do, not ``how'' you
 want to do it.  The problem statement should be written in a way that is
 understandable to a non-technical audience.}
 
+Personal finance and fitness follow the same pattern: the payoff for effort put
+in today shows up years later. Someone who invests \$100 a month from age 25,
+assuming a 7\% annual return, contributes \$48,000 over 40 years and ends up with
+roughly \$262,000. Waiting until 35 to start the same plan leaves them with about
+\$122,000. The same logic applies to exercise. A single walk or workout changes
+very little, but the habit, kept up for years, is what separates a healthy
+40-year-old from an unhealthy one. In both cases the early actions matter most,
+and in both cases they are the easiest to skip, because the reward is too far
+away to feel real.
+
+The concepts behind this are not widely understood, and young people understand
+them the least. A 2012 survey of 6,911 Canadians asked three basic questions
+covering compound interest, inflation, and risk diversification~\cite{boisclair2017}. 
+Only 42\% of respondents answered all three correctly.
+Among respondents under 35, that number fell to about 30\%, the lowest of any
+age group, and 44\% of them answered ``don't know'' to at least one question.
+Only about half of respondents under 35 knew that buying a single company's
+stock is usually riskier than buying a stock mutual fund. The same study found
+that respondents who answered all three questions correctly were 10 percentage
+points more likely to have retirement savings, which suggests that this gap in
+knowledge carries through to real financial outcomes.
+
+Tools for practising each skill already exist, but separately. Stock market
+simulators let people trade with fake money, and fitness apps reward steps with
+points and badges. A market simulator only helps someone who is already
+motivated to learn about investing, which excludes most of the young adults the
+survey shows are furthest behind. Fitness rewards, meanwhile, rarely lead to
+anything beyond the app itself. No product currently connects the two so that a
+habit a user is already building (or wants to build) becomes their way into
+learning how money grows.
+
+\subsection{Proposed Project}
+
+\productname{} is a mobile app that turns physical activity into virtual
+currency, and virtual currency into an investment portfolio. Steps are tracked
+automatically through the phone's health data rather than entered by hand, and
+users earn currency by meeting fitness goals such as a daily step count or a
+completed workout. Users can spend that currency on real financial assets,
+including stocks, bonds, and ETFs, at a simulated market price. The value of
+the portfolio rises and falls with the prices of the assets the simulated market holds.
+Users can view their holdings, their history of purchases and sales, and
+a graph that separates the currency they contributed from the gains and losses
+the market produced. Users can also choose to share their fitness and portfolio
+statistics with the entire community on a leaderboard. 
+
 \subsection{Inputs and Outputs}
 
 \subsection{Inputs}
@@ -84,6 +130,7 @@ The distribution of the application will be handled by the respective applicatio
 Integration with other devices/products that can read fitness data will need to be supported by the smart device. 
 The integration must be supported by an SDK, API, or other package developed by the manufacturer of the device/product that will allow data retrieval.
 \section{Goals}
+\label{sec:goals}
 
 \begin{enumerate}
     \item \textbf{Educate Users on the Power of Compounding}: Compounding is the process by which financial earnings from investments (dividends and capital gains) are re-invested, accelerating the growth of the investments.
@@ -109,6 +156,7 @@ The integration must be supported by an SDK, API, or other package developed by 
 \end{enumerate}
 
 \section{Stretch Goals}
+\label{sec:stretch}
 
 \begin{enumerate}
     \item \textbf{Design Unique Interactions for Users with Varying Knowledge Levels}: Create different interactions for users who have more knowledge in finance versus more knowledge in fitness.
@@ -131,6 +179,16 @@ We will complete the following two custom documents (one per term):
 \end{itemize}
 
 The interview report will contain information that we will use to derive our requirements and goals. The business plan was chosen as we feel this project can potentially become a startup, therefore we want to explore the business side of our project.
+
+\begin{thebibliography}{9}
+
+\bibitem{boisclair2017}
+D.~Boisclair, A.~Lusardi, and P.-C. Michaud, ``Financial literacy and
+retirement planning in Canada,'' \emph{Journal of Pension Economics and
+Finance}, vol.~16, no.~3, pp.~277--296, 2017,
+doi: 10.1017/S1474747215000311.
+
+\end{thebibliography}
 
 \newpage{}
 
