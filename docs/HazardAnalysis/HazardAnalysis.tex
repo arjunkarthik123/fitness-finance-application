@@ -64,12 +64,109 @@ hazards.}
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+Flexin' will consist of many key components, all of which will come together to create the product.
+These components may not be separate entities, but they are distinct enough to present their own hazards.
 
+\begin{itemize}
+    \item \textbf{Component 1: Account Creation \& Authentication}
+    \begin{itemize}
+        \item \textbf{Purpose:} Manages account creation and authentication for users
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Allow users to create accounts for Flexin'
+            \item Populate the database with the user account to store the created account
+            \item Store authentication key to ensure that only the account owner can log into their Flexin' account
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 2: User Information}
+    \begin{itemize}
+        \item \textbf{Purpose:} Manages user profile data such as name, height, weight, goals, workout data, etc.
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Read and write to the database with user information
+            \item Provide profile data for users
+            \item Allow users to set preferences within Flexin'
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 3: Fitness Device Integrations}
+    \begin{itemize}
+        \item \textbf{Purpose:} Allow Flexin' to connect with users' fitness devices
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Connect with users' devices
+            \item Take data from said devices when relevant
+            \item Ensure that connections with the devices are secure and reliable
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 4: Exercise Data}
+    \begin{itemize}
+        \item \textbf{Purpose:} Track and analyze users' exercise data
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Interact with the data collected from the fitness devices
+            \item Analyze exercise data against user goals
+            \item Read and write to the database with results and analytics
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 5: Currency Attribution}
+    \begin{itemize}
+        \item \textbf{Purpose:} Turn exercise results into virtual currency
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Use the analytics from exercise data
+            \item Compute the correct amount of currency to reward users
+            \item Read and write to the database with users' balances
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 6: Market Simulation}
+    \begin{itemize}
+        \item \textbf{Purpose:} The underlying behaviour of the market in Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Teach users about the effects of compounding
+            \item Mimic proper stock market behaviour
+            \item Incorporate randomness through seeding
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 7: Investment Platform}
+    \begin{itemize}
+        \item \textbf{Purpose:} Allow users to invest in the simulated market with their currency
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Provide users with securities to invest in
+            \item Allow for buying and selling of said securities
+            \item Read and write to the database with investment information
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 8: Group Management}
+    \begin{itemize}
+        \item \textbf{Purpose:} Create a space for users to compete with their friends on Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Manage group creation, validation and invites
+            \item Use the simulated markets randomness to create fair competition
+            \item Read and write to the database with group information
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 9: Database}
+    \begin{itemize}
+        \item \textbf{Purpose:} The single source of truth for all aspects of Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item ACID database that will ensure all data is correct
+            \item Accept reads and writes from components
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 10: User Interface \& Experience}
+    \begin{itemize}
+        \item \textbf{Purpose:} Provide users a place to interact with all backend components of Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Manage all user facing screens, navigation, and input
+            \item Ensure that components connect well to create a simple experience
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
 \section{Critical Assumptions}
 
 \wss{These assumptions that are made about the software or system.  You should
