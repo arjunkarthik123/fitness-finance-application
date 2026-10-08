@@ -36,7 +36,7 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
+Oct 7th, 2026 & Noah Goldschmied & Wrote Sections 1-2\\
 Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
@@ -72,10 +72,28 @@ important library, these are also potential components.}
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+The below assumptions define the scope of the hazard analysis by stating conditions that are expected to hold.
+These conditions will allow the FMEA to go into depth about failure modes that Flexin' has control over.
+
+\begin{itemize}
+    \item \textbf{Fitness Devices Properly Track Workouts}: Flexin' will assume that data provided by fitness devices is correct.
+    Hazards that stem from false data originating from workout devices are out of scope for this document.
+    \item \textbf{Users Understand Exercises They Attempt}: Flexin' assumes that users will not attempt workouts that they are either physically incapable of or do not understand proper form of.
+    Physical hazards that stem from improper workouts are out of scope for this document.
+    \item \textbf{Users Have Positive Intentions}: Flexin' assumes that users want to learn about compounding and build positive habits.
+    If the user has negative intentions, Flexin' will not be able to provide value.
+    \item \textbf{Third-Party Health Platforms Remain Available}: Flexin' assumes that the health-data APIs it depends on (e.g., Health Connect, manufacturer SDKs) remain supported and keep their documented behaviour.
+    Hazards from these platforms being shut down or changing their terms of use are out of scope; temporary outages and malformed responses are still analyzed.
+    \item \textbf{The User's Device Is Not Compromised}: Flexin' assumes that the device running the app has not been rooted, jailbroken, or infected with malware.
+    Hazards from a compromised operating system intercepting or changing app data are out of scope.
+    \item \textbf{Cloud Infrastructure Provides Its Advertised Guarantees}: Flexin' assumes that its hosting and database provider meets its stated durability and encryption-at-rest guarantees.
+    Application-level failures such as bad writes, failed syncs, and misconfigured access rules are still analyzed.
+    \item \textbf{Virtual Currency Has No Monetary Value}: Flexin' assumes that its virtual currency and simulated portfolios cannot be converted to or withdrawn as real money.
+    As a result, hazards involving real financial loss to users are out of scope.
+    \item \textbf{Users Provide Truthful Personal Information}: Flexin' assumes that the height, weight, fitness level, and health conditions users enter are accurate to the best of their knowledge.
+    \item \textbf{Users Keep Their Credentials Private}: Flexin' assumes that users do not deliberately share their login credentials with others.
+    Account takeover through stolen or leaked credentials is still analyzed.
+\end{itemize}
 
 \section{Failure Mode and Effect Analysis}
 
