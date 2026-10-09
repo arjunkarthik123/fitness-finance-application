@@ -51,25 +51,179 @@ Date2 & Name(s) & Description of changes\\
 
 \pagenumbering{arabic}
 
-\wss{You are free to modify this template.}
-
 \section{Introduction}
 
-\wss{You can include your definition of what a hazard is here.}
+This document aims to illustrate the hazards that may occur during the development and deployment of Flexin'.
+It defines hazards for this project, the purpose of analyzing them, and how the team will mitigate them to ensure safe use of Flexin'.
+
+\subsection{Flexin' Problem Statement}
+
+Personal finance and fitness follow the same pattern: the payoff for effort put
+in today shows up years later. Someone who invests \$100 a month from age 25,
+assuming a 7\% annual return, contributes \$48,000 over 40 years and ends up with
+roughly \$262,000. Waiting until 35 to start the same plan leaves them with about
+\$122,000. The same logic applies to exercise. A single walk or workout changes
+very little, but the habit, kept up for years, is what separates a healthy
+40-year-old from an unhealthy one. In both cases the early actions matter most,
+and in both cases they are the easiest to skip, because the reward is too far
+away to feel real.
+
+The concepts behind this are not widely understood, and young people understand
+them the least. A 2012 survey of 6,911 Canadians asked three basic questions
+covering compound interest, inflation, and risk diversification~\cite{boisclair2017}.
+Only 42\% of respondents answered all three correctly.
+Among respondents under 35, that number fell to about 30\%, the lowest of any
+age group, and 44\% of them answered ``don't know'' to at least one question.
+Only about half of respondents under 35 knew that buying a single company's
+stock is usually riskier than buying a stock mutual fund. The same study found
+that respondents who answered all three questions correctly were 10 percentage
+points more likely to have retirement savings, which suggests that this gap in
+knowledge carries through to real financial outcomes.
+
+Tools for practising each skill already exist, but separately. Stock market
+simulators let people trade with fake money, and fitness apps reward steps with
+points and badges. A market simulator only helps someone who is already
+motivated to learn about investing, which excludes most of the young adults the
+survey shows are furthest behind. Fitness rewards, meanwhile, rarely lead to
+anything beyond the app itself. No product currently connects the two so that a
+habit a user is already building (or wants to build) becomes their way into
+learning how money grows.
+
+\subsection{Hazard Analysis Introduction}
+
+A hazard as it pertains to Flexin' is a condition in the software that can create an unwanted effect of event on Flexin's users, or the general environment.
+In software, these hazards stem from poor design decisions or requirements.
+These hazards must be addressed prior to and during development in order to limit any unwanted impact on users.
+
+As described above, Flexin' focuses on developing healthy habits for investing and fitness and teach users the effect of compounding.
+However, to accomplish this goal there are many hazards that may hurt users physically, psychologically, or financially.
+These hazards may come from poor software implementation, incompatible data, or faulty integration with outside sources.
+The hazard analysis document below aims to identify all hazards and how the team plans to address them.
+
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\wss{You should say what \textbf{loss} could be incurred because of the
-hazards.}
+The hazard analysis document outlines the hazards that may occur while using Flexin'.
+The high level hazards in scope of Flexin' include:
+\begin{itemize}
+    \item \textbf{Physical/Psychological Harm}: Includes injuries that may occur during workouts that users intend to track.
+    Also includes any impacts on mental health caused by the platform, such as addiction (similar to Instagram or TikTok) or feelings of embarrassment/shame for missing goals.
+    \item \textbf{Financial Loss}: It is imperative to note that any interactions with financial markets on Flexin' are not indicative of real market results.
+    Users may take strategies learned on the platform and incur serious financial loss.
+    \item \textbf{Data Mismanagement}: Poor management of user data from database or cybersecurity perspectives may result in data leaks or loss of data.
+    In addition, users improperly providing data can cause over/under rewarding of virtual currency, and can therefore lead to poor learning.
+\end{itemize}
+
+The purpose of the hazard analysis is to identify and mitigate risks that could affect the reliability, correctness and safety of the Flexin' app.
+Conduction of this analysis will allow the team to anticipate failures early, and design around the hazards in a way that prioritizes the safety of the users.
+The findings from this process will inform safety and security requirements, as well as having an impact on compliance and maintainability requirements.
+In addition, this work will contribute to the creation of a fun, safe, and intuitive platform for users to learn about compounding and the importance of fitness and financial literacy.
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+Flexin' will consist of many key components, all of which will come together to create the product.
+These components may not be separate entities, but they are distinct enough to present their own hazards.
 
+\begin{itemize}
+    \item \textbf{Component 1: Account Creation \& Authentication}
+    \begin{itemize}
+        \item \textbf{Purpose:} Manages account creation and authentication for users
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Allow users to create accounts for Flexin'
+            \item Populate the database with the user account to store the created account
+            \item Store authentication key to ensure that only the account owner can log into their Flexin' account
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 2: User Information}
+    \begin{itemize}
+        \item \textbf{Purpose:} Manages user profile data such as name, height, weight, goals, workout data, etc.
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Read and write to the database with user information
+            \item Provide profile data for users
+            \item Allow users to set preferences within Flexin'
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 3: Fitness Device Integrations}
+    \begin{itemize}
+        \item \textbf{Purpose:} Allow Flexin' to connect with users' fitness devices
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Connect with users' devices
+            \item Take data from said devices when relevant
+            \item Ensure that connections with the devices are secure and reliable
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 4: Exercise Data}
+    \begin{itemize}
+        \item \textbf{Purpose:} Track and analyze users' exercise data
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Interact with the data collected from the fitness devices
+            \item Analyze exercise data against user goals
+            \item Read and write to the database with results and analytics
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 5: Currency Attribution}
+    \begin{itemize}
+        \item \textbf{Purpose:} Turn exercise results into virtual currency
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Use the analytics from exercise data
+            \item Compute the correct amount of currency to reward users
+            \item Read and write to the database with users' balances
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 6: Market Simulation}
+    \begin{itemize}
+        \item \textbf{Purpose:} The underlying behaviour of the market in Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Teach users about the effects of compounding
+            \item Mimic proper stock market behaviour
+            \item Incorporate randomness through seeding
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 7: Investment Platform}
+    \begin{itemize}
+        \item \textbf{Purpose:} Allow users to invest in the simulated market with their currency
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Provide users with securities to invest in
+            \item Allow for buying and selling of said securities
+            \item Read and write to the database with investment information
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 8: Social Management}
+    \begin{itemize}
+        \item \textbf{Purpose:} Create a space for users to compete with their friends on Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Manage group creation, validation and invites
+            \item Use the simulated markets randomness to create fair competition
+            \item Read and write to the database with group information
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 9: Database}
+    \begin{itemize}
+        \item \textbf{Purpose:} The single source of truth for all aspects of Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item ACID database that will ensure all data is correct
+            \item Accept reads and writes from components
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Component 10: User Interface \& Experience}
+    \begin{itemize}
+        \item \textbf{Purpose:} Provide users a place to interact with all backend components of Flexin'
+        \item \textbf{Key Functions:}
+        \begin{itemize}
+            \item Manage all user facing screens, navigation, and input
+            \item Ensure that components connect well to create a simple experience
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
 \section{Critical Assumptions}
 
 The below assumptions define the scope of the hazard analysis by stating conditions that are expected to hold.
@@ -171,5 +325,15 @@ whether material was generated by a human or an AI system.}
     appreciable risks of this form), list at least 2 other types of risk in
     software products. Why are they important to consider?
 \end{enumerate}
+
+\begin{thebibliography}{9}
+
+    \bibitem{boisclair2017}
+    D.~Boisclair, A.~Lusardi, and P.-C. Michaud, ``Financial literacy and
+    retirement planning in Canada,'' \emph{Journal of Pension Economics and
+    Finance}, vol.~16, no.~3, pp.~277--296, 2017,
+    doi: 10.1017/S1474747215000311.
+
+\end{thebibliography}
 
 \end{document}
