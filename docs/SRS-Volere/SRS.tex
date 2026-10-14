@@ -248,7 +248,43 @@ Since no ready-made product covers both halves of the problem, the team will
 build \progname{}, reusing the components and ideas listed below.
 
 \subsection{Reusable Components}
-\lips
+
+The following existing components are candidates for reuse. Each must have a
+license compatible with the project's proprietary license, and must be free to
+use within the project's budget.
+
+\begin{description}
+  \item[Fitness data:]\leavevmode
+  \begin{itemize}
+    \item \texttt{react-native-health-connect}, an open-source (MIT) React
+    Native library for reading data from Android Health Connect.
+    \item The Garmin Connect IQ SDK and Strava API for external devices and
+    services.
+  \end{itemize}
+
+  \item[Mobile client:]\leavevmode
+  \begin{itemize}
+    \item React Navigation for moving between screens.
+    \item An open-source React Native charting library for the portfolio graph
+    and activity history. The specific library will be chosen during design.
+  \end{itemize}
+
+  \item[Backend:]\leavevmode
+  \begin{itemize}
+    \item Spring Boot to set up and run the API.
+    \item Spring Security for authentication and access control, rather than
+    writing account security from scratch.
+    \item Spring Data JPA for reading and writing the MySQL database.
+  \end{itemize}
+
+  \item[Market data:] A source of historical or live asset prices for the
+  simulated market. The team will choose it at the Market Decision milestone,
+  and it must allow free use in an educational app.
+
+  \item[Testing and tooling:] JUnit, Detox, ESLint, and GitHub Actions, as
+  listed in the Development Plan.
+\end{description}
+
 \subsection{Products That Can Be Copied}
 \lips
 
