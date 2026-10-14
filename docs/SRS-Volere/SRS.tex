@@ -113,8 +113,286 @@ involved in the Project}
 \lips
 \subsection{Work Partitioning}
 \lips
-\subsection{Specifying a Business Use Case (BUC)}
-\lips
+\subsection{Specifying a BUC}
+
+This section specifies each Flexin Business Use Case (BUC), including
+its goal, actors, trigger, preconditions, main flow, alternative flows,
+and postconditions.
+
+\subsubsection*{BUC 1: User Onboarding}
+
+\textbf{Goal:} Create a user account and initialize their Flexin profile.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens Flexin and selects the registration option.
+
+\textbf{Preconditions:} The application is available and the user does not
+already have an active account.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user submits the required registration details.
+    \item Flexin validates the details and creates the account.
+    \item The user provides any requested baseline goals or preferences.
+    \item Flexin initializes the user's profile and virtual wallet.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If required details are missing or invalid,
+Flexin displays an error and requests corrections. If an account already
+exists, the user is prompted to sign in.
+
+\textbf{Postconditions:} The user account and initial virtual wallet are
+created successfully.
+
+\subsubsection*{BUC 2: Activity Ingestion}
+
+\textbf{Goal:} Retrieve and validate fitness activity data from supported
+integrations.
+
+\textbf{Actors:} End User, Android Health Connect, Garmin Integration.
+
+\textbf{Trigger:} New activity data becomes available or the user initiates
+an activity data synchronization.
+
+\textbf{Preconditions:} The user is registered and has granted the required
+permissions to an available supported integration.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves available activity data from Health Connect or Garmin.
+    \item Flexin validates the data and checks for duplicate activities.
+    \item Valid activities are stored in the user's activity history.
+    \item The application updates the user's activity summary.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If permissions are missing, the user is prompted
+to grant access. If an integration is unavailable or data is invalid,
+Flexin reports the issue without recording the invalid activity.
+
+\textbf{Postconditions:} Valid activity data is stored without duplicate
+records.
+
+\subsubsection*{BUC 3: Currency Allocation}
+
+\textbf{Goal:} Reward eligible physical activity with virtual currency.
+
+\textbf{Actors:} End User, Flexin Reward System.
+
+\textbf{Trigger:} A validated activity satisfies a configured reward threshold.
+
+\textbf{Preconditions:} The user has an active account and the activity has
+been validated.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin evaluates the activity against the reward rules.
+    \item The system calculates the eligible virtual currency reward.
+    \item Flexin credits the user's virtual wallet and records the transaction.
+    \item The user can view the updated balance and reward details.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the activity does not meet the reward
+threshold, no currency is awarded. If the activity has already been
+rewarded, Flexin prevents duplicate crediting.
+
+\textbf{Postconditions:} The wallet balance and transaction ledger reflect
+any eligible reward.
+
+\subsubsection*{BUC 4: Asset Purchase}
+
+\textbf{Goal:} Allow the user to purchase fictional financial assets using
+virtual currency.
+
+\textbf{Actors:} End User, Flexin Market Engine.
+
+\textbf{Trigger:} The user submits a simulated buy order.
+
+\textbf{Preconditions:} The user is registered, the selected asset exists,
+and a valid simulated price is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user selects an asset and enters the purchase quantity.
+    \item Flexin calculates the simulated purchase cost.
+    \item The system verifies that the user has sufficient virtual currency.
+    \item Flexin executes the simulated order and updates the wallet and holdings.
+    \item The completed transaction is recorded and displayed to the user.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the balance is insufficient, the order is
+rejected. If the asset or price is unavailable, the user is informed and
+the transaction is not executed.
+
+\textbf{Postconditions:} For a successful purchase, the virtual balance is
+reduced and the user's asset holdings increase accordingly.
+
+\subsubsection*{BUC 5: Asset Sale}
+
+\textbf{Goal:} Allow the user to sell fictional assets and receive virtual
+currency.
+
+\textbf{Actors:} End User, Flexin Market Engine.
+
+\textbf{Trigger:} The user submits a simulated sell order.
+
+\textbf{Preconditions:} The user holds a sufficient quantity of the selected
+asset and a valid simulated price is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user selects an asset and enters the quantity to sell.
+    \item Flexin calculates the simulated sale proceeds.
+    \item The system verifies that the user holds sufficient units.
+    \item Flexin executes the simulated order and updates the holdings and wallet.
+    \item The completed transaction is recorded and displayed to the user.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the user holds insufficient units or the
+asset price is unavailable, the order is rejected without changing the
+portfolio.
+
+\textbf{Postconditions:} For a successful sale, the user's holdings decrease
+and the corresponding virtual currency is credited.
+
+\subsubsection*{BUC 6: Market Simulation}
+
+\textbf{Goal:} Generate and update fictional asset prices and market events.
+
+\textbf{Actors:} Flexin Market Engine, Flexin Scheduler.
+
+\textbf{Trigger:} A scheduled market simulation cycle begins.
+
+\textbf{Preconditions:} The market engine is operational and fictional assets
+have been initialized.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The scheduler initiates a simulation cycle.
+    \item The engine generates price changes and fictional market events
+    according to the system's simulation rules.
+    \item Flexin updates asset valuations and relevant market information.
+    \item Updated prices and events become available to portfolio and trading
+    functions.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If a simulation cycle fails, Flexin records the
+failure and retains the last valid market state until an update succeeds.
+
+\textbf{Postconditions:} The latest valid fictional asset prices and market
+events are available within Flexin. The engine does not rely on real-world
+financial market data.
+
+\subsubsection*{BUC 7: Portfolio Analytics}
+
+\textbf{Goal:} Present the user with portfolio performance and activity-related
+progress.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens the portfolio analytics view.
+
+\textbf{Preconditions:} The user is registered and portfolio or activity data
+is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves the user's virtual balance, holdings, and transaction
+    history.
+    \item The system calculates portfolio value and performance metrics using
+    simulated asset prices.
+    \item Flexin retrieves relevant activity and reward information.
+    \item The application displays the resulting portfolio and activity summaries.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If insufficient history exists, Flexin displays
+available information and indicates that more data is needed for certain
+metrics.
+
+\textbf{Postconditions:} The user can view their latest available portfolio
+and activity analytics.
+
+\subsubsection*{BUC 8: Financial Education}
+
+\textbf{Goal:} Provide educational guidance relevant to the user's simulated
+investing activity.
+
+\textbf{Actors:} End User, Flexin Educational Rules Engine.
+
+\textbf{Trigger:} The user requests financial guidance or opens an educational
+feature.
+
+\textbf{Preconditions:} The user can access the application.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin identifies the context of the user's request.
+    \item The educational rules engine selects relevant educational content.
+    \item Flexin presents explanations or guidance to the user.
+    \item The user reviews the content and may return to the application.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If no specific guidance matches the request,
+Flexin presents general educational content.
+
+\textbf{Postconditions:} Relevant educational content is displayed. Guidance
+is educational and does not execute trades on the user's behalf.
+
+\subsubsection*{BUC 9: Community Leaderboard}
+
+\textbf{Goal:} Allow users to view community rankings based on eligible
+activity or simulated portfolio metrics.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens the community leaderboard.
+
+\textbf{Preconditions:} The user has access to Flexin and has enabled any
+participation required for their own information to appear in rankings.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves eligible ranking data from participating users.
+    \item The system calculates or retrieves rankings using the configured metrics.
+    \item The application displays the leaderboard and its ranking criteria.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the user has opted out or no ranking data is
+available, Flexin displays the available leaderboard information without
+including the user's opted-out data.
+
+\textbf{Postconditions:} The user can view the available community rankings
+in accordance with participation and privacy settings.
+
+\subsubsection*{BUC 10: Notifications}
+
+\textbf{Goal:} Notify users about relevant activity rewards, reminders, and
+simulated market events.
+
+\textbf{Actors:} End User, Flexin Notification Service, Android Device and OS.
+
+\textbf{Trigger:} A configured reminder, eligible reward, or relevant
+simulated market event occurs.
+
+\textbf{Preconditions:} The relevant event or schedule exists, and the user
+has enabled the applicable notifications and granted any required device
+permissions.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin identifies the event and determines whether a notification
+    should be sent.
+    \item The system generates a notification containing relevant information.
+    \item Flexin sends the notification through the supported device mechanism.
+    \item The user receives the notification if device settings and permissions
+    permit delivery.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If notifications are disabled or delivery fails,
+Flexin does not guarantee delivery and may retain the event for in-app display.
+
+\textbf{Postconditions:} The notification is submitted for delivery or the
+delivery failure is handled according to the system's notification rules.
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
