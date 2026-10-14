@@ -385,7 +385,32 @@ finalized.
 \end{description}
 
 \subsection{Capacity Requirements}
-\lips
+
+\begin{description}
+  \item[PR-C1: Users]\leavevmode
+  \begin{description}
+    \item[Description:] The system shall support at least 500 registered users,
+    with at least 100 using the app at the same time, without breaking the
+    speed requirements above.
+    \item[Rationale:] This covers the expected load during user testing, the
+    final demo, and the Capstone EXPO, where many people may try the app at
+    once.
+    \item[Fit Criterion:] A load test with 100 simulated concurrent users meets
+    PR-SL2 and PR-SL3.
+  \end{description}
+
+  \item[PR-C2: History]\leavevmode
+  \begin{description}
+    \item[Description:] The system shall store at least two years of activity
+    and trade history for each user.
+    \item[Rationale:] Compounding only shows up over long periods, so users
+    need to be able to look back over their history.
+    \item[Fit Criterion:] A test account loaded with two years of daily
+    activity and weekly trades can display its full history, and its screens
+    still meet PR-SL2.
+  \end{description}
+\end{description}
+
 \subsection{Scalability or Extensibility Requirements}
 \lips
 \subsection{Longevity Requirements}
