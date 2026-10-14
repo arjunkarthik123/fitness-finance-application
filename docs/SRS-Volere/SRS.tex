@@ -457,7 +457,30 @@ finalized.
 \end{description}
 
 \subsection{Longevity Requirements}
-\lips
+
+\begin{description}
+  \item[PR-L1: Supported Android versions]\leavevmode
+  \begin{description}
+    \item[Description:] The app shall target the Android version that Google
+    Play requires for new apps at the time of release, and keep working on
+    Android versions released through the end of the capstone in April 2027.
+    \item[Rationale:] Google Play stops accepting apps that target old Android
+    versions, and the app must stay usable for the final demo and the EXPO.
+    \item[Fit Criterion:] The release build meets Google Play's target version
+    requirement and passes the test suite on the newest Android version
+    available in April 2027.
+  \end{description}
+
+  \item[PR-L2: Keeping user history]\leavevmode
+  \begin{description}
+    \item[Description:] Activity and portfolio history shall be kept for as
+    long as the user's account exists, unless the user deletes it.
+    \item[Rationale:] The product teaches that habits pay off over years.
+    Deleting old history would remove the evidence of that.
+    \item[Fit Criterion:] The system has no automatic deletion of history for
+    active accounts.
+  \end{description}
+\end{description}
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
