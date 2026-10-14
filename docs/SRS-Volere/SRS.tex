@@ -77,7 +77,84 @@ Date 2 & 1.1 & Notes\\
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+
+The constraints below limit how the product can be built. They come from
+decisions recorded in the Problem Statement and the Development Plan, and the
+design must satisfy them.
+
+\begin{description}
+  \item[SC1: Android platform]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall run as a native mobile application
+    on Android phones.
+    \item[Rationale:] The team narrowed the scope from multiple operating
+    systems to Android only so the product can be finished to a high standard
+    within the capstone timeline. Support for iOS and other platforms is a
+    stretch goal.
+    \item[Fit Criterion:] The application installs and runs all core features
+    on an Android phone.
+  \end{description}
+
+  \item[SC2: Frontend technology]\leavevmode
+  \begin{description}
+    \item[Description:] The mobile client shall be written in TypeScript using
+    the React Native framework.
+    \item[Rationale:] The team agreed on this stack in the Development Plan,
+    based on the members' existing experience. React Native also leaves room
+    for an iOS build later without rewriting the client.
+    \item[Fit Criterion:] All client source code is TypeScript built on React
+    Native.
+  \end{description}
+
+  \item[SC3: Backend technology]\leavevmode
+  \begin{description}
+    \item[Description:] The backend API shall be built in Java with the Spring
+    framework, and persistent data shall be stored in a MySQL relational
+    database.
+    \item[Rationale:] Chosen in the Development Plan. A relational database
+    keeps user, transaction, and portfolio records structured and quick to
+    query.
+    \item[Fit Criterion:] The API is a Spring application and all persistent
+    application data lives in a MySQL database.
+  \end{description}
+
+  \item[SC4: Fitness data sources]\leavevmode
+  \begin{description}
+    \item[Description:] Activity data shall be read automatically from the
+    phone's built-in health data. Data from external devices such as fitness
+    watches or heart rate monitors shall only be read through an SDK or API
+    published by the device's manufacturer.
+    \item[Rationale:] Automatic tracking avoids manual entry, which users could
+    inflate to earn currency. Using official manufacturer interfaces keeps the
+    integration supported and within the manufacturer's terms of use.
+    \item[Fit Criterion:] The product has no feature for manually entering step
+    counts, and every external device integration uses a documented SDK or API
+    from that device's manufacturer.
+  \end{description}
+
+  \item[SC5: Simulated market only]\leavevmode
+  \begin{description}
+    \item[Description:] All trading shall take place in a simulated market
+    using virtual currency. The product shall not handle real money, connect
+    to a brokerage, or let users convert virtual currency into cash.
+    \item[Rationale:] The goal is to teach how investments grow, not to run a
+    trading platform. Handling real money or real trades would bring financial
+    regulation that is outside the scope of a capstone project.
+    \item[Fit Criterion:] No feature of the product accepts, stores, or pays
+    out real money, and no trade is sent to a real exchange or broker.
+  \end{description}
+
+  \item[SC6: Distribution]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall be distributed to users through the
+    Android application store.
+    \item[Rationale:] The Problem Statement specifies that distribution is
+    handled by the device's application store, which also handles installs and
+    updates.
+    \item[Fit Criterion:] The release build meets the store's publishing
+    requirements and can be installed from it.
+  \end{description}
+\end{description}
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
