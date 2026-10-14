@@ -156,7 +156,25 @@ design must satisfy them.
   \end{description}
 \end{description}
 \subsection{Implementation Environment of the Current System}
-\lips
+
+\progname{} is a new product and does not replace an existing system. Today,
+people who want to build both habits use separate tools: a fitness tracker or
+the phone's own health app for activity, and a stock market simulator or a real
+brokerage for investing. Nothing links the two.
+
+The product will run on the environment its users already have:
+
+\begin{itemize}
+  \item An Android phone with Health Connect, which collects activity data from
+  the phone's sensors and from other fitness apps the user has installed.
+  \item Optionally, a wearable such as a Garmin watch, or an account with a
+  fitness service such as Strava.
+  \item A mobile data or Wi-Fi connection to reach the \progname{} backend.
+\end{itemize}
+
+The backend (Spring API and MySQL database, see SC3) will be hosted on servers
+run by the team.
+
 \subsection{Partner or Collaborative Applications}
 \lips
 \subsection{Off-the-Shelf Software}
