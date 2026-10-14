@@ -216,7 +216,23 @@ included in proprietary software, since the project uses a proprietary
 license (see Section~\ref{sec:enterprise}).
 
 \subsection{Anticipated Workplace Environment}
-\lips
+
+\progname{} is used on the user's phone, wherever they are. That affects
+the design in a few ways:
+
+\begin{itemize}
+  \item Users will often check the app in short sessions, for example after a
+  walk or workout, while outdoors, or while moving. Key screens need to be
+  readable on a small screen in bright light and usable with one hand.
+  \item The connection may be slow or drop out. Activity data must not be lost
+  when the phone is offline; it should sync once the connection returns.
+  \item Users will not have a manual or training. The interface has to explain
+  financial terms itself, in line with the goal of a simple and delightful user
+  experience.
+  \item Step counting runs in the background through Health Connect, so the
+  app must not drain the battery noticeably during a normal day.
+\end{itemize}
+
 \subsection{Schedule Constraints}
 \lips
 \subsection{Budget Constraints}
