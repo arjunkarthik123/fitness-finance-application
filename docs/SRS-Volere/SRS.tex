@@ -153,8 +153,56 @@ involved in the Project}
 \lips
 
 \section{Performance Requirements}
+
+Unless stated otherwise, the timing requirements in this section are measured
+on a mid-range Android phone (one released within the last four years) with a
+typical mobile data or Wi-Fi connection.
+
 \subsection{Speed and Latency Requirements}
-\lips
+
+\begin{description}
+  \item[PR-SL1: App launch]\leavevmode
+  \begin{description}
+    \item[Description:] The app shall show the home screen within 3 seconds of
+    being opened from a closed state.
+    \item[Rationale:] Users will mostly open the app for short check-ins, such
+    as after a walk or workout. A slow start makes those check-ins less likely.
+    \item[Fit Criterion:] Across 20 cold starts on the reference phone, the
+    home screen appears in 3 seconds or less in at least 19 of them.
+  \end{description}
+
+  \item[PR-SL2: Response to input]\leavevmode
+  \begin{description}
+    \item[Description:] The app shall respond to a tap or navigation action
+    within 1 second.
+    \item[Rationale:] Supports the goal of a simple and delightful user
+    experience. Delays longer than about a second make an app feel broken.
+    \item[Fit Criterion:] At least 95\% of measured screen transitions and
+    button responses complete within 1 second.
+  \end{description}
+
+  \item[PR-SL3: Trades]\leavevmode
+  \begin{description}
+    \item[Description:] After a user confirms a buy or sell order, the updated
+    holdings and currency balance shall be shown within 2 seconds.
+    \item[Rationale:] Users need to see the result of a trade straight away to
+    connect the action with its effect on their portfolio.
+    \item[Fit Criterion:] At least 95\% of test trades show the updated
+    portfolio within 2 seconds of confirmation.
+  \end{description}
+
+  \item[PR-SL4: Activity sync]\leavevmode
+  \begin{description}
+    \item[Description:] When the app is opened, activity recorded since the
+    last sync shall be read and turned into currency within 10 seconds.
+    \item[Rationale:] The reward has to feel tied to the activity that earned
+    it. The whole point of the product is to make a distant payoff feel
+    immediate.
+    \item[Fit Criterion:] In testing, the currency balance reflects all
+    activity available in Health Connect within 10 seconds of opening the app.
+  \end{description}
+\end{description}
+
 \subsection{Safety-Critical Requirements}
 \lips
 \subsection{Precision or Accuracy Requirements}
