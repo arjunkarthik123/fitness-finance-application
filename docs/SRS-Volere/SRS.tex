@@ -7,6 +7,7 @@
 \documentclass[12pt]{article}
 
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{hyperref}
 \hypersetup{
@@ -252,7 +253,59 @@ Inhibit the New Product}
 \subsection{User Documentation Requirements}
 \lips
 \subsection{Training Requirements}
-\lips
+
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{|p{0.11\textwidth}|p{0.20\textwidth}|p{0.58\textwidth}|}
+\caption{Flexin Training Requirements}
+\label{tab:flexin-training}\\
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+
+\caption[]{Flexin Training Requirements (Continued)}\\
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{|r|}{\emph{Continued on next page}}\\
+\hline
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+TRN-01 &
+Zero-Training Design &
+\textbf{Description:} Flexin shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
+\newline\textbf{Rationale:} Intuitive navigation reduces onboarding effort and encourages continued use.
+\newline\textbf{Fit Criterion:} At least 90\% of first-time test users shall register, connect a fitness data source, and view their dashboard within 3 minutes without assistance. \\
+\hline
+
+TRN-02 &
+Interactive Onboarding &
+\textbf{Description:} After account creation, Flexin shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
+\newline\textbf{Rationale:} Guided interaction introduces the application's core features through practical examples.
+\newline\textbf{Fit Criterion:} The walkthrough shall take under 90 seconds, provide a visible ``Skip Tour'' option on every step, and remain accessible through settings. \\
+\hline
+
+TRN-03 &
+Progressive Feature Discovery &
+\textbf{Description:} Flexin shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
+\newline\textbf{Rationale:} Gradual feature discovery reduces cognitive overload for novice users.
+\newline\textbf{Fit Criterion:} Advanced trading indicators and portfolio analytics shall remain collapsed or secondary until the user completes an initial trade or logs at least three days of physical activity. \\
+\hline
+
+TRN-04 &
+Demonstrator Quick-Start Kit &
+\textbf{Description:} The team shall provide a demonstrator guide and automated demo-data seeding script for project evaluations and presentations.
+\newline\textbf{Rationale:} Preloaded data enables evaluators to verify application features without completing real-time workouts.
+\newline\textbf{Fit Criterion:} A preset configuration or debug toggle shall load 30 days of simulated activity and portfolio history within 10 seconds, enabling demonstrations of trading and compounding charts. \\
+
+\end{longtable}
 
 \section{Waiting Room}
 \lips
