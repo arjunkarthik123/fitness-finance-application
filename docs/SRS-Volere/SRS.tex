@@ -176,7 +176,25 @@ The backend (Spring API and MySQL database, see SC3) will be hosted on servers
 run by the team.
 
 \subsection{Partner or Collaborative Applications}
-\lips
+
+The product depends on the following external applications for fitness data.
+Each integration must follow the provider's developer terms and permission
+model (see SC4).
+
+\begin{description}
+  \item[Health Connect (Android):] The main source of step counts and workout
+  data. The user must grant \progname{} permission to read each data type.
+  \item[Garmin Connect IQ:] Gives access to activity data from Garmin watches
+  for users who own one.
+  \item[Strava API:] Gives access to runs, rides, and other activities logged
+  in Strava, after the user authorizes \progname{} on their Strava account.
+\end{description}
+
+The product also needs a source of asset prices for the simulated market. The
+team will choose it at the Market Decision milestone in Week 6 (see
+Section~\ref{sec:schedule}). Whatever source is chosen must allow use in an
+educational application at no cost to the team.
+
 \subsection{Off-the-Shelf Software}
 \lips
 \subsection{Anticipated Workplace Environment}
