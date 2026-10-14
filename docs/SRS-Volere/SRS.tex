@@ -287,7 +287,53 @@ finalized.
 \end{description}
 
 \subsection{Precision or Accuracy Requirements}
-\lips
+
+\begin{description}
+  \item[PR-PA1: Exact money values]\leavevmode
+  \begin{description}
+    \item[Description:] Currency balances, prices, and trade amounts shall be
+    stored and calculated as exact decimal values, not floating-point numbers,
+    and shown to two decimal places.
+    \item[Rationale:] Floating-point rounding errors build up over many trades
+    and would show users balances that do not add up.
+    \item[Fit Criterion:] After a scripted sequence of 1,000 trades, the
+    stored balance matches the expected balance exactly.
+  \end{description}
+
+  \item[PR-PA2: Consistent currency awards]\leavevmode
+  \begin{description}
+    \item[Description:] The currency awarded for a set of activity data shall
+    follow the published conversion rules exactly, and the same data shall
+    always earn the same amount.
+    \item[Rationale:] Users must be able to trust that effort is rewarded
+    fairly, and the team must be able to check that it is.
+    \item[Fit Criterion:] For a set of test activity records, the awarded
+    currency matches the amount calculated by hand from the conversion rules.
+  \end{description}
+
+  \item[PR-PA3: No double counting]\leavevmode
+  \begin{description}
+    \item[Description:] Activity reported by more than one source, such as the
+    phone and a watch both counting the same steps, shall be counted only once.
+    \item[Rationale:] Counting the same steps twice would over-reward users who
+    own more devices, which the Hazard Analysis lists as a cause of poor
+    learning.
+    \item[Fit Criterion:] When the same walk is recorded by two sources, the
+    currency earned equals the amount for one recording.
+  \end{description}
+
+  \item[PR-PA4: Portfolio value]\leavevmode
+  \begin{description}
+    \item[Description:] The displayed portfolio value shall equal the sum of
+    each holding's quantity times its current simulated price, plus uninvested
+    currency.
+    \item[Rationale:] The portfolio graph is the main tool for teaching
+    compounding, so it has to be correct.
+    \item[Fit Criterion:] For test portfolios, the displayed value matches the
+    value calculated by hand to the cent.
+  \end{description}
+\end{description}
+
 \subsection{Robustness or Fault-Tolerance Requirements}
 \lips
 \subsection{Capacity Requirements}
