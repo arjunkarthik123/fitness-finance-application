@@ -335,7 +335,55 @@ finalized.
 \end{description}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
-\lips
+
+\begin{description}
+  \item[PR-RFT1: Offline activity]\leavevmode
+  \begin{description}
+    \item[Description:] Activity recorded while the phone is offline, or while
+    the app is closed, shall be credited the next time the app syncs, for gaps
+    of up to 7 days.
+    \item[Rationale:] Users exercise in places without signal and will not
+    open the app every day. Losing that activity would discourage them.
+    \item[Fit Criterion:] Activity recorded during a 7-day gap with no syncing
+    is fully credited at the next sync.
+  \end{description}
+
+  \item[PR-RFT2: Atomic trades]\leavevmode
+  \begin{description}
+    \item[Description:] A trade shall either complete fully, updating both the
+    currency balance and the holdings, or not happen at all.
+    \item[Rationale:] A trade that fails halfway could take a user's currency
+    without giving them the asset, or the other way around.
+    \item[Fit Criterion:] When the connection or server is cut during a test
+    trade, the balance and holdings afterwards match either the state before
+    the trade or the state after it.
+  \end{description}
+
+  \item[PR-RFT3: Failing data sources]\leavevmode
+  \begin{description}
+    \item[Description:] If a fitness data source is unavailable or returns
+    invalid data, the app shall keep working with its other sources, tell the
+    user which source has a problem, and credit no currency for the invalid
+    data.
+    \item[Rationale:] Outages at Garmin, Strava, or Health Connect are outside
+    the team's control and should not make the whole app unusable.
+    \item[Fit Criterion:] With one source disabled or returning malformed data
+    in testing, the app stays usable, shows a message naming that source, and
+    awards nothing for the bad data.
+  \end{description}
+
+  \item[PR-RFT4: Backend unavailable]\leavevmode
+  \begin{description}
+    \item[Description:] If the backend cannot be reached, the app shall show
+    the last data it received, marked as possibly out of date, instead of
+    crashing or showing empty screens.
+    \item[Rationale:] Users on poor connections should still be able to see
+    their progress.
+    \item[Fit Criterion:] With the backend stopped, the app opens, shows the
+    last known balance and portfolio, and displays an offline notice.
+  \end{description}
+\end{description}
+
 \subsection{Capacity Requirements}
 \lips
 \subsection{Scalability or Extensibility Requirements}
