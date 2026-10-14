@@ -412,7 +412,50 @@ finalized.
 \end{description}
 
 \subsection{Scalability or Extensibility Requirements}
-\lips
+
+\begin{description}
+  \item[PR-SE1: Adding fitness sources]\leavevmode
+  \begin{description}
+    \item[Description:] A new fitness data source shall be addable without
+    changing the currency conversion logic.
+    \item[Rationale:] The team expects to add device integrations over time,
+    and the Problem Statement lists integration with existing fitness
+    technologies as a goal.
+    \item[Fit Criterion:] Adding a new source only requires changes inside the
+    integration module.
+  \end{description}
+
+  \item[PR-SE2: Adding asset types]\leavevmode
+  \begin{description}
+    \item[Description:] New types of assets shall be addable to the simulated
+    market without changing the trading logic.
+    \item[Rationale:] The product starts with stocks, bonds, and ETFs, and
+    other asset types may be added later.
+    \item[Fit Criterion:] Adding a new asset type only requires new market
+    data and configuration, not changes to the buy and sell code.
+  \end{description}
+
+  \item[PR-SE3: More server capacity]\leavevmode
+  \begin{description}
+    \item[Description:] The backend API shall keep no per-user state between
+    requests, so more instances can be run if the number of users grows.
+    \item[Rationale:] If the product continues after the capstone, as the
+    business plan explores, it will need to serve more users than PR-C1.
+    \item[Fit Criterion:] Two API instances running against the same database
+    give the same results as one.
+  \end{description}
+
+  \item[PR-SE4: Other platforms]\leavevmode
+  \begin{description}
+    \item[Description:] Code that depends on Android-only features shall be
+    kept separate from the rest of the client.
+    \item[Rationale:] Support for iOS is a stretch goal, and keeping
+    Android-specific code separate keeps that option open.
+    \item[Fit Criterion:] All calls to Android-only APIs are in a clearly
+    marked platform layer.
+  \end{description}
+\end{description}
+
 \subsection{Longevity Requirements}
 \lips
 
