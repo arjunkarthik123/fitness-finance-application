@@ -204,7 +204,88 @@ typical mobile data or Wi-Fi connection.
 \end{description}
 
 \subsection{Safety-Critical Requirements}
-\lips
+
+\progname{} does not control physical equipment, so none of its failures can
+directly injure someone. The Hazard Analysis does identify ways the product
+could encourage harm, and the requirements below address them. They will be
+traced to the safety requirements in the Hazard Analysis once those are
+finalized.
+
+\begin{description}
+  \item[PR-SC1: Daily earning cap]\leavevmode
+  \begin{description}
+    \item[Description:] The amount of currency a user can earn from activity
+    in one day shall be capped.
+    \item[Rationale:] Without a cap, the product would reward users for
+    exercising past safe limits to earn more.
+    \item[Fit Criterion:] No amount of activity recorded in a single day earns
+    more than the daily cap.
+  \end{description}
+
+  \item[PR-SC2: No penalties for missed days]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall not take away currency or holdings
+    when a user misses a goal or a day of activity.
+    \item[Rationale:] The Hazard Analysis lists shame over missed goals as a
+    psychological hazard. Losing earned progress would make that worse, and
+    could push users to exercise while injured or unwell.
+    \item[Fit Criterion:] No feature of the product reduces a user's balance
+    or holdings because of inactivity.
+  \end{description}
+
+  \item[PR-SC3: Simulated market is labelled]\leavevmode
+  \begin{description}
+    \item[Description:] Every screen that shows prices, holdings, or returns
+    shall state that the market is simulated and that results do not predict
+    real returns.
+    \item[Rationale:] The Hazard Analysis lists financial loss from users
+    applying strategies from the app to real markets.
+    \item[Fit Criterion:] A review of every market and portfolio screen finds
+    the notice visible on each one.
+  \end{description}
+
+  \item[PR-SC4: Not financial advice]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall state that its content is for
+    education only and is not financial advice. The statement shall be shown
+    during sign-up, where the user must acknowledge it before continuing, and
+    shall stay available from the settings screen. Lessons, tips, and any other
+    content that discusses investing shall not recommend specific real-world
+    investments to a user.
+    \item[Rationale:] The Hazard Analysis lists financial loss from users
+    acting on what they learn in the app. \progname{} is not a licensed
+    financial advisor, so users must understand that nothing in the app is
+    personal advice about their real money.
+    \item[Fit Criterion:] A new account cannot be created without
+    acknowledging the statement, the statement can be reached from settings,
+    and a review of all educational content finds no recommendations to buy
+    or sell specific real-world investments.
+  \end{description}
+
+  \item[PR-SC5: Exercise injury warning]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall warn users that physical activity
+    carries a risk of injury, that they should exercise within their own
+    limits, and that they should consult a doctor before starting a new
+    exercise routine if they have health concerns. The product's terms of use
+    shall state that users exercise at their own risk and that the
+    \progname{} team is not responsible for any injury that happens while
+    using the app. The user must acknowledge both during sign-up before
+    continuing.
+    \item[Rationale:] The product rewards physical activity, so some users
+    will exercise more because of it. The Hazard Analysis assumes users only
+    attempt exercises they are able to do safely, and places injuries from
+    exercise outside the product's control. Users need to be told this
+    directly. The responsibility statement is a legal matter as well as a
+    safety one, so it should also be listed under the Legal Requirements in
+    Compliance Requirements, and its exact wording should be checked against
+    the course's guidance before release.
+    \item[Fit Criterion:] A new account cannot be created without
+    acknowledging the injury warning and the terms of use, and both can be
+    reached from the settings screen at any time.
+  \end{description}
+\end{description}
+
 \subsection{Precision or Accuracy Requirements}
 \lips
 \subsection{Robustness or Fault-Tolerance Requirements}
