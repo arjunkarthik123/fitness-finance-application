@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -112,7 +113,82 @@ involved in the Project}
 \subsection{The Context of the Work}
 \lips
 \subsection{Work Partitioning}
-\lips
+
+Work partitioning divides the Flexin system into Business Use Cases
+(BUCs), each representing a business event that the system must handle.
+These use cases cover user onboarding, fitness data integration,
+virtual currency allocation, simulated investing, financial education,
+and user engagement. Table~\ref{tab:flexin-business-events} summarizes
+the business events, their triggers, expected outcomes, and associated
+use cases.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\textwidth}{
+        |p{1.2cm}|X|X|p{3.2cm}|}
+        \hline
+        \textbf{Event} &
+        \textbf{Business Event / Trigger} &
+        \textbf{Result / Output} &
+        \textbf{Associated BUC} \\
+        \hline
+        BE-01 &
+        User registers and submits baseline goals &
+        Account and virtual wallet initialized &
+        BUC 1: User Onboarding \\
+        \hline
+        BE-02 &
+        Activity data arrives from Health Connect or Garmin &
+        Validated activity log updated &
+        BUC 2: Activity Ingestion \\
+        \hline
+        BE-03 &
+        User achieves an activity reward threshold &
+        Virtual currency credited &
+        BUC 3: Currency Allocation \\
+        \hline
+        BE-04 &
+        User submits a simulated buy order &
+        Asset holdings and virtual balance updated &
+        BUC 4: Asset Purchase \\
+        \hline
+        BE-05 &
+        User submits a simulated sell order &
+        Holdings reduced and sale proceeds credited &
+        BUC 5: Asset Sale \\
+        \hline
+        BE-06 &
+        Scheduled market simulation cycle begins &
+        Fictional asset prices and valuations updated &
+        BUC 6: Market Simulation \\
+        \hline
+        BE-07 &
+        User requests portfolio analytics &
+        Portfolio growth and activity contributions displayed &
+        BUC 7: Portfolio Analytics \\
+        \hline
+        BE-08 &
+        User requests financial guidance &
+        Contextual educational content displayed &
+        BUC 8: Financial Education \\
+        \hline
+        BE-09 &
+        User accesses community rankings &
+        Opt-in leaderboard displayed &
+        BUC 9: Community Leaderboard \\
+        \hline
+        BE-10 &
+        Reminder schedule or simulated market event is triggered &
+        Relevant notification delivered &
+        BUC 10: Notifications \\
+        \hline
+    \end{tabularx}
+    \caption{Flexin Business Events and Associated Use Cases}
+    \label{tab:flexin-business-events}
+\end{table}
+
 \subsection{Specifying a Business Use Case (BUC)}
 \lips
 
