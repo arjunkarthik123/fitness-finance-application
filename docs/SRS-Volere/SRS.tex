@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -192,7 +193,47 @@ involved in the Project}
 \subsection{Access Requirements}
 \lips
 \subsection{Integrity Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-INT-01 &
+Activity Validation &
+\textbf{Description:} The Spring backend shall validate activity metrics and detect duplicate records, overlapping timestamps, and implausible activity values before awarding virtual currency.
+
+\textbf{Rationale:} Validation prevents activity manipulation and unauthorized currency generation.
+
+\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above 250 steps per minute shall be flagged for verification. \\
+\hline
+
+SEC-INT-02 &
+Ledger Consistency &
+\textbf{Description:} All virtual currency operations, including rewards, trades, and dividends, shall use ACID-compliant MySQL transactions.
+
+\textbf{Rationale:} Transactional consistency prevents duplicate rewards, negative balances, and partial updates.
+
+\textbf{Fit Criterion:} Stress tests with 100 concurrent trade requests against one wallet shall verify that every operation commits consistently or rolls back completely, without partial state changes. \\
+\hline
+
+SEC-INT-03 &
+Server-Side Valuation &
+\textbf{Description:} The Spring backend and custom market engine shall determine asset prices, portfolio valuations, and currency calculations. The mobile client shall not control authoritative values.
+
+\textbf{Rationale:} Server-side calculations prevent client manipulation of prices and balances.
+
+\textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. \\
+\hline
+
+\end{xltabular}
 \subsection{Privacy Requirements}
 \lips
 \subsection{Audit Requirements}
