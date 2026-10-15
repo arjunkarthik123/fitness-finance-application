@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -196,7 +197,38 @@ involved in the Project}
 \subsection{Privacy Requirements}
 \lips
 \subsection{Audit Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-AUD-01 &
+Economic Event Logging &
+\textbf{Description:} Flexin shall maintain an append-only audit ledger for currency rewards, simulated trades, dividends, and market price updates.
+
+\textbf{Rationale:} Auditable records support troubleshooting, transaction verification, and evaluation of the simulated economy.
+
+\textbf{Fit Criterion:} Database permissions shall prevent UPDATE and DELETE operations on audit records. Every recorded transaction shall reference a valid source activity or market event, where applicable. \\
+\hline
+
+SEC-AUD-02 &
+Security Event Logging &
+\textbf{Description:} The backend shall log failed authentication, token validation failures, duplicate activity submissions, anti-exploit flags, and runtime exceptions.
+
+\textbf{Rationale:} Security logs help identify suspicious activity and diagnose integration or system failures.
+
+\textbf{Fit Criterion:} Structured logs shall capture severity, client IP address where available, authenticated user ID where applicable, and exception details for runtime errors. \\
+\hline
+
+\end{xltabular}
 \subsection{Immunity Requirements}
 \lips
 
