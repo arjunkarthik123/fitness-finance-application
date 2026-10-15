@@ -8,7 +8,9 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
+\usepackage{array}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
       colorlinks=true,      % false: boxed links; true: colored links
@@ -190,7 +192,47 @@ involved in the Project}
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-ACC-01 &
+Authentication and Sessions &
+\textbf{Description:} Users shall authenticate before accessing personal fitness data, portfolios, or transactions. The React Native client shall authenticate with the Spring API using secure token-based sessions.
+
+\textbf{Rationale:} Authentication protects personal data and virtual assets from unauthorized access.
+
+\textbf{Fit Criterion:} All protected API endpoints shall reject missing or invalid access tokens with HTTP 401. Access tokens shall expire within 60 minutes, with refresh or re-authentication required. \\
+\hline
+
+SEC-ACC-02 &
+Role-Based Authorization &
+\textbf{Description:} Role-based access control shall restrict users to their own records and limit administrative or evaluator access to authorized functions.
+
+\textbf{Rationale:} Access restrictions prevent unauthorized modifications and cross-account data exposure.
+
+\textbf{Fit Criterion:} JUnit security tests shall confirm that attempts by standard users to access or modify another user's records return HTTP 403 in all tested cases. \\
+\hline
+
+SEC-ACC-03 &
+Fitness Integration Authorization &
+\textbf{Description:} Flexin shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored using secure, Android Keystore-backed storage.
+
+\textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
+
+\textbf{Fit Criterion:} Integration tokens shall use Android Keystore-backed secure storage. No credentials, tokens, or secrets shall be committed to the project repository. \\
+\hline
+
+\end{xltabular}
 \subsection{Integrity Requirements}
 \lips
 \subsection{Privacy Requirements}
