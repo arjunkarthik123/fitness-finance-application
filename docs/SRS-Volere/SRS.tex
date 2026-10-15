@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -198,7 +199,47 @@ involved in the Project}
 \subsection{Audit Requirements}
 \lips
 \subsection{Immunity Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-IMM-01 &
+Injection Defense &
+\textbf{Description:} The backend and database layer shall be protected against SQL injection, cross-site scripting (XSS), and command injection.
+
+\textbf{Rationale:} Injection vulnerabilities could compromise database integrity and expose user information.
+
+\textbf{Fit Criterion:} Database access shall use parameterized queries or prepared statements. Static analysis and security reviews shall identify zero unresolved high-severity injection vulnerabilities before release. \\
+\hline
+
+SEC-IMM-02 &
+Rate Limiting &
+\textbf{Description:} The Spring API shall limit request rates for authentication, trade submission, and activity synchronization endpoints.
+
+\textbf{Rationale:} Rate limiting reduces brute-force attempts, automated abuse, and service overload.
+
+\textbf{Fit Criterion:} A configured limit, initially 60 requests per minute per authenticated user or client IP, shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. \\
+\hline
+
+SEC-IMM-03 &
+Client Environment Validation &
+\textbf{Description:} The Android client shall detect supported indicators of rooted or otherwise untrusted environments and restrict sensitive functionality when tampering is detected outside developer builds.
+
+\textbf{Rationale:} Compromised environments can increase the risk of credential exposure and activity manipulation.
+
+\textbf{Fit Criterion:} In supported production configurations, detected root or tampering indicators shall trigger restrictions on community leaderboard access and virtual currency minting. Developer builds shall remain available for authorized testing. \\
+\hline
+
+\end{xltabular}
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
