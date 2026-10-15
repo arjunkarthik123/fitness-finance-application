@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -194,7 +195,47 @@ involved in the Project}
 \subsection{Integrity Requirements}
 \lips
 \subsection{Privacy Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-PRV-01 &
+Health Data Protection &
+\textbf{Description:} Sensitive personal information and fitness telemetry shall be protected through encryption in transit and at rest.
+
+\textbf{Rationale:} Encryption protects confidential user information against unauthorized disclosure.
+
+\textbf{Fit Criterion:} Client-server communications shall use TLS 1.3. Sensitive biometric data stored in MySQL shall be encrypted at rest using AES-256. \\
+\hline
+
+SEC-PRV-02 &
+Opt-In Community Sharing &
+\textbf{Description:} Leaderboard participation shall be opt-in. Users may share activity streaks and simulated portfolio returns using a chosen alias.
+
+\textbf{Rationale:} Users should control whether their activity and simulated financial performance are visible to others.
+
+\textbf{Fit Criterion:} Leaderboard sharing shall be disabled by default. Enabling it shall require explicit consent and disclose which pseudonymous information and statistics will be shared. \\
+\hline
+
+SEC-PRV-03 &
+User Data Deletion &
+\textbf{Description:} Users shall be able to request account deletion through the application settings, removing associated personal records.
+
+\textbf{Rationale:} Users should retain control over their personal information and account history.
+
+\textbf{Fit Criterion:} Personal health metrics, credentials, and fitness history shall be purged from the active database within 24 hours of a deletion request. Only appropriately anonymized transaction aggregates may be retained for auditing. \\
+\hline
+
+\end{xltabular}
 \subsection{Audit Requirements}
 \lips
 \subsection{Immunity Requirements}
