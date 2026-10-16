@@ -174,7 +174,22 @@ involved in the Project}
 \subsection{Wider Environment Requirements}
 \lips
 \subsection{Requirements for Interfacing with Adjacent Systems}
-\lips
+Many outside systems will be used:
+\begin{itemize}
+    \item HTTPS connection to external APIs
+    \begin{enumerate}
+        \item External Technology Connection (e.g., Garmin API, Strava SDK)
+        \item Software-specific API for health-related tracking (Android Health Connect)
+    \end{enumerate}
+    \item HTTPS connection to internal APIs
+    \begin{enumerate}
+        \item Java SpringBoot API for storing user data and retrieving from the database
+    \end{enumerate}
+    \item Database Connection
+    \begin{enumerate}
+        \item Privately hosted MySQL server
+    \end{enumerate}
+\end{itemize}
 \subsection{Productization Requirements}
 \lips
 \subsection{Release Requirements}
