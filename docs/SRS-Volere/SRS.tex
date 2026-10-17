@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -208,7 +209,83 @@ involved in the Project}
 \subsection{Legal Requirements}
 \lips
 \subsection{Standards Compliance Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+COMP-STD-01 & 
+Android Platform Compliance & 
+\textbf{Description:} The system shall comply with the Google Play Developer Program Policies. 
+
+\textbf{Rationale:} The application is intended to be deployed on the Google Play Store as to be accessible on Android devices and as a result must conform to platform requirements. 
+
+\textbf{Fit Criterion:} The application shall successfully pass all mandatory checks required for distribution through the Google Play store.\\ 
+\hline
+
+COMP-STD-02 & 
+Accessibility Compliance & 
+\textbf{Description:} The system shall comply with WCAG 2.1 Level AA accessibility guidelines for user-facing functionality. 
+
+\textbf{Rationale:} The system should offer a simple and delightful user experience that should be accessible to users with varying abilities (i.e. user's with colourblindness, hearing impairments, etc.).
+
+\textbf{Fit Criterion:} All major user workflows shall satisfy WCAG 2.1 Level AA success criteria as evaluated using automated accessibility tools and manual testing.\\ 
+\hline
+
+COMP-STD-03 & 
+TypeScript Coding Standards Compliance & 
+\textbf{Description:} The frontend codebase shall comply with the Google TypeScript Style Guide. 
+
+\textbf{Rationale:} Consistent coding standards improve maintainability, readability, and long-term project quality. 
+
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\hline
+
+COMP-STD-04 & 
+Java Coding Standards Compliance & 
+\textbf{Description:} The backend codebase shall comply with the Oracle Java Code Conventions. 
+
+\textbf{Rationale:} Standardized coding practices improve maintainability, code review effectiveness, and software quality. 
+
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\hline
+
+COMP-STD-05 & 
+Database Compliance & 
+\textbf{Description:} The system shall store data in compliance with the MySQL Reference Manual and the SQL Standard (ISO/IEC 9075). 
+
+\textbf{Rationale:} The project architecture relies upon MySQL as the primary relational database system. 
+
+\textbf{Fit Criterion:} All schema definitions and queries will be tested to execute successfully on the supported MySQL version without compatibility warnings or errors.\\ 
+\hline
+
+COMP-STD-06 & 
+Software Testing Standard Compliance & 
+\textbf{Description:} The system shall undergo thorough and complete testing in accordance with the IEEE 29119 Software Testing Standard. 
+
+\textbf{Rationale:} Consistent testing practices reduce defects and improve software reliability. The system will comply with this standard to provide a unified, process-driven framework for software testing.
+
+\textbf{Fit Criterion:} All code merged into the main branch shall pass automated test execution in the CI/CD pipeline based on tests that were developed in accordance with the IEEE 29119 Software Testing Standard.\\ 
+\hline
+
+COMP-STD-07 & 
+Information Security Compliance & 
+\textbf{Description:} The system shall be designed in accordance with the security principles outlined in ISO/IEC 27001. 
+
+\textbf{Rationale:} The application stores personal, financial-learning, and fitness-related information that must be protected against unauthorized access and disclosure. 
+
+\textbf{Fit Criterion:} Security controls for authentication, access control, data storage, and data transmission shall align with ISO/IEC 27001 recommendations.\\ 
+\hline
+
+\end{xltabular}
 
 \section{Open Issues}
 \lips
