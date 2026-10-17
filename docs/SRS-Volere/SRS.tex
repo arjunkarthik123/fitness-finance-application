@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -201,8 +202,60 @@ involved in the Project}
 \lips
 
 \section{Cultural Requirements}
+
+This section outlines the cultural requirements for the software system. Cultural requirements refer to the expectations and norms of the target user base, which may vary based on geographic location, language, social norms, and other cultural factors. These requirements ensure that the software is culturally sensitive and appropriate for its intended audience.
+
 \subsection{Cultural Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+CUL-01 & 
+Supports Canadian Languages & 
+\textbf{Description:} The system shall present all user-facing functionality with the option to choose between English and French. 
+
+\textbf{Rationale:} The application will initially be deployed strictly within Canada, where English and French are the country's official languages. 
+
+\textbf{Fit Criterion:} All user-facing text shall be stored separately from application logic and be replaceable through a localization framework.\\ 
+\hline
+
+CUL-02 & 
+Inclusive Financial Education & 
+\textbf{Description:} The system shall provide financial education content that does not assume prior investing knowledge. 
+
+\textbf{Rationale:} Users possess varying levels of financial literacy. The system seeks to educate users of all levels of financial literacy - including those who may have limited exposure to investing concepts. 
+
+\textbf{Fit Criterion:} All investment-related terminology presented to users shall include a plain-language explanation accessible from within the application. All financial concepts shall be explained in simple, non-technical language to start, until the system deems the user has gained sufficient experience within the application.\\ 
+\hline
+
+CUL-03 & 
+Inclusive Fitness Participation & 
+\textbf{Description:} The system shall accommodate users with varying fitness levels by allowing personalized activity participation. 
+
+\textbf{Rationale:} Users may differ significantly in age, physical ability, health conditions, and exercise experience. The application should promote participation regardless of fitness background. 
+
+\textbf{Fit Criterion:} Users shall be able to participate in their preferred fitness activities while still gaining subsequent rewards.\\ 
+\hline
+
+CUL-04 & 
+Culturally Neutral Educational Content & 
+\textbf{Description:} The system shall present fitness and financial education content using culturally neutral language and examples (i.e. sample companies in the virtual market). 
+
+\textbf{Rationale:} The Canadian population consists of individuals from diverse cultural, religious, and socioeconomic backgrounds. Educational content should be inclusive and broadly applicable. 
+
+\textbf{Fit Criterion:} Educational content shall not require familiarity with a specific cultural background, religion, ethnicity, or region to be understood.\\ 
+\hline
+
+\end{xltabular}
 
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
