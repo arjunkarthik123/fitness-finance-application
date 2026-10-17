@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -181,8 +182,70 @@ involved in the Project}
 \lips
 
 \section{Maintainability and Support Requirements}
+
+This section outlines the requirements for maintaining and supporting the software product throughout its lifecycle. It includes specifications for maintenance procedures, support services, and any necessary adaptability procedures to ensure the product remains functional and up-to-date.
+
 \subsection{Maintenance Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-MNT-01 &
+Fitness Activity Addition Effort &
+\textbf{Description:} The system shall support the addition of new reward-eligible fitness activity types with minimal maintenance effort.
+
+\textbf{Rationale:} Future releases may introduce additional forms of exercise and adaptive fitness activities.
+
+\textbf{Fit Criterion:} A new activity type shall be implemented, deployed, and fully tested within 2 months.\\
+\hline
+
+MAS-MNT-02 &
+Investment Asset Addition Effort &
+\textbf{Description:} The system shall support the addition of new simulated investment assets with minimal maintenance effort.
+
+\textbf{Rationale:} Future versions of the application may expand the types of simulated investments available to users.
+
+\textbf{Fit Criterion:} A new investment asset shall be implemented, deployed, and fully tested within 2 months.\\
+\hline
+
+MAS-MNT-03 &
+Corrective Maintenance Effort &
+\textbf{Description:} The system shall efficiently handle and correct software defects.
+
+\textbf{Rationale:} Timely defect resolution improves reliability and user satisfaction.
+
+\textbf{Fit Criterion:} Critical production defects shall be fixed and deployed within 5 business days of of the defect being reported.\\
+\hline
+
+MAS-MNT-04 &
+Third-Party Integration Maintenance &
+\textbf{Description:} The system shall support updates to external fitness platform integrations with minimal impact on overall system functionality.
+
+\textbf{Rationale:} External APIs may change independently of the application and require maintenance.
+
+\textbf{Fit Criterion:} Changes required to maintain compatibility with a supported fitness provider shall be deployed within 5 business days of identifying the incompatibility.\\
+\hline
+
+MAS-MNT-05 &
+Traceability &
+\textbf{Description:} The system shall provide sufficient documentation and traceability to allow future developers to efficiently understand previous changes and maintenance activities.
+
+\textbf{Rationale:} Accurate and up-to-date documentation improves maintainability by allowing future developers to understand previous modifications, known issues, and the reasoning behind architectural and implementation decisions.
+
+\textbf{Fit Criterion:} For every production release, developers shall be able to identify the implemented changes, associated issues, and documented design decisions within 30 minutes of searching project records.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Supportability Requirements}
 \lips
 \subsection{Adaptability Requirements}
