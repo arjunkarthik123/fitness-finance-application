@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -184,7 +185,48 @@ involved in the Project}
 \subsection{Maintenance Requirements}
 \lips
 \subsection{Supportability Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-SUP-01 &
+Backup and Recovery Support &
+\textbf{Description:} The system shall support recovery of user and application data following data corruption or infrastructure failure.
+
+\textbf{Rationale:} Effective recovery capabilities minimize the impact of data loss incidents on users.
+
+\textbf{Fit Criterion:} The system shall be capable of restoring application data from the most recent successful backup within 24 hours. Data backups must successfully occur at least once daily.\\
+\hline
+
+MAS-SUP-02 &
+Self-Service User Support &
+\textbf{Description:} The system shall provide integrated help resources that allow users to resolve common issues without requiring direct support from developers.
+
+\textbf{Rationale:} Users should be able to independently resolve common issues related to account management or recovery, activity tracking, portfolio management, and virtual currency rewards.
+
+\textbf{Fit Criterion:} Help documentation covering account management and recovery, activity synchronization, portfolio management, and reward allocation shall be accessible from within the application at all times. The user shall be able to successfully integrate these recovery protocols without developer intervention.\\
+\hline
+
+MAS-SUP-03 &
+Contact Support Capability &
+\textbf{Description:} The system shall provide users with a mechanism to submit feedback or support requests for more complicated issues.
+
+\textbf{Rationale:} Some issues may require assistance beyond self-service documentation.
+
+\textbf{Fit Criterion:} Users shall be able to submit feedback or support requests from within the application at any time. These requests must be processed within 2 business days with a response sent back to the user regarding details pertaining to the plans and timeline to address the issue.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Adaptability Requirements}
 \lips
 
