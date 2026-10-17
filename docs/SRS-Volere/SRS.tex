@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -146,7 +147,66 @@ involved in the Project}
 \subsection{Personalization and Internationalization Requirements}
 \lips
 \subsection{Learning Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-LRN-01 & 
+Minimal User Training & 
+\textbf{Description:} The system shall enable first-time users to successfully use the application's core functionality without requiring formal training.
+
+\textbf{Rationale:} The application targets users with varying expertises and should be intuitive for a broad audience.
+
+\textbf{Fit Criterion:} At least 80\% of first-time users shall be able to synchronize fitness data, earn virtual currency, and purchase an investment asset without external assistance.\\
+\hline
+
+UHR-LRN-02 & 
+Learning Curve of Financial Concepts & 
+\textbf{Description:} The system shall present investment concepts in a manner that can be understood by users with little or no prior experience. 
+
+\textbf{Rationale:} One of the system's primary goals is to educate users on financial investing. This means that all users, regardless of their prior financial experience, should be capable of learning and understanding the financial concepts presented.
+
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time investors shall successfully complete their first virtual investment and view their portfolio's growth after one week without assistance.\\ 
+\hline
+
+UHR-LRN-03 & 
+Learning Curve of Fitness Based Concepts & 
+\textbf{Description:} The system shall present fitness concepts in a manner that can be understood by users with little or no prior experience. 
+
+\textbf{Rationale:} One of the system's primary goals is to educate users on fitness and health related activities. This means that all users, regardless of their prior fitness experience, should be capable of learning and understanding the fitness concepts presented.
+
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time participants in a new fitness activity shall successfully accomplish their set goal and view their health metrics after one week without assistance.\\ 
+\hline
+
+UHR-LRN-04 & 
+Integrated Educational Assistance & 
+\textbf{Description:} The system shall provide contextual learning resources within the application.
+
+\textbf{Rationale:} In the event that users encounter unfamiliar fitness or financial terminology while using the platform, the system should offer immediate assistance to enhance their understanding so that users can quickly learn and pick up new concepts.
+
+\textbf{Fit Criterion:} Users shall be able to access explanatory information for all core financial and fitness concepts directly from the screen where the concept appears.\\
+\hline
+
+UHR-LRN-05 & 
+User Help Documentation & 
+\textbf{Description:} The system shall provide readily accessible help documentation describing the application's functionality should any users require it.
+
+\textbf{Rationale:} Users should be able to resolve common questions without external support.
+
+\textbf{Fit Criterion:} A help section shall be accessible from the application's settings menu and include explanations of all major features. Support teams should receive zero inquiries about basic system functionality.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
