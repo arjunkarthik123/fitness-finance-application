@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -205,8 +206,105 @@ involved in the Project}
 \lips
 
 \section{Compliance Requirements}
+
+This section outlines the legal and regulatory requirements that the system must adhere to, ensuring that it operates within the bounds of applicable laws and standards. Compliance with these requirements is essential for the system's legitimacy, user trust, and overall success.
+
 \subsection{Legal Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+COMP-LEG-01 &
+User Consent for Health Data Collection &
+\textbf{Description:} The system shall obtain explicit user consent before collecting, storing, or processing any health or fitness related data from external devices or applications.
+
+\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement (*******LINK ID HERE*******). Obtaining explicit user consent ensures compliance with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws.
+
+\textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.\\
+\hline
+
+COMP-LEG-02 & 
+Protection of Personal Information & 
+\textbf{Description:} The system shall store and collect PII (*****LINK TO DICTIONARY****), beyond just fitness data, using security measures that comply with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws. 
+
+\textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risk ***LINK TO THE HAZARD IN HE HAZ ANALYSIS****
+
+\textbf{Fit Criterion:} All PII shall be encrypted during network transmission and during data storage. Access to this data shall require user authentication into the system as per requirement (*****LINK ACCESS REQ ID HERE*****).\\ 
+\hline 
+
+COMP-LEG-03 & 
+Sharing of User Data & 
+\textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA (***LINK TO ACRONYM DEFINITIONS**). 
+
+\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data, ****LINK TO REQ ID?****) and companies (for incentivising rewards to motivate users and offer brand sponsoring, ****LINK TO REQ ID?****). Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
+
+\textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
+\hline 
+
+COMP-LEG-04 & Financial Education Disclaimer & 
+\textbf{Description:} The system shall clearly identify all portfolio recommendations, educational materials, and simulated investment activities as educational content and \textbf{not professional financial advice}. 
+
+\textbf{Rationale:} The application is designed to teach investing concepts through simulated portfolios and virtual currency. Users must understand that the application does not provide regulated financial advice. This is intended to prevent legal action against the system and its developers for any financial losses incurred by users in the real market - ultimately, the system is not responsible for any incurred losses by the users in the real market (see ***LINK TO THE HAZARD IN HE HAZ ANALYSIS****). 
+
+\textbf{Fit Criterion:} A financial disclaimer shall be displayed during user onboarding and remain accessible through the application's settings menu.\\ 
+\hline 
+
+COMP-LEG-05 & 
+User Data Deletion Rights & 
+\textbf{Description:} The system shall provide users with the ability to permanently delete their account and associated personal information from the system at any time, if and when they wish to do so. 
+
+\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding privacy regulations and PPCDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding data ownership and the user's right to disposal. 
+
+\textbf{Fit Criterion:} Users shall be able to initiate account deletion through the application's settings menu at any time, after which all traces of the user's personal information shall be removed from the system.\\ 
+\hline 
+
+COMP-LEG-06 & 
+AI-Content Disclosure & 
+\textbf{Description:} The system shall disclose when educational content is generated or assisted by an artificial intelligence system. 
+
+\textbf{Rationale:} With the potential for AI to aid in the virtual market simulation, users should be informed when content is generated by AI to promote transparency and allow them to appropriately evaluate the information received. 
+
+\textbf{Fit Criterion:} All AI-generated educational content shall include a visible notification indicating that the content was generated or assisted by AI. Additionally, the settings menu will contain an information section that explicitly discloses all components generated with the assistance of AI.\\ 
+\hline 
+
+COMP-LEG-07 & 
+Age Verification & 
+\textbf{Description:} The system shall verify a user's age to be a legal adult (18+) during account creation. 
+
+\textbf{Rationale:} The system collects personal and health-related information that may be subject to additional restrictions for minors. It is important that user's are of age to provide informed consent and understand the implications of sharing their personal information.
+
+\textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (18+).\\ 
+\hline 
+
+COMP-LEG-08 & 
+Third-Party Licensing Compliance & 
+\textbf{Description:} The system shall comply with all licensing requirements associated with third-party libraries, APIs, SDKs, and external content used by the application. 
+
+\textbf{Rationale:} The application relies on external technologies and services whose licenses impose legal obligations on software developers during the development of this system. 
+
+\textbf{Fit Criterion:} All third-party components included in a release shall have documented license reviews and approval prior to deployment.\\ 
+\hline
+
+COMP-LEG-09 & 
+Fitness Activity Risk Acknowledgement & 
+\textbf{Description:} The system shall require users to acknowledge that participation in physical activities undertaken while using the application is performed at their own risk. 
+
+\textbf{Rationale:} The system rewards users for completing physical activities, where more rewards are available for higher-intensity or a higher quantity of activities. As a result, users may push their physical limits to gain more rewards and that may lead to injury (see ****LINK TO THE HAZARD IN HE HAZ ANALYSIS***). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
+
+\textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu.\\ 
+\hline
+
+\end{xltabular}
+
 \subsection{Standards Compliance Requirements}
 \lips
 
