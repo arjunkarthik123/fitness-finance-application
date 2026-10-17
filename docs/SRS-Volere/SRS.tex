@@ -8,6 +8,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -148,7 +150,111 @@ involved in the Project}
 \subsection{Learning Requirements}
 \lips
 \subsection{Understandability and Politeness Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-UND-01 &
+Plain Language Communication &
+\textbf{Description:} The system shall present information using clear and concise language appropriate for users with limited financial and fitness knowledge.
+
+\textbf{Rationale:} The system targets users with varying levels of experience in personal finance and physical fitness. Clear language improves comprehension and engagement.
+
+\textbf{Fit Criterion:} User-facing content shall avoid unexplained technical terminology and provide explanations for all specialized terms.\\
+\hline
+
+UHR-UND-02 &
+Investment Terminology Explanations &
+\textbf{Description:} The system shall provide accessible explanations for investment-related terminology and metrics.
+
+\textbf{Rationale:} Users may be unfamiliar with investing concepts and require additional context to make informed decisions within the simulated environment.
+
+\textbf{Fit Criterion:} All investment-related terms shall include supporting descriptions or contextual explanations.\\
+\hline
+
+UHR-UND-03 &
+Fitness Terminology Explanations &
+\textbf{Description:} The system shall provide accessible explanations for fitness metrics and terminology presented to users.
+
+\textbf{Rationale:} Users may have varying levels of fitness and health metric knowledge and should be able to understand the significance of displayed fitness information and health metrics.
+
+\textbf{Fit Criterion:} All fitness-related metrics shall include supporting descriptions or contextual explanations.\\
+\hline
+
+UHR-UND-04 &
+Compounding Transparency and Distinction &
+\textbf{Description:} The system shall clearly distinguish between currency gains through the completion of fitness-related activities and gains resulting from portfolio performance.
+
+\textbf{Rationale:} One of the primary educational goals of the application is to demonstrate the concept of compounding over time. The user's should not solely focus on gaining currency through fitness-related activities - nor should they solely focus on portfolio performance. The system should clearly communicate the distinction between these two sources of currency gains to ensure users understand the impact of both fitness and investment decisions on their overall success.
+
+\textbf{Fit Criterion:} Portfolio views shall separately display user-earned virtual currency contributions and investment gains or losses.\\
+\hline
+
+UHR-UND-05 &
+Action Outcome Transparency &
+\textbf{Description:} The system shall clearly communicate the outcome of actions affecting fitness progress, virtual currency balances, and portfolio holdings.
+
+\textbf{Rationale:} Users should understand how their actions impact system state and long-term progress at all times.
+
+\textbf{Fit Criterion:} Following any successful transaction or activity synchronization, the system shall immediately identify the resulting changes to affected data.\\
+\hline
+
+UHR-POL-01 &
+Respectful User Communication &
+\textbf{Description:} The system shall communicate with users in a respectful and professional manner at all times.
+
+\textbf{Rationale:} Positive interactions improve user satisfaction and promote long-term engagement with the application.
+
+\textbf{Fit Criterion:} User-facing notifications, prompts, and messages shall \textbf{never} contain insulting, belittling, or derogatory language.\\
+\hline
+
+UHR-POL-02 &
+Positive Motivational Feedback &
+\textbf{Description:} The system shall provide encouraging feedback regarding fitness activity and portfolio performance.
+
+\textbf{Rationale:} Long-term engagement is a primary project goal and positive reinforcement supports continued participation.
+
+\textbf{Fit Criterion:} Achievement notifications and milestone messages shall always use positive and supportive language.\\
+\hline
+
+UHR-POL-03 &
+Non-Punitive Performance Messaging &
+\textbf{Description:} The system shall avoid language that shames users for missed goals, inactivity, or poor portfolio performance.
+
+\textbf{Rationale:} Users should remain motivated even when progress is temporarily reduced. User's may experience setbacks but should not be discouraged from continuing.
+
+\textbf{Fit Criterion:} Notifications regarding missed goals or declining portfolio performance shall focus on future opportunities for improvement rather than negative judgement. During user testing, a survey will be sent out to users to gauge their satisfaction with the feedback provided when they encounter performance challenges - it is expected that survey results will return that no more than 10\% of users were discouraged to continue after failing to meet a fitness and/or financial goal.\\
+\hline
+
+UHR-POL-04 &
+Respectful Competitive Features &
+\textbf{Description:} The system shall present leaderboard rankings and competitive information in a respectful and encouraging manner.
+
+\textbf{Rationale:} Users may be motivated by competition, but competitive features should not create a negative user experience.
+
+\textbf{Fit Criterion:} Leaderboard interfaces shall not contain derogatory labels or language that demeans lower-ranked users.\\
+\hline
+
+UHR-POL-05 &
+Respectful User-Generated Content &
+\textbf{Description:} The system shall prevent users from creating usernames, profile information, or public content containing offensive, discriminatory, harassing, or abusive language.
+
+\textbf{Rationale:} The system should foster a welcoming and respectful environment for all users participating in community and competitive features. No users should be subject to offensive or deragatory content when competing with other users online. This helps mitigate hazard *****LINK HAZARD FROM HAZ ANALYSIS HERE ABT OFFENSIVE CONTENT*****
+
+\textbf{Fit Criterion:} Attempts to create or modify public-facing content containing prohibited language shall be rejected and the user shall be notified that the content violates community guidelines.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Accessibility Requirements}
 \lips
 
