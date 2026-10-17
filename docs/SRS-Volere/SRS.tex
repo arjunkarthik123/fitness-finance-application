@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -144,7 +145,66 @@ involved in the Project}
 \subsection{Ease of Use Requirements}
 \lips
 \subsection{Personalization and Internationalization Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-PER-01 &
+Personalized Fitness Goals &
+\textbf{Description:} The system shall allow users to configure fitness goals based on their personal fitness level and preferences.
+
+\textbf{Rationale:} Users will possess different fitness capabilities and activity levels. Personalized goals encourage engagement while remaining achievable.
+
+\textbf{Fit Criterion:} Users shall be able to modify daily and weekly fitness goals that will take effect the next time period.\\
+\hline
+
+UHR-PER-02 &
+Customizable Notifications &
+\textbf{Description:} The system shall allow users to configure which notifications they receive and how frequently they are delivered.
+
+\textbf{Rationale:} Users have varying preferences regarding reminders and activity notifications.
+
+\textbf{Fit Criterion:} Users shall be able to independently enable or disable workout reminders, portfolio updates, and achievement notifications.\\
+\hline
+
+UHR-PER-03 &
+Customizable Privacy Settings &
+\textbf{Description:} The system shall allow users to control the visibility of their fitness achievements, portfolio statistics, and leaderboard participation.
+
+\textbf{Rationale:} Users have different privacy expectations and comfort levels regarding public sharing of personal information.
+
+\textbf{Fit Criterion:} Users shall be able to independently configure visibility settings for all community-facing features that will take immediate effect.\\
+\hline
+
+UHR-PER-04 &
+Customizable Competition Groups &
+\textbf{Description:} The system shall allow users to customize the set of users with whom they share and compare fitness and portfolio progress.
+
+\textbf{Rationale:} Users may have different comfort levels regarding competition and sharing personal achievements. Allowing users to select their competition group creates a more personalized and engaging experience where friends can motivate each other.
+
+\textbf{Fit Criterion:} Users shall be able to choose between private, friends-only, and public, community-wide, leaderboard participation.\\
+\hline
+
+UHR-INT-01 &
+Canadian Time Zone Support &
+\textbf{Description:} The system shall automatically detect and utilize the user's local Canadian time zone when calculating daily goals, rewards, and streaks.
+
+\textbf{Rationale:} Users may access the application from any Canadian province or territory.
+
+\textbf{Fit Criterion:} Daily statistics and streak calculations shall correspond to the user's local device time zone.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Learning Requirements}
 \lips
 \subsection{Understandability and Politeness Requirements}
