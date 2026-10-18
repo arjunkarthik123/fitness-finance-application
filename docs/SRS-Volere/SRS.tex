@@ -5,15 +5,17 @@
 %
 % Risks are removed because they are covered by the Hazard Analysis
 \documentclass[12pt]{article}
-
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabularx}
+\usepackage{float}
 \usepackage{longtable}
 \usepackage{hyperref}
-\usepackage{array}
 \usepackage{enumitem}
-\usepackage{float}
 \usepackage{xltabular}
 \usepackage[round]{natbib}
 \hypersetup{
@@ -24,7 +26,7 @@
     filecolor=magenta,      % color of file links
     urlcolor=cyan           % color of external links
 }
-
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
 \newcommand{\lips}{\textit{Insert your content here.}}
 
 \input{../Comments.text}
@@ -252,7 +254,179 @@ needed for informed long-term decision-making.
 
 
 \subsection{The Context of the Work}
-\lips
+
+The Flexin system connects physical activity tracking with simulated
+investing by converting validated exercise data into virtual investment
+capital. Users can use this capital to build simulated portfolios
+containing fictional stocks, exchange-traded funds (ETFs), funds, bonds,
+and other supported assets without risking real money. Flexin integrates
+with Android Health Connect and Garmin to retrieve supported fitness
+data, while its internally developed financial market engine generates
+fictional assets, prices, and market events. The system also provides
+portfolio management, financial education, and notifications.
+
+\subsubsection{Project Context Diagram}
+
+Figure~\ref{fig:flexin-context} illustrates the interactions between
+Flexin and its users, fitness integrations, and device environment.
+The custom financial market engine is an internal component of Flexin
+that generates simulated financial data rather than retrieving
+real-world market prices.
+
+\begin{figure}[!htbp]
+    \centering
+    \resizebox{0.95\linewidth}{!}{%
+    \begin{tikzpicture}[
+        system/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            thick,
+            align=center,
+            minimum width=4.4cm,
+            minimum height=1.4cm,
+            fill=blue!5
+        },
+        external/.style={
+            rectangle,
+            draw,
+            thick,
+            align=center,
+            minimum width=3.4cm,
+            minimum height=1.1cm,
+            fill=gray!10
+        },
+        flow/.style={
+            <->,
+            >=Stealth,
+            thick
+        },
+        node distance=2.2cm and 2.5cm
+    ]
+
+    % Central System (Encompassing App, Backend, and Internal Simulator)
+    \node[system] (flexin) {
+        \textbf{Flexin System}\\[2pt]
+        \small Mobile Application, Backend, \&\\
+        \small Custom Market Simulation Engine
+    };
+
+    % External Terminators / Adjacent Systems
+    \node[external, above=of flexin] (user) {End User};
+    \node[external, left=of flexin] (health) {Android Health Connect};
+    \node[external, right=of flexin] (garmin) {Garmin Integration};
+    \node[external, below=of flexin] (device) {Android Device and OS};
+
+    % Data Flows
+    \draw[flow] (user) --
+        node[right=0.25cm, align=left, font=\small]
+        {Profiles, goals, trades,\\and portfolio views}
+        (flexin);
+
+    \draw[flow] (health) --
+        node[above=0.2cm, font=\small] {Activity data}
+        (flexin);
+
+    \draw[flow] (garmin) --
+        node[above=0.2cm, font=\small] {Fitness data}
+        (flexin);
+
+    \draw[flow] (flexin) --
+        node[right=0.25cm, align=left, font=\small]
+        {Sensors, local storage,\\notifications, and alerts}
+        (device);
+
+    \end{tikzpicture}%
+    }
+    \caption{Flexin Project Context Diagram}
+    \label{fig:flexin-context}
+\end{figure}
+
+\subsubsection{Adjacent Systems and External Entities}
+
+The Flexin system interacts with the following entities and services.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\textwidth}{
+        |>{\raggedright\arraybackslash}p{3.5cm}
+        |>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Entity} & \textbf{Responsibility} \\
+        \hline
+        End User &
+        Provides profile information, exercise goals, and simulated
+        trade instructions; receives portfolio insights, educational
+        guidance, and virtual currency balances. \\
+        \hline
+        Android Health Connect &
+        Provides aggregated health and activity data, such as step
+        counts and exercise metrics, subject to device compatibility
+        and user permissions. \\
+        \hline
+        Garmin Integration &
+        Retrieves supported fitness and workout data from compatible
+        Garmin devices and services, subject to API access and user
+        authorization. \\
+        \hline
+        Custom Simulated Financial Market Engine &
+        An internally developed component that creates and manages
+        fictional stocks, ETFs, funds, bonds, and other supported
+        assets. It generates simulated prices, market events, and
+        asset performance without relying on real-world market data. \\
+        \hline
+        Android Device and OS &
+        Provides the runtime environment, network connectivity,
+        local storage, and native notification services. \\
+        \hline
+    \end{tabularx}
+    \caption{Flexin Adjacent Systems and External Entities}
+    \label{tab:flexin-entities}
+\end{table}
+
+\subsubsection{Information Flows Across the Work Boundary}
+
+\paragraph{Inbound Information.}
+Inbound information includes user commands, profile and configuration
+data, exercise goals, and simulated trade orders. Flexin also receives
+fitness telemetry, such as step counts and workout records, through
+Android Health Connect and the Garmin integration. The custom financial
+market engine supplies internally generated asset prices, historical
+price series, simulated market events, and distributions such as
+dividends or fund returns.
+
+\paragraph{Outbound Information.}
+Outbound information includes virtual currency earned through validated
+activity, portfolio balances, asset allocations, and investment
+performance visualizations. Flexin also provides contextual financial
+education on compound growth, diversification, and investment risk.
+Optional leaderboards, activity milestones, workout reminders, and
+simulated market notifications encourage continued engagement.
+
+\subsubsection{Boundary Scope and Enclosure}
+
+\paragraph{In Scope.}
+Flexin includes fitness data validation, activity-to-currency
+conversion, duplicate reward prevention, simulated portfolio
+management, and virtual trade execution. Its custom financial market
+engine generates fictional assets and determines their simulated
+prices and performance. The backend manages accounts, asset positions,
+transaction records, and portfolio valuations, while the React Native
+and TypeScript frontend presents fitness and investment dashboards.
+An educational rules engine provides contextual explanations of
+financial concepts.
+
+\paragraph{Out of Scope.}
+Flexin does not depend on real-world stock prices, execute actual
+financial transactions, or manage real investment funds. It does not
+control the accuracy or availability of third-party fitness data,
+Garmin services, Android Health Connect, or device hardware. External
+fitness integrations remain subject to provider capabilities, API
+availability, device compatibility, and user permissions.
+
+
 \subsection{Work Partitioning}
 \lips
 \subsection{Specifying a BUC}
