@@ -758,7 +758,71 @@ Additionally, many external fitness devices (e.g., Garmin watches) offer APIs an
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\lips
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{
+    |p{1.5cm}|p{2.7cm}|p{\dimexpr\textwidth-1.5cm-2.7cm-6\tabcolsep-4\arrayrulewidth\relax}|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+LF-APP-01 &
+Visual Hierarchy &
+\textbf{Description:} The dashboard shall present fitness metrics and financial metrics in a balanced, uncluttered layout using unified summary cards.
+
+\textbf{Rationale:} Equal emphasis reinforces the relationship between physical activity and simulated investment growth.
+
+\textbf{Fit Criterion:} All primary screens shall follow the Figma design library and its 4-point/8-point spacing grid. \\
+\hline
+
+LF-APP-02 &
+Compounding Chart &
+\textbf{Description:} The portfolio chart shall distinguish cumulative workout earnings from simulated investment gains and dividends.
+
+\textbf{Rationale:} Users should understand the difference between contributions and compounded returns.
+
+\textbf{Fit Criterion:} Two visually distinct chart traces shall allow users to distinguish these values within 5 seconds. \\
+\hline
+
+LF-APP-03 &
+Responsive Layout &
+\textbf{Description:} The interface shall adapt to Android screen sizes, aspect ratios, pixel densities, and system font scaling.
+
+\textbf{Rationale:} Flexin must remain usable across supported Android devices.
+
+\textbf{Fit Criterion:} On Android 10+ devices with 5.5--6.8-inch screens, no text shall clip or touch targets overlap, including at 130\% font scaling. \\
+\hline
+
+LF-APP-04 &
+Theme and Contrast &
+\textbf{Description:} The interface shall support Light and Dark modes with distinguishable fitness and financial status indicators.
+
+\textbf{Rationale:} Consistent contrast improves readability and accessibility in different environments.
+
+\textbf{Fit Criterion:} The interface shall provide sufficient colour contrast for readability, meeting WCAG 2.1 AA minimum ratios of 4.5:1 for normal text and 3:1 for large text and essential graphical elements. \\
+\hline
+
+LF-APP-05 &
+Navigation &
+\textbf{Description:} A persistent bottom navigation bar shall link to Dashboard, Activity, Market/Portfolio, Learn, and Community.
+
+\textbf{Rationale:} Simple navigation reduces user effort.
+
+\textbf{Fit Criterion:} Primary operations shall be reachable within three taps from the home dashboard. \\
+\hline
+
+\caption{Flexin Appearance Requirements}
+\label{tab:flexin-appearance}
+\end{longtable}
+\endgroup
 \subsection{Style Requirements}
 
 \begingroup
