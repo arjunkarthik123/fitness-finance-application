@@ -9,6 +9,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
       colorlinks=true,      % false: boxed links; true: colored links
@@ -117,8 +119,22 @@ involved in the Project}
 \lips
 
 \section{Business Data Model and Data Dictionary}
+
+This section outlines the business data model and data dictionary for the project. The business data model provides a high-level overview of the data relevant to the business, while the data dictionary specifies the content and structure of the data elements within the system (i.e. classes, attributes, relationships). Together, these components serve as a foundation for understanding how data is organized, stored, and utilized within the business processes.
+
 \subsection{Business Data Model}
-\lips
+
+This business data model is a high-level diagram of the data that is relevant to the business. It identifies the key entities and the relationships between them. The model serves as a blueprint for understanding how data flows through the business processes and how it is stored and managed. Due to still being in the earlier stages of the project, this model may be subject to changes in the later stages of the project. This business data model is not a complete representation of the data, but rather a simplified view that highlights the most important aspects of the business data. It is intended to provide a clear and concise overview of the data landscape for stakeholders and team members.
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.85\textwidth]{BusinessDataModel.png} 
+    \caption{Business Data Model} 
+    \label{fig:business-data-model} 
+\end{figure}
+
+Each of the rectangles represents a class of business data. The attributes of each class are defined in the data dictionary.
+
 \subsection{Data Dictionary}
 \lips
 
