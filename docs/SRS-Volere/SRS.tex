@@ -207,41 +207,54 @@ typical mobile data or Wi-Fi connection.
 
 \progname{} does not control physical equipment, so none of its failures can
 directly injure someone. The Hazard Analysis does identify ways the product
-could encourage harm, and the requirements below address them. They will be
-traced to the safety requirements in the Hazard Analysis once those are
-finalized.
+could encourage harm, and the requirements below address them. Each
+requirement lists the safety requirements and hazards from the Hazard Analysis
+that it traces to.
 
 \begin{description}
-  \item[PR-SC1: Daily earning cap]\leavevmode
+  \item[PR-SC1: Daily earning limits]\leavevmode
   \begin{description}
     \item[Description:] The amount of currency a user can earn from activity
-    in one day shall be capped.
-    \item[Rationale:] Without a cap, the product would reward users for
-    exercising past safe limits to earn more.
+    in one day shall be capped, and activity beyond a healthy daily volume
+    shall earn currency at a reduced rate.
+    \item[Rationale:] Without these limits, the product would reward users for
+    exercising past safe limits, or while injured, to earn more.
     \item[Fit Criterion:] No amount of activity recorded in a single day earns
-    more than the daily cap.
+    more than the daily cap, and activity beyond the healthy daily volume earns
+    less per unit than activity below it.
+    \item[Hazard Analysis:] SR8 (H4.1, H5.1)
   \end{description}
 
   \item[PR-SC2: No penalties for missed days]\leavevmode
   \begin{description}
     \item[Description:] The product shall not take away currency or holdings
-    when a user misses a goal or a day of activity.
+    when a user misses a goal or a day of activity. Users shall be able to
+    freeze their streak for days missed because of illness, injury, rest, or a
+    delayed sync.
     \item[Rationale:] The Hazard Analysis lists shame over missed goals as a
-    psychological hazard. Losing earned progress would make that worse, and
-    could push users to exercise while injured or unwell.
+    psychological hazard. Losing earned progress or a long streak would make
+    that worse, could push users to exercise while injured or unwell, and
+    makes users feel they have failed through no fault of their own.
     \item[Fit Criterion:] No feature of the product reduces a user's balance
-    or holdings because of inactivity.
+    or holdings because of inactivity, and a user can freeze their streak so
+    that a missed day does not reset it.
+    \item[Hazard Analysis:] SR8 (H3.1, H4.1, H11.1)
   \end{description}
 
   \item[PR-SC3: Simulated market is labelled]\leavevmode
   \begin{description}
     \item[Description:] Every screen that shows prices, holdings, or returns
     shall state that the market is simulated and that results do not predict
-    real returns.
+    real returns. Each of these screens shall link to an explanation of what
+    the simulation does not model, such as fees, taxes, and real-world
+    volatility.
     \item[Rationale:] The Hazard Analysis lists financial loss from users
-    applying strategies from the app to real markets.
+    applying strategies from the app to real markets. Users who treat
+    simulated results as real-world truth may lose real money.
     \item[Fit Criterion:] A review of every market and portfolio screen finds
-    the notice visible on each one.
+    the notice visible on each one, and the explanation of the simulation's
+    limits can be reached from each one.
+    \item[Hazard Analysis:] SR11 (H6.1, H7.1)
   \end{description}
 
   \item[PR-SC4: Not financial advice]\leavevmode
@@ -260,6 +273,7 @@ finalized.
     acknowledging the statement, the statement can be reached from settings,
     and a review of all educational content finds no recommendations to buy
     or sell specific real-world investments.
+    \item[Hazard Analysis:] SR11 (H6.1, H7.1)
   \end{description}
 
   \item[PR-SC5: Exercise injury warning]\leavevmode
@@ -283,6 +297,47 @@ finalized.
     \item[Fit Criterion:] A new account cannot be created without
     acknowledging the injury warning and the terms of use, and both can be
     reached from the settings screen at any time.
+  \end{description}
+
+  \item[PR-SC6: Safe goal progression]\leavevmode
+  \begin{description}
+    \item[Description:] Goals that the product raises automatically shall
+    increase gradually and include regular rest days. When a goal is missed
+    several times in a row, the product shall suggest lowering it. Users shall
+    be able to lower or override any goal themselves.
+    \item[Rationale:] Goals that rise too quickly push users to overexert
+    themselves, while goals that are missed again and again lead to shame and
+    users giving up on exercise.
+    \item[Fit Criterion:] Automatic goals never rise by more than the set
+    maximum step, every goal plan includes regular rest days, a lower goal is
+    suggested after the set number of misses in a row, and a user can lower
+    any goal from the goal screen.
+    \item[Hazard Analysis:] SR6 (H4.1, H4.2)
+  \end{description}
+
+  \item[PR-SC7: Supportive messages and notifications]\leavevmode
+  \begin{description}
+    \item[Description:] All goal-related messages and reminders shall use
+    supportive language that does not shame or guilt the user. Users shall be
+    able to choose how often they get notifications and set quiet hours.
+    \item[Rationale:] Guilt-based messages and too many notifications harm
+    users' mental health and encourage compulsive use of the app.
+    \item[Fit Criterion:] Every goal-related message passes a team review for
+    shaming or guilt-based language, and in testing no notifications are sent
+    during the user's quiet hours or more often than the frequency they chose.
+    \item[Hazard Analysis:] SR7 (H4.1, H10.1)
+  \end{description}
+
+  \item[PR-SC8: Leaderboards]\leavevmode
+  \begin{description}
+    \item[Description:] Users shall be able to opt out of group leaderboards.
+    Leaderboards shall rank users by progress towards their own goals, not by
+    absolute performance.
+    \item[Rationale:] Ranking users by absolute performance causes shame and
+    anxiety for those who rank poorly.
+    \item[Fit Criterion:] Users who opt out do not appear on any leaderboard,
+    and rankings are computed from each user's percentage of their own goal.
+    \item[Hazard Analysis:] SR9 (H4.1, H8.1)
   \end{description}
 \end{description}
 
@@ -332,6 +387,32 @@ finalized.
     \item[Fit Criterion:] For test portfolios, the displayed value matches the
     value calculated by hand to the cent.
   \end{description}
+
+  \item[PR-PA5: Workout dates]\leavevmode
+  \begin{description}
+    \item[Description:] Each workout shall be dated by the time it happened on
+    the source device, not the time it was synced. When workout data arrives
+    late, the affected streaks and rewards shall be recalculated.
+    \item[Rationale:] Users who exercised on time should not lose their streak
+    or currency because their device synced late or across a day boundary.
+    \item[Fit Criterion:] Workouts synced after midnight or from a different
+    time zone are recorded on the day they happened, and the affected streaks
+    and rewards are updated once the late data arrives.
+    \item[Hazard Analysis:] SR5 (H3.1, H11.1)
+  \end{description}
+
+  \item[PR-PA6: Realistic market simulation]\leavevmode
+  \begin{description}
+    \item[Description:] The market simulation shall be calibrated against
+    historical market data, so that its volatility and downturns are
+    consistent with real markets.
+    \item[Rationale:] Returns that are unrealistically smooth or high would
+    teach users a false understanding of risk and compounding.
+    \item[Fit Criterion:] Over a long simulated period, the average annual
+    return and volatility are consistent with historical data for a broad
+    market index, and downturns occur.
+    \item[Hazard Analysis:] SR10 (H6.1)
+  \end{description}
 \end{description}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
@@ -348,28 +429,38 @@ finalized.
     is fully credited at the next sync.
   \end{description}
 
-  \item[PR-RFT2: Atomic trades]\leavevmode
+  \item[PR-RFT2: Atomic writes]\leavevmode
   \begin{description}
-    \item[Description:] A trade shall either complete fully, updating both the
-    currency balance and the holdings, or not happen at all.
-    \item[Rationale:] A trade that fails halfway could take a user's currency
-    without giving them the asset, or the other way around.
-    \item[Fit Criterion:] When the connection or server is cut during a test
-    trade, the balance and holdings afterwards match either the state before
-    the trade or the state after it.
+    \item[Description:] Every database write with more than one step shall
+    either complete fully or be rolled back. A trade shall update both the
+    currency balance and the holdings, at the price the user confirmed, or not
+    happen at all.
+    \item[Rationale:] A write that fails halfway leaves balances, portfolios,
+    or progress wrong. For example, a failed trade could take a user's
+    currency without giving them the asset, or the other way around.
+    \item[Fit Criterion:] Tests that simulate a failure at each step of a
+    multi-step write leave the database unchanged. When the connection or
+    server is cut during a test trade, the balance and holdings afterwards
+    match either the state before the trade or the state after it, and
+    completed trades execute at the confirmed price.
+    \item[Hazard Analysis:] SR12 (H7.2, H9.2)
   \end{description}
 
   \item[PR-RFT3: Failing data sources]\leavevmode
   \begin{description}
     \item[Description:] If a fitness data source is unavailable or returns
-    invalid data, the app shall keep working with its other sources, tell the
-    user which source has a problem, and credit no currency for the invalid
-    data.
+    invalid data, the app shall keep working with its other sources and credit
+    no currency for the invalid data. A failed workout sync shall be retried
+    automatically, and if it still fails, the app shall tell the user which
+    source has a problem and why.
     \item[Rationale:] Outages at Garmin, Strava, or Health Connect are outside
-    the team's control and should not make the whole app unusable.
+    the team's control and should not make the whole app unusable. Users
+    should find out about a failed sync from the app, not from a broken
+    streak.
     \item[Fit Criterion:] With one source disabled or returning malformed data
-    in testing, the app stays usable, shows a message naming that source, and
-    awards nothing for the bad data.
+    in testing, the app stays usable, retries the sync, then shows a message
+    naming that source and the cause, and awards nothing for the bad data.
+    \item[Hazard Analysis:] SR4 (H3.1)
   \end{description}
 
   \item[PR-RFT4: Backend unavailable]\leavevmode
@@ -381,6 +472,17 @@ finalized.
     their progress.
     \item[Fit Criterion:] With the backend stopped, the app opens, shows the
     last known balance and portfolio, and displays an offline notice.
+  \end{description}
+
+  \item[PR-RFT5: Account errors]\leavevmode
+  \begin{description}
+    \item[Description:] When account creation or sign-in fails, the app shall
+    show a clear error message that states the cause.
+    \item[Rationale:] Users should know why they cannot get into their
+    account, instead of being locked out with no explanation.
+    \item[Fit Criterion:] Every failed account creation or sign-in in testing
+    shows an error message that states the cause.
+    \item[Hazard Analysis:] SR4 (H1.1)
   \end{description}
 \end{description}
 
