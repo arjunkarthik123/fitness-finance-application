@@ -7,12 +7,15 @@
 \documentclass[12pt]{article}
 
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{xltabular}
+\usepackage[round]{natbib}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
       colorlinks=true,      % false: boxed links; true: colored links
@@ -61,20 +64,109 @@ Date 2 & 1.1 & Notes\\
 \lips
 \subsection{Goals of the Project}
 \lips
+
 \section{Stakeholders}
+This section will look at all individuals and groups that will affected by the success of this project. We will look further and study the people affected through the following sections. 
 \subsection{Client}
+The client with whom the team is building the app is \textbf{Chris Schankula}. 
+Chris was responsible for providing the initial idea and will work throughout each stage of the project to deliver the final product.
 \lips
 \subsection{Customer}
+\begin{itemize}
+    \item \textbf{Primary}: Young adults aged 18-30 who are seeking to build financial literacy and sustainable fitness habits. 
+    \item \textbf{Secondary:} Adults older than the intended age range who are looking to learn new skills, reinforce or start new healthy habits.
+\end{itemize}
 \lips
 \subsection{Other Stakeholders}
+\begin{itemize}
+    \item \textbf{Financial Institution/Banks:} which benefit from financially literate consumers who will engage more with their finances.
+    \item \textbf{Gyms/Training Facilities:} which can benefit from increased user activity by providing a place to exercise. 
+\end{itemize}
 \lips
 \subsection{Hands-On Users of the Project}
+\begin{itemize}
+    \item \textbf{Mobile (Android) Smartphone Users:} users will be able to interact with the app and utilize the different features to view and track financial and fitness goals. For the purpose of Capstone our final deployed app will be for Android users only.
+\end{itemize}
 \lips
 \subsection{Personas}
+\subsubsection{Brandon - The Novice Saver and Avid Runner}
+
+\subsubsection*{Background}
+Brandon is a university student in his final year of Environmental Sciences at the University of Toronto, preparing for graduation in the spring. Brandon has recently begun learning more about his own finances, but still has a limited understanding of investing and saving.
+
+\subsubsection*{Goals and Motivations}
+Brandon enjoys recreational running as a way to stay active, relieve stress, and maintain a healthy lifestyle. He wants to improve running performance, build consistency, and take this hobby to the next level. At the same time, Brandon wants to develop his financial literacy and gain confidence in investment decisions before investing real savings.
+
+\subsubsection*{Behaviours and Habits}
+Brandon balances school responsibilities with running and personal development. He currently uses his phone as his main device to track his running activities such as goals and progress. Brandon prefers simple explanations, interactive learning, and measurable progress rather than complicated financial terminology.
+
+\subsubsection*{Needs and Expectations}
+\begin{itemize}
+    \item A risk-free stock trading simulator that uses virtual money.
+    \item Beginner-friendly lessons explaining investment opportunities, market trends, risk, and investment strategies.
+    \item Progress tracking and feedback to help build investing knowledge and confidence.
+    \item Running features to record workouts, monitor distance and pace, and track improvements over time.
+    \item Achievable goals, milestones, and challenges that encourage consistent participation in both activities.
+\end{itemize}
+
+\subsubsection*{Frustrations}
+Brandon finds financial platforms intimidating because of unfamiliar terminology and the potential to lose money. Many investing resources assume prior knowledge, while running apps may focus primarily on recording workouts rather than helping beginners improve. Brandon wants a straightforward experience that makes learning and progress rewarding.
+
+\subsubsection{Connor – The Young Expert}
+\subsubsection*{Background}
+Connor is a third-year Commerce student specializing in Finance, returning to university after completing a year-long co-op placement at IG Wealth Management. Coming from a long line of financial professionals, Connor has developed a strong interest in financial management and aspires to build a successful career in the industry. As a top-performing student and hardworking individual, Connor is confident in his financial knowledge and enjoys applying what he has learned to real-world situations.
+
+\subsubsection*{Goals and Motivations}
+Connor wants to excel academically and build on the professional experience gained during his co-op placement to advance his career in financial management. He enjoys demonstrating his financial knowledge and sharing his opinions on investment opportunities and market trends. Although Connor is an avid sports fan, he recognizes that balancing academics, career ambitions, and personal interests leaves him with little time to exercise. He wants to find ways to incorporate physical activity into his busy schedule without compromising his professional goals.
+
+\subsubsection*{Behaviours and Habits}
+Connor maintains a demanding schedule focused on academics, career development, and expanding his financial knowledge. He regularly follows financial news, monitors market trends, and enjoys discussing investment strategies with others. Connor is competitive and motivated by measurable results, academic achievement, and opportunities to demonstrate his expertise. While he enjoys watching sports, exercise is not currently a consistent part of his routine due to his time commitments.
+
+\subsubsection*{Needs and Expectations}
+\begin{itemize}
+    \item Advanced financial tools and simulated trading features that allow him to apply his existing investment knowledge.
+    \item Access to market trends, investment opportunities, and performance statistics to support informed decision-making.
+    \item Competitive features such as rankings, challenges, and performance comparisons to showcase his financial expertise.
+    \item Efficient running and exercise tracking that fits into his busy academic and professional schedule.
+    \item Personalized fitness goals, progress tracking, and achievable challenges that encourage consistent physical activity.
+    \item An engaging platform that combines financial competition with physical activity, allowing him to pursue both interests in one place.
+\end{itemize}
+
+\subsubsection*{Frustrations}
+Connor finds it difficult to balance his academic workload, career ambitions, and personal interests while maintaining an active lifestyle. Beginner-focused financial platforms may not provide enough depth or challenge to keep him engaged, while traditional fitness applications may not offer the competitive elements that motivate him. Connor wants an efficient, challenging experience that allows him to demonstrate his financial knowledge while encouraging him to make time for exercise.
+\subsubsection{Daniella — The All-Arounder}
+\subsubsection*{Background}
+Daniella is a recent Civil Engineering graduate from the University of Guelph who gained valuable work experience and earned a substantial amount of money through multiple co-op placements throughout his degree. Through personal curiosity and working with her bank to understand her finances, Daniella developed a strong awareness of saving and managing money. Following graduation, she dedicated significant time to building her own investment portfolio and developing her financial knowledge. Although she has gained practical experience managing her savings, Daniella wants to become more confident in making independent investment decisions.
+
+\subsubsection*{Goals and Motivations}
+Daniella enjoys staying active through a variety of organized sports which he participates in throughout the year. She worries that the time commitment required by multiple sports leagues may eventually become unsustainable, and makes the decision to cut back on some of the organized leagues that she participates in. She is interested in beginning a more traditional circuit-style workout as these tend to be more convenient. Financially, she wants to continue growing her investment portfolio while gaining more experience evaluating opportunities and making important investment decisions independently.
+
+\subsubsection*{Behaviours and Habits}
+Daniella balances her professional responsibilities and personal interests while maintaining an active social life through organized sports. She prefers physical activities that are engaging, competitive, and social. Financially, Daniella takes an active role in monitoring his savings and managing his investment portfolio. She is curious, self-motivated, and willing to learn independently, but recognizes that managing a portfolio with real money offers limited opportunities to experiment with unfamiliar strategies without risking her savings.
+
+\subsubsection*{Needs and Expectations}
+\begin{itemize}
+    \item A realistic stock trading simulator that allows her to practice making independent investment decisions without risking real money.
+    \item Investment tools that help evaluate market trends, compare opportunities, and understand the potential risks and outcomes of different strategies.
+    \item Performance tracking and feedback to evaluate investment decisions and identify areas for improvement.
+    \item Convenient fitness tracking and personalized activity goals that fit her professional responsibilities and sports league commitments.
+    \item Flexible exercise recommendations that provide alternatives to traditional gym workouts and help maintain fitness during busy periods.
+    \item An integrated platform that encourages both financial development and physical activity without requiring excessive time or effort.
+\end{itemize}
+
+\subsubsection*{Frustrations}
+Daniella finds it challenging to balance his professional life, multiple sports leagues, and financial goals without over-committing her time. Although she enjoys sports, she recognizes that relying entirely on organized leagues may make it difficult to maintain a consistent fitness routine year-round. Similarly, while she has successfully developed her own investment portfolio, she wants more opportunities to test strategies and learn from her decisions without putting his savings at risk. Daniella wants a flexible and practical solution that supports her financial growth and physical well-being while fitting naturally into his lifestyle.
+
 \lips
 \subsection{Priorities Assigned to Users}
+The project's main priority will be to focus on the beginner - novice users of the application. The goal will be to teach the basis of health/fitness and financial literacy.
 \lips
 \subsection{User Participation}
+User participation will be incorporated into the development process. User feedback will help to make design decisions and provide a better scope of features. 
+\begin{itemize}
+    \item User interviews planned for Term 1 (CD-Fall document) to help elicit requirements and plan for the development. 
+    \item User testing on demo builds planned for Term 2 (Weeks 17 and 21) to receive feedback on decisions and provide an outside source of feedback.
+\end{itemize}
 \lips
 \subsection{Maintenance Users and Service Technicians}
 \lips
@@ -112,23 +204,549 @@ involved in the Project}
 
 \section{The Scope of the Work}
 \subsection{The Current Situation}
-\lips
+
+The modern software landscape treats physical health management and
+financial education as separate domains, despite both relying on
+consistent daily actions and the long-term benefits of compounding.
+Existing fitness applications, such as Strava, Garmin Connect, and
+Google Fit, track physical activity through metrics such as steps,
+heart rate, and GPS routes, while using badges, streaks, and milestones
+to encourage engagement. However, the long-term effectiveness of these
+incentives varies, and meaningful health benefits often require
+sustained participation over time \cite{edwards2016gamification,nishi2024digitalhealth}.
+
+Similarly, financial simulators provide users with risk-free investment
+experiences but may rely on virtual capital that is disconnected from
+real-world effort and financial constraints. These environments can
+allow users to experiment with investing without experiencing the
+consequences of actual financial decisions. Furthermore, their
+educational value depends on users' motivation to learn, rather than
+providing a direct incentive to develop stronger personal financial
+management habits.
+
+Financial literacy remains a significant challenge in Canada.
+Boisclair et al. found that only 42\% of Canadian respondents correctly
+answered three foundational questions concerning compound interest,
+inflation, and risk diversification \cite{boisclair2017financial}.
+The same study found that respondents who answered all three questions
+correctly were 10 percentage points more likely to have retirement
+savings, demonstrating an association between financial knowledge and
+retirement preparedness \cite{boisclair2017financial}.
+
+Despite their shared emphasis on consistency and compounding, physical
+activity tracking and financial education remain largely disconnected.
+Fitness data is primarily managed through health-focused platforms,
+while investment simulators do not typically connect simulated capital
+to users' real-world effort or habit formation. Consequently, users
+lack an integrated way to explore how small, repeated actions can
+contribute to long-term outcomes across both domains.
+
+This gap presents an opportunity for an integrated platform that
+connects physical activity with simulated investing. By linking
+consistent activity to incremental virtual investment opportunities,
+such a platform could introduce more tangible short-term incentives,
+demonstrate the effects of compounding, and teach financial concepts
+through familiar daily habits. This approach could encourage sustained
+participation while helping users develop the financial literacy
+needed for informed long-term decision-making.
+
+
 \subsection{The Context of the Work}
 \lips
 \subsection{Work Partitioning}
 \lips
-\subsection{Specifying a Business Use Case (BUC)}
-\lips
+\subsection{Specifying a BUC}
+
+This section specifies each Flexin Business Use Case (BUC), including
+its goal, actors, trigger, preconditions, main flow, alternative flows,
+and postconditions.
+
+\subsubsection*{BUC 1: User Onboarding}
+
+\textbf{Goal:} Create a user account and initialize their Flexin profile.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens Flexin and selects the registration option.
+
+\textbf{Preconditions:} The application is available and the user does not
+already have an active account.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user submits the required registration details.
+    \item Flexin validates the details and creates the account.
+    \item The user provides any requested baseline goals or preferences.
+    \item Flexin initializes the user's profile and virtual wallet.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If required details are missing or invalid,
+Flexin displays an error and requests corrections. If an account already
+exists, the user is prompted to sign in.
+
+\textbf{Postconditions:} The user account and initial virtual wallet are
+created successfully.
+
+\subsubsection*{BUC 2: Activity Ingestion}
+
+\textbf{Goal:} Retrieve and validate fitness activity data from supported
+integrations.
+
+\textbf{Actors:} End User, Android Health Connect, Garmin Integration.
+
+\textbf{Trigger:} New activity data becomes available or the user initiates
+an activity data synchronization.
+
+\textbf{Preconditions:} The user is registered and has granted the required
+permissions to an available supported integration.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves available activity data from Health Connect or Garmin.
+    \item Flexin validates the data and checks for duplicate activities.
+    \item Valid activities are stored in the user's activity history.
+    \item The application updates the user's activity summary.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If permissions are missing, the user is prompted
+to grant access. If an integration is unavailable or data is invalid,
+Flexin reports the issue without recording the invalid activity.
+
+\textbf{Postconditions:} Valid activity data is stored without duplicate
+records.
+
+\subsubsection*{BUC 3: Currency Allocation}
+
+\textbf{Goal:} Reward eligible physical activity with virtual currency.
+
+\textbf{Actors:} End User, Flexin Reward System.
+
+\textbf{Trigger:} A validated activity satisfies a configured reward threshold.
+
+\textbf{Preconditions:} The user has an active account and the activity has
+been validated.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin evaluates the activity against the reward rules.
+    \item The system calculates the eligible virtual currency reward.
+    \item Flexin credits the user's virtual wallet and records the transaction.
+    \item The user can view the updated balance and reward details.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the activity does not meet the reward
+threshold, no currency is awarded. If the activity has already been
+rewarded, Flexin prevents duplicate crediting.
+
+\textbf{Postconditions:} The wallet balance and transaction ledger reflect
+any eligible reward.
+
+\subsubsection*{BUC 4: Asset Purchase}
+
+\textbf{Goal:} Allow the user to purchase fictional financial assets using
+virtual currency.
+
+\textbf{Actors:} End User, Flexin Market Engine.
+
+\textbf{Trigger:} The user submits a simulated buy order.
+
+\textbf{Preconditions:} The user is registered, the selected asset exists,
+and a valid simulated price is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user selects an asset and enters the purchase quantity.
+    \item Flexin calculates the simulated purchase cost.
+    \item The system verifies that the user has sufficient virtual currency.
+    \item Flexin executes the simulated order and updates the wallet and holdings.
+    \item The completed transaction is recorded and displayed to the user.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the balance is insufficient, the order is
+rejected. If the asset or price is unavailable, the user is informed and
+the transaction is not executed.
+
+\textbf{Postconditions:} For a successful purchase, the virtual balance is
+reduced and the user's asset holdings increase accordingly.
+
+\subsubsection*{BUC 5: Asset Sale}
+
+\textbf{Goal:} Allow the user to sell fictional assets and receive virtual
+currency.
+
+\textbf{Actors:} End User, Flexin Market Engine.
+
+\textbf{Trigger:} The user submits a simulated sell order.
+
+\textbf{Preconditions:} The user holds a sufficient quantity of the selected
+asset and a valid simulated price is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The user selects an asset and enters the quantity to sell.
+    \item Flexin calculates the simulated sale proceeds.
+    \item The system verifies that the user holds sufficient units.
+    \item Flexin executes the simulated order and updates the holdings and wallet.
+    \item The completed transaction is recorded and displayed to the user.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the user holds insufficient units or the
+asset price is unavailable, the order is rejected without changing the
+portfolio.
+
+\textbf{Postconditions:} For a successful sale, the user's holdings decrease
+and the corresponding virtual currency is credited.
+
+\subsubsection*{BUC 6: Market Simulation}
+
+\textbf{Goal:} Generate and update fictional asset prices and market events.
+
+\textbf{Actors:} Flexin Market Engine, Flexin Scheduler.
+
+\textbf{Trigger:} A scheduled market simulation cycle begins.
+
+\textbf{Preconditions:} The market engine is operational and fictional assets
+have been initialized.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The scheduler initiates a simulation cycle.
+    \item The engine generates price changes and fictional market events
+    according to the system's simulation rules.
+    \item Flexin updates asset valuations and relevant market information.
+    \item Updated prices and events become available to portfolio and trading
+    functions.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If a simulation cycle fails, Flexin records the
+failure and retains the last valid market state until an update succeeds.
+
+\textbf{Postconditions:} The latest valid fictional asset prices and market
+events are available within Flexin. The engine does not rely on real-world
+financial market data.
+
+\subsubsection*{BUC 7: Portfolio Analytics}
+
+\textbf{Goal:} Present the user with portfolio performance and activity-related
+progress.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens the portfolio analytics view.
+
+\textbf{Preconditions:} The user is registered and portfolio or activity data
+is available.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves the user's virtual balance, holdings, and transaction
+    history.
+    \item The system calculates portfolio value and performance metrics using
+    simulated asset prices.
+    \item Flexin retrieves relevant activity and reward information.
+    \item The application displays the resulting portfolio and activity summaries.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If insufficient history exists, Flexin displays
+available information and indicates that more data is needed for certain
+metrics.
+
+\textbf{Postconditions:} The user can view their latest available portfolio
+and activity analytics.
+
+\subsubsection*{BUC 8: Financial Education}
+
+\textbf{Goal:} Provide educational guidance relevant to the user's simulated
+investing activity.
+
+\textbf{Actors:} End User, Flexin Educational Rules Engine.
+
+\textbf{Trigger:} The user requests financial guidance or opens an educational
+feature.
+
+\textbf{Preconditions:} The user can access the application.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin identifies the context of the user's request.
+    \item The educational rules engine selects relevant educational content.
+    \item Flexin presents explanations or guidance to the user.
+    \item The user reviews the content and may return to the application.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If no specific guidance matches the request,
+Flexin presents general educational content.
+
+\textbf{Postconditions:} Relevant educational content is displayed. Guidance
+is educational and does not execute trades on the user's behalf.
+
+\subsubsection*{BUC 9: Community Leaderboard}
+
+\textbf{Goal:} Allow users to view community rankings based on eligible
+activity or simulated portfolio metrics.
+
+\textbf{Actors:} End User.
+
+\textbf{Trigger:} The user opens the community leaderboard.
+
+\textbf{Preconditions:} The user has access to Flexin and has enabled any
+participation required for their own information to appear in rankings.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin retrieves eligible ranking data from participating users.
+    \item The system calculates or retrieves rankings using the configured metrics.
+    \item The application displays the leaderboard and its ranking criteria.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If the user has opted out or no ranking data is
+available, Flexin displays the available leaderboard information without
+including the user's opted-out data.
+
+\textbf{Postconditions:} The user can view the available community rankings
+in accordance with participation and privacy settings.
+
+\subsubsection*{BUC 10: Notifications}
+
+\textbf{Goal:} Notify users about relevant activity rewards, reminders, and
+simulated market events.
+
+\textbf{Actors:} End User, Flexin Notification Service, Android Device and OS.
+
+\textbf{Trigger:} A configured reminder, eligible reward, or relevant
+simulated market event occurs.
+
+\textbf{Preconditions:} The relevant event or schedule exists, and the user
+has enabled the applicable notifications and granted any required device
+permissions.
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item Flexin identifies the event and determines whether a notification
+    should be sent.
+    \item The system generates a notification containing relevant information.
+    \item Flexin sends the notification through the supported device mechanism.
+    \item The user receives the notification if device settings and permissions
+    permit delivery.
+\end{enumerate}
+
+\textbf{Alternative Flows:} If notifications are disabled or delivery fails,
+Flexin does not guarantee delivery and may retain the event for in-app display.
+
+\textbf{Postconditions:} The notification is submitted for delivery or the
+delivery failure is handled according to the system's notification rules.
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
 \lips
 \subsection{Data Dictionary}
-\lips
+
+\subsubsection{User} 
+
+\textbf{Description:} Represents a registered user of the system.
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline
+    
+    User ID & Integer & Unique identifier for a user account & Primary Key, Not Null \\ 
+    \hline 
+    
+    Password & String & User authentication credential & Encrypted, Not Null \\ 
+    \hline 
+    
+    Currency & Decimal & Current virtual currency balance & $\geq 0$ \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Associated portfolio identifier & Foreign Key \\ 
+    \hline 
+    
+    Experience Points & Integer & Accumulated experience points earned through platform activities & $\geq 0$ \\ 
+    \hline 
+    
+    Active Score & Integer & Current activity score used for engagement and competition metrics & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Competitor} 
+
+\textbf{Description:} Represents a user's competitors that may appear on leaderboards and challenges. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Competitor ID & Integer & Unique competitor record identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Associated user account & Foreign Key \\ 
+    \hline 
+    
+    Friend Flag & Boolean & Indicates whether the competitor is on the user's friends list & True/False \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Leaderboard} 
+
+\textbf{Description:} Stores ranking and competitive information for users. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Leaderboard ID & Integer & Unique leaderboard identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Associated user on the identified leaderboard & Foreign Key \\ 
+    \hline 
+    
+    User Score & Integer & User's competition score on the identified leaderboard & $\geq 0$ \\ 
+    \hline 
+    
+    Leaderboard Rank & String & Tier ranking (e.g., Bronze, Silver, Gold) & Enumerated Values \\ 
+    \hline 
+    
+    User Rank & Integer & Position within the leaderboard & $\geq 1$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Fitness Goal} 
+
+\textbf{Description:} Represents an individual fitness objective created by a user. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Goal ID & Integer & Unique goal identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Identifies which user has this goal & Foreign Key \\ 
+    \hline 
+    
+    Status & Enum & Current goal state & Active, Completed, Cancelled \\ 
+    \hline 
+    
+    Reward On Completion & Decimal & Virtual currency awarded upon completion & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Fitness Activity} 
+
+\textbf{Description:} Represents a fitness activity associated with achieving a fitness goal. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Activity ID & Integer & Unique activity identifier & Primary Key \\ 
+    \hline 
+    
+    Goal ID & Integer & Associated fitness goal & Foreign Key \\ 
+    \hline 
+    
+    Activity Name & String & Name of activity & Not Null \\ 
+    \hline 
+    
+    Activity Details & String & What is required/associated with carrying out the activity (i.e. 10,000 steps, burn 100 calories, etc.) & Not Null \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Portfolio} 
+
+\textbf{Description:} Represents a user's investment portfolio. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Unique portfolio identifier & Primary Key \\ 
+    \hline 
+    
+    Gains/Losses & Decimal & Current unrealized portfolio gain or loss & None \\ 
+    \hline 
+    
+    Asset ID & Integer & Financial asset within the identified portfolio & Foreign Key \\ 
+    \hline 
+    
+    Quantity & Integer & Quantity of asset held & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Financial Asset} 
+
+\textbf{Description:} Represents a simulated financial instrument available for trading. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Asset ID & Integer & Unique asset identifier & Primary Key \\ 
+    \hline 
+    
+    Cost To Buy/Sell & Decimal & Current purchase or sale price of the asset & $\geq 0$ \\ 
+    \hline 
+    
+    Quantity Available & Integer & Total quantity available in the simulated market & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Financial Transaction} 
+
+\textbf{Description:} Records the purchase and sale of financial assets within a user's portfolio. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Transaction ID & Integer & Unique transaction identifier & Primary Key \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Associated portfolio where the transaction occured & Foreign Key \\ 
+    \hline 
+    
+    Asset ID & Integer & Asset involved in the transaction & Foreign Key \\ 
+    \hline 
+    
+    Transaction Cost & Decimal & Cost of the asset at the time of transaction & $\geq 0$ \\ 
+    \hline 
+    
+    Transaction Date & DateTime & Timestamp of transaction execution & Not Null \\ 
+    \hline 
+\end{xltabular}
+
 
 \section{The Scope of the Product}
+This section will explore the different features of the application. This section explores the full scope of Flexin' application and will help to define main user functions.
 \subsection{Product Boundary}
-\lips
+
+\subsection*{App Functionality}
+The Flexin application is designed as an educational tool to help young adults improve their personal fitness and financial literacy. The app provides a range of interactive features that allow users to engage with both domains in a meaningful and motivating way.
+\begin{itemize}
+    \item Create a personal profile within the application. This profile allows users to:
+    \begin{enumerate}
+        \item Enter personal information to tailor and control fitness goals.
+        \item Select the desired level of difficulty and pace for financial learning modules.
+    \end{enumerate}
+    \item Enter, manage, and track fitness goals.
+    \item Complete fitness challenges to earn virtual currency.
+    \item Use virtual currency to invest in a simulated stock market environment to practice financial principles.
+    \item View other users' progress and compete to build the largest virtual investment portfolio.
+\end{itemize}
+\subsection*{Excluded Functionality / Outside Scope}
+The Flexin' application will be developed specifically for the Android operating system and optimized for use within Canada. Support for other operating systems or international deployment is outside the scope of this project.
+\subsection*{External Systems}
+To accurately track fitness goals, the application must retrieve data such as steps taken, heart rate, calories burned, and distance traveled. Modern Android devices provide these metrics natively, and the app will integrate with the Android Health Connect API to access this information.
+Additionally, many external fitness devices (e.g., Garmin watches) offer APIs and SDKs that provide detailed activity data. The \textit{Flexin} app will communicate with these external systems to retrieve and incorporate user fitness data where supported.
+
 \subsection{Product Use Case Table}
 \lips
 \subsection{Individual Product Use Cases (PUC's)}
@@ -200,16 +818,299 @@ Component Consistency &
 \endgroup
 
 \section{Usability and Humanity Requirements}
+
+This section outlines the usability and humanity requirements for the system, including ease of use, personalization and internationalization, learning, understandability and politeness, and accessibility.
+
 \subsection{Ease of Use Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-EOU-01 & 
+Onboarding Completion Time & 
+\textbf{Description:} The system shall enable new users to complete initial account setup and onboarding within 5 minutes. 
+
+\textbf{Rationale:} Users should be able to begin using the application almost immediately without excessive setup requirements. Within 5 minutes allows users to maintain their engagement with the system. If the setup and onboarding take too long, users may become frustrated and disengaged. 
+
+\textbf{Fit Criterion:} A first-time user shall be able to setup their account, complete onboarding and reach the main dashboard/screen within 5 minutes. This will be tested later in the project through user testing and observation.\\ 
+\hline
+
+UHR-EOU-02 & 
+Dashboard Accessibility & 
+\textbf{Description:} The system shall provide direct access to fitness progress, portfolio information, and rewards through the main dashboard.
+
+\textbf{Rationale:} Users should not need to navigate through multiple screens to access frequently used information. 
+
+\textbf{Fit Criterion:} Important high-level KPIs pertaining to fitness progress, portfolio value, and virtual currency balance shall be visible from the application's primary screen after login. Users should be able to answer questions like "How much currency do I have available?", "What percentage of my fitness goal is complete?" and "How is my portfolio performing?" within 1 minute after logging into the system. \\ 
+\hline
+
+UHR-EOU-03 & 
+Minimal Screen Navigation & 
+\textbf{Description:} The system shall minimize navigation complexity by ensuring that portfolio management and lower-level metric viewing can be reached from the main dashboard within two taps.
+
+\textbf{Rationale:} Users should not need to navigate through multiple screens to access detailed metrics and adjust their portfolios. Excessive navigation increases user frustration and decreases engagement. 
+
+\textbf{Fit Criterion:} Users shall be able to access detailed fitness statistics, portfolio management, virtual currency transactions, and goal tracking within two taps from the main dashboard.\\
+\hline
+
+UHR-EOU-04 & 
+Error Feedback and Recovery & 
+\textbf{Description:} The system shall provide clear, actionable, and immediate feedback to the user whenever user actions cannot be completed. 
+
+\textbf{Rationale:} Clear feedback helps users understand how to resolve issues and continue using the application. 
+
+\textbf{Fit Criterion:} Whenever an error occurs (i.e. the user is prevented to complete an action), the user will be notified immediately with a user-facing error message that shall explain the problem in great detail and provide guidance for corrective action.\\ 
+\hline
+
+UHR-EOU-05 & 
+Positive Feedback & 
+\textbf{Description:} The system shall provide immediate visual feedback following user actions to confirm whether the requested operation was completed successfully.
+
+\textbf{Rationale:} Users should be able to easily determine whether an action has been executed correctly without needing to manually verify the system state. Clear feedback increases user confidence and reduces confusion.
+
+\textbf{Fit Criterion:} All user-initiated actions, including goal updates, portfolio transactions, account modifications, and fitness device connections, shall display a confirmation message, notification, or visual state change within 2 seconds of successful completion.\\
+\hline
+
+UHR-EOU-06 & 
+Simple and Reliable Device Connectivity & 
+\textbf{Description:} The system shall simplify the process of connecting supported fitness devices and applications and maintain strong and reliable connections to these devices. 
+
+\textbf{Rationale:} Integration with existing fitness technologies is a core project goal. Users should be able to link their existing devices without requiring technical expertise. Once connected, the system shall maintain a stable connection to ensure continuous data synchronization so that the user is not constantly required to re-establish the connection - as this will cause user frustration.
+
+\textbf{Fit Criterion:} Users shall be able to perform a one-time action to connect a supported fitness data source through a guided setup workflow. Once connected the first time, the system shall not sever this connection more than three times per year without explicit user intervention.\\ 
+\hline
+
+UHR-EOU-07 & 
+Consistent User Interface & 
+\textbf{Description:} The system shall maintain consistent visual design, terminology, and navigation patterns across all screens. 
+
+\textbf{Rationale:} Consistency improves user familiarity and reduces the effort required to learn new functionality. 
+
+\textbf{Fit Criterion:} Similar actions shall use consistent icons, terminology, colors, and interaction patterns throughout the application.\\ 
+\hline
+
+UHR-EOU-08 & 
+Learnability & 
+\textbf{Description:} The system shall require no more than 10 minutes for users to become proficient in performing core tasks and navigating the application. 
+
+\textbf{Rationale:} Users should not require an excessive amount of time to learn and use the application effectively. Excessive time required to learn how to use the core functionalities of the application may lead to user frustration and disengagement.
+
+\textbf{Fit Criterion:} First-time users shall be able to make their first investment, set one fitness goal, and view fitness and portfolio performance metrics within 10 minutes from landing on the main screen after login.\\ 
+\hline
+
+UHR-EOU-09 & 
+Efficient Re-Learnability & 
+\textbf{Description:} The system shall require no more than 5 minutes for former users to re-learn how to execute core tasks and navigating the application. 
+
+\textbf{Rationale:} Even after time away from the system, users should be able to pick back up right where they left off. If a user has to spend too much time re-learning the application, it may lead to frustration and discourage users from re-engaging with the system.
+
+\textbf{Fit Criterion:} Former users with at least 1 month of consistent daily usage shall be able to re-learn how to manage at least one investment, manage at least one fitness goal, and view fitness and portfolio performance metrics within 5 minutes of returning to the system after 6+ months of inactivity.\\ 
+\hline
+
+\end{xltabular}
+
 \subsection{Personalization and Internationalization Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-PER-01 &
+Personalized Fitness Goals &
+\textbf{Description:} The system shall allow users to configure fitness goals based on their personal fitness level and preferences.
+
+\textbf{Rationale:} Users will possess different fitness capabilities and activity levels. Personalized goals encourage engagement while remaining achievable.
+
+\textbf{Fit Criterion:} Users shall be able to modify daily and weekly fitness goals that will take effect the next time period.\\
+\hline
+
+UHR-PER-02 &
+Customizable Notifications &
+\textbf{Description:} The system shall allow users to configure which notifications they receive and how frequently they are delivered.
+
+\textbf{Rationale:} Users have varying preferences regarding reminders and activity notifications.
+
+\textbf{Fit Criterion:} Users shall be able to independently enable or disable workout reminders, portfolio updates, and achievement notifications.\\
+\hline
+
+UHR-PER-03 &
+Customizable Privacy Settings &
+\textbf{Description:} The system shall allow users to control the visibility of their fitness achievements, portfolio statistics, and leaderboard participation.
+
+\textbf{Rationale:} Users have different privacy expectations and comfort levels regarding public sharing of personal information.
+
+\textbf{Fit Criterion:} Users shall be able to independently configure visibility settings for all community-facing features that will take immediate effect.\\
+\hline
+
+UHR-PER-04 &
+Customizable Competition Groups &
+\textbf{Description:} The system shall allow users to customize the set of users with whom they share and compare fitness and portfolio progress.
+
+\textbf{Rationale:} Users may have different comfort levels regarding competition and sharing personal achievements. Allowing users to select their competition group creates a more personalized and engaging experience where friends can motivate each other.
+
+\textbf{Fit Criterion:} Users shall be able to choose between private, friends-only, and public, community-wide, leaderboard participation.\\
+\hline
+
+UHR-INT-01 &
+Canadian Time Zone Support &
+\textbf{Description:} The system shall automatically detect and utilize the user's local Canadian time zone when calculating daily goals, rewards, and streaks.
+
+\textbf{Rationale:} Users may access the application from any Canadian province or territory.
+
+\textbf{Fit Criterion:} Daily statistics and streak calculations shall correspond to the user's local device time zone.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Learning Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-LRN-01 & 
+Minimal User Training & 
+\textbf{Description:} The system shall enable first-time users to successfully use the application's core functionality without requiring formal training.
+
+\textbf{Rationale:} The application targets users with varying expertises and should be intuitive for a broad audience.
+
+\textbf{Fit Criterion:} At least 80\% of first-time users shall be able to synchronize fitness data, earn virtual currency, and purchase an investment asset without external assistance.\\
+\hline
+
+UHR-LRN-02 & 
+Learning Curve of Financial Concepts & 
+\textbf{Description:} The system shall present investment concepts in a manner that can be understood by users with little or no prior experience. 
+
+\textbf{Rationale:} One of the system's primary goals is to educate users on financial investing. This means that all users, regardless of their prior financial experience, should be capable of learning and understanding the financial concepts presented.
+
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time investors shall successfully complete their first virtual investment and view their portfolio's growth after one week without assistance.\\ 
+\hline
+
+UHR-LRN-03 & 
+Learning Curve of Fitness Based Concepts & 
+\textbf{Description:} The system shall present fitness concepts in a manner that can be understood by users with little or no prior experience. 
+
+\textbf{Rationale:} One of the system's primary goals is to educate users on fitness and health related activities. This means that all users, regardless of their prior fitness experience, should be capable of learning and understanding the fitness concepts presented.
+
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time participants in a new fitness activity shall successfully accomplish their set goal and view their health metrics after one week without assistance.\\ 
+\hline
+
+UHR-LRN-04 & 
+Integrated Educational Assistance & 
+\textbf{Description:} The system shall provide contextual learning resources within the application.
+
+\textbf{Rationale:} In the event that users encounter unfamiliar fitness or financial terminology while using the platform, the system should offer immediate assistance to enhance their understanding so that users can quickly learn and pick up new concepts.
+
+\textbf{Fit Criterion:} Users shall be able to access explanatory information for all core financial and fitness concepts directly from the screen where the concept appears.\\
+\hline
+
+UHR-LRN-05 & 
+User Help Documentation & 
+\textbf{Description:} The system shall provide readily accessible help documentation describing the application's functionality should any users require it.
+
+\textbf{Rationale:} Users should be able to resolve common questions without external support.
+
+\textbf{Fit Criterion:} A help section shall be accessible from the application's settings menu and include explanations of all major features. Support teams should receive zero inquiries about basic system functionality.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-ACC-01 &
+Screen Reader Compatibility &
+\textbf{Description:} The system shall support screen reader technologies for all primary application workflows.
+
+\textbf{Rationale:} Users with visual impairments may rely on screen readers to navigate the application. Users with visual impairments should not be excluded from benefitting from this application.
+
+\textbf{Fit Criterion:} All interactive interface elements shall have descriptive accessibility labels that can be read aloud.\\
+\hline
+
+UHR-ACC-02 &
+Scalable Text Support &
+\textbf{Description:} The system shall support device-configured text scaling without loss of functionality.
+
+\textbf{Rationale:} Users with reduced vision may require larger text sizes to comfortably use the application.
+
+\textbf{Fit Criterion:} All application screens shall remain usable when the device text size is increased to the maximum supported accessibility setting.\\
+\hline
+
+UHR-ACC-03 &
+Color Independent Information &
+\textbf{Description:} The system shall not rely solely on color to communicate information or system status.
+
+\textbf{Rationale:} Users with color vision deficiencies may be unable to distinguish information represented exclusively through color.
+
+\textbf{Fit Criterion:} All status indicators, icons, buttons, graphs, and notifications shall include a secondary visual indicator in addition to color.\\
+\hline
+
+UHR-ACC-04 &
+Touch Target Accessibility &
+\textbf{Description:} The system shall provide interface controls that are sufficiently large for reliable touch interaction.
+
+\textbf{Rationale:} Users with limited dexterity or motor impairments may have difficulty selecting small interface elements.
+
+\textbf{Fit Criterion:} All touch-interactive elements shall meet the minimum touch target size recommended by Android accessibility guidelines.\\
+\hline
+
+UHR-ACC-05 &
+Alternative Notification Methods &
+\textbf{Description:} The system shall provide both visual notifications, audio cues, and haptic feedback for important events and shall not rely exclusively on one.
+
+\textbf{Rationale:} Users who are deaf or hard of hearing may not perceive audio notifications. Users with visual impairments may not be able to perceive visual notifications. Providing alternative notification methods ensures that all users can stay informed of important events.
+
+\textbf{Fit Criterion:} All important user notifications shall be easily accesible to all users within the application interface.\\
+\hline
+
+UHR-ACC-06 &
+Inclusive Activity Tracking &
+\textbf{Description:} The system shall not require a single type of physical activity as the sole method of earning rewards.
+
+\textbf{Rationale:} Users with disabilities, injuries, temporary medical conditions, or differing fitness abilities may be unable to participate in certain forms of exercise.
+
+\textbf{Fit Criterion:} The system shall support multiple reward-eligible activity types and allow users to select activities appropriate to their abilities.\\
+\hline
+
+\end{xltabular}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
@@ -229,45 +1130,522 @@ Component Consistency &
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
-\lips
+The application will be operable through mobile smartphones and smart tablets with cellular/Wi-Fi connectivity. Inputs will be completed through health tracking services that will be provided by the smart device that is running the software, or optionally received through other technologies used for health tracking.
 \subsection{Wider Environment Requirements}
 \lips
 \subsection{Requirements for Interfacing with Adjacent Systems}
-\lips
+Many outside systems will be used:
+\begin{itemize}
+    \item HTTPS connection to external APIs
+    \begin{enumerate}
+        \item External Technology Connection (e.g., Garmin API, Strava SDK)
+        \item Software-specific API for health-related tracking (Android Health Connect)
+    \end{enumerate}
+    \item HTTPS connection to internal APIs
+    \begin{enumerate}
+        \item Java SpringBoot API for storing user data and retrieving from the database
+    \end{enumerate}
+    \item Database Connection
+    \begin{enumerate}
+        \item Privately hosted MySQL server
+    \end{enumerate}
+\end{itemize}
 \subsection{Productization Requirements}
 \lips
 \subsection{Release Requirements}
 \lips
 
 \section{Maintainability and Support Requirements}
+
+This section outlines the requirements for maintaining and supporting the software product throughout its lifecycle. It includes specifications for maintenance procedures, support services, and any necessary adaptability procedures to ensure the product remains functional and up-to-date.
+
 \subsection{Maintenance Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-MNT-01 &
+Fitness Activity Addition Effort &
+\textbf{Description:} The system shall support the addition of new reward-eligible fitness activity types with minimal maintenance effort.
+
+\textbf{Rationale:} Future releases may introduce additional forms of exercise and adaptive fitness activities.
+
+\textbf{Fit Criterion:} A new activity type shall be implemented, deployed, and fully tested within 2 months.\\
+\hline
+
+MAS-MNT-02 &
+Investment Asset Addition Effort &
+\textbf{Description:} The system shall support the addition of new simulated investment assets with minimal maintenance effort.
+
+\textbf{Rationale:} Future versions of the application may expand the types of simulated investments available to users.
+
+\textbf{Fit Criterion:} A new investment asset shall be implemented, deployed, and fully tested within 2 months.\\
+\hline
+
+MAS-MNT-03 &
+Corrective Maintenance Effort &
+\textbf{Description:} The system shall efficiently handle and correct software defects.
+
+\textbf{Rationale:} Timely defect resolution improves reliability and user satisfaction.
+
+\textbf{Fit Criterion:} Critical production defects shall be fixed and deployed within 5 business days of of the defect being reported.\\
+\hline
+
+MAS-MNT-04 &
+Third-Party Integration Maintenance &
+\textbf{Description:} The system shall support updates to external fitness platform integrations with minimal impact on overall system functionality.
+
+\textbf{Rationale:} External APIs may change independently of the application and require maintenance.
+
+\textbf{Fit Criterion:} Changes required to maintain compatibility with a supported fitness provider shall be deployed within 5 business days of identifying the incompatibility.\\
+\hline
+
+MAS-MNT-05 &
+Traceability &
+\textbf{Description:} The system shall provide sufficient documentation and traceability to allow future developers to efficiently understand previous changes and maintenance activities.
+
+\textbf{Rationale:} Accurate and up-to-date documentation improves maintainability by allowing future developers to understand previous modifications, known issues, and the reasoning behind architectural and implementation decisions.
+
+\textbf{Fit Criterion:} For every production release, developers shall be able to identify the implemented changes, associated issues, and documented design decisions within 30 minutes of searching project records.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Supportability Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-SUP-01 &
+Backup and Recovery Support &
+\textbf{Description:} The system shall support recovery of user and application data following data corruption or infrastructure failure.
+
+\textbf{Rationale:} Effective recovery capabilities minimize the impact of data loss incidents on users.
+
+\textbf{Fit Criterion:} The system shall be capable of restoring application data from the most recent successful backup within 24 hours. Data backups must successfully occur at least once daily.\\
+\hline
+
+MAS-SUP-02 &
+Self-Service User Support &
+\textbf{Description:} The system shall provide integrated help resources that allow users to resolve FAQs without requiring direct support from developers.
+
+\textbf{Rationale:} Users should be able to independently resolve common issues related to account management or recovery, activity tracking, portfolio management, and virtual currency rewards.
+
+\textbf{Fit Criterion:} Help documentation covering account management and recovery, activity synchronization, portfolio management, and reward allocation shall be accessible from within the application at all times. The user shall be able to successfully integrate these recovery protocols without developer intervention.\\
+\hline
+
+MAS-SUP-03 &
+Contact Support Capability &
+\textbf{Description:} The system shall provide users with a mechanism to submit feedback or support requests for more complicated issues.
+
+\textbf{Rationale:} Some issues may require assistance beyond self-service documentation.
+
+\textbf{Fit Criterion:} Users shall be able to submit feedback or support requests from within the application at any time. These requests must be processed within 2 business days with a response sent back to the user regarding details pertaining to the plans and timeline to address the issue.\\
+\hline
+
+\end{xltabular}
+
 \subsection{Adaptability Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-ADPT-01 &
+External Fitness Provider Adaptability &
+\textbf{Description:} The system shall support the addition of new fitness data providers without requiring major changes to user workflows.
+
+\textbf{Rationale:} The ecosystem of fitness tracking applications and devices will evolve over time and additional providers may become desirable.
+
+\textbf{Fit Criterion:} Users shall be able to successfully connect newly supported fitness providers using the same workflow used for existing providers.\\
+\hline
+
+MAS-ADPT-02 &
+Mobile Platform Portability &
+\textbf{Description:} The system shall support future deployment on additional mobile platforms beyond the initially targeted platform - Android devices.
+
+\textbf{Rationale:} Initial deployment is limited to Android, but future releases may target additional mobile operating systems, such as iOS.
+
+\textbf{Fit Criterion:} User account information and application data shall remain portable across supported platforms.\\
+\hline
+
+MAS-ADPT-03 &
+Future AI Service Adaptability &
+\textbf{Description:} The system shall support future integration of AI-assisted educational content.
+
+\textbf{Rationale:} With the rapid growth of AI technologies, future releases may provide personalized fitness and financial learning experiences using AI technologies.
+
+\textbf{Fit Criterion:} AI-powered educational services shall be deployable without requiring modifications to existing user accounts.\\
+\hline
+
+\end{xltabular}
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-ACC-01 &
+Authentication and Sessions &
+\textbf{Description:} Users shall authenticate before accessing personal fitness data, portfolios, or transactions. The React Native client shall authenticate with the Spring API using secure token-based sessions.
+
+\textbf{Rationale:} Authentication protects personal data and virtual assets from unauthorized access.
+
+\textbf{Fit Criterion:} All protected API endpoints shall reject missing or invalid access tokens with HTTP 401. Access tokens shall expire within 60 minutes, with refresh or re-authentication required. \\
+\hline
+
+SEC-ACC-02 &
+Role-Based Authorization &
+\textbf{Description:} Role-based access control shall restrict users to their own records and limit administrative or evaluator access to authorized functions.
+
+\textbf{Rationale:} Access restrictions prevent unauthorized modifications and cross-account data exposure.
+
+\textbf{Fit Criterion:} JUnit security tests shall confirm that attempts by standard users to access or modify another user's records return HTTP 403 in all tested cases. \\
+\hline
+
+SEC-ACC-03 &
+Fitness Integration Authorization &
+\textbf{Description:} Flexin shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored using secure, Android Keystore-backed storage.
+
+\textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
+
+\textbf{Fit Criterion:} Integration tokens shall use Android Keystore-backed secure storage. No credentials, tokens, or secrets shall be committed to the project repository. \\
+\hline
+
+\end{xltabular}
 \subsection{Integrity Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-INT-01 &
+Activity Validation &
+\textbf{Description:} The Spring backend shall validate activity metrics and detect duplicate records, overlapping timestamps, and implausible activity values before awarding virtual currency.
+
+\textbf{Rationale:} Validation prevents activity manipulation and unauthorized currency generation.
+
+\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above 250 steps per minute shall be flagged for verification. \\
+\hline
+
+SEC-INT-02 &
+Ledger Consistency &
+\textbf{Description:} All virtual currency operations, including rewards, trades, and dividends, shall use ACID-compliant MySQL transactions.
+
+\textbf{Rationale:} Transactional consistency prevents duplicate rewards, negative balances, and partial updates.
+
+\textbf{Fit Criterion:} Stress tests with 100 concurrent trade requests against one wallet shall verify that every operation commits consistently or rolls back completely, without partial state changes. \\
+\hline
+
+SEC-INT-03 &
+Server-Side Valuation &
+\textbf{Description:} The Spring backend and custom market engine shall determine asset prices, portfolio valuations, and currency calculations. The mobile client shall not control authoritative values.
+
+\textbf{Rationale:} Server-side calculations prevent client manipulation of prices and balances.
+
+\textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. \\
+\hline
+
+\end{xltabular}
 \subsection{Privacy Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-PRV-01 &
+Health Data Protection &
+\textbf{Description:} Sensitive personal information and fitness telemetry shall be protected through encryption in transit and at rest.
+
+\textbf{Rationale:} Encryption protects confidential user information against unauthorized disclosure.
+
+\textbf{Fit Criterion:} Client-server communications shall use TLS 1.3. Sensitive biometric data stored in MySQL shall be encrypted at rest using AES-256. \\
+\hline
+
+SEC-PRV-02 &
+Opt-In Community Sharing &
+\textbf{Description:} Leaderboard participation shall be opt-in. Users may share activity streaks and simulated portfolio returns using a chosen alias.
+
+\textbf{Rationale:} Users should control whether their activity and simulated financial performance are visible to others.
+
+\textbf{Fit Criterion:} Leaderboard sharing shall be disabled by default. Enabling it shall require explicit consent and disclose which pseudonymous information and statistics will be shared. \\
+\hline
+
+SEC-PRV-03 &
+User Data Deletion &
+\textbf{Description:} Users shall be able to request account deletion through the application settings, removing associated personal records.
+
+\textbf{Rationale:} Users should retain control over their personal information and account history.
+
+\textbf{Fit Criterion:} Personal health metrics, credentials, and fitness history shall be purged from the active database within 24 hours of a deletion request. Only appropriately anonymized transaction aggregates may be retained for auditing. \\
+\hline
+
+\end{xltabular}
 \subsection{Audit Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-AUD-01 &
+Economic Event Logging &
+\textbf{Description:} Flexin shall maintain an append-only audit ledger for currency rewards, simulated trades, dividends, and market price updates.
+
+\textbf{Rationale:} Auditable records support troubleshooting, transaction verification, and evaluation of the simulated economy.
+
+\textbf{Fit Criterion:} Database permissions shall prevent UPDATE and DELETE operations on audit records. Every recorded transaction shall reference a valid source activity or market event, where applicable. \\
+\hline
+
+SEC-AUD-02 &
+Security Event Logging &
+\textbf{Description:} The backend shall log failed authentication, token validation failures, duplicate activity submissions, anti-exploit flags, and runtime exceptions.
+
+\textbf{Rationale:} Security logs help identify suspicious activity and diagnose integration or system failures.
+
+\textbf{Fit Criterion:} Structured logs shall capture severity, client IP address where available, authenticated user ID where applicable, and exception details for runtime errors. \\
+\hline
+
+\end{xltabular}
 \subsection{Immunity Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+SEC-IMM-01 &
+Injection Defense &
+\textbf{Description:} The backend and database layer shall be protected against SQL injection, cross-site scripting (XSS), and command injection.
+
+\textbf{Rationale:} Injection vulnerabilities could compromise database integrity and expose user information.
+
+\textbf{Fit Criterion:} Database access shall use parameterized queries or prepared statements. Static analysis and security reviews shall identify zero unresolved high-severity injection vulnerabilities before release. \\
+\hline
+
+SEC-IMM-02 &
+Rate Limiting &
+\textbf{Description:} The Spring API shall limit request rates for authentication, trade submission, and activity synchronization endpoints.
+
+\textbf{Rationale:} Rate limiting reduces brute-force attempts, automated abuse, and service overload.
+
+\textbf{Fit Criterion:} A configured limit, initially 60 requests per minute per authenticated user or client IP, shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. \\
+\hline
+
+SEC-IMM-03 &
+Client Environment Validation &
+\textbf{Description:} The Android client shall detect supported indicators of rooted or otherwise untrusted environments and restrict sensitive functionality when tampering is detected outside developer builds.
+
+\textbf{Rationale:} Compromised environments can increase the risk of credential exposure and activity manipulation.
+
+\textbf{Fit Criterion:} In supported production configurations, detected root or tampering indicators shall trigger restrictions on community leaderboard access and virtual currency minting. Developer builds shall remain available for authorized testing. \\
+\hline
+
+\end{xltabular}
 
 \section{Cultural Requirements}
+
+This section outlines the cultural requirements for the software system. Cultural requirements refer to the expectations and norms of the target user base, which may vary based on geographic location, language, social norms, and other cultural factors. These requirements ensure that the software is culturally sensitive and appropriate for its intended audience.
+
 \subsection{Cultural Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+CUL-01 & 
+Supports Canadian Languages & 
+\textbf{Description:} The system shall present all user-facing functionality with the option to choose between English and French. 
+
+\textbf{Rationale:} The application will initially be deployed strictly within Canada, where English and French are the country's official languages. 
+
+\textbf{Fit Criterion:} All user-facing text shall be stored separately from application logic and be replaceable through a localization framework.\\ 
+\hline
+
+CUL-02 & 
+Inclusive Financial Education & 
+\textbf{Description:} The system shall provide financial education content that does not assume prior investing knowledge. 
+
+\textbf{Rationale:} Users possess varying levels of financial literacy. The system seeks to educate users of all levels of financial literacy - including those who may have limited exposure to investing concepts. 
+
+\textbf{Fit Criterion:} All investment-related terminology presented to users shall include a plain-language explanation accessible from within the application. All financial concepts shall be explained in simple, non-technical language to start, until the system deems the user has gained sufficient experience within the application. During user testing, a survey will be conducted to gather feedback on the clarity and understandibility of the financial education content - at least 80\% of users shall express great satisfaction with little to no problems understanding financial concepts.\\ 
+\hline
+
+CUL-03 & 
+Inclusive Fitness Participation & 
+\textbf{Description:} The system shall accommodate users with varying fitness levels by allowing personalized activity participation. 
+
+\textbf{Rationale:} Users may differ significantly in age, physical ability, health conditions, and exercise experience. The application should promote participation regardless of fitness background. 
+
+\textbf{Fit Criterion:} Users shall be able to participate in their preferred fitness activities while still gaining subsequent rewards.\\ 
+\hline
+
+CUL-04 & 
+Culturally Neutral Educational Content & 
+\textbf{Description:} The system shall present fitness and financial education content using culturally neutral language and examples (i.e. sample companies in the virtual market). 
+
+\textbf{Rationale:} The Canadian population consists of individuals from diverse cultural, religious, and socioeconomic backgrounds. Educational content should be inclusive and broadly applicable. 
+
+\textbf{Fit Criterion:} Educational content shall not require familiarity with a specific cultural background, religion, ethnicity, or region to be understood.\\ 
+\hline
+
+\end{xltabular}
 
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
 \lips
 \subsection{Standards Compliance Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+COMP-STD-01 & 
+Android Platform Compliance & 
+\textbf{Description:} The system shall comply with the Google Play Developer Program Policies. 
+
+\textbf{Rationale:} The application is intended to be deployed on the Google Play Store as to be accessible on Android devices and as a result must conform to platform requirements. 
+
+\textbf{Fit Criterion:} The application shall successfully pass all mandatory checks required for distribution through the Google Play Store.\\ 
+\hline
+
+COMP-STD-02 & 
+Accessibility Compliance & 
+\textbf{Description:} The system shall comply with WCAG 2.1 Level AA accessibility guidelines for user-facing functionality. 
+
+\textbf{Rationale:} The system should offer a simple and delightful user experience that should be accessible to users with varying abilities (i.e. user's with colourblindness, hearing impairments, etc.).
+
+\textbf{Fit Criterion:} All major user workflows shall satisfy WCAG 2.1 Level AA success criteria as evaluated using automated accessibility tools and manual testing.\\ 
+\hline
+
+COMP-STD-03 & 
+TypeScript Coding Standards Compliance & 
+\textbf{Description:} The frontend codebase shall comply with the Google TypeScript Style Guide. 
+
+\textbf{Rationale:} Consistent coding standards improve maintainability, readability, and long-term project quality. 
+
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\hline
+
+COMP-STD-04 & 
+Java Coding Standards Compliance & 
+\textbf{Description:} The backend codebase shall comply with the Oracle Java Code Conventions. 
+
+\textbf{Rationale:} Standardized coding practices improve maintainability, code review effectiveness, and software quality. 
+
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\hline
+
+COMP-STD-05 & 
+Database Compliance & 
+\textbf{Description:} The system shall store data in compliance with the MySQL Reference Manual and the SQL Standard (ISO/IEC 9075). 
+
+\textbf{Rationale:} The project architecture relies upon MySQL as the primary relational database system. 
+
+\textbf{Fit Criterion:} All schema definitions and queries will be tested to execute successfully on the supported MySQL version without compatibility warnings or errors.\\ 
+\hline
+
+COMP-STD-06 & 
+Software Testing Standard Compliance & 
+\textbf{Description:} The system shall undergo thorough and complete testing in accordance with the IEEE 29119 Software Testing Standard. 
+
+\textbf{Rationale:} Consistent testing practices reduce defects and improve software reliability. The system will comply with this standard to provide a unified, process-driven framework for software testing.
+
+\textbf{Fit Criterion:} All code merged into the main branch shall pass automated test execution in the CI/CD pipeline based on tests that were developed in accordance with the IEEE 29119 Software Testing Standard.\\ 
+\hline
+
+COMP-STD-07 & 
+Information Security Compliance & 
+\textbf{Description:} The system shall be designed in accordance with the security principles outlined in ISO/IEC 27001. 
+
+\textbf{Rationale:} The application stores personal, financial-learning, and fitness-related information that must be protected against unauthorized access and disclosure. 
+
+\textbf{Fit Criterion:} Security controls for authentication, access control, data storage, and data transmission shall align with ISO/IEC 27001 recommendations.\\ 
+\hline
+
+\end{xltabular}
 
 \section{Open Issues}
 \lips
@@ -294,8 +1672,18 @@ Inhibit the New Product}
 \lips
 
 \section{Tasks}
+
+This section outlines the tasks that will be undertaken during the development of the solution. Each task is associated with a specific duration, start and finish date, and any dependencies on other tasks. The tasks are designed to ensure that the project progresses in a structured manner, with clear milestones and deliverables. This section also includes the phase-in plan identifying when requirements will be phased into the development process.
+
 \subsection{Project Planning}
-\lips
+
+The team will follow an agile development process throughout the development of this solution, with a focus on iterative development and continuous feedback. The project will be divided into several sprints, each lasting two weeks. At the end of each sprint, the team will conduct a review to assess progress and make necessary adjustments. Each sprint will consist of planning, developing, testing, and deploying. This will allow the team to make iterative progress while still ensuring that previous iterations are effective and meet the requirements of the stakeholders.
+The detailed breakdown of weekly tasks and deliverables can be found in \href{pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{section 9 of the development plan} and is the basis for the following project task breakdown:
+
+\small
+\setlength{\tabcolsep}{4pt}
+% Table below generated with the help of Copilot (tasks taken from dev plan section 9)
+\begin{xltabular}{\textwidth}{|p{4.0cm}|p{2.0cm}|p{1.7cm}|p{1.7cm}|X|} \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endfirsthead \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endhead Requirements Gathering \& Analysis & 4 weeks & 21-Sep-26 & 18-Oct-26 & None \\ \hline User Interviews \& Validation & 3 weeks & 05-Oct-26 & 25-Oct-26 & Requirements Gathering \& Analysis \\ \hline Fitness API Research \& Integration Design & 3 weeks & 12-Oct-26 & 01-Nov-26 & Requirements Gathering \& Analysis \\ \hline Virtual Currency System Design & 2 weeks & 26-Oct-26 & 08-Nov-26 & User Interviews \& Validation \\ \hline Market Simulation Design & 3 weeks & 19-Oct-26 & 08-Nov-26 & Requirements Gathering \& Analysis \\ \hline UI/UX Design \& Prototyping & 4 weeks & 26-Oct-26 & 22-Nov-26 & User Interviews \& Validation \\ \hline Proof of Concept Development & 5 weeks & 02-Nov-26 & 06-Dec-26 & Fitness API Design, Currency Design \\ \hline Backend Architecture \& Database Development & 5 weeks & 11-Jan-27 & 14-Feb-27 & Design Document \\ \hline Frontend Development & 6 weeks & 11-Jan-27 & 21-Feb-27 & UI Design \\ \hline Fitness Provider Integration & 5 weeks & 18-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Portfolio Management Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Gamification \& Rewards Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Currency Design \\ \hline Rev 0 Demo Preparation & 2 weeks & 25-Jan-27 & 07-Feb-27 & Core Features Complete \\ \hline User Testing Round 1 & 2 weeks & 01-Feb-27 & 14-Feb-27 & Rev 0 Demo \\ \hline Accessibility, Security, \& Compliance Improvements & 2 weeks & 15-Feb-27 & 28-Feb-27 & User Testing Round 1 \\ \hline Final User Testing & 2 weeks & 01-Mar-27 & 14-Mar-27 & Accessibility, Security, \& Compliance Improvements \\ \hline V\&V Execution & 4 weeks & 15-Feb-27 & 14-Mar-27 & Most Development Tasks Complete \\ \hline Final Bug Fixes \& Stabilization & 2 weeks & 08-Mar-27 & 21-Mar-27 & V\&V Execution \\ \hline Final Demo Preparation & 1 week & 15-Mar-27 & 21-Mar-27 & Final Bug Fixes \& Stabilization \\ \hline EXPO Preparation & 2 weeks & 22-Mar-27 & 05-Apr-27 & Final Demo Preparation \\ \hline \caption{Project Schedule and Task Breakdown} \label{tab:flexin_gantt_tasks} \end{xltabular}
 \subsection{Planning of the Development Phases}
 \lips
 
@@ -311,7 +1699,59 @@ Inhibit the New Product}
 \subsection{User Documentation Requirements}
 \lips
 \subsection{Training Requirements}
-\lips
+
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{|p{0.11\textwidth}|p{0.20\textwidth}|p{0.58\textwidth}|}
+\caption{Flexin Training Requirements}
+\label{tab:flexin-training}\\
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+
+\caption[]{Flexin Training Requirements (Continued)}\\
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{|r|}{\emph{Continued on next page}}\\
+\hline
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+TRN-01 &
+Zero-Training Design &
+\textbf{Description:} Flexin shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
+\newline\textbf{Rationale:} Intuitive navigation reduces onboarding effort and encourages continued use.
+\newline\textbf{Fit Criterion:} At least 90\% of first-time test users shall register, connect a fitness data source, and view their dashboard within 3 minutes without assistance. \\
+\hline
+
+TRN-02 &
+Interactive Onboarding &
+\textbf{Description:} After account creation, Flexin shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
+\newline\textbf{Rationale:} Guided interaction introduces the application's core features through practical examples.
+\newline\textbf{Fit Criterion:} The walkthrough shall take under 90 seconds, provide a visible ``Skip Tour'' option on every step, and remain accessible through settings. \\
+\hline
+
+TRN-03 &
+Progressive Feature Discovery &
+\textbf{Description:} Flexin shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
+\newline\textbf{Rationale:} Gradual feature discovery reduces cognitive overload for novice users.
+\newline\textbf{Fit Criterion:} Advanced trading indicators and portfolio analytics shall remain collapsed or secondary until the user completes an initial trade or logs at least three days of physical activity. \\
+\hline
+
+TRN-04 &
+Demonstrator Quick-Start Kit &
+\textbf{Description:} The team shall provide a demonstrator guide and automated demo-data seeding script for project evaluations and presentations.
+\newline\textbf{Rationale:} Preloaded data enables evaluators to verify application features without completing real-time workouts.
+\newline\textbf{Fit Criterion:} A preset configuration or debug toggle shall load 30 days of simulated activity and portfolio history within 10 seconds, enabling demonstrations of trading and compounding charts. \\
+
+\end{longtable}
 
 \section{Waiting Room}
 \lips
@@ -360,5 +1800,8 @@ whether material was generated by a human or an AI system.}
 \input{../Reflection.text}
 
 \input{../SRS_Reflection.text}
+
+\bibliographystyle{plainnat}
+\bibliography{../../refs/References}
 
 \end{document}
