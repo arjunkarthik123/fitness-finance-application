@@ -1574,7 +1574,9 @@ Role-Based Authorization &
 
 \textbf{Rationale:} Access restrictions prevent unauthorized modifications and cross-account data exposure.
 
-\textbf{Fit Criterion:} JUnit security tests shall confirm that attempts by standard users to access or modify another user's records return HTTP 403 in all tested cases. \\
+\textbf{Fit Criterion:} JUnit security tests shall confirm that attempts by standard users to access or modify another user's records return HTTP 403 in all tested cases.
+
+\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1) \\
 \hline
 
 SEC-ACC-03 &
@@ -1584,6 +1586,28 @@ Fitness Integration Authorization &
 \textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
 
 \textbf{Fit Criterion:} Integration tokens shall use Android Keystore-backed secure storage. No credentials, tokens, or secrets shall be committed to the project repository. \\
+\hline
+
+SEC-ACC-04 &
+Password and Sign-In Protection &
+\textbf{Description:} Flexin shall enforce a minimum password strength, offer optional multi-factor authentication through the user's email, and temporarily lock sign-in after repeated failed attempts. Users shall be able to reset their password through email.
+
+\textbf{Rationale:} Weak passwords and unlimited sign-in attempts let attackers reach users' private data, while legitimate users must still be able to regain access to their accounts.
+
+\textbf{Fit Criterion:} Passwords shorter than 8 characters or found on a common-password list shall be rejected. Sign-in to an account shall be locked for 15 minutes after 5 consecutive failed attempts. A user who enables multi-factor authentication shall be asked for an email code at each new sign-in, and a password reset email shall let a locked-out user sign in again.
+
+\textbf{Hazard Analysis:} SR1 (H1.1, H1.2) \\
+\hline
+
+SEC-ACC-05 &
+Session End and Device Unlinking &
+\textbf{Description:} Flexin shall end a user's session after a period of inactivity or when the user signs out, and shall unlink the user's fitness devices on sign-out.
+
+\textbf{Rationale:} Sessions and device links left open on shared or lost devices let other people access an account or send their health data to it.
+
+\textbf{Fit Criterion:} A session unused for 30 days shall require the user to sign in again. After sign-out, the user's access and refresh tokens shall be rejected with HTTP 401, and no integration from that device shall be able to submit activity to the account.
+
+\textbf{Hazard Analysis:} SR2 (H1.2, H11.2) \\
 \hline
 
 \end{xltabular}
@@ -1616,7 +1640,9 @@ Ledger Consistency &
 
 \textbf{Rationale:} Transactional consistency prevents duplicate rewards, negative balances, and partial updates.
 
-\textbf{Fit Criterion:} Stress tests with 100 concurrent trade requests against one wallet shall verify that every operation commits consistently or rolls back completely, without partial state changes. \\
+\textbf{Fit Criterion:} Stress tests with 100 concurrent trade requests against one wallet shall verify that every operation commits consistently or rolls back completely, without partial state changes.
+
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2) \\
 \hline
 
 SEC-INT-03 &
@@ -1626,6 +1652,17 @@ Server-Side Valuation &
 \textbf{Rationale:} Server-side calculations prevent client manipulation of prices and balances.
 
 \textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. \\
+\hline
+
+SEC-INT-04 &
+Data Backups &
+\textbf{Description:} Flexin shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios.
+
+\textbf{Rationale:} Without backups, a database failure or bad write would leave users' balances, portfolios, and progress permanently lost.
+
+\textbf{Fit Criterion:} The production database shall be backed up at least once a day, and each backup shall be kept for at least 30 days. A restore from backup into a test environment shall be performed successfully before each release.
+
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2) \\
 \hline
 
 \end{xltabular}
@@ -1653,12 +1690,14 @@ Health Data Protection &
 \hline
 
 SEC-PRV-02 &
-Opt-In Community Sharing &
-\textbf{Description:} Leaderboard participation shall be opt-in. Users may share activity streaks and simulated portfolio returns using a chosen alias.
+Private by Default &
+\textbf{Description:} All profile and health data shall be private by default. A field shall be shared with other users only after the user opts in, and backend access rules shall deny access to any data that has not been shared. Leaderboard participation shall be opt-in, and users may share activity streaks and simulated portfolio returns using a chosen alias.
 
-\textbf{Rationale:} Users should control whether their activity and simulated financial performance are visible to others.
+\textbf{Rationale:} Sensitive information such as weight, goals, and missed workouts must never be exposed to other users or unauthorized parties without consent. Users should control whether their activity and simulated financial performance are visible to others.
 
-\textbf{Fit Criterion:} Leaderboard sharing shall be disabled by default. Enabling it shall require explicit consent and disclose which pseudonymous information and statistics will be shared. \\
+\textbf{Fit Criterion:} All sharing settings, including leaderboard sharing, shall be disabled for new accounts. Enabling sharing shall require explicit consent and disclose which pseudonymous information and statistics will be shared. Automated access-rule tests run in CI shall confirm before each release that no user can read another user's unshared data.
+
+\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1), SR9 (H4.1, H8.1) \\
 \hline
 
 SEC-PRV-03 &
