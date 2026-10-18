@@ -89,7 +89,8 @@
     "docs/Common.text",
     "docs/Reflection.text",
     "docs/SRS-Volere/SRS.tex",
-    "docs/SRS_Reflection.text"
+    "docs/SRS_Reflection.text",
+    "refs/References.bib"
   ],
   "docs/SRS/SRS-FAQ.tex": [
     "docs/SRS/SRS-FAQ.tex"
