@@ -175,21 +175,225 @@ User participation will be incorporated into the development process. User feedb
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+
+The constraints below limit how the product can be built. They come from
+decisions recorded in the Problem Statement and the Development Plan, and the
+design must satisfy them.
+
+\begin{description}
+  \item[SC1: Android platform]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall run as a native mobile application
+    on Android phones.
+    \item[Rationale:] The team narrowed the scope from multiple operating
+    systems to Android only so the product can be finished to a high standard
+    within the capstone timeline. Support for iOS and other platforms is a
+    stretch goal.
+    \item[Fit Criterion:] The application installs and runs all core features
+    on an Android phone.
+  \end{description}
+
+  \item[SC2: Frontend technology]\leavevmode
+  \begin{description}
+    \item[Description:] The mobile client shall be written in TypeScript using
+    the React Native framework.
+    \item[Rationale:] The team agreed on this stack in the Development Plan,
+    based on the members' existing experience. React Native also leaves room
+    for an iOS build later without rewriting the client.
+    \item[Fit Criterion:] All client source code is TypeScript built on React
+    Native.
+  \end{description}
+
+  \item[SC3: Backend technology]\leavevmode
+  \begin{description}
+    \item[Description:] The backend API shall be built in Java with the Spring
+    framework, and persistent data shall be stored in a MySQL relational
+    database.
+    \item[Rationale:] Chosen in the Development Plan. A relational database
+    keeps user, transaction, and portfolio records structured and quick to
+    query.
+    \item[Fit Criterion:] The API is a Spring application and all persistent
+    application data lives in a MySQL database.
+  \end{description}
+
+  \item[SC4: Fitness data sources]\leavevmode
+  \begin{description}
+    \item[Description:] Activity data shall be read automatically from the
+    phone's built-in health data. Data from external devices such as fitness
+    watches or heart rate monitors shall only be read through an SDK or API
+    published by the device's manufacturer.
+    \item[Rationale:] Automatic tracking avoids manual entry, which users could
+    inflate to earn currency. Using official manufacturer interfaces keeps the
+    integration supported and within the manufacturer's terms of use.
+    \item[Fit Criterion:] The product has no feature for manually entering step
+    counts, and every external device integration uses a documented SDK or API
+    from that device's manufacturer.
+  \end{description}
+
+  \item[SC5: Simulated market only]\leavevmode
+  \begin{description}
+    \item[Description:] All trading shall take place in a simulated market
+    using virtual currency. The product shall not handle real money, connect
+    to a brokerage, or let users convert virtual currency into cash.
+    \item[Rationale:] The goal is to teach how investments grow, not to run a
+    trading platform. Handling real money or real trades would bring financial
+    regulation that is outside the scope of a capstone project.
+    \item[Fit Criterion:] No feature of the product accepts, stores, or pays
+    out real money, and no trade is sent to a real exchange or broker.
+  \end{description}
+
+  \item[SC6: Distribution]\leavevmode
+  \begin{description}
+    \item[Description:] The product shall be distributed to users through the
+    Android application store.
+    \item[Rationale:] The Problem Statement specifies that distribution is
+    handled by the device's application store, which also handles installs and
+    updates.
+    \item[Fit Criterion:] The release build meets the store's publishing
+    requirements and can be installed from it.
+  \end{description}
+\end{description}
 \subsection{Implementation Environment of the Current System}
-\lips
+
+\progname{} is a new product and does not replace an existing system. Today,
+people who want to build both habits use separate tools: a fitness tracker or
+the phone's own health app for activity, and a stock market simulator or a real
+brokerage for investing. Nothing links the two.
+
+The product will run on the environment its users already have:
+
+\begin{itemize}
+  \item An Android phone with Health Connect, which collects activity data from
+  the phone's sensors and from other fitness apps the user has installed.
+  \item Optionally, a wearable such as a Garmin watch, or an account with a
+  fitness service such as Strava.
+  \item A mobile data or Wi-Fi connection to reach the \progname{} backend.
+\end{itemize}
+
+The backend (Spring API and MySQL database, see SC3) will be hosted on servers
+run by the team.
+
 \subsection{Partner or Collaborative Applications}
-\lips
+
+The product depends on the following external applications for fitness data.
+Each integration must follow the provider's developer terms and permission
+model (see SC4).
+
+\begin{description}
+  \item[Health Connect (Android):] The main source of step counts and workout
+  data. The user must grant \progname{} permission to read each data type.
+  \item[Garmin Connect IQ:] Gives access to activity data from Garmin watches
+  for users who own one.
+  \item[Strava API:] Gives access to runs, rides, and other activities logged
+  in Strava, after the user authorizes \progname{} on their Strava account.
+\end{description}
+
+The product also needs a source of asset prices for the simulated market. The
+team will choose it at the Market Decision milestone in Week 6 (see
+Section~\ref{sec:schedule}). Whatever source is chosen must allow use in an
+educational application at no cost to the team.
+
 \subsection{Off-the-Shelf Software}
-\lips
+
+The product will be built on the following existing software rather than
+writing the equivalent from scratch:
+
+\begin{itemize}
+  \item React Native and TypeScript for the mobile client.
+  \item Java Spring for the backend API.
+  \item MySQL for the database.
+  \item JUnit for backend unit and system tests, and Detox for end-to-end tests
+  of the mobile client.
+  \item ESLint and the linters built into the team's IDEs.
+  \item Figma for UI mockups.
+  \item GitHub for source control, issue tracking, and CI/CD.
+\end{itemize}
+
+Any library added to the product must have a license that allows it to be
+included in proprietary software, since the project uses a proprietary
+license (see Section~\ref{sec:enterprise}).
+
 \subsection{Anticipated Workplace Environment}
-\lips
+
+\progname{} is used on the user's phone, wherever they are. That affects
+the design in a few ways:
+
+\begin{itemize}
+  \item Users will often check the app in short sessions, for example after a
+  walk or workout, while outdoors, or while moving. Key screens need to be
+  readable on a small screen in bright light and usable with one hand.
+  \item The connection may be slow or drop out. Activity data must not be lost
+  when the phone is offline; it should sync once the connection returns.
+  \item Users will not have a manual or training. The interface has to explain
+  financial terms itself, in line with the goal of a simple and delightful user
+  experience.
+  \item Step counting runs in the background through Health Connect, so the
+  app must not drain the battery noticeably during a normal day.
+\end{itemize}
+
 \subsection{Schedule Constraints}
-\lips
+\label{sec:schedule}
+
+The project runs on the capstone course schedule, from September 2026 to April
+2027. Dates cannot move. The milestones that constrain development are:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Week of} & \textbf{Milestone}\\
+\midrule
+Oct 19, 2026 & SRS and Hazard Analysis Rev 0; preliminary market engine
+working for the proof of concept\\
+Nov 9, 2026 & Virtual currency logic defined (how activity converts into
+currency)\\
+Nov 23 -- Dec 4, 2026 & Proof of concept demo\\
+Jan 18, 2027 & Design Document Rev 0\\
+Jan 25, 2027 & Demo build ready for first round of user testing\\
+Feb 1 -- Feb 12, 2027 & Rev 0 demo\\
+Mar 1, 2027 & Second round of user testing\\
+Mar 15, 2027 & Final demo\\
+Mar 29, 2027 & Final documentation (Rev 1)\\
+Apr 5, 2027 & Capstone EXPO\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Features that cannot be finished by the Rev 0 demo with enough time left for
+user testing will be moved to the stretch goals rather than delaying the
+schedule.
+
 \subsection{Budget Constraints}
-\lips
+
+The project has no dedicated budget. All software, services, and hosting must
+be free, or covered by free tiers, student plans, or resources provided by the
+course. This rules out paid market data feeds and paid hosting, and any
+integration whose API charges per request beyond a free tier.
+
+Development and testing will use the team members' own Android phones and the
+Android emulator, so no test hardware will be bought.
+
 \subsection{Enterprise Constraints}
-\lips
+\label{sec:enterprise}
+
+\begin{itemize}
+  \item \textbf{Course requirements.} The project must meet the deliverables
+  and standards of the McMaster capstone course, including the document
+  templates and checklists provided by the instructor.
+  \item \textbf{Licensing.} The project uses a proprietary license that
+  reserves all rights to the team (see the \texttt{LICENSE} file). This limits
+  which third-party code can be included (see Off-the-Shelf Software).
+  \item \textbf{Personal data.} The product stores personal and health data,
+  such as height, weight, health conditions, and activity history. It must
+  handle that data in line with Canadian privacy law (PIPEDA): collect only
+  what is needed, get the user's consent, and let users see and delete their
+  data. Details will be set out in the security and privacy requirements.
+  \item \textbf{No financial advice.} The product teaches general investing
+  concepts. It must not present anything as personalized financial advice, and
+  any content that could be read that way needs a clear disclaimer.
+  \item \textbf{App store policies.} The product must meet Google Play's
+  developer policies, including its rules for health data and for
+  finance-related apps.
+\end{itemize}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
