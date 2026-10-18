@@ -747,7 +747,47 @@ Traceability &
 \subsection{Supportability Requirements}
 \lips
 \subsection{Adaptability Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+MAS-ADPT-01 &
+External Fitness Provider Adaptability &
+\textbf{Description:} The system shall support the addition of new fitness data providers without requiring major changes to user workflows.
+
+\textbf{Rationale:} The ecosystem of fitness tracking applications and devices will evolve over time and additional providers may become desirable.
+
+\textbf{Fit Criterion:} Users shall be able to successfully connect newly supported fitness providers using the same workflow used for existing providers.\\
+\hline
+
+MAS-ADPT-02 &
+Mobile Platform Portability &
+\textbf{Description:} The system shall support future deployment on additional mobile platforms beyond the initially targeted platform - Android devices.
+
+\textbf{Rationale:} Initial deployment is limited to Android, but future releases may target additional mobile operating systems, such as iOS.
+
+\textbf{Fit Criterion:} User account information and application data shall remain portable across supported platforms.\\
+\hline
+
+MAS-ADPT-03 &
+Future AI Service Adaptability &
+\textbf{Description:} The system shall support future integration of AI-assisted educational content.
+
+\textbf{Rationale:} With the rapid growth of AI technologies, future releases may provide personalized fitness and financial learning experiences using AI technologies.
+
+\textbf{Fit Criterion:} AI-powered educational services shall be deployable without requiring modifications to existing user accounts.\\
+\hline
+
+\end{xltabular}
 
 \section{Security Requirements}
 \subsection{Access Requirements}
