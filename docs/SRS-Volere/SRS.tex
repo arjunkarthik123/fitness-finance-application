@@ -554,8 +554,106 @@ delivery failure is handled according to the system's notification rules.
 \lips
 
 \section{Usability and Humanity Requirements}
+
+This section outlines the usability and humanity requirements for the system, including ease of use, personalization and internationalization, learning, understandability and politeness, and accessibility.
+
 \subsection{Ease of Use Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-EOU-01 & 
+Onboarding Completion Time & 
+\textbf{Description:} The system shall enable new users to complete initial account setup and onboarding within 5 minutes. 
+
+\textbf{Rationale:} Users should be able to begin using the application almost immediately without excessive setup requirements. Within 5 minutes allows users to maintain their engagement with the system. If the setup and onboarding take too long, users may become frustrated and disengaged. 
+
+\textbf{Fit Criterion:} A first-time user shall be able to setup their account, complete onboarding and reach the main dashboard/screen within 5 minutes. This will be tested later in the project through user testing and observation.\\ 
+\hline
+
+UHR-EOU-02 & 
+Dashboard Accessibility & 
+\textbf{Description:} The system shall provide direct access to fitness progress, portfolio information, and rewards through the main dashboard.
+
+\textbf{Rationale:} Users should not need to navigate through multiple screens to access frequently used information. 
+
+\textbf{Fit Criterion:} Important high-level KPIs pertaining to fitness progress, portfolio value, and virtual currency balance shall be visible from the application's primary screen after login. Users should be able to answer questions like "How much currency do I have available?", "What percentage of my fitness goal is complete?" and "How is my portfolio performing?" within 1 minute after logging into the system. \\ 
+\hline
+
+UHR-EOU-03 & 
+Minimal Screen Navigation & 
+\textbf{Description:} The system shall minimize navigation complexity by ensuring that portfolio management and lower-level metric viewing can be reached from the main dashboard within two taps.
+
+\textbf{Rationale:} Users should not need to navigate through multiple screens to access detailed metrics and adjust their portfolios. Excessive navigation increases user frustration and decreases engagement. 
+
+\textbf{Fit Criterion:} Users shall be able to access detailed fitness statistics, portfolio management, virtual currency transactions, and goal tracking within two taps from the main dashboard.\\
+\hline
+
+UHR-EOU-04 & 
+Error Feedback and Recovery & 
+\textbf{Description:} The system shall provide clear, actionable, and immediate feedback to the user whenever user actions cannot be completed. 
+
+\textbf{Rationale:} Clear feedback helps users understand how to resolve issues and continue using the application. 
+
+\textbf{Fit Criterion:} Whenever an error occurs (i.e. the user is prevented to complete an action), the user will be notified immediately with a user-facing error message that shall explain the problem in great detail and provide guidance for corrective action.\\ 
+\hline
+
+UHR-EOU-05 & 
+Positive Feedback & 
+\textbf{Description:} The system shall provide immediate visual feedback following user actions to confirm whether the requested operation was completed successfully.
+
+\textbf{Rationale:} Users should be able to easily determine whether an action has been executed correctly without needing to manually verify the system state. Clear feedback increases user confidence and reduces confusion.
+
+\textbf{Fit Criterion:} All user-initiated actions, including goal updates, portfolio transactions, account modifications, and fitness device connections, shall display a confirmation message, notification, or visual state change within 2 seconds of successful completion.\\
+\hline
+
+UHR-EOU-06 & 
+Simple and Reliable Device Connectivity & 
+\textbf{Description:} The system shall simplify the process of connecting supported fitness devices and applications and maintain strong and reliable connections to these devices. 
+
+\textbf{Rationale:} Integration with existing fitness technologies is a core project goal. Users should be able to link their existing devices without requiring technical expertise. Once connected, the system shall maintain a stable connection to ensure continuous data synchronization so that the user is not constantly required to re-establish the connection - as this will cause user frustration.
+
+\textbf{Fit Criterion:} Users shall be able to perform a one-time action to connect a supported fitness data source through a guided setup workflow. Once connected the first time, the system shall not sever this connection more than three times per year without explicit user intervention.\\ 
+\hline
+
+UHR-EOU-07 & 
+Consistent User Interface & 
+\textbf{Description:} The system shall maintain consistent visual design, terminology, and navigation patterns across all screens. 
+
+\textbf{Rationale:} Consistency improves user familiarity and reduces the effort required to learn new functionality. 
+
+\textbf{Fit Criterion:} Similar actions shall use consistent icons, terminology, colors, and interaction patterns throughout the application.\\ 
+\hline
+
+UHR-EOU-08 & 
+Learnability & 
+\textbf{Description:} The system shall require no more than 10 minutes for users to become proficient in performing core tasks and navigating the application. 
+
+\textbf{Rationale:} Users should not require an excessive amount of time to learn and use the application effectively. Excessive time required to learn how to use the core functionalities of the application may lead to user frustration and disengagement.
+
+\textbf{Fit Criterion:} First-time users shall be able to make their first investment, set one fitness goal, and view fitness and portfolio performance metrics within 10 minutes from landing on the main screen after login.\\ 
+\hline
+
+UHR-EOU-09 & 
+Efficient Re-Learnability & 
+\textbf{Description:} The system shall require no more than 5 minutes for former users to re-learn how to execute core tasks and navigating the application. 
+
+\textbf{Rationale:} Even after time away from the system, users should be able to pick back up right where they left off. If a user has to spend too much time re-learning the application, it may lead to frustration and discourage users from re-engaging with the system.
+
+\textbf{Fit Criterion:} Former users with at least 1 month of consistent daily usage shall be able to re-learn how to manage at least one investment, manage at least one fitness goal, and view fitness and portfolio performance metrics within 5 minutes of returning to the system after 6+ months of inactivity.\\ 
+\hline
+
+\end{xltabular}
+
 \subsection{Personalization and Internationalization Requirements}
 
 \small
