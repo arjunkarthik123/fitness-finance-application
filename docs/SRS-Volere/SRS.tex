@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -236,7 +237,14 @@ Inhibit the New Product}
 
 \section{Tasks}
 \subsection{Project Planning}
-\lips
+
+The team will follow an agile development process throughout the development of this solution, with a focus on iterative development and continuous feedback. The project will be divided into several sprints, each lasting two weeks. At the end of each sprint, the team will conduct a review to assess progress and make necessary adjustments. Each sprint will consist of planning, developing, testing, and deploying. This will allow the team to make iterative progress while still ensuring that previous iterations are effective and meet the requirements of the stakeholders.
+The detailed breakdown of weekly tasks and deliverables can be found in \href{pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{section 9 of the development plan} and is the basis for the following project task breakdown:
+
+\small
+\setlength{\tabcolsep}{4pt}
+% Table below generated with the help of Copilot (tasks taken from dev plan section 9)
+\begin{xltabular}{\textwidth}{|p{4.0cm}|p{2.0cm}|p{1.7cm}|p{1.7cm}|X|} \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endfirsthead \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endhead Requirements Gathering \& Analysis & 4 weeks & 21-Sep-26 & 18-Oct-26 & None \\ \hline User Interviews \& Validation & 3 weeks & 05-Oct-26 & 25-Oct-26 & Requirements Gathering \& Analysis \\ \hline Fitness API Research \& Integration Design & 3 weeks & 12-Oct-26 & 01-Nov-26 & Requirements Gathering \& Analysis \\ \hline Virtual Currency System Design & 2 weeks & 26-Oct-26 & 08-Nov-26 & User Interviews \& Validation \\ \hline Market Simulation Design & 3 weeks & 19-Oct-26 & 08-Nov-26 & Requirements Gathering \& Analysis \\ \hline UI/UX Design \& Prototyping & 4 weeks & 26-Oct-26 & 22-Nov-26 & User Interviews \& Validation \\ \hline Proof of Concept Development & 5 weeks & 02-Nov-26 & 06-Dec-26 & Fitness API Design, Currency Design \\ \hline Backend Architecture \& Database Development & 5 weeks & 11-Jan-27 & 14-Feb-27 & Design Document \\ \hline Frontend Development & 6 weeks & 11-Jan-27 & 21-Feb-27 & UI Design \\ \hline Fitness Provider Integration & 5 weeks & 18-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Portfolio Management Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Gamification \& Rewards Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Currency Design \\ \hline Rev 0 Demo Preparation & 2 weeks & 25-Jan-27 & 07-Feb-27 & Core Features Complete \\ \hline User Testing Round 1 & 2 weeks & 01-Feb-27 & 14-Feb-27 & Rev 0 Demo \\ \hline Accessibility, Security, \& Compliance Improvements & 2 weeks & 15-Feb-27 & 28-Feb-27 & User Testing Round 1 \\ \hline Final User Testing & 2 weeks & 01-Mar-27 & 14-Mar-27 & Accessibility, Security, \& Compliance Improvements \\ \hline V\&V Execution & 4 weeks & 15-Feb-27 & 14-Mar-27 & Most Development Tasks Complete \\ \hline Final Bug Fixes \& Stabilization & 2 weeks & 08-Mar-27 & 21-Mar-27 & V\&V Execution \\ \hline Final Demo Preparation & 1 week & 15-Mar-27 & 21-Mar-27 & Final Bug Fixes \& Stabilization \\ \hline EXPO Preparation & 2 weeks & 22-Mar-27 & 05-Apr-27 & Final Demo Preparation \\ \hline \caption{Project Schedule and Task Breakdown} \label{tab:flexin_gantt_tasks} \end{xltabular}
 \subsection{Planning of the Development Phases}
 \lips
 
