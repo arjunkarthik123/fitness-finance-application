@@ -783,7 +783,74 @@ User Help Documentation &
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+UHR-ACC-01 &
+Screen Reader Compatibility &
+\textbf{Description:} The system shall support screen reader technologies for all primary application workflows.
+
+\textbf{Rationale:} Users with visual impairments may rely on screen readers to navigate the application. Users with visual impairments should not be excluded from benefitting from this application.
+
+\textbf{Fit Criterion:} All interactive interface elements shall have descriptive accessibility labels that can be read aloud.\\
+\hline
+
+UHR-ACC-02 &
+Scalable Text Support &
+\textbf{Description:} The system shall support device-configured text scaling without loss of functionality.
+
+\textbf{Rationale:} Users with reduced vision may require larger text sizes to comfortably use the application.
+
+\textbf{Fit Criterion:} All application screens shall remain usable when the device text size is increased to the maximum supported accessibility setting.\\
+\hline
+
+UHR-ACC-03 &
+Color Independent Information &
+\textbf{Description:} The system shall not rely solely on color to communicate information or system status.
+
+\textbf{Rationale:} Users with color vision deficiencies may be unable to distinguish information represented exclusively through color.
+
+\textbf{Fit Criterion:} All status indicators, icons, buttons, graphs, and notifications shall include a secondary visual indicator in addition to color.\\
+\hline
+
+UHR-ACC-04 &
+Touch Target Accessibility &
+\textbf{Description:} The system shall provide interface controls that are sufficiently large for reliable touch interaction.
+
+\textbf{Rationale:} Users with limited dexterity or motor impairments may have difficulty selecting small interface elements.
+
+\textbf{Fit Criterion:} All touch-interactive elements shall meet the minimum touch target size recommended by Android accessibility guidelines.\\
+\hline
+
+UHR-ACC-05 &
+Alternative Notification Methods &
+\textbf{Description:} The system shall provide both visual notifications, audio cues, and haptic feedback for important events and shall not rely exclusively on one.
+
+\textbf{Rationale:} Users who are deaf or hard of hearing may not perceive audio notifications. Users with visual impairments may not be able to perceive visual notifications. Providing alternative notification methods ensures that all users can stay informed of important events.
+
+\textbf{Fit Criterion:} All important user notifications shall be easily accesible to all users within the application interface.\\
+\hline
+
+UHR-ACC-06 &
+Inclusive Activity Tracking &
+\textbf{Description:} The system shall not require a single type of physical activity as the sole method of earning rewards.
+
+\textbf{Rationale:} Users with disabilities, injuries, temporary medical conditions, or differing fitness abilities may be unable to participate in certain forms of exercise.
+
+\textbf{Fit Criterion:} The system shall support multiple reward-eligible activity types and allow users to select activities appropriate to their abilities.\\
+\hline
+
+\end{xltabular}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
