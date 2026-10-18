@@ -1,0 +1,45 @@
+@startuml BusinessDataModel
+
+skinparam classAttributeIconSize 0
+skinparam ranksep 80
+skinparam nodesep 40
+
+class Competitor
+class Leaderboard
+class User
+
+class FitnessGoal
+class Portfolio
+
+class FitnessActivity
+class FinancialAsset
+class FinancialTransaction
+
+Competitor "*" -- "1" User
+Competitor "*" -- "1" Leaderboard
+
+Leaderboard "1" -- "*" User
+
+User "1" -- "*" FitnessGoal
+FitnessGoal "1" -- "*" FitnessActivity
+
+User "1" -- "1" Portfolio
+
+Portfolio "1" -- "*" FinancialAsset
+Portfolio "1" -- "*" FinancialTransaction
+
+FinancialAsset "1" -- "*" FinancialTransaction
+
+' --- Layout Anchors ---
+Competitor -[hidden]down- Leaderboard
+Leaderboard -[hidden]right- User
+
+User -[hidden]down- Portfolio
+User -[hidden]right- FitnessGoal
+
+Portfolio -[hidden]down- FinancialAsset
+FitnessGoal -[hidden]down- FitnessActivity
+
+FinancialAsset -[hidden]right- FinancialTransaction
+
+@enduml
