@@ -537,7 +537,189 @@ delivery failure is handled according to the system's notification rules.
 \subsection{Business Data Model}
 \lips
 \subsection{Data Dictionary}
-\lips
+
+\subsubsection{User} 
+
+\textbf{Description:} Represents a registered user of the system.
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline
+    
+    User ID & Integer & Unique identifier for a user account & Primary Key, Not Null \\ 
+    \hline 
+    
+    Password & String & User authentication credential & Encrypted, Not Null \\ 
+    \hline 
+    
+    Currency & Decimal & Current virtual currency balance & $\geq 0$ \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Associated portfolio identifier & Foreign Key \\ 
+    \hline 
+    
+    Experience Points & Integer & Accumulated experience points earned through platform activities & $\geq 0$ \\ 
+    \hline 
+    
+    Active Score & Integer & Current activity score used for engagement and competition metrics & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Competitor} 
+
+\textbf{Description:} Represents a user's competitors that may appear on leaderboards and challenges. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Competitor ID & Integer & Unique competitor record identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Associated user account & Foreign Key \\ 
+    \hline 
+    
+    Friend Flag & Boolean & Indicates whether the competitor is on the user's friends list & True/False \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Leaderboard} 
+
+\textbf{Description:} Stores ranking and competitive information for users. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Leaderboard ID & Integer & Unique leaderboard identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Associated user on the identified leaderboard & Foreign Key \\ 
+    \hline 
+    
+    User Score & Integer & User's competition score on the identified leaderboard & $\geq 0$ \\ 
+    \hline 
+    
+    Leaderboard Rank & String & Tier ranking (e.g., Bronze, Silver, Gold) & Enumerated Values \\ 
+    \hline 
+    
+    User Rank & Integer & Position within the leaderboard & $\geq 1$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Fitness Goal} 
+
+\textbf{Description:} Represents an individual fitness objective created by a user. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Goal ID & Integer & Unique goal identifier & Primary Key \\ 
+    \hline 
+    
+    User ID & Integer & Identifies which user has this goal & Foreign Key \\ 
+    \hline 
+    
+    Status & Enum & Current goal state & Active, Completed, Cancelled \\ 
+    \hline 
+    
+    Reward On Completion & Decimal & Virtual currency awarded upon completion & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Fitness Activity} 
+
+\textbf{Description:} Represents a fitness activity associated with achieving a fitness goal. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Activity ID & Integer & Unique activity identifier & Primary Key \\ 
+    \hline 
+    
+    Goal ID & Integer & Associated fitness goal & Foreign Key \\ 
+    \hline 
+    
+    Activity Name & String & Name of activity & Not Null \\ 
+    \hline 
+    
+    Activity Details & String & What is required/associated with carrying out the activity (i.e. 10,000 steps, burn 100 calories, etc.) & Not Null \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Portfolio} 
+
+\textbf{Description:} Represents a user's investment portfolio. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Unique portfolio identifier & Primary Key \\ 
+    \hline 
+    
+    Gains/Losses & Decimal & Current unrealized portfolio gain or loss & None \\ 
+    \hline 
+    
+    Asset ID & Integer & Financial asset within the identified portfolio & Foreign Key \\ 
+    \hline 
+    
+    Quantity & Integer & Quantity of asset held & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Financial Asset} 
+
+\textbf{Description:} Represents a simulated financial instrument available for trading. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Asset ID & Integer & Unique asset identifier & Primary Key \\ 
+    \hline 
+    
+    Cost To Buy/Sell & Decimal & Current purchase or sale price of the asset & $\geq 0$ \\ 
+    \hline 
+    
+    Quantity Available & Integer & Total quantity available in the simulated market & $\geq 0$ \\ 
+    \hline 
+\end{xltabular}
+
+\subsubsection{Financial Transaction} 
+
+\textbf{Description:} Records the purchase and sale of financial assets within a user's portfolio. 
+
+\begin{xltabular}{\textwidth}{|p{3cm}|p{2cm}|X|p{3cm}|} 
+    \hline 
+    \textbf{Attribute} & \textbf{Type} & \textbf{Description} & \textbf{Constraints} \\ 
+    \hline 
+    
+    Transaction ID & Integer & Unique transaction identifier & Primary Key \\ 
+    \hline 
+    
+    Portfolio ID & Integer & Associated portfolio where the transaction occured & Foreign Key \\ 
+    \hline 
+    
+    Asset ID & Integer & Asset involved in the transaction & Foreign Key \\ 
+    \hline 
+    
+    Transaction Cost & Decimal & Cost of the asset at the time of transaction & $\geq 0$ \\ 
+    \hline 
+    
+    Transaction Date & DateTime & Timestamp of transaction execution & Not Null \\ 
+    \hline 
+\end{xltabular}
+
 
 \section{The Scope of the Product}
 This section will explore the different features of the application. This section explores the full scope of Flexin' application and will help to define main user functions.
