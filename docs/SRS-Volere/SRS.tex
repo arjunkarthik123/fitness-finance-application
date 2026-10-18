@@ -1965,11 +1965,98 @@ Information Security Compliance &
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
-\lips
+
+The team looked at existing products that could meet the project's goals
+without building something new. Each covers part of the problem, but none
+connects fitness habits to learning how investments grow.
+
+\begin{description}
+  \item[Stock market simulators (e.g.\ Investopedia Simulator):] Free
+  simulators give users virtual cash to trade real securities at market prices,
+  and some let users compete in private groups. They teach investing well, but
+  only to people who are already motivated to learn about it. The Problem
+  Statement identifies young adults who are not yet interested as the group
+  furthest behind, so a simulator alone does not reach them.
+
+  \item[Step reward apps (e.g.\ Sweatcoin):] These apps turn steps into a
+  virtual currency that can be spent on offers and products. They reward
+  activity, but the currency is spent rather than invested, so they teach
+  nothing about compounding.
+
+  \item[Move-to-earn crypto apps (e.g.\ STEPN):] These reward exercise with
+  cryptocurrency tokens that have real market value. They link exercise to
+  money, but expose users to real financial loss. STEPN's reward token lost
+  most of its value within months in 2022. This approach conflicts with
+  constraint SC5 (simulated market only) and is not suitable.
+
+  \item[Fitness trackers (e.g.\ Strava, Garmin Connect, Health Connect):]
+  These record activity accurately but do not offer any financial component.
+  \progname{} will use them as data sources rather than replace them.
+\end{description}
+
+Since no ready-made product covers both halves of the problem, the team will
+build \progname{}, reusing the components and ideas listed below.
+
 \subsection{Reusable Components}
-\lips
+
+The following existing components are candidates for reuse. Each must have a
+license compatible with the project's proprietary license, and must be free to
+use within the project's budget.
+
+\begin{description}
+  \item[Fitness data:]\leavevmode
+  \begin{itemize}
+    \item \texttt{react-native-health-connect}, an open-source (MIT) React
+    Native library for reading data from Android Health Connect.
+    \item The Garmin Connect IQ SDK and Strava API for external devices and
+    services.
+  \end{itemize}
+
+  \item[Mobile client:]\leavevmode
+  \begin{itemize}
+    \item React Navigation for moving between screens.
+    \item An open-source React Native charting library for the portfolio graph
+    and activity history. The specific library will be chosen during design.
+  \end{itemize}
+
+  \item[Backend:]\leavevmode
+  \begin{itemize}
+    \item Spring Boot to set up and run the API.
+    \item Spring Security for authentication and access control, rather than
+    writing account security from scratch.
+    \item Spring Data JPA for reading and writing the MySQL database.
+  \end{itemize}
+
+  \item[Market data:] A source of historical or live asset prices for the
+  simulated market. The team will choose it at the Market Decision milestone,
+  and it must allow free use in an educational app.
+
+  \item[Testing and tooling:] JUnit, Detox, ESLint, and GitHub Actions, as
+  listed in the Development Plan.
+\end{description}
+
 \subsection{Products That Can Be Copied}
-\lips
+
+The products below are not reused directly, but parts of their design can be
+adapted for \progname{}. Only ideas will be copied, not code, artwork, or other
+protected material.
+
+\begin{description}
+  \item[Investment simulators:] The layout of portfolio, trade, and order
+  history screens, which users of investing apps will already recognize. Short
+  explanations of financial terms placed next to where the terms are used.
+
+  \item[Step reward apps:] Converting steps into currency at a fixed rate, with
+  a daily limit on how much can be earned (see PR-SC1).
+
+  \item[Strava:] Leaderboards, clubs, and activity feeds that let friends
+  follow each other's progress. These can be adapted for the community
+  leaderboard and friend groups.
+
+  \item[Habit and learning apps (e.g.\ Duolingo):] Streaks, short daily goals,
+  and reminders that build a daily habit. These must be adapted carefully so
+  that missing a day is not punished (see PR-SC2).
+\end{description}
 
 \section{New Problems}
 \subsection{Effects on the Current Environment}
