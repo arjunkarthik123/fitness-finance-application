@@ -502,11 +502,11 @@ needed for informed long-term decision-making.
 
 \subsection{The Context of the Work}
 
-The Flexin system connects physical activity tracking with simulated
+The Flexin' system connects physical activity tracking with simulated
 investing by converting validated exercise data into virtual investment
 capital. Users can use this capital to build simulated portfolios
 containing fictional stocks, exchange-traded funds (ETFs), funds, bonds,
-and other supported assets without risking real money. Flexin integrates
+and other supported assets without risking real money. Flexin' integrates
 with Android Health Connect and Garmin to retrieve supported fitness
 data, while its internally developed financial market engine generates
 fictional assets, prices, and market events. The system also provides
@@ -515,8 +515,8 @@ portfolio management, financial education, and notifications.
 \subsubsection{Project Context Diagram}
 
 Figure~\ref{fig:flexin-context} illustrates the interactions between
-Flexin and its users, fitness integrations, and device environment.
-The custom financial market engine is an internal component of Flexin
+Flexin' and its users, fitness integrations, and device environment.
+The custom financial market engine is an internal component of Flexin'
 that generates simulated financial data rather than retrieving
 real-world market prices. The engine is calibrated against historical
 market data so that its fictional prices follow real-world market
@@ -555,7 +555,7 @@ trends (see PR-PA-06).
 
     % Central System (Encompassing App, Backend, and Internal Simulator)
     \node[system] (flexin) {
-        \textbf{Flexin System}\\[2pt]
+        \textbf{Flexin' System}\\[2pt]
         \small Mobile Application, Backend, \&\\
         \small Custom Market Simulation Engine
     };
@@ -587,13 +587,13 @@ trends (see PR-PA-06).
 
     \end{tikzpicture}%
     }
-    \caption{Flexin Project Context Diagram}
+    \caption{Flexin' Project Context Diagram}
     \label{fig:flexin-context}
 \end{figure}
 
 \subsubsection{Adjacent Systems and External Entities}
 
-The Flexin system interacts with the following entities and services.
+The Flexin' system interacts with the following entities and services.
 
 \begin{table}[H]
     \centering
@@ -631,7 +631,7 @@ The Flexin system interacts with the following entities and services.
         local storage, and native notification services. \\
         \hline
     \end{tabularx}
-    \caption{Flexin Adjacent Systems and External Entities}
+    \caption{Flexin' Adjacent Systems and External Entities}
     \label{tab:flexin-entities}
 \end{table}
 
@@ -639,7 +639,7 @@ The Flexin system interacts with the following entities and services.
 
 \paragraph{Inbound Information.}
 Inbound information includes user commands, profile and configuration
-data, exercise goals, and simulated trade orders. Flexin also receives
+data, exercise goals, and simulated trade orders. Flexin' also receives
 fitness telemetry, such as step counts and workout records, through
 Android Health Connect and the Garmin integration. The custom financial
 market engine supplies internally generated asset prices, historical
@@ -649,7 +649,7 @@ dividends or fund returns.
 \paragraph{Outbound Information.}
 Outbound information includes virtual currency earned through validated
 activity, portfolio balances, asset allocations, and investment
-performance visualizations. Flexin also provides contextual financial
+performance visualizations. Flexin' also provides contextual financial
 education on compound growth, diversification, and investment risk.
 Optional leaderboards, activity milestones, workout reminders, and
 simulated market notifications encourage continued engagement.
@@ -657,7 +657,7 @@ simulated market notifications encourage continued engagement.
 \subsubsection{Boundary Scope and Enclosure}
 
 \paragraph{In Scope.}
-Flexin includes fitness data validation, activity-to-currency
+Flexin' includes fitness data validation, activity-to-currency
 conversion, duplicate reward prevention, simulated portfolio
 management, and virtual trade execution. Its custom financial market
 engine generates fictional assets and determines their simulated
@@ -668,7 +668,7 @@ An educational rules engine provides contextual explanations of
 financial concepts.
 
 \paragraph{Out of Scope.}
-Flexin does not depend on real-world stock prices, execute actual
+Flexin' does not depend on real-world stock prices, execute actual
 financial transactions, or manage real investment funds. It does not
 control the accuracy or availability of third-party fitness data,
 Garmin services, Android Health Connect, or device hardware. External
@@ -678,7 +678,7 @@ availability, device compatibility, and user permissions.
 
 \subsection{Work Partitioning}
 
-Work partitioning divides the Flexin system into Business Use Cases
+Work partitioning divides the Flexin' system into Business Use Cases
 (BUCs), each representing a business event that the system must handle.
 These use cases cover user onboarding, fitness data integration,
 virtual currency allocation, simulated investing, financial education,
@@ -749,23 +749,23 @@ use cases.
         BUC 10: Notifications \\
         \hline
     \end{tabularx}
-    \caption{Flexin Business Events and Associated Use Cases}
+    \caption{Flexin' Business Events and Associated Use Cases}
     \label{tab:flexin-business-events}
 \end{table}
 
 \subsection{Specifying a Business Use Case (BUC)}
 
-This section specifies each Flexin Business Use Case (BUC), including
+This section specifies each Flexin' Business Use Case (BUC), including
 its goal, actors, trigger, preconditions, main flow, alternative flows,
 and postconditions.
 
 \subsubsection*{BUC 1: User Onboarding}
 
-\textbf{Goal:} Create a user account and initialize their Flexin profile.
+\textbf{Goal:} Create a user account and initialize their Flexin' profile.
 
 \textbf{Actors:} End User.
 
-\textbf{Trigger:} The user opens Flexin and selects the registration option.
+\textbf{Trigger:} The user opens Flexin' and selects the registration option.
 
 \textbf{Preconditions:} The application is available and the user does not
 already have an active account.
@@ -773,13 +773,13 @@ already have an active account.
 \textbf{Main Flow:}
 \begin{enumerate}
     \item The user submits the required registration details.
-    \item Flexin validates the details and creates the account.
+    \item Flexin' validates the details and creates the account.
     \item The user provides any requested baseline goals or preferences.
-    \item Flexin initializes the user's profile and virtual wallet.
+    \item Flexin' initializes the user's profile and virtual wallet.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If required details are missing or invalid,
-Flexin displays an error and requests corrections. If an account already
+Flexin' displays an error and requests corrections. If an account already
 exists, the user is prompted to sign in.
 
 \textbf{Postconditions:} The user account and initial virtual wallet are
@@ -800,15 +800,15 @@ permissions to an available supported integration.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin retrieves available activity data from Health Connect or Garmin.
-    \item Flexin validates the data and checks for duplicate activities.
+    \item Flexin' retrieves available activity data from Health Connect or Garmin.
+    \item Flexin' validates the data and checks for duplicate activities.
     \item Valid activities are stored in the user's activity history.
     \item The application updates the user's activity summary.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If permissions are missing, the user is prompted
 to grant access. If an integration is unavailable or data is invalid,
-Flexin reports the issue without recording the invalid activity.
+Flexin' reports the issue without recording the invalid activity.
 
 \textbf{Postconditions:} Valid activity data is stored without duplicate
 records.
@@ -817,7 +817,7 @@ records.
 
 \textbf{Goal:} Reward eligible physical activity with virtual currency.
 
-\textbf{Actors:} End User, Flexin Reward System.
+\textbf{Actors:} End User, Flexin' Reward System.
 
 \textbf{Trigger:} A validated activity satisfies a configured reward threshold.
 
@@ -826,15 +826,15 @@ been validated.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin evaluates the activity against the reward rules.
+    \item Flexin' evaluates the activity against the reward rules.
     \item The system calculates the eligible virtual currency reward.
-    \item Flexin credits the user's virtual wallet and records the transaction.
+    \item Flexin' credits the user's virtual wallet and records the transaction.
     \item The user can view the updated balance and reward details.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If the activity does not meet the reward
 threshold, no currency is awarded. If the activity has already been
-rewarded, Flexin prevents duplicate crediting.
+rewarded, Flexin' prevents duplicate crediting.
 
 \textbf{Postconditions:} The wallet balance and transaction ledger reflect
 any eligible reward.
@@ -844,7 +844,7 @@ any eligible reward.
 \textbf{Goal:} Allow the user to purchase fictional financial assets using
 virtual currency.
 
-\textbf{Actors:} End User, Flexin Market Engine.
+\textbf{Actors:} End User, Flexin' Market Engine.
 
 \textbf{Trigger:} The user submits a simulated buy order.
 
@@ -854,9 +854,9 @@ and a valid simulated price is available.
 \textbf{Main Flow:}
 \begin{enumerate}
     \item The user selects an asset and enters the purchase quantity.
-    \item Flexin calculates the simulated purchase cost.
+    \item Flexin' calculates the simulated purchase cost.
     \item The system verifies that the user has sufficient virtual currency.
-    \item Flexin executes the simulated order and updates the wallet and holdings.
+    \item Flexin' executes the simulated order and updates the wallet and holdings.
     \item The completed transaction is recorded and displayed to the user.
 \end{enumerate}
 
@@ -872,7 +872,7 @@ reduced and the user's asset holdings increase accordingly.
 \textbf{Goal:} Allow the user to sell fictional assets and receive virtual
 currency.
 
-\textbf{Actors:} End User, Flexin Market Engine.
+\textbf{Actors:} End User, Flexin' Market Engine.
 
 \textbf{Trigger:} The user submits a simulated sell order.
 
@@ -882,9 +882,9 @@ asset and a valid simulated price is available.
 \textbf{Main Flow:}
 \begin{enumerate}
     \item The user selects an asset and enters the quantity to sell.
-    \item Flexin calculates the simulated sale proceeds.
+    \item Flexin' calculates the simulated sale proceeds.
     \item The system verifies that the user holds sufficient units.
-    \item Flexin executes the simulated order and updates the holdings and wallet.
+    \item Flexin' executes the simulated order and updates the holdings and wallet.
     \item The completed transaction is recorded and displayed to the user.
 \end{enumerate}
 
@@ -899,7 +899,7 @@ and the corresponding virtual currency is credited.
 
 \textbf{Goal:} Generate and update fictional asset prices and market events.
 
-\textbf{Actors:} Flexin Market Engine, Flexin Scheduler.
+\textbf{Actors:} Flexin' Market Engine, Flexin' Scheduler.
 
 \textbf{Trigger:} A scheduled market simulation cycle begins.
 
@@ -911,16 +911,16 @@ have been initialized.
     \item The scheduler initiates a simulation cycle.
     \item The engine generates price changes and fictional market events
     according to the system's simulation rules.
-    \item Flexin updates asset valuations and relevant market information.
+    \item Flexin' updates asset valuations and relevant market information.
     \item Updated prices and events become available to portfolio and trading
     functions.
 \end{enumerate}
 
-\textbf{Alternative Flows:} If a simulation cycle fails, Flexin records the
+\textbf{Alternative Flows:} If a simulation cycle fails, Flexin' records the
 failure and retains the last valid market state until an update succeeds.
 
 \textbf{Postconditions:} The latest valid fictional asset prices and market
-events are available within Flexin. The engine does not rely on real-world
+events are available within Flexin'. The engine does not rely on real-world
 financial market data.
 
 \subsubsection*{BUC 7: Portfolio Analytics}
@@ -937,15 +937,15 @@ is available.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin retrieves the user's virtual balance, holdings, and transaction
+    \item Flexin' retrieves the user's virtual balance, holdings, and transaction
     history.
     \item The system calculates portfolio value and performance metrics using
     simulated asset prices.
-    \item Flexin retrieves relevant activity and reward information.
+    \item Flexin' retrieves relevant activity and reward information.
     \item The application displays the resulting portfolio and activity summaries.
 \end{enumerate}
 
-\textbf{Alternative Flows:} If insufficient history exists, Flexin displays
+\textbf{Alternative Flows:} If insufficient history exists, Flexin' displays
 available information and indicates that more data is needed for certain
 metrics.
 
@@ -957,7 +957,7 @@ and activity analytics.
 \textbf{Goal:} Provide educational guidance relevant to the user's simulated
 investing activity.
 
-\textbf{Actors:} End User, Flexin Educational Rules Engine.
+\textbf{Actors:} End User, Flexin' Educational Rules Engine.
 
 \textbf{Trigger:} The user requests financial guidance or opens an educational
 feature.
@@ -966,14 +966,14 @@ feature.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin identifies the context of the user's request.
+    \item Flexin' identifies the context of the user's request.
     \item The educational rules engine selects relevant educational content.
-    \item Flexin presents explanations or guidance to the user.
+    \item Flexin' presents explanations or guidance to the user.
     \item The user reviews the content and may return to the application.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If no specific guidance matches the request,
-Flexin presents general educational content.
+Flexin' presents general educational content.
 
 \textbf{Postconditions:} Relevant educational content is displayed. Guidance
 is educational and does not execute trades on the user's behalf.
@@ -988,18 +988,18 @@ goals.
 
 \textbf{Trigger:} The user opens the community leaderboard.
 
-\textbf{Preconditions:} The user has access to Flexin and has enabled any
+\textbf{Preconditions:} The user has access to Flexin' and has enabled any
 participation required for their own information to appear in rankings.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin retrieves eligible ranking data from participating users.
+    \item Flexin' retrieves eligible ranking data from participating users.
     \item The system calculates or retrieves rankings using the configured metrics.
     \item The application displays the leaderboard and its ranking criteria.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If the user has opted out or no ranking data is
-available, Flexin displays the available leaderboard information without
+available, Flexin' displays the available leaderboard information without
 including the user's opted-out data.
 
 \textbf{Postconditions:} The user can view the available community rankings
@@ -1010,7 +1010,7 @@ in accordance with participation and privacy settings.
 \textbf{Goal:} Notify users about relevant activity rewards, reminders, and
 simulated market events.
 
-\textbf{Actors:} End User, Flexin Notification Service, Android Device and OS.
+\textbf{Actors:} End User, Flexin' Notification Service, Android Device and OS.
 
 \textbf{Trigger:} A configured reminder, eligible reward, or relevant
 simulated market event occurs.
@@ -1021,16 +1021,16 @@ permissions.
 
 \textbf{Main Flow:}
 \begin{enumerate}
-    \item Flexin identifies the event and determines whether a notification
+    \item Flexin' identifies the event and determines whether a notification
     should be sent.
     \item The system generates a notification containing relevant information.
-    \item Flexin sends the notification through the supported device mechanism.
+    \item Flexin' sends the notification through the supported device mechanism.
     \item The user receives the notification if device settings and permissions
     permit delivery.
 \end{enumerate}
 
 \textbf{Alternative Flows:} If notifications are disabled or delivery fails,
-Flexin does not guarantee delivery and may retain the event for in-app display.
+Flexin' does not guarantee delivery and may retain the event for in-app display.
 
 \textbf{Postconditions:} The notification is submitted for delivery or the
 delivery failure is handled according to the system's notification rules.
@@ -1278,7 +1278,7 @@ This section will explore the different features of the application. This sectio
 \subsection{Product Boundary}
 
 \subsection*{App Functionality}
-The Flexin application is designed as an educational tool to help young adults improve their personal fitness and financial literacy. The app provides a range of interactive features that allow users to engage with both domains in a meaningful and motivating way.
+The Flexin' application is designed as an educational tool to help young adults improve their personal fitness and financial literacy. The app provides a range of interactive features that allow users to engage with both domains in a meaningful and motivating way.
 \begin{itemize}
     \item Create a personal profile within the application. This profile allows users to:
     \begin{enumerate}
@@ -1551,7 +1551,7 @@ LF-APP-03 &
 Responsive Layout &
 \textbf{Description:} The interface shall adapt to Android screen sizes, aspect ratios, pixel densities, and system font scaling.
 
-\textbf{Rationale:} Flexin must remain usable across supported Android devices.
+\textbf{Rationale:} Flexin' must remain usable across supported Android devices.
 
 \textbf{Fit Criterion:} On Android 10+ devices with 5.5--6.8-inch screens, no text shall clip or touch targets overlap, including at 130\% font scaling.\\
 \hline
@@ -1602,7 +1602,7 @@ LF-STY-02 &
 Simulated Finance Clarity &
 \textbf{Description:} Financial screens, holdings, orders, and balances shall clearly identify all financial activity as simulated.
 
-\textbf{Rationale:} Users must not confuse Flexin with a real brokerage or financial account.
+\textbf{Rationale:} Users must not confuse Flexin' with a real brokerage or financial account.
 
 \textbf{Fit Criterion:} Every screen displaying financial values shall show the virtual currency symbol (e.g., FLX) and a clearly visible ``Simulated Market'' label (see also PR-SC-03).\\
 \hline
@@ -2706,7 +2706,7 @@ Role-Based Authorization &
 
 SEC-ACC-03 &
 Fitness Integration Authorization &
-\textbf{Description:} Flexin shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored using secure, Android Keystore-backed storage.
+\textbf{Description:} Flexin' shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored using secure, Android Keystore-backed storage.
 
 \textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
 
@@ -2715,7 +2715,7 @@ Fitness Integration Authorization &
 
 SEC-ACC-04 &
 Password and Sign-In Protection &
-\textbf{Description:} Flexin shall enforce a minimum password strength, offer optional multi-factor authentication through the user's email, and temporarily lock sign-in after repeated failed attempts. Users shall be able to reset their password through email.
+\textbf{Description:} Flexin' shall enforce a minimum password strength, offer optional multi-factor authentication through the user's email, and temporarily lock sign-in after repeated failed attempts. Users shall be able to reset their password through email.
 
 \textbf{Rationale:} Weak passwords and unlimited sign-in attempts let attackers reach users' private data, while legitimate users must still be able to regain access to their accounts.
 
@@ -2726,7 +2726,7 @@ Password and Sign-In Protection &
 
 SEC-ACC-05 &
 Session End and Device Unlinking &
-\textbf{Description:} Flexin shall end a user's session after a period of inactivity or when the user signs out, and shall unlink the user's fitness devices on sign-out.
+\textbf{Description:} Flexin' shall end a user's session after a period of inactivity or when the user signs out, and shall unlink the user's fitness devices on sign-out.
 
 \textbf{Rationale:} Sessions and device links left open on shared or lost devices let other people access an account or send their health data to it.
 
@@ -2781,7 +2781,7 @@ Server-Side Valuation &
 
 SEC-INT-04 &
 Data Backups &
-\textbf{Description:} Flexin shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios.
+\textbf{Description:} Flexin' shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios.
 
 \textbf{Rationale:} Without backups, a database failure or bad write would leave users' balances, portfolios, and progress permanently lost.
 
@@ -2851,7 +2851,7 @@ User Data Deletion &
 
 SEC-AUD-01 &
 Economic Event Logging &
-\textbf{Description:} Flexin shall maintain an append-only audit ledger for currency rewards, simulated trades, dividends, and market price updates.
+\textbf{Description:} Flexin' shall maintain an append-only audit ledger for currency rewards, simulated trades, dividends, and market price updates.
 
 \textbf{Rationale:} Auditable records support troubleshooting, transaction verification, and evaluation of the simulated economy.
 
@@ -3167,6 +3167,10 @@ and have not yet been resolved.
   Email, Date of Birth, Goal Progress, and Transaction Type). The Portfolio
   class also holds a single Asset ID, so a portfolio cannot hold more than one
   asset; a separate holding class is likely needed.
+  \item \textbf{Claim Virtual Currency flowchart.} The flowchart for this use
+  case (Figure~\ref{fig:puc-claim-currency}) still shows users collecting
+  currency by completing financial lessons. Currency is now earned only through
+  physical activity, so the image needs to be updated.
   \item \textbf{Privacy legislation.} The team needs to confirm whether PHIPA
   applies to \progname{}, and what ``PPCDA'' in COMP-LEG-05 refers to.
   \item \textbf{Glossary.} The Glossary of terms and acronyms (Naming
@@ -3311,7 +3315,7 @@ The detailed breakdown of weekly tasks and deliverables can be found in \href{ht
 
 \subsection{Planning of the Development Phases}
 
-The Flexin project will be implemented incrementally through a series of development phases. Requirements are allocated to phases based on technical dependencies, implementation risk, stakeholder priority, and project milestones. Earlier phases focus on establishing the core platform infrastructure and fitness-to-investment workflow, while later phases introduce engagement features, usability enhancements, accessibility improvements, and compliance requirements. 
+The Flexin' project will be implemented incrementally through a series of development phases. Requirements are allocated to phases based on technical dependencies, implementation risk, stakeholder priority, and project milestones. Earlier phases focus on establishing the core platform infrastructure and fitness-to-investment workflow, while later phases introduce engagement features, usability enhancements, accessibility improvements, and compliance requirements. 
 
 The requirements identified below represent the planned allocation at the time of writing. Requirement assignments and phase deadlines may be refined during development as new information becomes available through user testing, stakeholder feedback, and technical investigation.
 
@@ -3383,7 +3387,7 @@ This phase focuses on hardening the application prior to release. Security contr
 
 DOC-01 &
 Financial Glossary and Tooltips &
-\textbf{Description:} Flexin shall provide contextual tooltips and a glossary defining financial concepts, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
+\textbf{Description:} Flexin' shall provide contextual tooltips and a glossary defining financial concepts, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
 
 \textbf{Rationale:} Contextual explanations help novice users learn financial terminology while using the application.
 
@@ -3392,7 +3396,7 @@ Financial Glossary and Tooltips &
 
 DOC-02 &
 Fitness Integration Guide &
-\textbf{Description:} Flexin shall provide an illustrated setup guide explaining how to authorize and configure supported fitness integrations and troubleshoot synchronization issues.
+\textbf{Description:} Flexin' shall provide an illustrated setup guide explaining how to authorize and configure supported fitness integrations and troubleshoot synchronization issues.
 
 \textbf{Rationale:} Clear instructions help users connect their fitness data sources successfully.
 
@@ -3401,7 +3405,7 @@ Fitness Integration Guide &
 
 DOC-03 &
 Searchable Help Center &
-\textbf{Description:} Flexin shall provide an in-app searchable FAQ covering activity rewards, simulated market mechanics, virtual currency disclaimers, and health-data privacy.
+\textbf{Description:} Flexin' shall provide an in-app searchable FAQ covering activity rewards, simulated market mechanics, virtual currency disclaimers, and health-data privacy.
 
 \textbf{Rationale:} Accessible documentation improves transparency, reduces confusion, and builds user trust.
 
@@ -3434,7 +3438,7 @@ Digital Manual and Release Notes &
 
 TRN-01 &
 Zero-Training Design &
-\textbf{Description:} Flexin shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
+\textbf{Description:} Flexin' shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
 
 \textbf{Rationale:} Intuitive navigation reduces onboarding effort and encourages continued use.
 
@@ -3443,7 +3447,7 @@ Zero-Training Design &
 
 TRN-02 &
 Interactive Onboarding &
-\textbf{Description:} After account creation, Flexin shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
+\textbf{Description:} After account creation, Flexin' shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
 
 \textbf{Rationale:} Guided interaction introduces the application's core features through practical examples.
 
@@ -3452,7 +3456,7 @@ Interactive Onboarding &
 
 TRN-03 &
 Progressive Feature Discovery &
-\textbf{Description:} Flexin shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
+\textbf{Description:} Flexin' shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
 
 \textbf{Rationale:} Gradual feature discovery reduces cognitive overload for novice users.
 
