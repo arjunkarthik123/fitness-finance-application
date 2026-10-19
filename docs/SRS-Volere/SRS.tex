@@ -197,7 +197,7 @@ decisions recorded in the Problem Statement and the Development Plan, and the
 design must satisfy them.
 
 \begin{description}
-  \item[SC1: Android platform]\leavevmode
+  \item[SC-01: Android platform]\leavevmode
   \begin{description}
     \item[Description:] The product shall run as a native mobile application
     on Android phones.
@@ -209,7 +209,7 @@ design must satisfy them.
     on an Android phone.
   \end{description}
 
-  \item[SC2: Frontend technology]\leavevmode
+  \item[SC-02: Frontend technology]\leavevmode
   \begin{description}
     \item[Description:] The mobile client shall be written in TypeScript using
     the React Native framework.
@@ -220,7 +220,7 @@ design must satisfy them.
     Native.
   \end{description}
 
-  \item[SC3: Backend technology]\leavevmode
+  \item[SC-03: Backend technology]\leavevmode
   \begin{description}
     \item[Description:] The backend API shall be built in Java with the Spring
     framework, and persistent data shall be stored in a MySQL relational
@@ -232,7 +232,7 @@ design must satisfy them.
     application data lives in a MySQL database.
   \end{description}
 
-  \item[SC4: Fitness data sources]\leavevmode
+  \item[SC-04: Fitness data sources]\leavevmode
   \begin{description}
     \item[Description:] Activity data shall be read automatically from the
     phone's built-in health data. Data from external devices such as fitness
@@ -246,7 +246,7 @@ design must satisfy them.
     from that device's manufacturer.
   \end{description}
 
-  \item[SC5: Simulated market only]\leavevmode
+  \item[SC-05: Simulated market only]\leavevmode
   \begin{description}
     \item[Description:] All trading shall take place in a simulated market
     using virtual currency. The product shall not handle real money, connect
@@ -258,7 +258,7 @@ design must satisfy them.
     out real money, and no trade is sent to a real exchange or broker.
   \end{description}
 
-  \item[SC6: Distribution]\leavevmode
+  \item[SC-06: Distribution]\leavevmode
   \begin{description}
     \item[Description:] The product shall be distributed to users through the
     Android application store.
@@ -292,7 +292,7 @@ server, provided to the team for the course.
 
 The product depends on the following external applications for fitness data.
 Each integration must follow the provider's developer terms and permission
-model (see SC4).
+model (see SC-04).
 
 \begin{description}
   \item[Health Connect (Android):] The main source of step counts and workout
@@ -1535,7 +1535,7 @@ Navigation &
 
 \textbf{Rationale:} Simple navigation reduces user effort.
 
-\textbf{Fit Criterion:} Primary operations shall be reachable within three taps from the home dashboard. \\
+\textbf{Fit Criterion:} Primary operations shall be reachable within two taps from the home dashboard (see UHR-EOU-03). \\
 \hline
 
 \caption{Flexin Appearance Requirements}
@@ -2019,7 +2019,7 @@ typical mobile data or Wi-Fi connection.
 \hline
 \endhead
 
-PR-SL1 &
+PR-SL-01 &
 App launch &
 \textbf{Description:} The app shall show the home screen within 3 seconds of being opened from a closed state.
 
@@ -2028,7 +2028,7 @@ App launch &
 \textbf{Fit Criterion:} Across 20 cold starts on the reference phone, the home screen appears in 3 seconds or less in at least 19 of them.\\
 \hline
 
-PR-SL2 &
+PR-SL-02 &
 Response to input &
 \textbf{Description:} The app shall respond to a tap or navigation action within 1 second.
 
@@ -2037,7 +2037,7 @@ Response to input &
 \textbf{Fit Criterion:} At least 95\% of measured screen transitions and button responses complete within 1 second.\\
 \hline
 
-PR-SL3 &
+PR-SL-03 &
 Trades &
 \textbf{Description:} After a user confirms a buy or sell order, the updated holdings and currency balance shall be shown within 2 seconds.
 
@@ -2046,7 +2046,7 @@ Trades &
 \textbf{Fit Criterion:} At least 95\% of test trades show the updated portfolio within 2 seconds of confirmation.\\
 \hline
 
-PR-SL4 &
+PR-SL-04 &
 Activity sync &
 \textbf{Description:} When the app is opened, activity recorded since the last sync shall be read and turned into currency within 10 seconds.
 
@@ -2077,7 +2077,7 @@ that it traces to.
 \hline
 \endhead
 
-PR-SC1 &
+PR-SC-01 &
 Daily earning limits &
 \textbf{Description:} The amount of currency a user can earn from activity in one day shall be capped, and activity beyond a healthy daily volume shall earn currency at a reduced rate.
 
@@ -2088,7 +2088,7 @@ Daily earning limits &
 \textbf{Hazard Analysis:} SR8 (H4.1, H5.1)\\
 \hline
 
-PR-SC2 &
+PR-SC-02 &
 No penalties for missed days &
 \textbf{Description:} The product shall not take away currency or holdings when a user misses a goal or a day of activity. Users shall be able to freeze their streak for days missed because of illness, injury, rest, or a delayed sync.
 
@@ -2099,7 +2099,7 @@ No penalties for missed days &
 \textbf{Hazard Analysis:} SR8 (H3.1, H4.1, H11.1)\\
 \hline
 
-PR-SC3 &
+PR-SC-03 &
 Simulated market is labelled &
 \textbf{Description:} Every screen that shows prices, holdings, or returns shall state that the market is simulated and that results do not predict real returns. Each of these screens shall link to an explanation of what the simulation does not model, such as fees, taxes, and real-world volatility.
 
@@ -2110,7 +2110,7 @@ Simulated market is labelled &
 \textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
 \hline
 
-PR-SC4 &
+PR-SC-04 &
 Not financial advice &
 \textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, and any other content that discusses investing shall not recommend specific real-world investments to a user.
 
@@ -2121,7 +2121,7 @@ Not financial advice &
 \textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
 \hline
 
-PR-SC5 &
+PR-SC-05 &
 Exercise injury warning &
 \textbf{Description:} The product shall warn users that physical activity carries a risk of injury, that they should exercise within their own limits, and that they should consult a doctor before starting a new exercise routine if they have health concerns. The product's terms of use shall state that users exercise at their own risk and that the \progname{} team is not responsible for any injury that happens while using the app. The user must acknowledge both during sign-up before continuing.
 
@@ -2130,7 +2130,7 @@ Exercise injury warning &
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.\\
 \hline
 
-PR-SC6 &
+PR-SC-06 &
 Safe goal progression &
 \textbf{Description:} Goals that the product raises automatically shall increase gradually and include regular rest days. When a goal is missed several times in a row, the product shall suggest lowering it. Users shall be able to lower or override any goal themselves.
 
@@ -2141,7 +2141,7 @@ Safe goal progression &
 \textbf{Hazard Analysis:} SR6 (H4.1, H4.2)\\
 \hline
 
-PR-SC7 &
+PR-SC-07 &
 Supportive messages and notifications &
 \textbf{Description:} All goal-related messages and reminders shall use supportive language that does not shame or guilt the user. Users shall be able to choose how often they get notifications and set quiet hours.
 
@@ -2152,7 +2152,7 @@ Supportive messages and notifications &
 \textbf{Hazard Analysis:} SR7 (H4.1, H10.1)\\
 \hline
 
-PR-SC8 &
+PR-SC-08 &
 Leaderboards &
 \textbf{Description:} Leaderboards shall be off by default, and users shall appear on one only after opting in to a group. Leaderboards shall rank users by progress towards their own goals or the group's agreed goals, not by absolute performance, and shall not award currency or other rewards.
 
@@ -2179,7 +2179,7 @@ Leaderboards &
 \hline
 \endhead
 
-PR-PA1 &
+PR-PA-01 &
 Exact money values &
 \textbf{Description:} Currency balances, prices, and trade amounts shall be stored and calculated as exact decimal values, not floating-point numbers, and shown to two decimal places.
 
@@ -2188,7 +2188,7 @@ Exact money values &
 \textbf{Fit Criterion:} After a scripted sequence of 1,000 trades, the stored balance matches the expected balance exactly.\\
 \hline
 
-PR-PA2 &
+PR-PA-02 &
 Consistent currency awards &
 \textbf{Description:} The currency awarded for a set of activity data shall follow the published conversion rules exactly, and the same data shall always earn the same amount.
 
@@ -2197,7 +2197,7 @@ Consistent currency awards &
 \textbf{Fit Criterion:} For a set of test activity records, the awarded currency matches the amount calculated by hand from the conversion rules.\\
 \hline
 
-PR-PA3 &
+PR-PA-03 &
 No double counting &
 \textbf{Description:} Activity reported by more than one source, such as the phone and a watch both counting the same steps, shall be counted only once.
 
@@ -2206,7 +2206,7 @@ No double counting &
 \textbf{Fit Criterion:} When the same walk is recorded by two sources, the currency earned equals the amount for one recording.\\
 \hline
 
-PR-PA4 &
+PR-PA-04 &
 Portfolio value &
 \textbf{Description:} The displayed portfolio value shall equal the sum of each holding's quantity times its current simulated price, plus uninvested currency.
 
@@ -2215,7 +2215,7 @@ Portfolio value &
 \textbf{Fit Criterion:} For test portfolios, the displayed value matches the value calculated by hand to the cent.\\
 \hline
 
-PR-PA5 &
+PR-PA-05 &
 Workout dates &
 \textbf{Description:} Each workout shall be dated by the time it happened on the source device, not the time it was synced. When workout data arrives late, the affected streaks and rewards shall be recalculated.
 
@@ -2226,7 +2226,7 @@ Workout dates &
 \textbf{Hazard Analysis:} SR5 (H3.1, H11.1)\\
 \hline
 
-PR-PA6 &
+PR-PA-06 &
 Realistic market simulation &
 \textbf{Description:} The market simulation shall be calibrated against historical market data, so that its volatility and downturns are consistent with real markets.
 
@@ -2253,7 +2253,7 @@ Realistic market simulation &
 \hline
 \endhead
 
-PR-RFT1 &
+PR-RFT-01 &
 Offline activity &
 \textbf{Description:} Activity recorded while the phone is offline, or while the app is closed, shall be credited the next time the app syncs, for gaps of up to 7 days.
 
@@ -2262,7 +2262,7 @@ Offline activity &
 \textbf{Fit Criterion:} Activity recorded during a 7-day gap with no syncing is fully credited at the next sync.\\
 \hline
 
-PR-RFT2 &
+PR-RFT-02 &
 Atomic writes &
 \textbf{Description:} Every database write with more than one step shall either complete fully or be rolled back. A trade shall update both the currency balance and the holdings, at the price the user confirmed, or not happen at all.
 
@@ -2273,7 +2273,7 @@ Atomic writes &
 \textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
 \hline
 
-PR-RFT3 &
+PR-RFT-03 &
 Failing data sources &
 \textbf{Description:} If a fitness data source is unavailable or returns invalid data, the app shall keep working with its other sources and credit no currency for the invalid data. A failed workout sync shall be retried automatically, and if it still fails, the app shall tell the user which source has a problem and why.
 
@@ -2284,7 +2284,7 @@ Failing data sources &
 \textbf{Hazard Analysis:} SR4 (H3.1)\\
 \hline
 
-PR-RFT4 &
+PR-RFT-04 &
 Backend unavailable &
 \textbf{Description:} If the backend cannot be reached, the app shall show the last data it received, marked as possibly out of date, instead of crashing or showing empty screens.
 
@@ -2293,7 +2293,7 @@ Backend unavailable &
 \textbf{Fit Criterion:} With the backend stopped, the app opens, shows the last known balance and portfolio, and displays an offline notice.\\
 \hline
 
-PR-RFT5 &
+PR-RFT-05 &
 Account errors &
 \textbf{Description:} When account creation or sign-in fails, the app shall show a clear error message that states the cause.
 
@@ -2320,22 +2320,22 @@ Account errors &
 \hline
 \endhead
 
-PR-C1 &
+PR-C-01 &
 Users &
 \textbf{Description:} The system shall support at least 500 registered users, with at least 100 using the app at the same time, without breaking the speed requirements above.
 
 \textbf{Rationale:} This covers the expected load during user testing, the final demo, and the Capstone EXPO, where many people may try the app at once.
 
-\textbf{Fit Criterion:} A load test with 100 simulated concurrent users meets PR-SL2 and PR-SL3.\\
+\textbf{Fit Criterion:} A load test with 100 simulated concurrent users meets PR-SL-02 and PR-SL-03.\\
 \hline
 
-PR-C2 &
+PR-C-02 &
 History &
 \textbf{Description:} The system shall store at least two years of activity and trade history for each user.
 
 \textbf{Rationale:} Compounding only shows up over long periods, so users need to be able to look back over their history.
 
-\textbf{Fit Criterion:} A test account loaded with two years of daily activity and weekly trades can display its full history, and its screens still meet PR-SL2.\\
+\textbf{Fit Criterion:} A test account loaded with two years of daily activity and weekly trades can display its full history, and its screens still meet PR-SL-02.\\
 \hline
 
 \end{xltabular}
@@ -2354,7 +2354,7 @@ History &
 \hline
 \endhead
 
-PR-SE1 &
+PR-SE-01 &
 Adding fitness sources &
 \textbf{Description:} A new fitness data source shall be addable without changing the currency conversion logic.
 
@@ -2363,7 +2363,7 @@ Adding fitness sources &
 \textbf{Fit Criterion:} Adding a new source only requires changes inside the integration module.\\
 \hline
 
-PR-SE2 &
+PR-SE-02 &
 Adding asset types &
 \textbf{Description:} New types of assets shall be addable to the simulated market without changing the trading logic.
 
@@ -2372,16 +2372,16 @@ Adding asset types &
 \textbf{Fit Criterion:} Adding a new asset type only requires new asset definitions and market engine configuration, not changes to the buy and sell code.\\
 \hline
 
-PR-SE3 &
+PR-SE-03 &
 More server capacity &
 \textbf{Description:} The backend API shall keep no per-user state between requests, so more instances can be run if the number of users grows.
 
-\textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than PR-C1.
+\textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than PR-C-01.
 
 \textbf{Fit Criterion:} Two API instances running against the same database give the same results as one.\\
 \hline
 
-PR-SE4 &
+PR-SE-04 &
 Other platforms &
 \textbf{Description:} Code that depends on Android-only features shall be kept separate from the rest of the client.
 
@@ -2406,7 +2406,7 @@ Other platforms &
 \hline
 \endhead
 
-PR-L1 &
+PR-L-01 &
 Supported Android versions &
 \textbf{Description:} The app shall target the Android version that Google Play requires for new apps at the time of release, and keep working on Android versions released through the end of the capstone in April 2027.
 
@@ -2415,7 +2415,7 @@ Supported Android versions &
 \textbf{Fit Criterion:} The release build meets Google Play's target version requirement and passes the test suite on the newest Android version available in April 2027.\\
 \hline
 
-PR-L2 &
+PR-L-02 &
 Keeping user history &
 \textbf{Description:} Activity and portfolio history shall be kept for as long as the user's account exists, unless the user deletes it.
 
@@ -3142,7 +3142,7 @@ connects fitness habits to learning how investments grow.
   cryptocurrency tokens that have real market value. They link exercise to
   money, but expose users to real financial loss. STEPN's reward token lost
   most of its value within months in 2022. This approach conflicts with
-  constraint SC5 (simulated market only) and is not suitable.
+  constraint SC-05 (simulated market only) and is not suitable.
 
   \item[Fitness trackers (e.g.\ Strava, Garmin Connect, Health Connect):]
   These record activity accurately but do not offer any financial component.
@@ -3203,7 +3203,7 @@ protected material.
   explanations of financial terms placed next to where the terms are used.
 
   \item[Step reward apps:] Converting steps into currency at a fixed rate, with
-  a daily limit on how much can be earned (see PR-SC1).
+  a daily limit on how much can be earned (see PR-SC-01).
 
   \item[Strava:] Leaderboards, clubs, and activity feeds that let friends
   follow each other's progress. These can be adapted for the community
@@ -3211,7 +3211,7 @@ protected material.
 
   \item[Habit and learning apps (e.g.\ Duolingo):] Streaks, short daily goals,
   and reminders that build a daily habit. These must be adapted carefully so
-  that missing a day is not punished (see PR-SC2).
+  that missing a day is not punished (see PR-SC-02).
 \end{description}
 
 \section{New Problems}
@@ -3259,14 +3259,14 @@ The requirements identified below represent the planned allocation at the time o
 
 This phase establishes the core application infrastructure including account management, authentication, fitness integration, virtual currency generation, and synchronization with supported health platforms. The primary objective is to demonstrate the end-to-end workflow of completing fitness activity and receiving virtual currency rewards. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL1, PR-SL2, PR-SL4
+\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04
 
 \subsubsection{Phase 2 --- Simulated Investing} 
 \noindent\textbf{Deadline:} January 31, 2027 \\
 
 This phase introduces the simulated financial market and portfolio management capabilities. Users will be able to purchase and sell investment assets, manage portfolios, and view investment performance using virtual currency earned through physical activity. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA1, PR-PA4, PR-PA6, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01
+\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01
 
 \subsubsection{Phase 3 --- Community and Gamification} 
 \noindent\textbf{Deadline:} February 14, 2027 \\
@@ -3393,7 +3393,7 @@ TRN-01 &
 Zero-Training Design &
 \textbf{Description:} Flexin shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
 \newline\textbf{Rationale:} Intuitive navigation reduces onboarding effort and encourages continued use.
-\newline\textbf{Fit Criterion:} At least 90\% of first-time test users shall register, connect a fitness data source, and view their dashboard within 3 minutes without assistance. \\
+\newline\textbf{Fit Criterion:} At least 90\% of first-time test users shall register, connect a fitness data source, and view their dashboard within 5 minutes without assistance (see UHR-EOU-01). \\
 \hline
 
 TRN-02 &
