@@ -26,6 +26,8 @@
 }
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
 \newcommand{\lips}{\textit{Insert your content here.}}
+% Symbolic constants (see Table~\ref{tab:constants}); links to their definition
+\newcommand{\const}[1]{\hyperlink{const:#1}{\textsf{#1}}}
 
 \input{../Comments.text}
 \input{../Common.text}
@@ -338,7 +340,7 @@ the design in a few ways:
   \item The connection may be slow or drop out. Activity data must not be lost
   when the phone is offline; it should sync once the connection returns.
   \item Users should not need a manual or formal training to use the app (see
-  TRN-01). The interface has to explain financial terms itself, in line with the goal of a simple and delightful user
+  UHR-LRN-01). The interface has to explain financial terms itself, in line with the goal of a simple and delightful user
   experience.
   \item Step counting runs in the background through Health Connect, so the
   app must not drain the battery noticeably during a normal day.
@@ -400,10 +402,10 @@ Android emulator, so no test hardware will be bought.
   handle that data in line with Canadian privacy law (PIPEDA): collect only
   what is needed, get the user's consent, and let users see and delete their
   data. Details are set out in the Privacy Requirements (SEC-PRV-01 to
-  SEC-PRV-03) and Legal Requirements (COMP-LEG-01 to COMP-LEG-05).
+  SEC-PRV-03) and Legal Requirements (COMP-LEG-01 to COMP-LEG-04).
   \item \textbf{No financial advice.} The product teaches general investing
-  concepts. It must not present anything as personalized financial advice, and
-  any content that could be read that way needs a clear disclaimer.
+  concepts and must not present anything as personalized financial advice (see
+  PR-SC-04).
   \item \textbf{App store policies.} The product must meet Google Play's
   developer policies, including its rules for health data and for
   finance-related apps.
@@ -1072,7 +1074,7 @@ Each of the rectangles represents a class of business data. The attributes of ea
     Password & String & User authentication credential, stored as a salted hash & Hashed, Not Null \\ 
     \hline 
     
-    Date of Birth & Date & Used to confirm the user is 18 or older (COMP-LEG-07) & Not Null, Age $\geq 18$ \\ 
+    Date of Birth & Date & Used to confirm the user is 18 or older (COMP-LEG-06) & Not Null, Age $\geq 18$ \\ 
     \hline 
     
     Height & Decimal & User's height, used to tailor fitness goals & Optional, Encrypted \\ 
@@ -1476,13 +1478,13 @@ Portfolio Performance Calculation &
 \textbf{Fit Criterion:} Users shall be able to view current portfolio value and unrealized gains or losses.\\
 \hline
 
-FUNC-13 & 
-Leaderboard Participation & 
-\textbf{Description:} The system shall let users opt in to leaderboard groups. Leaderboards shall be off by default, and shall rank the members of a group by their progress towards their own goals or towards the goals the group has agreed on, not by absolute performance. Leaderboards shall not award currency or any other reward; the ranking itself is the reward.
+FUNC-13 &
+Leaderboard Participation &
+\textbf{Description:} The system shall let users join and leave leaderboard groups, and shall show each group's members ranked by their progress towards their own goals or towards the goals the group has agreed on. Ranking rules are constrained by PR-SC-08.
 
-\textbf{Rationale:} Competitive features encourage continued engagement and motivation. Ranking by progress towards personal or agreed goals keeps the competition fair between users of different fitness and financial levels (see PR-SC-08).
+\textbf{Rationale:} Competitive features encourage continued engagement and motivation. Ranking by progress towards personal or agreed goals keeps the competition fair between users of different fitness and financial levels.
 
-\textbf{Fit Criterion:} New accounts do not appear on any leaderboard until the user joins a group. Each member's position is computed from their percentage progress towards their own or the group's agreed goal, and no currency is credited because of a leaderboard position.\\
+\textbf{Fit Criterion:} A user can join a group, view its ranking, and leave it. Each member's position is computed from their percentage progress towards their own or the group's agreed goal and updates when their progress changes.\\
 \hline
 
 FUNC-14 & 
@@ -1496,7 +1498,7 @@ Friend Management &
 
 FUNC-15 & 
 Private Leaderboards & 
-\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. Like all leaderboards, private groups give no rewards, so friends cannot use them to earn currency.
+\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. Private groups follow the same leaderboard rules as public ones (PR-SC-08), so friends cannot use them to earn currency.
 
 \textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
 
@@ -1562,7 +1564,7 @@ Theme and Contrast &
 
 \textbf{Rationale:} Consistent contrast improves readability and accessibility in different environments.
 
-\textbf{Fit Criterion:} The interface shall provide sufficient colour contrast for readability, meeting WCAG 2.1 AA minimum ratios of 4.5:1 for normal text and 3:1 for large text and essential graphical elements.\\
+\textbf{Fit Criterion:} Both Light and Dark modes meet the colour contrast ratios required by COMP-STD-02, and fitness and financial status indicators remain distinguishable in both modes.\\
 \hline
 
 LF-APP-05 &
@@ -1571,7 +1573,7 @@ Navigation &
 
 \textbf{Rationale:} Simple navigation reduces user effort.
 
-\textbf{Fit Criterion:} Primary operations shall be reachable within two taps from the home dashboard (see UHR-EOU-03).\\
+\textbf{Fit Criterion:} The bottom navigation bar with these five destinations is visible on every primary screen. How many taps primary operations may take is specified in UHR-EOU-03.\\
 \hline
 
 \end{xltabular}
@@ -1599,12 +1601,12 @@ Approachable Tone &
 \hline
 
 LF-STY-02 &
-Simulated Finance Clarity &
-\textbf{Description:} Financial screens, holdings, orders, and balances shall clearly identify all financial activity as simulated.
+Virtual Currency Symbol &
+\textbf{Description:} All amounts of virtual currency shall be shown with the virtual currency symbol (FLX), never with a real-world currency symbol.
 
-\textbf{Rationale:} Users must not confuse Flexin' with a real brokerage or financial account.
+\textbf{Rationale:} Users must not confuse \progname{} with a real brokerage or financial account.
 
-\textbf{Fit Criterion:} Every screen displaying financial values shall show the virtual currency symbol (e.g., FLX) and a clearly visible ``Simulated Market'' label (see also PR-SC-03).\\
+\textbf{Fit Criterion:} No screen shows a virtual amount with a real-world currency symbol such as \$, and every virtual amount uses FLX. The label marking the market as simulated is specified in PR-SC-03.\\
 \hline
 
 LF-STY-03 &
@@ -1672,13 +1674,15 @@ Minimal Screen Navigation &
 \textbf{Fit Criterion:} Users shall be able to access detailed fitness statistics, portfolio management, virtual currency transactions, and goal tracking within two taps from the main dashboard.\\
 \hline
 
-UHR-EOU-04 & 
-Error Feedback and Recovery & 
-\textbf{Description:} The system shall provide clear, actionable, and immediate feedback to the user whenever user actions cannot be completed. 
+UHR-EOU-04 &
+Error Feedback and Recovery &
+\textbf{Description:} The system shall provide clear, actionable, and immediate feedback to the user whenever a user action cannot be completed, including failed account creation and sign-in.
 
-\textbf{Rationale:} Clear feedback helps users understand how to resolve issues and continue using the application. 
+\textbf{Rationale:} Clear feedback helps users understand how to resolve issues and continue using the application, instead of being locked out or stuck with no explanation.
 
-\textbf{Fit Criterion:} Whenever an error occurs (i.e. the user is prevented to complete an action), the user will be notified immediately with a user-facing error message that shall explain the problem in great detail and provide guidance for corrective action.\\ 
+\textbf{Fit Criterion:} Every error shown during testing appears immediately, states what went wrong, and gives at least one action the user can take to fix it.
+
+\textbf{Hazard Analysis:} SR4 (H1.1)\\
 \hline
 
 UHR-EOU-05 & 
@@ -1830,22 +1834,13 @@ Learning Curve of Fitness Based Concepts &
 \textbf{Fit Criterion:} During user testing, at least 80\% of first-time participants in a new fitness activity shall successfully accomplish their set goal and view their health metrics after one week without assistance.\\ 
 \hline
 
-UHR-LRN-04 & 
-Integrated Educational Assistance & 
-\textbf{Description:} The system shall provide contextual learning resources within the application.
+UHR-LRN-04 &
+Integrated Educational Assistance &
+\textbf{Description:} The system shall provide a plain-language explanation, reachable directly from the screen where it appears, for every financial term, investment metric, fitness metric, and health term shown to users. Explanations shall not assume any prior investing or fitness knowledge.
 
-\textbf{Rationale:} In the event that users encounter unfamiliar fitness or financial terminology while using the platform, the system should offer immediate assistance to enhance their understanding so that users can quickly learn and pick up new concepts.
+\textbf{Rationale:} Users have very different levels of financial and fitness knowledge, and many target users have little experience with investing. Explaining each term where it appears lets them learn while they use the app instead of leaving to look things up.
 
-\textbf{Fit Criterion:} Users shall be able to access explanatory information for all core financial and fitness concepts directly from the screen where the concept appears.\\
-\hline
-
-UHR-LRN-05 & 
-User Help Documentation & 
-\textbf{Description:} The system shall provide readily accessible help documentation describing the application's functionality should any users require it.
-
-\textbf{Rationale:} Users should be able to resolve common questions without external support.
-
-\textbf{Fit Criterion:} A help section shall be accessible from the application's settings menu and include explanations of all major features. Support teams should receive zero inquiries about basic system functionality.\\
+\textbf{Fit Criterion:} A review of every screen finds an explanation for each financial and fitness term or metric shown. In user testing, at least 80\% of participants rate the explanations as clear (4 or 5 on a 5-point scale).\\
 \hline
 
 \end{xltabular}
@@ -1874,24 +1869,6 @@ Plain Language Communication &
 \hline
 
 UHR-UND-02 &
-Investment Terminology Explanations &
-\textbf{Description:} The system shall provide accessible explanations for investment-related terminology and metrics.
-
-\textbf{Rationale:} Users may be unfamiliar with investing concepts and require additional context to make informed decisions within the simulated environment.
-
-\textbf{Fit Criterion:} All investment-related terms shall include supporting descriptions or contextual explanations.\\
-\hline
-
-UHR-UND-03 &
-Fitness Terminology Explanations &
-\textbf{Description:} The system shall provide accessible explanations for fitness metrics and terminology presented to users.
-
-\textbf{Rationale:} Users may have varying levels of fitness and health metric knowledge and should be able to understand the significance of displayed fitness information and health metrics.
-
-\textbf{Fit Criterion:} All fitness-related metrics shall include supporting descriptions or contextual explanations.\\
-\hline
-
-UHR-UND-04 &
 Compounding Transparency and Distinction &
 \textbf{Description:} The system shall clearly distinguish between currency gains through the completion of fitness-related activities and gains resulting from portfolio performance.
 
@@ -1900,7 +1877,7 @@ Compounding Transparency and Distinction &
 \textbf{Fit Criterion:} Portfolio views shall separately display user-earned virtual currency contributions and investment gains or losses.\\
 \hline
 
-UHR-UND-05 &
+UHR-UND-03 &
 Action Outcome Transparency &
 \textbf{Description:} The system shall clearly communicate the outcome of actions affecting fitness progress, virtual currency balances, and portfolio holdings.
 
@@ -2130,7 +2107,7 @@ PR-SC-03 &
 Simulated market is labelled &
 \textbf{Description:} Every screen that shows prices, holdings, or returns shall state that the market is simulated and that results do not predict real returns. Each of these screens shall link to an explanation of what the simulation does not model, such as fees, taxes, and real-world volatility.
 
-\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money. The on-screen label itself is specified in LF-STY-02.
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money. Currency amounts on these screens use the FLX symbol (LF-STY-02).
 
 \textbf{Fit Criterion:} A review of every market and portfolio screen finds the notice visible on each one, and the explanation of the simulation's limits can be reached from each one.
 
@@ -2139,9 +2116,9 @@ Simulated market is labelled &
 
 PR-SC-04 &
 Not financial advice &
-\textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, and any other content that discusses investing shall not recommend specific real-world investments to a user.
+\textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, portfolio insights, and any other content that discusses investing shall not recommend specific real-world investments to a user.
 
-\textbf{Rationale:} The Hazard Analysis lists financial loss from users acting on what they learn in the app. \progname{} is not a licensed financial advisor, so users must understand that nothing in the app is personal advice about their real money. The legal side of this disclaimer is covered by COMP-LEG-04.
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users acting on what they learn in the app. \progname{} is not a licensed financial advisor, so users must understand that nothing in the app is personal advice about their real money. The statement also protects the team from legal claims over losses users make in real markets, so it is a legal requirement as well as a safety one.
 
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the statement, the statement can be reached from settings, and a review of all educational content finds no recommendations to buy or sell specific real-world investments.
 
@@ -2152,9 +2129,11 @@ PR-SC-05 &
 Exercise injury warning &
 \textbf{Description:} The product shall warn users that physical activity carries a risk of injury, that they should exercise within their own limits, and that they should consult a doctor before starting a new exercise routine if they have health concerns. The product's terms of use shall state that users exercise at their own risk and that the \progname{} team is not responsible for any injury that happens while using the app. The user must acknowledge both during sign-up before continuing.
 
-\textbf{Rationale:} The product rewards physical activity, so some users will exercise more because of it. The Hazard Analysis assumes users only attempt exercises they are able to do safely, and places injuries from exercise outside the product's control. Users need to be told this directly. The responsibility statement is a legal matter as well as a safety one and is also covered by COMP-LEG-09. Its exact wording should be checked against the course's guidance before release.
+\textbf{Rationale:} The product rewards physical activity, so some users will exercise more because of it. The Hazard Analysis assumes users only attempt exercises they are able to do safely, and places injuries from exercise outside the product's control. Users need to be told this directly. The responsibility statement is a legal requirement as well as a safety one, and its exact wording should be checked against the course's guidance before release.
 
-\textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.\\
+\textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.
+
+\textbf{Hazard Analysis:} H4.2\\
 \hline
 
 PR-SC-06 &
@@ -2169,23 +2148,23 @@ Safe goal progression &
 \hline
 
 PR-SC-07 &
-Supportive messages and notifications &
-\textbf{Description:} All goal-related messages and reminders shall use supportive language that does not shame or guilt the user. Users shall be able to choose how often they get notifications and set quiet hours.
+Notification limits &
+\textbf{Description:} Users shall be able to set quiet hours during which no notifications are sent. By default, the product shall send no more than \const{MaxDailyNotifications} goal-related notifications per day. The wording of these messages is specified in UHR-POL-03, and which notifications a user receives is set under UHR-PER-02.
 
-\textbf{Rationale:} Guilt-based messages and too many notifications harm users' mental health and encourage compulsive use of the app.
+\textbf{Rationale:} Too many notifications, or notifications at the wrong time, harm users' mental health and encourage compulsive use of the app.
 
-\textbf{Fit Criterion:} Every goal-related message passes a team review for shaming or guilt-based language, and in testing no notifications are sent during the user's quiet hours or more often than the frequency they chose.
+\textbf{Fit Criterion:} In testing, no notifications are sent during the user's quiet hours, and no more than \const{MaxDailyNotifications} goal-related notifications are sent in a day unless the user raises the limit.
 
 \textbf{Hazard Analysis:} SR7 (H4.1, H10.1)\\
 \hline
 
 PR-SC-08 &
-Leaderboards &
-\textbf{Description:} Leaderboards shall be off by default, and users shall appear on one only after opting in to a group. Leaderboards shall rank users by progress towards their own goals or the group's agreed goals, not by absolute performance, and shall not award currency or other rewards.
+Safe leaderboard rules &
+\textbf{Description:} Leaderboards shall never rank users by absolute performance and shall never award currency or other rewards. Leaderboard participation is off by default (SEC-PRV-02).
 
 \textbf{Rationale:} Ranking users by absolute performance causes shame and anxiety for those who rank poorly. Rewarding leaderboard positions would also push users to overexert themselves to climb the rankings.
 
-\textbf{Fit Criterion:} New accounts do not appear on any leaderboard, users who leave a group stop appearing on its leaderboard, rankings are computed from each user's percentage of their own or the group's agreed goal, and no currency is awarded for a ranking.
+\textbf{Fit Criterion:} Rankings are computed from each user's percentage of their own or the group's agreed goal, users who leave a group stop appearing on its leaderboard, and no currency is credited because of a ranking.
 
 \textbf{Hazard Analysis:} SR9 (H4.1, H8.1)\\
 \hline
@@ -2291,11 +2270,11 @@ Offline activity &
 
 PR-RFT-02 &
 Atomic writes &
-\textbf{Description:} Every database write with more than one step shall either complete fully or be rolled back. A trade shall update both the currency balance and the holdings, at the price the user confirmed, or not happen at all.
+\textbf{Description:} Every operation that changes balances, holdings, rewards, or progress shall either complete fully or be rolled back. A trade shall update both the currency balance and the holdings, at the price the user confirmed, or not happen at all.
 
-\textbf{Rationale:} A write that fails halfway leaves balances, portfolios, or progress wrong. For example, a failed trade could take a user's currency without giving them the asset, or the other way around.
+\textbf{Rationale:} A write that fails halfway leaves balances, portfolios, or progress wrong. For example, a failed trade could take a user's currency without giving them the asset, or the other way around, and two simultaneous requests could produce duplicate rewards or a negative balance.
 
-\textbf{Fit Criterion:} Tests that simulate a failure at each step of a multi-step write leave the database unchanged. When the connection or server is cut during a test trade, the balance and holdings afterwards match either the state before the trade or the state after it, and completed trades execute at the confirmed price.
+\textbf{Fit Criterion:} Tests that simulate a failure at each step of a multi-step write leave the data unchanged. When the connection or server is cut during a test trade, the balance and holdings afterwards match either the state before the trade or the state after it, and completed trades execute at the confirmed price. A stress test of 100 concurrent trade requests against one account leaves every operation either fully completed or fully rolled back, with no negative balance.
 
 \textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
 \hline
@@ -2318,17 +2297,6 @@ Backend unavailable &
 \textbf{Rationale:} Users on poor connections should still be able to see their progress.
 
 \textbf{Fit Criterion:} With the backend stopped, the app opens, shows the last known balance and portfolio, and displays an offline notice.\\
-\hline
-
-PR-RFT-05 &
-Account errors &
-\textbf{Description:} When account creation or sign-in fails, the app shall show a clear error message that states the cause.
-
-\textbf{Rationale:} Users should know why they cannot get into their account, instead of being locked out with no explanation.
-
-\textbf{Fit Criterion:} Every failed account creation or sign-in in testing shows an error message that states the cause.
-
-\textbf{Hazard Analysis:} SR4 (H1.1)\\
 \hline
 
 \end{xltabular}
@@ -2408,15 +2376,6 @@ More server capacity &
 \textbf{Fit Criterion:} Two API instances running against the same database give the same results as one.\\
 \hline
 
-PR-SE-04 &
-Other platforms &
-\textbf{Description:} Code that depends on Android-only features shall be kept separate from the rest of the client.
-
-\textbf{Rationale:} Support for iOS is a stretch goal, and keeping Android-specific code separate keeps that option open.
-
-\textbf{Fit Criterion:} All calls to Android-only APIs are in a clearly marked platform layer.\\
-\hline
-
 \end{xltabular}
 
 \subsection{Longevity Requirements}
@@ -2457,7 +2416,7 @@ Keeping user history &
 \subsection{Expected Physical Environment}
 The application will be operable through Android smartphones with cellular/Wi-Fi connectivity. Tablets are not supported. Inputs will be completed through health tracking services that will be provided by the smart device that is running the software, or optionally received through other technologies used for health tracking.
 \subsection{Wider Environment Requirements}
-The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the Google Play Store. 
+The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the Google Play Store (SC-06). 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 Many outside systems will be used:
 \begin{itemize}
@@ -2489,15 +2448,6 @@ Many outside systems will be used:
 \endhead
 
 PROD-01 &
-Installation and Updates channels &
-\textbf{Description:} The application distribution and update management shall be handled through the Google Play Store.
-
-\textbf{Rationale:} The app store system is an established process that users will already be familiar with. This allows the user base to continue a process they have become accustomed too.
-
-\textbf{Fit Criterion:} Users will be able to download and update the application through the Google Play Store.\\
-\hline
-
-PROD-02 &
 Build and Quality Assurance & 
 \textbf{Description:} The application will be subject to all the basic coding tests and standards needed to be published on the Google Play Store.
 
@@ -2598,24 +2548,6 @@ Traceability &
 \endhead
 
 MAS-SUP-01 &
-Backup and Recovery Support &
-\textbf{Description:} The system shall support recovery of user and application data following data corruption or infrastructure failure.
-
-\textbf{Rationale:} Effective recovery capabilities minimize the impact of data loss incidents on users.
-
-\textbf{Fit Criterion:} The system shall be capable of restoring application data from the most recent successful backup within 24 hours. Data backups must successfully occur at least once daily.\\
-\hline
-
-MAS-SUP-02 &
-Self-Service User Support &
-\textbf{Description:} The system shall provide integrated help resources that allow users to resolve FAQs without requiring direct support from developers.
-
-\textbf{Rationale:} Users should be able to independently resolve common issues related to account management or recovery, activity tracking, portfolio management, and virtual currency rewards.
-
-\textbf{Fit Criterion:} Help documentation covering account management and recovery, activity synchronization, portfolio management, and reward allocation shall be accessible from within the application at all times. The user shall be able to successfully integrate these recovery protocols without developer intervention.\\
-\hline
-
-MAS-SUP-03 &
 Contact Support Capability &
 \textbf{Description:} The system shall provide users with a mechanism to submit feedback or support requests for more complicated issues.
 
@@ -2651,11 +2583,11 @@ External Fitness Provider Adaptability &
 
 MAS-ADPT-02 &
 Mobile Platform Portability &
-\textbf{Description:} The system shall support future deployment on additional mobile platforms beyond the initially targeted platform - Android devices.
+\textbf{Description:} The system shall support future deployment on additional mobile platforms beyond the initially targeted platform, Android.
 
-\textbf{Rationale:} Initial deployment is limited to Android, but future releases may target additional mobile operating systems, such as iOS.
+\textbf{Rationale:} Initial deployment is limited to Android (SC-01), but future releases may target additional mobile operating systems, such as iOS.
 
-\textbf{Fit Criterion:} User account information and application data shall remain portable across supported platforms.\\
+\textbf{Fit Criterion:} A test client running outside Android can sign in to an existing account and retrieve the user's full account, activity, and portfolio data, with no migration step.\\
 \hline
 
 MAS-ADPT-03 &
@@ -2752,7 +2684,7 @@ Session End and Device Unlinking &
 
 SEC-INT-01 &
 Activity Validation &
-\textbf{Description:} The Spring backend shall validate activity metrics and detect duplicate records, overlapping timestamps, and implausible activity values before awarding virtual currency.
+\textbf{Description:} The system shall validate activity metrics and detect overlapping timestamps and implausible activity values before awarding virtual currency. Activity reported more than once is handled by PR-PA-03.
 
 \textbf{Rationale:} Validation prevents activity manipulation and unauthorized currency generation.
 
@@ -2760,17 +2692,6 @@ Activity Validation &
 \hline
 
 SEC-INT-02 &
-Ledger Consistency &
-\textbf{Description:} All virtual currency operations, including rewards, trades, and dividends, shall use ACID-compliant MySQL transactions.
-
-\textbf{Rationale:} Transactional consistency prevents duplicate rewards, negative balances, and partial updates.
-
-\textbf{Fit Criterion:} Stress tests with 100 concurrent trade requests against one wallet shall verify that every operation commits consistently or rolls back completely, without partial state changes.
-
-\textbf{Hazard Analysis:} SR12 (H7.2, H9.2) \\
-\hline
-
-SEC-INT-03 &
 Server-Side Valuation &
 \textbf{Description:} The Spring backend and custom market engine shall determine asset prices, portfolio valuations, and currency calculations. The mobile client shall not control authoritative values.
 
@@ -2779,15 +2700,15 @@ Server-Side Valuation &
 \textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. \\
 \hline
 
-SEC-INT-04 &
-Data Backups &
-\textbf{Description:} Flexin' shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios.
+SEC-INT-03 &
+Data Backups and Recovery &
+\textbf{Description:} \progname{} shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios, and shall be able to restore that data after data corruption or an infrastructure failure.
 
-\textbf{Rationale:} Without backups, a database failure or bad write would leave users' balances, portfolios, and progress permanently lost.
+\textbf{Rationale:} Without backups, a database failure or bad write would leave users' balances, portfolios, and progress permanently lost. Fast recovery limits how long users are affected.
 
-\textbf{Fit Criterion:} The production database shall be backed up at least once a day, and each backup shall be kept for at least 30 days. A restore from backup into a test environment shall be performed successfully before each release.
+\textbf{Fit Criterion:} The production database is backed up at least once every \const{BackupInterval}, and each backup is kept for \const{BackupRetention}. Data can be restored from the most recent backup within \const{RestoreTime}, and a restore into a test environment is performed successfully before each release.
 
-\textbf{Hazard Analysis:} SR12 (H7.2, H9.2) \\
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
 \hline
 
 \end{xltabular}
@@ -2827,11 +2748,11 @@ Private by Default &
 
 SEC-PRV-03 &
 User Data Deletion &
-\textbf{Description:} Users shall be able to request account deletion through the application settings, removing associated personal records.
+\textbf{Description:} Users shall be able to delete their account and associated personal information at any time from the application's settings menu.
 
 \textbf{Rationale:} Users should retain control over their personal information and account history.
 
-\textbf{Fit Criterion:} Personal health metrics, credentials, and fitness history shall be purged from the active database within 24 hours of a deletion request. Only appropriately anonymized transaction aggregates may be retained for auditing. \\
+\textbf{Fit Criterion:} After a deletion request, personal health metrics, credentials, and fitness history are removed from the active database within \const{DeletionWindow}. Because data is backed up by default (SEC-INT-03), copies held in backups are removed as those backups expire, within \const{BackupRetention}. Audit records (SEC-AUD-01) keep only an anonymized account identifier that can no longer be linked to the deleted user.\\
 \hline
 
 \end{xltabular}
@@ -2939,24 +2860,6 @@ Supports Canadian Languages &
 \hline
 
 CUL-02 & 
-Inclusive Financial Education & 
-\textbf{Description:} The system shall provide financial education content that does not assume prior investing knowledge. 
-
-\textbf{Rationale:} Users possess varying levels of financial literacy. The system seeks to educate users of all levels of financial literacy - including those who may have limited exposure to investing concepts. 
-
-\textbf{Fit Criterion:} All investment-related terminology presented to users shall include a plain-language explanation accessible from within the application. All financial concepts shall be explained in simple, non-technical language to start, until the system deems the user has gained sufficient experience within the application. During user testing, a survey will be conducted to gather feedback on the clarity and understandibility of the financial education content - at least 80\% of users shall express great satisfaction with little to no problems understanding financial concepts.\\ 
-\hline
-
-CUL-03 & 
-Inclusive Fitness Participation & 
-\textbf{Description:} The system shall accommodate users with varying fitness levels by allowing personalized activity participation. 
-
-\textbf{Rationale:} Users may differ significantly in age, physical ability, health conditions, and exercise experience. The application should promote participation regardless of fitness background. 
-
-\textbf{Fit Criterion:} Users shall be able to participate in their preferred fitness activities while still gaining subsequent rewards.\\ 
-\hline
-
-CUL-04 & 
 Culturally Neutral Educational Content & 
 \textbf{Description:} The system shall present fitness and financial education content using culturally neutral language and examples (i.e. sample companies in the virtual market). 
 
@@ -2972,6 +2875,12 @@ Culturally Neutral Educational Content &
 This section outlines the legal and regulatory requirements that the system must adhere to, ensuring that it operates within the bounds of applicable laws and standards. Compliance with these requirements is essential for the system's legitimacy, user trust, and overall success.
 
 \subsection{Legal Requirements}
+
+The financial advice disclaimer and the exercise risk acknowledgement are legal
+requirements as well as safety requirements. To keep each requirement in one
+place, they are specified only in PR-SC-04 and PR-SC-05 (Safety-Critical
+Requirements).
+
 
 \small
 \setlength{\tabcolsep}{4pt}
@@ -2994,14 +2903,14 @@ User Consent for Health Data Collection &
 \textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.\\
 \hline
 
-COMP-LEG-02 & 
-Protection of Personal Information & 
-\textbf{Description:} The system shall store and collect personally identifiable information (PII), beyond just fitness data, using security measures that comply with PIPEDA and PHIPA privacy laws. 
+COMP-LEG-02 &
+Protection of Personal Information &
+\textbf{Description:} The collection, use, storage, and disclosure of personally identifiable information (PII), beyond just fitness data, shall follow the fair information principles of PIPEDA, and of PHIPA if it applies (see Open Issues).
 
 \textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risks H2.1 and H11.2 identified in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}.
 
-\textbf{Fit Criterion:} All PII shall be encrypted during network transmission and during data storage. Access to this data shall require user authentication into the system as per requirement FUNC-02.\\ 
-\hline 
+\textbf{Fit Criterion:} Before each release, a privacy review checks the product against each of PIPEDA's ten fair information principles and records how each one is met, with none left unaddressed. The technical protections the review relies on are specified in SEC-ACC-01, SEC-PRV-01, and SEC-PRV-02.\\
+\hline
 
 COMP-LEG-03 & 
 Sharing of User Data & 
@@ -3012,24 +2921,16 @@ Sharing of User Data &
 \textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
 \hline 
 
-COMP-LEG-04 & Financial Education Disclaimer & 
-\textbf{Description:} The system shall clearly identify all portfolio insights, educational materials, and simulated investment activities as educational content and \textbf{not professional financial advice}. 
+COMP-LEG-04 &
+User Data Deletion Rights &
+\textbf{Description:} Account deletion, as specified in SEC-PRV-03, shall meet PIPEDA's requirements for withdrawing consent and disposing of personal information.
 
-\textbf{Rationale:} The application is designed to teach investing concepts through simulated portfolios and virtual currency. Users must understand that the application does not provide regulated financial advice. This is intended to prevent legal action against the system and its developers for any financial losses incurred by users in the real market - ultimately, the system is not responsible for any incurred losses by the users in the real market (see H7.1 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). 
+\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and PPCDA regarding data ownership and the user's right to disposal.
 
-\textbf{Fit Criterion:} A financial disclaimer shall be displayed during user onboarding and remain accessible through the application's settings menu (see PR-SC-04).\\ 
-\hline 
+\textbf{Fit Criterion:} The privacy review in COMP-LEG-02 confirms that account deletion under SEC-PRV-03 meets these requirements.\\
+\hline
 
 COMP-LEG-05 & 
-User Data Deletion Rights & 
-\textbf{Description:} The system shall provide users with the ability to permanently delete their account and associated personal information from the system at any time, if and when they wish to do so. 
-
-\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and PPCDA regarding data ownership and the user's right to disposal. 
-
-\textbf{Fit Criterion:} Users shall be able to initiate account deletion through the application's settings menu at any time. The user's personal information shall be removed from the active database within 24 hours of the request (SEC-PRV-03). Data is backed up by default (SEC-INT-04), so copies held in backups shall be removed as those backups expire, within 30 days. Audit records (SEC-AUD-01) shall keep only an anonymized account identifier that can no longer be linked to the deleted user.\\
-\hline 
-
-COMP-LEG-06 & 
 AI-Content Disclosure & 
 \textbf{Description:} The system shall disclose when educational content is generated or assisted by an artificial intelligence system. 
 
@@ -3038,7 +2939,7 @@ AI-Content Disclosure &
 \textbf{Fit Criterion:} All AI-generated educational content shall include a visible notification indicating that the content was generated or assisted by AI. Additionally, the settings menu will contain an information section that explicitly discloses all components generated with the assistance of AI.\\ 
 \hline 
 
-COMP-LEG-07 & 
+COMP-LEG-06 & 
 Age Verification & 
 \textbf{Description:} The system shall verify a user's age to be a legal adult (18+) during account creation. 
 
@@ -3047,22 +2948,13 @@ Age Verification &
 \textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (18+).\\ 
 \hline 
 
-COMP-LEG-08 & 
+COMP-LEG-07 & 
 Third-Party Licensing Compliance & 
 \textbf{Description:} The system shall comply with all licensing requirements associated with third-party libraries, APIs, SDKs, and external content used by the application. 
 
 \textbf{Rationale:} The application relies on external technologies and services whose licenses impose legal obligations on software developers during the development of this system. 
 
 \textbf{Fit Criterion:} All third-party components included in a release shall have documented license reviews and approval prior to deployment.\\ 
-\hline
-
-COMP-LEG-09 & 
-Fitness Activity Risk Acknowledgement & 
-\textbf{Description:} The system shall require users to acknowledge that participation in physical activities undertaken while using the application is performed at their own risk. 
-
-\textbf{Rationale:} The system rewards users with currency for completing physical activities. Although daily earnings are capped and activity beyond a healthy volume earns less (PR-SC-01), users may still push their physical limits to gain more rewards and that may lead to injury (see H4.2 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
-
-\textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu (see PR-SC-05).\\ 
 \hline
 
 \end{xltabular}
@@ -3172,7 +3064,7 @@ and have not yet been resolved.
   currency by completing financial lessons. Currency is now earned only through
   physical activity, so the image needs to be updated.
   \item \textbf{Privacy legislation.} The team needs to confirm whether PHIPA
-  applies to \progname{}, and what ``PPCDA'' in COMP-LEG-05 refers to.
+  applies to \progname{}, and what ``PPCDA'' in COMP-LEG-04 refers to.
   \item \textbf{Glossary.} The Glossary of terms and acronyms (Naming
   Conventions and Terminology) has not been written yet.
   \item \textbf{API hosting.} The database will be hosted on McMaster
@@ -3324,35 +3216,35 @@ The requirements identified below represent the planned allocation at the time o
 
 This phase establishes the core application infrastructure including account management, authentication, fitness integration, virtual currency generation, and synchronization with supported health platforms. The primary objective is to demonstrate the end-to-end workflow of completing fitness activity and receiving virtual currency rewards. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04, PR-SC-01, PR-SC-04, PR-SC-05, PR-PA-02, PR-PA-03, PR-PA-05, PR-RFT-01, PR-RFT-03, PR-RFT-05, PR-SE-01, PR-SE-04, SEC-ACC-02, UHR-PER-01, UHR-INT-01
+\noindent\textbf{Priority Requirements:} FUNC-01 through FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04, PR-SC-01, PR-SC-04, PR-SC-05, PR-PA-02, PR-PA-03, PR-PA-05, PR-RFT-01, PR-RFT-03, PR-SE-01, SEC-ACC-02, UHR-PER-01, UHR-INT-01
 
 \subsubsection{Phase 2 --- Simulated Investing} 
 \noindent\textbf{Deadline:} January 31, 2027 \\
 
 This phase introduces the simulated financial market and portfolio management capabilities. Users will be able to purchase and sell investment assets, manage portfolios, and view investment performance using virtual currency earned through physical activity. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01, PR-SL-03, PR-SC-03, PR-RFT-02, PR-SE-02
+\noindent\textbf{Priority Requirements:} FUNC-08 through FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-AUD-01, PR-SL-03, PR-SC-03, PR-RFT-02, PR-SE-02
 
 \subsubsection{Phase 3 --- Community and Gamification} 
 \noindent\textbf{Deadline:} February 14, 2027 \\
 
 This phase focuses on user engagement features including leaderboards, friend groups, private competitions, and progress reporting. Sponsor-based reward redemption (FUNC-17) is a stretch goal and is not scheduled (see the Waiting Room). \\
 
-\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05, UHR-PER-02, PR-SC-02, PR-SC-06, PR-SC-07, PR-SC-08, SEC-PRV-02
+\noindent\textbf{Priority Requirements:} FUNC-13 through FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05, UHR-PER-02, PR-SC-02, PR-SC-06 through PR-SC-08, SEC-PRV-02
 
 \subsubsection{Phase 4 --- Usability, Accessibility, and Learning} 
 \noindent\textbf{Deadline:} February 28, 2027 \\
 
 This phase refines the overall user experience through interface improvements, educational content, accessibility enhancements, personalization features, and user feedback gathered through testing activities. \\
 
-\noindent\textbf{Priority Requirements:} LF-APP-01 through LF-APP-05, LF-STY-01 through LF-STY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-05, UHR-UND-01 through UHR-UND-05, UHR-ACC-01 through UHR-ACC-06, UHR-POL-01 through UHR-POL-03, CUL-01 through CUL-04, PR-RFT-04
+\noindent\textbf{Priority Requirements:} LF-APP-01 through LF-APP-05, LF-STY-01 through LF-STY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-04, UHR-UND-01 through UHR-UND-03, UHR-ACC-01 through UHR-ACC-06, UHR-POL-01 through UHR-POL-03, CUL-01, CUL-02, PR-RFT-04
 
 \subsubsection{Phase 5 --- Security, Compliance, and Release Preparation} 
 \noindent\textbf{Deadline:} March 14, 2027 \\
 
 This phase focuses on hardening the application prior to release. Security controls, privacy requirements, documentation, training materials, legal compliance requirements, maintenance support, and final validation activities are completed during this phase.\\
 
-\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-09, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-04, SEC-INT-04, SEC-PRV-03, SEC-AUD-02, PROD-01, PROD-02, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
+\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-07, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-MNT-05, MAS-SUP-01, MAS-ADPT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-03, SEC-INT-03, SEC-PRV-03, SEC-AUD-02, PROD-01, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
 
 \section{Migration to the New Product}
 \noindent N/A \\
@@ -3386,12 +3278,12 @@ This phase focuses on hardening the application prior to release. Security contr
 \endhead
 
 DOC-01 &
-Financial Glossary and Tooltips &
-\textbf{Description:} Flexin' shall provide contextual tooltips and a glossary defining financial concepts, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
+Financial and Fitness Glossary &
+\textbf{Description:} \progname{} shall provide a searchable in-app glossary of the terms explained under UHR-LRN-04, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
 
-\textbf{Rationale:} Contextual explanations help novice users learn financial terminology while using the application.
+\textbf{Rationale:} A single list of terms lets novice users review concepts they have met in the app, separately from the screen where they first saw them.
 
-\textbf{Fit Criterion:} All financial instruments and portfolio metrics shall link to plain-language definitions. At least 90\% of novice test participants shall locate and understand an ETF or compound return definition within 15 seconds.\\
+\textbf{Fit Criterion:} Every term that has a contextual explanation under UHR-LRN-04 also appears in the glossary. At least 90\% of novice test participants locate and understand an ETF or compound return definition within 15 seconds.\\
 \hline
 
 DOC-02 &
@@ -3405,11 +3297,11 @@ Fitness Integration Guide &
 
 DOC-03 &
 Searchable Help Center &
-\textbf{Description:} Flexin' shall provide an in-app searchable FAQ covering activity rewards, simulated market mechanics, virtual currency disclaimers, and health-data privacy.
+\textbf{Description:} \progname{} shall provide an in-app, searchable help center, reachable from the settings menu, that explains all major features and covers account management and recovery, activity synchronization, activity rewards, portfolio management, simulated market mechanics, virtual currency disclaimers, and health-data privacy.
 
-\textbf{Rationale:} Accessible documentation improves transparency, reduces confusion, and builds user trust.
+\textbf{Rationale:} Users should be able to resolve common questions themselves without contacting the team. Accessible documentation also improves transparency and builds user trust.
 
-\textbf{Fit Criterion:} The help center shall operate without an external browser, support real-time keyword filtering, and return search results in under 200 milliseconds.\\
+\textbf{Fit Criterion:} The help center covers every topic listed above, can be opened from the settings menu at any time, works without an external browser, supports real-time keyword filtering, and returns search results in under 200 milliseconds.\\
 \hline
 
 DOC-04 &
@@ -3437,15 +3329,6 @@ Digital Manual and Release Notes &
 \endhead
 
 TRN-01 &
-Zero-Training Design &
-\textbf{Description:} Flexin' shall follow a walk-up-and-use design requiring no mandatory formal training or external assistance.
-
-\textbf{Rationale:} Intuitive navigation reduces onboarding effort and encourages continued use.
-
-\textbf{Fit Criterion:} At least 90\% of first-time test users shall register, connect a fitness data source, and view their dashboard within 5 minutes without assistance (see UHR-EOU-01).\\
-\hline
-
-TRN-02 &
 Interactive Onboarding &
 \textbf{Description:} After account creation, Flexin' shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
 
@@ -3454,7 +3337,7 @@ Interactive Onboarding &
 \textbf{Fit Criterion:} The walkthrough shall take under 90 seconds, provide a visible ``Skip Tour'' option on every step, and remain accessible through settings.\\
 \hline
 
-TRN-03 &
+TRN-02 &
 Progressive Feature Discovery &
 \textbf{Description:} Flexin' shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
 
@@ -3463,7 +3346,7 @@ Progressive Feature Discovery &
 \textbf{Fit Criterion:} Advanced trading indicators and portfolio analytics shall remain collapsed or secondary until the user completes an initial trade or logs at least three days of physical activity.\\
 \hline
 
-TRN-04 &
+TRN-03 &
 Demonstrator Quick-Start Kit &
 \textbf{Description:} The team shall provide a demonstrator guide and automated demo-data seeding script for project evaluations and presentations.
 
