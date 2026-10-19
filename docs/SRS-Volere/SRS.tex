@@ -713,33 +713,6 @@ This section specifies each Flexin Business Use Case (BUC), including
 its goal, actors, trigger, preconditions, main flow, alternative flows,
 and postconditions.
 
-\section{The Scope of the Product}
-\subsection{Product Boundary}
-
-\subsection{Product Use Case Table}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|
-    >{\centering\arraybackslash}p{4cm}|
-    >{\centering\arraybackslash}p{8cm}|}
-\hline
-\textbf{Use Case} & \textbf{Description} \\ \hline
-Register and setup fitness/finance goals &
-The user upon opening the application will be able to login to an existing account or register a new account. Upon registering a new account the user will complete a fitness and finance questionnaire to assess their current level of understanding.
-\\ \hline
-Claim Virtual Currency&
-Users will be able to work toward their fitness goals and complete fitness challenges (i.e. Steps/workout challenges) to collect virtual currency. Users will also have objectives and be able to complete financial lessons for virtual currency. 
-\\ \hline
-View Portfolio and Growth Graphs&
-Users will have a virtual portfolio to be managed. This is where they will be able to practice their financial teachings and investment strategies.
-\\ \hline
-Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a completely virtual stock exchange simulator that will allow users to study investment strategies and buy/sell investments. This stock exchange will be another means for users to earn virtual currency.   
-\\ \hline
-\end{tabular}
-\caption{Product Use Case Table}
-\end{table}
-\subsection{Individual Product Use Cases (PUC's)}
-
 \subsubsection*{BUC 1: User Onboarding}
 
 \textbf{Goal:} Create a user account and initialize their Flexin profile.
@@ -1016,8 +989,22 @@ Flexin does not guarantee delivery and may retain the event for in-app display.
 delivery failure is handled according to the system's notification rules.
 
 \section{Business Data Model and Data Dictionary}
+
+This section outlines the business data model and data dictionary for the project. The business data model provides a high-level overview of the data relevant to the business, while the data dictionary specifies the content and structure of the data elements within the system (i.e. classes, attributes, relationships). Together, these components serve as a foundation for understanding how data is organized, stored, and utilized within the business processes.
+
 \subsection{Business Data Model}
-\lips
+
+This business data model is a high-level diagram of the data that is relevant to the business. It identifies the key entities and the relationships between them. The model serves as a blueprint for understanding how data flows through the business processes and how it is stored and managed. Due to still being in the earlier stages of the project, this model may be subject to changes in the later stages of the project. This business data model is not a complete representation of the data, but rather a simplified view that highlights the most important aspects of the business data. It is intended to provide a clear and concise overview of the data landscape for stakeholders and team members.
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.85\textwidth]{BusinessDataModel.png} 
+    \caption{Business Data Model} 
+    \label{fig:business-data-model} 
+\end{figure}
+
+Each of the rectangles represents a class of business data. The attributes of each class are defined in the data dictionary.
+
 \subsection{Data Dictionary}
 
 \subsubsection{User} 
