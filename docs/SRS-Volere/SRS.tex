@@ -1537,7 +1537,7 @@ Visual Hierarchy &
 
 \textbf{Rationale:} Equal emphasis reinforces the relationship between physical activity and simulated investment growth.
 
-\textbf{Fit Criterion:} All primary screens shall follow the Figma design library and its 4-point/8-point spacing grid.\\
+\textbf{Fit Criterion:} In user testing, at least 80\% of participants identify both their current fitness progress and their portfolio value from the dashboard within 5 seconds.\\
 \hline
 
 LF-APP-02 &
@@ -1624,7 +1624,7 @@ Component Consistency &
 
 \textbf{Rationale:} Consistency builds trust and reduces the learning curve.
 
-\textbf{Fit Criterion:} All components shall conform to the master React Native theme, verified through linting and pull-request UI reviews.\\
+\textbf{Fit Criterion:} A design review of every screen finds no button, form, modal, tooltip, card, or toggle that departs from the shared style guide.\\
 \hline
 
 \end{xltabular}
@@ -1709,7 +1709,7 @@ Consistent User Interface &
 
 \textbf{Rationale:} Consistency improves user familiarity and reduces the effort required to learn new functionality. 
 
-\textbf{Fit Criterion:} Similar actions shall use consistent icons, terminology, colors, and interaction patterns throughout the application.\\ 
+\textbf{Fit Criterion:} A design review checklist covering icons, terminology, colours, and interaction patterns finds no inconsistency between screens for the same action.\\ 
 \hline
 
 UHR-EOU-08 & 
@@ -1985,11 +1985,11 @@ Touch Target Accessibility &
 
 UHR-ACC-05 &
 Alternative Notification Methods &
-\textbf{Description:} The system shall provide both visual notifications, audio cues, and haptic feedback for important events and shall not rely exclusively on one.
+\textbf{Description:} The system shall signal important events (a completed goal, currency earned, a failed sync, and security alerts) in at least two ways: visually, and by sound or vibration.
 
 \textbf{Rationale:} Users who are deaf or hard of hearing may not perceive audio notifications. Users with visual impairments may not be able to perceive visual notifications. Providing alternative notification methods ensures that all users can stay informed of important events.
 
-\textbf{Fit Criterion:} All important user notifications shall be easily accesible to all users within the application interface.\\
+\textbf{Fit Criterion:} In testing, each important event is signalled visually and by sound or vibration, and with the device's sound turned off the visual and vibration signals still occur.\\
 \hline
 
 UHR-ACC-06 &
@@ -2083,11 +2083,11 @@ that it traces to.
 
 PR-SC-01 &
 Daily earning limits &
-\textbf{Description:} The amount of currency a user can earn from activity in one day shall be capped, and activity beyond a healthy daily volume shall earn currency at a reduced rate.
+\textbf{Description:} The currency a user can earn from activity in one day shall not exceed \const{DailyEarnCap}, and activity beyond \const{HealthyDailyActivity} in a day shall earn currency at a reduced rate.
 
 \textbf{Rationale:} Without these limits, the product would reward users for exercising past safe limits, or while injured, to earn more.
 
-\textbf{Fit Criterion:} No amount of activity recorded in a single day earns more than the daily cap, and activity beyond the healthy daily volume earns less per unit than activity below it.
+\textbf{Fit Criterion:} No amount of activity recorded in a single day earns more than \const{DailyEarnCap}, and activity beyond \const{HealthyDailyActivity} earns less per unit than activity below it.
 
 \textbf{Hazard Analysis:} SR8 (H4.1, H5.1)\\
 \hline
@@ -2138,11 +2138,11 @@ Exercise injury warning &
 
 PR-SC-06 &
 Safe goal progression &
-\textbf{Description:} Goals that the product raises automatically shall increase gradually and include regular rest days. When a goal is missed several times in a row, the product shall suggest lowering it. Users shall be able to lower or override any goal themselves.
+\textbf{Description:} Goals that the product raises automatically shall increase gradually and include regular rest days. When a goal is missed \const{MissedGoalLimit} times in a row, the product shall suggest lowering it. Users shall be able to lower or override any goal themselves.
 
 \textbf{Rationale:} Goals that rise too quickly push users to overexert themselves, while goals that are missed again and again lead to shame and users giving up on exercise.
 
-\textbf{Fit Criterion:} Automatic goals never rise by more than the set maximum step, every goal plan includes regular rest days, a lower goal is suggested after the set number of misses in a row, and a user can lower any goal from the goal screen.
+\textbf{Fit Criterion:} Automatic goals never rise by more than \const{MaxGoalIncrease} per week, every goal plan includes at least one rest day per week, a lower goal is suggested after \const{MissedGoalLimit} misses in a row, and a user can lower any goal from the goal screen.
 
 \textbf{Hazard Analysis:} SR6 (H4.1, H4.2)\\
 \hline
@@ -2187,7 +2187,7 @@ Safe leaderboard rules &
 
 PR-PA-01 &
 Exact money values &
-\textbf{Description:} Currency balances, prices, and trade amounts shall be stored and calculated as exact decimal values, not floating-point numbers, and shown to two decimal places.
+\textbf{Description:} Currency balances, prices, and trade amounts shall be exact to the cent, with no rounding error building up across operations, and shall be shown to two decimal places.
 
 \textbf{Rationale:} Floating-point rounding errors build up over many trades and would show users balances that do not add up.
 
@@ -2261,11 +2261,11 @@ Realistic market simulation &
 
 PR-RFT-01 &
 Offline activity &
-\textbf{Description:} Activity recorded while the phone is offline, or while the app is closed, shall be credited the next time the app syncs, for gaps of up to 7 days.
+\textbf{Description:} Activity recorded while the phone is offline, or while the app is closed, shall be credited the next time the app syncs, for gaps of up to \const{OfflineSyncWindow}.
 
 \textbf{Rationale:} Users exercise in places without signal and will not open the app every day. Losing that activity would discourage them.
 
-\textbf{Fit Criterion:} Activity recorded during a 7-day gap with no syncing is fully credited at the next sync.\\
+\textbf{Fit Criterion:} Activity recorded during a gap of \const{OfflineSyncWindow} with no syncing is fully credited at the next sync.\\
 \hline
 
 PR-RFT-02 &
@@ -2369,11 +2369,11 @@ Adding asset types &
 
 PR-SE-03 &
 More server capacity &
-\textbf{Description:} The backend API shall keep no per-user state between requests, so more instances can be run if the number of users grows.
+\textbf{Description:} The system shall be able to serve more users than PR-C-01 by adding server capacity, without any change to the mobile app.
 
 \textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than PR-C-01.
 
-\textbf{Fit Criterion:} Two API instances running against the same database give the same results as one.\\
+\textbf{Fit Criterion:} A load test at twice the PR-C-01 load, run after adding server capacity, meets PR-SL-02 and PR-SL-03 with the same version of the mobile app.\\
 \hline
 
 \end{xltabular}
@@ -2454,6 +2454,15 @@ Build and Quality Assurance &
 \textbf{Rationale:} An app must be whole and completely working to provide value to the user base.
 
 \textbf{Fit Criterion:} All automated and manual written code tests must pass (100\%) to be deemed fully complete.\\
+\hline
+
+PROD-02 &
+Installability &
+\textbf{Description:} The application shall install from the Google Play Store onto any supported Android device without any setup beyond granting the permissions it asks for.
+
+\textbf{Rationale:} Users should be able to get started without technical help. Health Connect is built into recent versions of Android but must be installed separately on older ones, so the app has to guide users through that case.
+
+\textbf{Fit Criterion:} On each supported test device (see LF-APP-03), installing from Google Play completes in under 2 minutes on Wi-Fi and the app opens to the sign-up screen on first launch. Each permission is requested only when the feature that needs it is first used. If Health Connect is missing, the app directs the user to install it. Uninstalling removes all app data stored on the device.\\
 \hline
 \end{xltabular}
 \subsection{Release Requirements}
@@ -2617,12 +2626,12 @@ Future AI Service Adaptability &
 \endhead
 
 SEC-ACC-01 &
-Authentication and Sessions &
-\textbf{Description:} Users shall authenticate before accessing personal fitness data, portfolios, or transactions. The React Native client shall authenticate with the Spring API using secure token-based sessions.
+Authenticated Access &
+\textbf{Description:} Access granted when a user signs in (FUNC-02) shall be checked on every request for personal fitness data, portfolios, or transactions, and shall expire after \const{AccessExpiry}.
 
-\textbf{Rationale:} Authentication protects personal data and virtual assets from unauthorized access.
+\textbf{Rationale:} Authentication protects personal data and virtual assets from unauthorized access. Expiring access limits the damage if a device or access credential is stolen.
 
-\textbf{Fit Criterion:} All protected API endpoints shall reject missing or invalid access tokens with HTTP 401. Access tokens shall expire within 60 minutes, with refresh or re-authentication required. \\
+\textbf{Fit Criterion:} Every protected request with missing, invalid, or expired access is rejected (HTTP 401). After \const{AccessExpiry}, the app must refresh its access or the user must sign in again.\\
 \hline
 
 SEC-ACC-02 &
@@ -2638,11 +2647,11 @@ Role-Based Authorization &
 
 SEC-ACC-03 &
 Fitness Integration Authorization &
-\textbf{Description:} Flexin' shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored using secure, Android Keystore-backed storage.
+\textbf{Description:} Flexin' shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored encrypted on the device, where other apps cannot read them.
 
 \textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
 
-\textbf{Fit Criterion:} Integration tokens shall use Android Keystore-backed secure storage. No credentials, tokens, or secrets shall be committed to the project repository. \\
+\textbf{Fit Criterion:} A security review confirms that integration tokens are stored only in encrypted device storage that other apps cannot read, and finds no credentials, tokens, or secrets in the project repository. \\
 \hline
 
 SEC-ACC-04 &
@@ -2651,7 +2660,7 @@ Password and Sign-In Protection &
 
 \textbf{Rationale:} Weak passwords and unlimited sign-in attempts let attackers reach users' private data, while legitimate users must still be able to regain access to their accounts.
 
-\textbf{Fit Criterion:} Passwords shorter than 8 characters or found on a common-password list shall be rejected. Sign-in to an account shall be locked for 15 minutes after 5 consecutive failed attempts. A user who enables multi-factor authentication shall be asked for an email code at each new sign-in, and a password reset email shall let a locked-out user sign in again.
+\textbf{Fit Criterion:} Passwords shorter than \const{MinPasswordLength} characters or found on a common-password list shall be rejected. Sign-in to an account shall be locked for \const{LockoutDuration} after \const{LockoutAttempts} consecutive failed attempts. A user who enables multi-factor authentication shall be asked for an email code at each new sign-in, and a password reset email shall let a locked-out user sign in again.
 
 \textbf{Hazard Analysis:} SR1 (H1.1, H1.2) \\
 \hline
@@ -2662,7 +2671,7 @@ Session End and Device Unlinking &
 
 \textbf{Rationale:} Sessions and device links left open on shared or lost devices let other people access an account or send their health data to it.
 
-\textbf{Fit Criterion:} A session unused for 30 days shall require the user to sign in again. After sign-out, the user's access and refresh tokens shall be rejected with HTTP 401, and no integration from that device shall be able to submit activity to the account.
+\textbf{Fit Criterion:} A session unused for \const{SessionTimeout} shall require the user to sign in again. After sign-out, the user's access and refresh tokens shall be rejected with HTTP 401, and no integration from that device shall be able to submit activity to the account.
 
 \textbf{Hazard Analysis:} SR2 (H1.2, H11.2) \\
 \hline
@@ -2688,12 +2697,12 @@ Activity Validation &
 
 \textbf{Rationale:} Validation prevents activity manipulation and unauthorized currency generation.
 
-\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above 250 steps per minute shall be flagged for verification. \\
+\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above \const{MaxCadence} shall be flagged for verification. \\
 \hline
 
 SEC-INT-02 &
 Server-Side Valuation &
-\textbf{Description:} The Spring backend and custom market engine shall determine asset prices, portfolio valuations, and currency calculations. The mobile client shall not control authoritative values.
+\textbf{Description:} Asset prices, portfolio valuations, and currency amounts shall be calculated by the system's servers. Values sent by the mobile app shall never be accepted as authoritative.
 
 \textbf{Rationale:} Server-side calculations prevent client manipulation of prices and balances.
 
@@ -2732,7 +2741,7 @@ Health Data Protection &
 
 \textbf{Rationale:} Encryption protects confidential user information against unauthorized disclosure.
 
-\textbf{Fit Criterion:} Client-server communications shall use TLS 1.3. Sensitive biometric data stored in MySQL shall be encrypted at rest using AES-256. \\
+\textbf{Fit Criterion:} Client-server communications shall use TLS 1.3. Stored health and biometric data shall be encrypted at rest using AES-256 or stronger. \\
 \hline
 
 SEC-PRV-02 &
@@ -2805,20 +2814,20 @@ Security Event Logging &
 
 SEC-IMM-01 &
 Injection Defense &
-\textbf{Description:} The backend and database layer shall be protected against SQL injection, cross-site scripting (XSS), and command injection.
+\textbf{Description:} The system shall be protected against SQL injection, cross-site scripting (XSS), and command injection.
 
 \textbf{Rationale:} Injection vulnerabilities could compromise database integrity and expose user information.
 
-\textbf{Fit Criterion:} Database access shall use parameterized queries or prepared statements. Static analysis and security reviews shall identify zero unresolved high-severity injection vulnerabilities before release. \\
+\textbf{Fit Criterion:} Before each release, an automated security scan and a code review find zero unresolved high-severity injection vulnerabilities. \\
 \hline
 
 SEC-IMM-02 &
 Rate Limiting &
-\textbf{Description:} The Spring API shall limit request rates for authentication, trade submission, and activity synchronization endpoints.
+\textbf{Description:} The system shall limit request rates for authentication, trade submission, and activity synchronization endpoints.
 
 \textbf{Rationale:} Rate limiting reduces brute-force attempts, automated abuse, and service overload.
 
-\textbf{Fit Criterion:} A configured limit, initially 60 requests per minute per authenticated user or client IP, shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. \\
+\textbf{Fit Criterion:} A limit of \const{RateLimit} per authenticated user or client IP address shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. \\
 \hline
 
 SEC-IMM-03 &
@@ -2856,7 +2865,7 @@ Supports Canadian Languages &
 
 \textbf{Rationale:} The application will initially be deployed strictly within Canada, where English and French are the country's official languages. 
 
-\textbf{Fit Criterion:} All user-facing text shall be stored separately from application logic and be replaceable through a localization framework.\\ 
+\textbf{Fit Criterion:} Every screen can be shown in English or French, chosen in settings, with no untranslated text.\\ 
 \hline
 
 CUL-02 & 
@@ -2941,11 +2950,11 @@ AI-Content Disclosure &
 
 COMP-LEG-06 & 
 Age Verification & 
-\textbf{Description:} The system shall verify a user's age to be a legal adult (18+) during account creation. 
+\textbf{Description:} The system shall verify a user's age to be a legal adult (\const{MinAge} or older) during account creation. 
 
 \textbf{Rationale:} The system collects personal and health-related information that may be subject to additional restrictions for minors. It is important that user's are of age to provide informed consent and understand the implications of sharing their personal information.
 
-\textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (18+).\\ 
+\textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (\const{MinAge} or older).\\ 
 \hline 
 
 COMP-LEG-07 & 
@@ -3033,7 +3042,7 @@ Information Security Compliance &
 
 \textbf{Rationale:} The application stores personal, financial-learning, and fitness-related information that must be protected against unauthorized access and disclosure. 
 
-\textbf{Fit Criterion:} Security controls for authentication, access control, data storage, and data transmission shall align with ISO/IEC 27001 recommendations.\\ 
+\textbf{Fit Criterion:} Before release, a checklist maps the security requirements to the applicable ISO/IEC 27001 Annex A controls, and every applicable control is either addressed or justified as out of scope.\\ 
 \hline
 
 \end{xltabular}
@@ -3244,7 +3253,7 @@ This phase refines the overall user experience through interface improvements, e
 
 This phase focuses on hardening the application prior to release. Security controls, privacy requirements, documentation, training materials, legal compliance requirements, maintenance support, and final validation activities are completed during this phase.\\
 
-\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-07, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-MNT-05, MAS-SUP-01, MAS-ADPT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-03, SEC-INT-03, SEC-PRV-03, SEC-AUD-02, PROD-01, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
+\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-07, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-MNT-05, MAS-SUP-01, MAS-ADPT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-03, SEC-INT-03, SEC-PRV-03, SEC-AUD-02, PROD-01, PROD-02, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
 
 \section{Migration to the New Product}
 \noindent N/A \\
