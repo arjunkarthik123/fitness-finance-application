@@ -1263,8 +1263,177 @@ Additionally, many external fitness devices (e.g., Garmin watches) offer APIs an
 \lips
 
 \section{Functional Requirements}
+
+This section outlines the functional requirements for the system, detailing the specific capabilities and behaviors that the system must exhibit to meet user needs and business objectives. Each requirement is identified by a unique ID, described in detail, and includes the rationale for its inclusion as well as the criteria for determining whether it has been successfully implemented.
+
 \subsection{Functional Requirements}
-\lips
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+FUNC-01 & 
+User Registration & 
+\textbf{Description:} The system shall allow new users to create an account using a valid email address and password. 
+
+\textbf{Rationale:} User accounts are required to store fitness progress, portfolio information, and competition statistics. 
+
+\textbf{Fit Criterion:} A user shall be able to successfully create an account and access the application using their newly created credentials.\\ 
+\hline
+
+FUNC-02 & 
+User Authentication & 
+\textbf{Description:} The system shall authenticate users before granting access to personalized application functionality.
+
+\textbf{Rationale:} Authentication protects personal information and ensures users can only access their own data.
+
+\textbf{Fit Criterion:} Users shall be required to provide valid credentials before accessing account-specific information.\\
+\hline
+
+FUNC-03 & 
+Third-Party Fitness Data Import & 
+\textbf{Description:} The system shall import fitness activity data from supported third-party fitness providers.
+
+\textbf{Rationale:} Fitness activity data is required to reward users and track progress.
+
+\textbf{Fit Criterion:} Activities recorded through a supported third-party provider shall appear within the user's account after synchronization.\\
+\hline
+
+FUNC-04 & 
+Fitness Goal Creation & 
+\textbf{Description:} The system shall allow users to create and manage fitness goals.
+
+\textbf{Rationale:} Goals provide motivation and measurable milestones for physical activity. This is also how users will earn virtual currency to invest in the simulated stock market.
+
+\textbf{Fit Criterion:} Users shall be able to create, modify, and delete fitness goals.\\
+\hline
+
+FUNC-05 & 
+Fitness Goal Tracking & 
+\textbf{Description:} The system shall track user progress toward active fitness goals.
+
+\textbf{Rationale:} Progress tracking enables users to monitor their fitness achievements. This also allows the system to determine when a user has completed a goal and is eligible for virtual currency rewards.
+
+\textbf{Fit Criterion:} Goal progress shall automatically update when related activities are synchronized.\\
+\hline
+
+FUNC-06 & 
+Reward Allocation & 
+\textbf{Description:} The system shall award virtual currency when users complete eligible fitness activities or goals.
+
+\textbf{Rationale:} Virtual rewards act as the primary incentive linking physical activity to financial education.
+
+\textbf{Fit Criterion:} Virtual currency balances shall increase following successful completion of reward-eligible activities.\\
+\hline
+
+FUNC-07 & 
+Virtual Currency Tracking & 
+\textbf{Description:} The system shall maintain a record of each user's current virtual currency balance.
+
+\textbf{Rationale:} Users require visibility into available funds for portfolio management activities.
+
+\textbf{Fit Criterion:} Users shall be able to view their current virtual currency balance at any time.\\
+\hline
+
+FUNC-08 & 
+Portfolio Creation & 
+\textbf{Description:} The system shall create and maintain a portfolio for each registered user.
+
+\textbf{Rationale:} Portfolios provide users with a mechanism for applying virtual currency toward investment activities.
+
+\textbf{Fit Criterion:} A portfolio shall automatically be created when a user account is established.\\
+\hline
+
+FUNC-09 & 
+Asset Purchase & 
+\textbf{Description:} The system shall allow users to purchase supported financial assets using virtual currency.
+
+\textbf{Rationale:} Asset purchases are necessary to simulate investment decision-making and portfolio growth.
+
+\textbf{Fit Criterion:} Users shall be able to purchase available assets provided they possess sufficient virtual currency.\\
+\hline
+
+FUNC-10 & 
+Asset Sale & 
+\textbf{Description:} The system shall allow users to sell previously purchased financial assets and realize gains or losses.
+
+\textbf{Rationale:} Users must be able to modify portfolio holdings and realize gains or losses.
+
+\textbf{Fit Criterion:} Users shall be able to sell assets currently held within their portfolio.\\
+\hline
+
+FUNC-11 & 
+Transaction Recording & 
+\textbf{Description:} The system shall record all financial transactions executed by users.
+
+\textbf{Rationale:} Transaction records provide accountability and support portfolio calculations.
+
+\textbf{Fit Criterion:} Every asset purchase and sale shall generate a corresponding transaction record that can be viewed by the user at any time.\\
+\hline
+
+FUNC-12 & 
+Portfolio Performance Calculation & 
+\textbf{Description:} The system shall calculate portfolio gains and losses based on current asset values.
+
+\textbf{Rationale:} Portfolio performance provides feedback regarding investment decisions and how the user can adjust their strategies moving forward.
+
+\textbf{Fit Criterion:} Users shall be able to view current portfolio value and unrealized gains or losses.\\
+\hline
+
+FUNC-13 & 
+Leaderboard Participation & 
+\textbf{Description:} The system shall rank users on leaderboards based on their current leaderboard rank to compete with other users of similar ranking.
+
+\textbf{Rationale:} Competitive features encourage continued engagement and motivation.
+
+\textbf{Fit Criterion:} Users shall be assigned a leaderboard rank based on their previous performance results. This rank can move up or down based on where the user places within the leaderboard each week. Users will compete on the leaderboard with other users of similar ranking.\\
+\hline
+
+FUNC-14 & 
+Friend Management & 
+\textbf{Description:} The system shall allow users to create and manage lists of friends they wish to compete with.
+
+\textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
+
+\textbf{Fit Criterion:} Users shall be able to add and remove friends from their friends list.\\
+\hline
+
+FUNC-15 & 
+Private Leaderboards & 
+\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. The rewards from private leaderboard groups will be significantly lower to prevent users from "gaming" the system with their friends to gain currency quickly.
+
+\textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
+
+\textbf{Fit Criterion:} Users shall be able to create private competition groups with select friends by inviting them.\\
+\hline
+
+FUNC-16 & 
+Progress Reporting & 
+\textbf{Description:} The system shall provide users with summaries of fitness activity, goal completion, virtual currency earnings, portfolio performance, and leaderboard standings.
+
+\textbf{Rationale:} Summaries help users understand their overall progress and achievements.
+
+\textbf{Fit Criterion:} Users shall be able to access current and historical progress information at any time.\\
+\hline
+
+FUNC-17 & 
+Sponsored Reward Redemption & 
+\textbf{Description:} The system shall allow users to redeem virtual currency for discounts, coupons, products, or services provided by participating sponsors.
+
+\textbf{Rationale:} Real-world rewards strengthen user engagement by connecting fitness achievements to tangible benefits.
+
+\textbf{Fit Criterion:} Users shall be able to view available rewards, view redemption costs, and successfully redeem rewards when sufficient virtual currency is available.\\
+\hline
+
+\end{xltabular}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
