@@ -120,15 +120,15 @@ following changes were made to the template:
   Analysis}.
   \item This subsection (About This Document) was added to Section 1 to record
   the template, the conventions, and the symbolic constants.
-  \item Requirements are presented in tables (ID, Requirement, Specification)
-  rather than as individual requirement cards. Each specification has the
+  \item Requirements are presented in tables with \acr{ID}{identifier}{ID},
+  Requirement, and Specification columns, rather than as individual requirement cards. Each specification has the
   Description, Rationale, and Fit Criterion fields of the Volere card, plus a
   Hazard Analysis trace and a list of related requirements where they apply.
   \item A Likely and Unlikely Changes section was added after Open Issues
   (Section~\ref{sec:changes}).
   \item A traceability matrix was added as an appendix
-  (Appendix~\ref{sec:traceability}), along with the course's Generative AI Use
-  Disclosure and Reflection appendices.
+  (Appendix~\ref{sec:traceability}), along with the course's Generative
+  \acr{AI}{Artificial Intelligence}{AI} Use Disclosure and Reflection appendices.
 \end{itemize}
 
 \subsubsection{Conventions}
@@ -137,7 +137,7 @@ following changes were made to the template:
   \item ``Shall'' marks a mandatory requirement. Requirements are written to be
   black-box: they say what the product must do, not how. Design decisions that
   are imposed on the team are recorded as solution constraints (\hyperlink{req:SC-01}{SC-01} to \hyperlink{req:SC-06}{SC-06}).
-  \item Every requirement has a unique \acr{ID}{identifier}{ID}. IDs use the prefixes in
+  \item Every requirement has a unique ID. IDs use the prefixes in
   Table~\ref{tab:id-prefixes} followed by a two-digit number. Every mention of
   a requirement ID is a hyperlink to its definition, and the traceability
   matrix lists, for each requirement, every requirement it relates to in both
@@ -147,7 +147,7 @@ following changes were made to the template:
   Table~\ref{tab:constants}, and are defined only there.
   \item References such as SR8 and H4.1 refer to a
   \acr{SR}{safety requirement}{SR} and a hazard in the Hazard Analysis.
-  \item Amounts of virtual currency use the symbol FLX. Days, dates, and times
+  \item Amounts of virtual currency use the \acr{FLX}{virtual currency symbol}{FLX}. Days, dates, and times
   of day are in the user's local time zone.
   \item Acronyms are spelled out at first use and are listed in the Glossary
   (Section~\ref{sec:glossary}) with a link to where each is defined.
@@ -162,7 +162,7 @@ following changes were made to the template:
 \textbf{Prefix} & \textbf{Meaning and location} \\
 \hline
 SC & Solution constraint (Mandated Constraints) \\
-BE, BUC & Business event and business use case (The Scope of the Work) \\
+BE, BUC & \acr{BE}{Business event}{BE} and \acr{BUC}{business use case}{BUC} (The Scope of the Work) \\
 FUNC & Functional requirement \\
 LF-APP, LF-STY & Look and feel: appearance, style \\
 UHR-EOU, UHR-PER, UHR-INT, UHR-LRN, UHR-UND, UHR-POL, UHR-ACC & Usability and humanity: ease of use, personalization, internationalization, learning, understandability, politeness, accessibility \\
@@ -644,7 +644,7 @@ Symbolic constant & A named value defined once in Table~\ref{tab:constants} and 
 \hline
 Virtual currency & The in-app currency, with the symbol FLX, that users earn through physical activity. It has no real-world value. \\
 \hline
-WCAG Level AA & The middle of the three conformance levels defined by WCAG. \\
+\acr{WCAG}{Web Content Accessibility Guidelines}{WCAG} Level AA & The middle of the three conformance levels defined by WCAG. \\
 \hline
 \end{xltabular}
 \normalsize
@@ -670,6 +670,8 @@ AI & Artificial intelligence & Section~\ref{acr:AI}, p.~\pageref{acr:AI} \\
 \hline
 API & Application programming interface & Section~\ref{acr:API}, p.~\pageref{acr:API} \\
 \hline
+BE & Business event & Section~\ref{acr:BE}, p.~\pageref{acr:BE} \\
+\hline
 BUC & Business Use Cases & Section~\ref{acr:BUC}, p.~\pageref{acr:BUC} \\
 \hline
 CD & Custom document & Section~\ref{acr:CD}, p.~\pageref{acr:CD} \\
@@ -681,6 +683,8 @@ ETF & Exchange-traded funds & Section~\ref{acr:ETF}, p.~\pageref{acr:ETF} \\
 FLX & Virtual currency symbol & Section~\ref{acr:FLX}, p.~\pageref{acr:FLX} \\
 \hline
 GPS & Global Positioning System & Section~\ref{acr:GPS}, p.~\pageref{acr:GPS} \\
+\hline
+GPT-5 & Generative Pre-trained Transformer 5 & Section~\ref{acr:GPT}, p.~\pageref{acr:GPT} \\
 \hline
 HTTP & Hypertext Transfer Protocol & Section~\ref{acr:HTTP}, p.~\pageref{acr:HTTP} \\
 \hline
@@ -699,6 +703,8 @@ ISO/IEC & International Organization for Standardization and International Elect
 JPA & Jakarta Persistence API & Section~\ref{acr:JPA}, p.~\pageref{acr:JPA} \\
 \hline
 KPI & Key performance indicators & Section~\ref{acr:KPI}, p.~\pageref{acr:KPI} \\
+\hline
+MIT & Massachusetts Institute of Technology & Section~\ref{acr:MIT}, p.~\pageref{acr:MIT} \\
 \hline
 N/A & Not applicable & Section~\ref{acr:NA}, p.~\pageref{acr:NA} \\
 \hline
@@ -1003,7 +1009,7 @@ availability, device compatibility, and user permissions.
 
 \subsection{Work Partitioning}
 
-Work partitioning divides the Flexin' system into \acr{BUC}{Business Use Cases}{BUCs}, each representing a business event that the system must handle.
+Work partitioning divides the Flexin' system into Business Use Cases (BUCs), each representing a business event that the system must handle.
 These use cases cover user onboarding, fitness data integration,
 virtual currency allocation, simulated investing, financial education,
 and user engagement. Table~\ref{tab:flexin-business-events} summarizes
@@ -1975,7 +1981,7 @@ Approachable Tone &
 
 LF-STY-02\hypertarget{req:LF-STY-02}{} &
 Virtual Currency Symbol &
-\textbf{Description:} All amounts of virtual currency shall be shown with the \acr{FLX}{virtual currency symbol}{FLX}, never with a real-world currency symbol.
+\textbf{Description:} All amounts of virtual currency shall be shown with the virtual currency symbol (FLX), never with a real-world currency symbol.
 
 \textbf{Rationale:} Users must not confuse \progname{} with a real brokerage or financial account.
 
@@ -3122,7 +3128,7 @@ Mobile Platform Portability &
 
 MAS-ADPT-03\hypertarget{req:MAS-ADPT-03}{} &
 Future Artificial Intelligence Service Adaptability &
-\textbf{Description:} The system shall support future integration of educational content assisted by \acr{AI}{artificial intelligence}{AI}.
+\textbf{Description:} The system shall support future integration of educational content assisted by AI.
 
 \textbf{Rationale:} With the rapid growth of AI technologies, future releases may provide personalized fitness and financial learning experiences using AI technologies.
 
@@ -3568,7 +3574,7 @@ Android Platform Compliance &
 
 COMP-STD-02\hypertarget{req:COMP-STD-02}{} & 
 Accessibility Compliance & 
-\textbf{Description:} The system shall comply with the \acr{WCAG}{Web Content Accessibility Guidelines}{WCAG} 2.1 Level AA for user-facing functionality. 
+\textbf{Description:} The system shall comply with WCAG 2.1 Level AA for user-facing functionality. 
 
 \textbf{Rationale:} The system should offer a simple and delightful user experience that should be accessible to users with varying abilities (i.e. users with colourblindness, hearing impairments, etc.).
 
@@ -3763,7 +3769,7 @@ use within the project's budget.
 \begin{description}
   \item[Fitness data:]\leavevmode
   \begin{itemize}
-    \item \texttt{react-native-health-connect}, an open-source (MIT License) React
+    \item \texttt{react-native-health-connect}, an open-source (\acr{MIT}{Massachusetts Institute of Technology}{MIT} License) React
     Native library for reading data from Android Health Connect.
     \item The Garmin Connect IQ SDK for Garmin watches.
   \end{itemize}
@@ -4405,7 +4411,7 @@ SR12 & \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:SEC-INT-03}{SEC-INT-
 \begin{itemize}
     \item \textbf{Gemini 3.8} 
     \item \textbf{ChatGPT 5.6} 
-    \item \textbf{GitHub Copilot (GPT-5)} 
+    \item \textbf{GitHub Copilot}, using the \acr{GPT}{Generative Pre-trained Transformer 5}{GPT-5} model 
     \item \textbf{Claude Opus 5.5} 
     \item \textbf{Claude Opus 5.5} 
 
