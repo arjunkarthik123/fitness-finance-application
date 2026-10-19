@@ -25,6 +25,12 @@
     urlcolor=cyan           % color of external links
 }
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+% xltabular measures X columns with trial runs; skip link targets during those
+% runs so each requirement ID creates exactly one link destination
+\makeatletter
+\let\SRS@TX@trial\TX@trial
+\def\TX@trial#1{\SRS@TX@trial{#1\let\hypertarget\@secondoftwo}}
+\makeatother
 \newcommand{\lips}{\textit{Insert your content here.}}
 % Symbolic constants (see Table~\ref{tab:constants}); links to their definition
 \newcommand{\const}[1]{\hyperlink{const:#1}{\textsf{#1}}}
@@ -130,7 +136,7 @@ following changes were made to the template:
 \begin{itemize}
   \item ``Shall'' marks a mandatory requirement. Requirements are written to be
   black-box: they say what the product must do, not how. Design decisions that
-  are imposed on the team are recorded as solution constraints (SC-01 to SC-06).
+  are imposed on the team are recorded as solution constraints (\hyperlink{req:SC-01}{SC-01} to \hyperlink{req:SC-06}{SC-06}).
   \item Every requirement has a unique \acr{ID}{identifier}{ID}. IDs use the prefixes in
   Table~\ref{tab:id-prefixes} followed by a two-digit number. Every mention of
   a requirement ID is a hyperlink to its definition, and the traceability
@@ -181,36 +187,38 @@ requirements. Values marked ``initial'' are starting values that the team will
 confirm at the Currency Decision milestone (November 9, 2026) and adjust after
 user testing. Changing a value here changes it everywhere it is used.
 
-\begin{table}[H]
-\centering
-\small
-\begin{tabularx}{\textwidth}{|p{4.1cm}|p{3.4cm}|X|}
+{\small
+\begin{xltabular}{\textwidth}{|p{4.1cm}|p{3.4cm}|X|}
+\caption{Symbolic constants}\label{tab:constants}\\
 \hline
 \textbf{Constant} & \textbf{Value} & \textbf{Used in and basis} \\
 \hline
-\hypertarget{const:HealthyDailyActivity}{\textsf{HealthyDailyActivity}} & 10{,}000 steps or 60 minutes of recorded workouts (initial) & PR-SC-01. A widely used daily activity target. \\
-\hypertarget{const:DailyEarnCap}{\textsf{DailyEarnCap}} & The currency earned for 1.5 $\times$ \textsf{HealthyDailyActivity} (initial) & PR-SC-01. Removes any reward for activity far beyond a healthy volume. \\
-\hypertarget{const:MaxGoalIncrease}{\textsf{MaxGoalIncrease}} & 10\% per week (initial) & PR-SC-06. Follows the common guideline of increasing training load by no more than 10\% a week. \\
-\hypertarget{const:MissedGoalLimit}{\textsf{MissedGoalLimit}} & 3 consecutive goal periods (initial) & PR-SC-06. \\
-\hypertarget{const:MaxDailyNotifications}{\textsf{MaxDailyNotifications}} & 3 per day (initial) & PR-SC-07. \\
-\hypertarget{const:OfflineSyncWindow}{\textsf{OfflineSyncWindow}} & 7 days & PR-RFT-01. Covers a week away from a connection or without opening the app. \\
-\hypertarget{const:AccessExpiry}{\textsf{AccessExpiry}} & 60 minutes & SEC-ACC-01. \\
-\hypertarget{const:SessionTimeout}{\textsf{SessionTimeout}} & 30 days without use & SEC-ACC-05. \\
-\hypertarget{const:MinPasswordLength}{\textsf{MinPasswordLength}} & 8 characters & SEC-ACC-04. \\
-\hypertarget{const:LockoutAttempts}{\textsf{LockoutAttempts}} & 5 consecutive failures & SEC-ACC-04. \\
-\hypertarget{const:LockoutDuration}{\textsf{LockoutDuration}} & 15 minutes & SEC-ACC-04. \\
-\hypertarget{const:MaxCadence}{\textsf{MaxCadence}} & 250 steps per minute, sustained & SEC-INT-01. Faster than a person can sustain, so it indicates faked data. \\
-\hypertarget{const:RateLimit}{\textsf{RateLimit}} & 60 requests per minute & SEC-IMM-02. \\
-\hypertarget{const:BackupInterval}{\textsf{BackupInterval}} & 24 hours & SEC-INT-03. \\
-\hypertarget{const:BackupRetention}{\textsf{BackupRetention}} & 30 days & SEC-INT-03, SEC-PRV-03. \\
-\hypertarget{const:RestoreTime}{\textsf{RestoreTime}} & 24 hours & SEC-INT-03. \\
-\hypertarget{const:DeletionWindow}{\textsf{DeletionWindow}} & 24 hours & SEC-PRV-03. \\
-\hypertarget{const:MinAge}{\textsf{MinAge}} & 18 years & COMP-LEG-06. Age of majority for consenting to share personal health information. \\
+\endfirsthead
 \hline
-\end{tabularx}
-\caption{Symbolic constants}
-\label{tab:constants}
-\end{table}
+\textbf{Constant} & \textbf{Value} & \textbf{Used in and basis} \\
+\hline
+\endhead
+\textsf{HealthyDailyActivity}\hypertarget{const:HealthyDailyActivity}{} & 10{,}000 steps or 60 minutes of recorded workouts (initial) & \hyperlink{req:PR-SC-01}{PR-SC-01}. A widely used daily activity target. \\
+\textsf{DailyEarnCap}\hypertarget{const:DailyEarnCap}{} & The currency earned for 1.5 $\times$ \textsf{HealthyDailyActivity} (initial) & \hyperlink{req:PR-SC-01}{PR-SC-01}. Removes any reward for activity far beyond a healthy volume. \\
+\textsf{MaxGoalIncrease}\hypertarget{const:MaxGoalIncrease}{} & 10\% per week (initial) & \hyperlink{req:PR-SC-06}{PR-SC-06}. Follows the common guideline of increasing training load by no more than 10\% a week. \\
+\textsf{MissedGoalLimit}\hypertarget{const:MissedGoalLimit}{} & 3 consecutive goal periods (initial) & \hyperlink{req:PR-SC-06}{PR-SC-06}. \\
+\textsf{MaxDailyNotifications}\hypertarget{const:MaxDailyNotifications}{} & 3 per day (initial) & \hyperlink{req:PR-SC-07}{PR-SC-07}. \\
+\textsf{OfflineSyncWindow}\hypertarget{const:OfflineSyncWindow}{} & 7 days & \hyperlink{req:PR-RFT-01}{PR-RFT-01}. Covers a week away from a connection or without opening the app. \\
+\textsf{AccessExpiry}\hypertarget{const:AccessExpiry}{} & 60 minutes & \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}. \\
+\textsf{SessionTimeout}\hypertarget{const:SessionTimeout}{} & 30 days without use & \hyperlink{req:SEC-ACC-05}{SEC-ACC-05}. \\
+\textsf{MinPasswordLength}\hypertarget{const:MinPasswordLength}{} & 8 characters & \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}. \\
+\textsf{LockoutAttempts}\hypertarget{const:LockoutAttempts}{} & 5 consecutive failures & \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}. \\
+\textsf{LockoutDuration}\hypertarget{const:LockoutDuration}{} & 15 minutes & \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}. \\
+\textsf{MaxCadence}\hypertarget{const:MaxCadence}{} & 250 steps per minute, sustained & \hyperlink{req:SEC-INT-01}{SEC-INT-01}. Faster than a person can sustain, so it indicates faked data. \\
+\textsf{RateLimit}\hypertarget{const:RateLimit}{} & 60 requests per minute & \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}. \\
+\textsf{BackupInterval}\hypertarget{const:BackupInterval}{} & 24 hours & \hyperlink{req:SEC-INT-03}{SEC-INT-03}. \\
+\textsf{BackupRetention}\hypertarget{const:BackupRetention}{} & 30 days & \hyperlink{req:SEC-INT-03}{SEC-INT-03}, \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}. \\
+\textsf{RestoreTime}\hypertarget{const:RestoreTime}{} & 24 hours & \hyperlink{req:SEC-INT-03}{SEC-INT-03}. \\
+\textsf{DeletionWindow}\hypertarget{const:DeletionWindow}{} & 24 hours & \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}. \\
+\textsf{MinAge}\hypertarget{const:MinAge}{} & 18 years & \hyperlink{req:COMP-LEG-06}{COMP-LEG-06}. Age of majority for consenting to share personal health information. \\
+\hline
+\end{xltabular}
+}
 
 \subsubsection{Diagram Notation}
 
@@ -358,7 +366,7 @@ decisions recorded in the Problem Statement and the Development Plan, and the
 design must satisfy them.
 
 \begin{description}
-  \item[SC-01: Android platform]\leavevmode
+  \item[{SC-01\hypertarget{req:SC-01}{}}: Android platform]\leavevmode
   \begin{description}
     \item[Description:] The product shall run as a native mobile application
     on Android phones.
@@ -368,9 +376,10 @@ design must satisfy them.
     stretch goal.
     \item[Fit Criterion:] The application installs and runs all core features
     on an Android phone.
+    \item[Related Requirements:] \hyperlink{req:MAS-ADPT-02}{MAS-ADPT-02}
   \end{description}
 
-  \item[SC-02: Frontend technology]\leavevmode
+  \item[{SC-02\hypertarget{req:SC-02}{}}: Frontend technology]\leavevmode
   \begin{description}
     \item[Description:] The mobile client shall be written in TypeScript using
     the React Native framework.
@@ -379,9 +388,10 @@ design must satisfy them.
     for an iOS build later without rewriting the client.
     \item[Fit Criterion:] All client source code is TypeScript built on React
     Native.
+    \item[Related Requirements:] \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:COMP-STD-03}{COMP-STD-03}
   \end{description}
 
-  \item[SC-03: Backend technology]\leavevmode
+  \item[{SC-03\hypertarget{req:SC-03}{}}: Backend technology]\leavevmode
   \begin{description}
     \item[Description:] The backend \acr{API}{application programming interface}{API} shall be built in Java with the Spring
     framework, and persistent data shall be stored in a MySQL relational
@@ -391,9 +401,10 @@ design must satisfy them.
     query.
     \item[Fit Criterion:] The API is a Spring application and all persistent
     application data lives in a MySQL database.
+    \item[Related Requirements:] \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:COMP-STD-04}{COMP-STD-04}, \hyperlink{req:COMP-STD-05}{COMP-STD-05}
   \end{description}
 
-  \item[SC-04: Fitness data sources]\leavevmode
+  \item[{SC-04\hypertarget{req:SC-04}{}}: Fitness data sources]\leavevmode
   \begin{description}
     \item[Description:] Activity data shall be read automatically from the
     phone's built-in health data. Data from external devices such as fitness
@@ -405,9 +416,10 @@ design must satisfy them.
     \item[Fit Criterion:] The product has no feature for manually entering step
     counts, and every external device integration uses a documented SDK or API
     from that device's manufacturer.
+    \item[Related Requirements:] \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}
   \end{description}
 
-  \item[SC-05: Simulated market only]\leavevmode
+  \item[{SC-05\hypertarget{req:SC-05}{}}: Simulated market only]\leavevmode
   \begin{description}
     \item[Description:] All trading shall take place in a simulated market
     using virtual currency. The product shall not handle real money, connect
@@ -417,9 +429,10 @@ design must satisfy them.
     regulation that is outside the scope of a capstone project.
     \item[Fit Criterion:] No feature of the product accepts, stores, or pays
     out real money, and no trade is sent to a real exchange or broker.
+    \item[Related Requirements:] \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:FUNC-17}{FUNC-17}
   \end{description}
 
-  \item[SC-06: Distribution]\leavevmode
+  \item[{SC-06\hypertarget{req:SC-06}{}}: Distribution]\leavevmode
   \begin{description}
     \item[Description:] The product shall be distributed to users through the
     Android application store.
@@ -428,6 +441,7 @@ design must satisfy them.
     updates.
     \item[Fit Criterion:] The release build meets the store's publishing
     requirements and can be installed from it.
+    \item[Related Requirements:] \hyperlink{req:PROD-01}{PROD-01}, \hyperlink{req:COMP-STD-01}{COMP-STD-01}
   \end{description}
 \end{description}
 \subsection{Implementation Environment of the Current System}
@@ -446,14 +460,14 @@ The product will run on the environment its users already have:
   \item A mobile data or Wi-Fi connection to reach the \progname{} backend.
 \end{itemize}
 
-The MySQL database (see SC-03) will be hosted on McMaster University's MySQL
+The MySQL database (see \hyperlink{req:SC-03}{SC-03}) will be hosted on McMaster University's MySQL
 server, provided to the team for the course.
 
 \subsection{Partner or Collaborative Applications}
 
 The product depends on the following external applications for fitness data.
 Each integration must follow the provider's developer terms and permission
-model (see SC-04).
+model (see \hyperlink{req:SC-04}{SC-04}).
 
 \begin{description}
   \item[Health Connect (Android):] The main source of step counts and workout
@@ -465,7 +479,7 @@ model (see SC-04).
 The simulated market does not depend on any external price feed. Its assets and
 prices are fictional and are generated by the product's own market engine (see
 The Context of the Work). To make price movements follow real-world trends, the
-engine is calibrated against historical market data (see PR-PA-06). Any
+engine is calibrated against historical market data (see \hyperlink{req:PR-PA-06}{PR-PA-06}). Any
 historical data set used for this must be free to use in an educational
 application.
 
@@ -501,7 +515,7 @@ the design in a few ways:
   \item The connection may be slow or drop out. Activity data must not be lost
   when the phone is offline; it should sync once the connection returns.
   \item Users should not need a manual or formal training to use the app (see
-  UHR-LRN-01). The interface has to explain financial terms itself, in line with the goal of a simple and delightful user
+  \hyperlink{req:UHR-LRN-01}{UHR-LRN-01}). The interface has to explain financial terms itself, in line with the goal of a simple and delightful user
   experience.
   \item Step counting runs in the background through Health Connect, so the
   app must not drain the battery noticeably during a normal day.
@@ -563,11 +577,11 @@ Android emulator, so no test hardware will be bought.
   handle that data in line with Canadian privacy law, the \acr{PIPEDA}{Personal Information
   Protection and Electronic Documents Act}{PIPEDA}: collect only
   what is needed, get the user's consent, and let users see and delete their
-  data. Details are set out in the Privacy Requirements (SEC-PRV-01 to
-  SEC-PRV-03) and Legal Requirements (COMP-LEG-01 to COMP-LEG-04).
+  data. Details are set out in the Privacy Requirements (\hyperlink{req:SEC-PRV-01}{SEC-PRV-01} to
+  \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}) and Legal Requirements (\hyperlink{req:COMP-LEG-01}{COMP-LEG-01} to \hyperlink{req:COMP-LEG-04}{COMP-LEG-04}).
   \item \textbf{No financial advice.} The product teaches general investing
   concepts and must not present anything as personalized financial advice (see
-  PR-SC-04).
+  \hyperlink{req:PR-SC-04}{PR-SC-04}).
   \item \textbf{App store policies.} The product must meet Google Play's
   developer policies, including its rules for health data and for
   finance-related apps.
@@ -622,7 +636,7 @@ Stock & A share of ownership in a company. Stocks in \progname{} are fictional. 
 \hline
 Streak & The number of consecutive days or periods in which a user has met a goal. \\
 \hline
-Streak freeze & Protection a user can apply so that a missed day does not reset their streak (PR-SC-02). \\
+Streak freeze & Protection a user can apply so that a missed day does not reset their streak (\hyperlink{req:PR-SC-02}{PR-SC-02}). \\
 \hline
 Stretch goal & A feature outside the capstone scope that will be added only if time allows. \\
 \hline
@@ -831,7 +845,7 @@ The custom financial market engine is an internal component of Flexin'
 that generates simulated financial data rather than retrieving
 real-world market prices. The engine is calibrated against historical
 market data so that its fictional prices follow real-world market
-trends (see PR-PA-06).
+trends (see \hyperlink{req:PR-PA-06}{PR-PA-06}).
 
 \begin{figure}[!htbp]
     \centering
@@ -1376,13 +1390,13 @@ The figure is a Unified Modeling Language (UML) class diagram. Each box is a cla
     User ID & Integer & Unique identifier for a user account & Primary Key, Not Null \\ 
     \hline 
     
-    Email & String & Email address used to sign in and to reset the password (FUNC-01, SEC-ACC-04) & Unique, Not Null \\ 
+    Email & String & Email address used to sign in and to reset the password (\hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}) & Unique, Not Null \\ 
     \hline 
     
     Password & String & User authentication credential, stored as a salted hash & Hashed, Not Null \\ 
     \hline 
     
-    Date of Birth & Date & Used to confirm the user is 18 or older (COMP-LEG-06) & Not Null, Age $\geq 18$ \\ 
+    Date of Birth & Date & Used to confirm the user is 18 or older (\hyperlink{req:COMP-LEG-06}{COMP-LEG-06}) & Not Null, Age $\geq 18$ \\ 
     \hline 
     
     Height & Decimal & User's height, used to tailor fitness goals & Optional, Encrypted \\ 
@@ -1394,10 +1408,10 @@ The figure is a Unified Modeling Language (UML) class diagram. Each box is a cla
     Health Conditions & String & Health conditions the user chooses to share & Optional, Encrypted \\ 
     \hline 
     
-    Display Alias & String & Name shown to other users on leaderboards (SEC-PRV-02) & Unique, Optional \\ 
+    Display Alias & String & Name shown to other users on leaderboards (\hyperlink{req:SEC-PRV-02}{SEC-PRV-02}) & Unique, Optional \\ 
     \hline 
     
-    Leaderboard Opt-In & Boolean & Whether the user has joined any leaderboard group (PR-SC-08) & Default False \\ 
+    Leaderboard Opt-In & Boolean & Whether the user has joined any leaderboard group (\hyperlink{req:PR-SC-08}{PR-SC-08}) & Default False \\ 
     \hline 
     
     Currency & Decimal & Current virtual currency balance & $\geq 0$ \\ 
@@ -1500,13 +1514,13 @@ The figure is a Unified Modeling Language (UML) class diagram. Each box is a cla
     Activity Details & String & What is required/associated with carrying out the activity (i.e. 10,000 steps, burn 100 calories, etc.) & Not Null \\ 
     \hline 
     
-    Start Time & DateTime & When the activity happened on the source device, not when it was synced (PR-PA-05) & Not Null \\ 
+    Start Time & DateTime & When the activity happened on the source device, not when it was synced (\hyperlink{req:PR-PA-05}{PR-PA-05}) & Not Null \\ 
     \hline 
     
     Source & Enum & Where the activity data came from & Health Connect, Garmin \\ 
     \hline 
     
-    Source Record ID & String & The source's identifier for the record, used to prevent double counting (PR-PA-03) & Unique per Source \\ 
+    Source Record ID & String & The source's identifier for the record, used to prevent double counting (\hyperlink{req:PR-PA-03}{PR-PA-03}) & Unique per Source \\ 
     \hline
 \end{xltabular}
 
@@ -1685,148 +1699,180 @@ This section outlines the functional requirements for the system, detailing the 
 \hline
 \endhead
 
-FUNC-01 & 
+FUNC-01\hypertarget{req:FUNC-01}{} & 
 User Registration & 
 \textbf{Description:} The system shall allow new users to create an account using a valid email address and password. 
 
 \textbf{Rationale:} User accounts are required to store fitness progress, portfolio information, and competition statistics. 
 
-\textbf{Fit Criterion:} A user shall be able to successfully create an account and access the application using their newly created credentials.\\ 
+\textbf{Fit Criterion:} A user shall be able to successfully create an account and access the application using their newly created credentials.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-01}{UHR-EOU-01}, \hyperlink{req:PR-SC-04}{PR-SC-04}, \hyperlink{req:PR-SC-05}{PR-SC-05}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:COMP-LEG-06}{COMP-LEG-06}\\
 \hline
 
-FUNC-02 & 
+FUNC-02\hypertarget{req:FUNC-02}{} & 
 User Authentication & 
 \textbf{Description:} The system shall authenticate users before granting access to personalized application functionality.
 
 \textbf{Rationale:} Authentication protects personal information and ensures users can only access their own data.
 
-\textbf{Fit Criterion:} Users shall be required to provide valid credentials before accessing account-specific information.\\
+\textbf{Fit Criterion:} Users shall be required to provide valid credentials before accessing account-specific information.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-04}{UHR-EOU-04}, \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-ACC-05}{SEC-ACC-05}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}\\
 \hline
 
-FUNC-03 & 
+FUNC-03\hypertarget{req:FUNC-03}{} & 
 Third-Party Fitness Data Import & 
 \textbf{Description:} The system shall import fitness activity data from supported third-party fitness providers.
 
 \textbf{Rationale:} Fitness activity data is required to reward users and track progress.
 
-\textbf{Fit Criterion:} Activities recorded through a supported third-party provider shall appear within the user's account after synchronization.\\
+\textbf{Fit Criterion:} Activities recorded through a supported third-party provider shall appear within the user's account after synchronization.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-06}{UHR-EOU-06}, \hyperlink{req:PR-SL-04}{PR-SL-04}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:PR-PA-05}{PR-PA-05}, \hyperlink{req:PR-RFT-01}{PR-RFT-01}, \hyperlink{req:PR-RFT-03}{PR-RFT-03}, \hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:MAS-MNT-01}{MAS-MNT-01}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04}, \hyperlink{req:SEC-ACC-03}{SEC-ACC-03}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:COMP-LEG-01}{COMP-LEG-01}, \hyperlink{req:COMP-LEG-03}{COMP-LEG-03}, \hyperlink{req:DOC-02}{DOC-02}, \hyperlink{req:SC-04}{SC-04}\\
 \hline
 
-FUNC-04 & 
+FUNC-04\hypertarget{req:FUNC-04}{} & 
 Fitness Goal Creation & 
 \textbf{Description:} The system shall allow users to create and manage fitness goals.
 
 \textbf{Rationale:} Goals provide motivation and measurable milestones for physical activity. This is also how users will earn virtual currency to invest in the simulated stock market.
 
-\textbf{Fit Criterion:} Users shall be able to create, modify, and delete fitness goals.\\
+\textbf{Fit Criterion:} Users shall be able to create, modify, and delete fitness goals.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-01}{UHR-PER-01}, \hyperlink{req:UHR-LRN-03}{UHR-LRN-03}, \hyperlink{req:UHR-ACC-06}{UHR-ACC-06}, \hyperlink{req:PR-SC-06}{PR-SC-06}\\
 \hline
 
-FUNC-05 & 
+FUNC-05\hypertarget{req:FUNC-05}{} & 
 Fitness Goal Tracking & 
 \textbf{Description:} The system shall track user progress toward active fitness goals.
 
 \textbf{Rationale:} Progress tracking enables users to monitor their fitness achievements. This also allows the system to determine when a user has completed a goal and is eligible for virtual currency rewards.
 
-\textbf{Fit Criterion:} Goal progress shall automatically update when related activities are synchronized.\\
+\textbf{Fit Criterion:} Goal progress shall automatically update when related activities are synchronized.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-INT-01}{UHR-INT-01}, \hyperlink{req:PR-SC-02}{PR-SC-02}, \hyperlink{req:PR-PA-05}{PR-PA-05}\\
 \hline
 
-FUNC-06 & 
+FUNC-06\hypertarget{req:FUNC-06}{} & 
 Reward Allocation & 
 \textbf{Description:} The system shall award virtual currency when users complete eligible fitness activities or goals.
 
 \textbf{Rationale:} Virtual rewards act as the primary incentive linking physical activity to financial education.
 
-\textbf{Fit Criterion:} Virtual currency balances shall increase following successful completion of reward-eligible activities.\\
+\textbf{Fit Criterion:} Virtual currency balances shall increase following successful completion of reward-eligible activities.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SC-01}{PR-SC-01}, \hyperlink{req:PR-PA-02}{PR-PA-02}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03}\\
 \hline
 
-FUNC-07 & 
+FUNC-07\hypertarget{req:FUNC-07}{} & 
 Virtual Currency Tracking & 
 \textbf{Description:} The system shall maintain a record of each user's current virtual currency balance.
 
 \textbf{Rationale:} Users require visibility into available funds for portfolio management activities.
 
-\textbf{Fit Criterion:} Users shall be able to view their current virtual currency balance at any time.\\
+\textbf{Fit Criterion:} Users shall be able to view their current virtual currency balance at any time.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-02}{LF-STY-02}, \hyperlink{req:PR-PA-01}{PR-PA-01}, \hyperlink{req:PR-RFT-04}{PR-RFT-04}\\
 \hline
 
-FUNC-08 & 
+FUNC-08\hypertarget{req:FUNC-08}{} & 
 Portfolio Creation & 
 \textbf{Description:} The system shall create and maintain a portfolio for each registered user.
 
 \textbf{Rationale:} Portfolios provide users with a mechanism for applying virtual currency toward investment activities.
 
-\textbf{Fit Criterion:} A portfolio shall automatically be created when a user account is established.\\
+\textbf{Fit Criterion:} A portfolio shall automatically be created when a user account is established.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-RFT-02}{PR-RFT-02}\\
 \hline
 
-FUNC-09 & 
+FUNC-09\hypertarget{req:FUNC-09}{} & 
 Asset Purchase & 
 \textbf{Description:} The system shall allow users to purchase supported financial assets using virtual currency.
 
 \textbf{Rationale:} Asset purchases are necessary to simulate investment decision-making and portfolio growth.
 
-\textbf{Fit Criterion:} Users shall be able to purchase available assets provided they possess sufficient virtual currency.\\
+\textbf{Fit Criterion:} Users shall be able to purchase available assets provided they possess sufficient virtual currency.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-SC-03}{PR-SC-03}, \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:PR-SE-02}{PR-SE-02}, \hyperlink{req:SEC-INT-02}{SEC-INT-02}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}, \hyperlink{req:SC-05}{SC-05}\\
 \hline
 
-FUNC-10 & 
+FUNC-10\hypertarget{req:FUNC-10}{} & 
 Asset Sale & 
 \textbf{Description:} The system shall allow users to sell previously purchased financial assets and realize gains or losses.
 
 \textbf{Rationale:} Users must be able to modify portfolio holdings and realize gains or losses.
 
-\textbf{Fit Criterion:} Users shall be able to sell assets currently held within their portfolio.\\
+\textbf{Fit Criterion:} Users shall be able to sell assets currently held within their portfolio.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:SEC-INT-02}{SEC-INT-02}, \hyperlink{req:SC-05}{SC-05}\\
 \hline
 
-FUNC-11 & 
+FUNC-11\hypertarget{req:FUNC-11}{} & 
 Transaction Recording & 
 \textbf{Description:} The system shall record all financial transactions executed by users.
 
 \textbf{Rationale:} Transaction records provide accountability and support portfolio calculations.
 
-\textbf{Fit Criterion:} Every asset purchase and sale shall generate a corresponding transaction record that can be viewed by the user at any time.\\
+\textbf{Fit Criterion:} Every asset purchase and sale shall generate a corresponding transaction record that can be viewed by the user at any time.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}\\
 \hline
 
-FUNC-12 & 
+FUNC-12\hypertarget{req:FUNC-12}{} & 
 Portfolio Performance Calculation & 
 \textbf{Description:} The system shall calculate portfolio gains and losses based on current asset values.
 
 \textbf{Rationale:} Portfolio performance provides feedback regarding investment decisions and how the user can adjust their strategies moving forward.
 
-\textbf{Fit Criterion:} Users shall be able to view current portfolio value and unrealized gains or losses.\\
+\textbf{Fit Criterion:} Users shall be able to view current portfolio value and unrealized gains or losses.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-02}{LF-APP-02}, \hyperlink{req:UHR-UND-02}{UHR-UND-02}, \hyperlink{req:PR-PA-04}{PR-PA-04}, \hyperlink{req:PR-PA-06}{PR-PA-06}, \hyperlink{req:PR-RFT-04}{PR-RFT-04}\\
 \hline
 
-FUNC-13 &
+FUNC-13\hypertarget{req:FUNC-13}{} &
 Leaderboard Participation &
-\textbf{Description:} The system shall let users join and leave leaderboard groups, and shall show each group's members ranked by their progress towards their own goals or towards the goals the group has agreed on. Ranking rules are constrained by PR-SC-08.
+\textbf{Description:} The system shall let users join and leave leaderboard groups, and shall show each group's members ranked by their progress towards their own goals or towards the goals the group has agreed on. Ranking rules are constrained by \hyperlink{req:PR-SC-08}{PR-SC-08}.
 
 \textbf{Rationale:} Competitive features encourage continued engagement and motivation. Ranking by progress towards personal or agreed goals keeps the competition fair between users of different fitness and financial levels.
 
-\textbf{Fit Criterion:} A user can join a group, view its ranking, and leave it. Each member's position is computed from their percentage progress towards their own or the group's agreed goal and updates when their progress changes.\\
+\textbf{Fit Criterion:} A user can join a group, view its ranking, and leave it. Each member's position is computed from their percentage progress towards their own or the group's agreed goal and updates when their progress changes.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-03}{UHR-PER-03}, \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:UHR-POL-04}{UHR-POL-04}, \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03}\\
 \hline
 
-FUNC-14 & 
+FUNC-14\hypertarget{req:FUNC-14}{} & 
 Friend Management & 
 \textbf{Description:} The system shall allow users to create and manage lists of friends they wish to compete with.
 
 \textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
 
-\textbf{Fit Criterion:} Users shall be able to add and remove friends from their friends list.\\
+\textbf{Fit Criterion:} Users shall be able to add and remove friends from their friends list.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:UHR-POL-05}{UHR-POL-05}\\
 \hline
 
-FUNC-15 & 
+FUNC-15\hypertarget{req:FUNC-15}{} & 
 Private Leaderboards & 
-\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. Private groups follow the same leaderboard rules as public ones (PR-SC-08), so friends cannot use them to earn currency.
+\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. Private groups follow the same leaderboard rules as public ones (\hyperlink{req:PR-SC-08}{PR-SC-08}), so friends cannot use them to earn currency.
 
 \textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
 
-\textbf{Fit Criterion:} Users shall be able to create private competition groups with select friends by inviting them.\\
+\textbf{Fit Criterion:} Users shall be able to create private competition groups with select friends by inviting them.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:PR-SC-08}{PR-SC-08}\\
 \hline
 
-FUNC-16 & 
+FUNC-16\hypertarget{req:FUNC-16}{} & 
 Progress Reporting & 
 \textbf{Description:} The system shall provide users with summaries of fitness activity, goal completion, virtual currency earnings, portfolio performance, and leaderboard standings.
 
 \textbf{Rationale:} Summaries help users understand their overall progress and achievements.
 
-\textbf{Fit Criterion:} Users shall be able to access current and historical progress information at any time.\\
+\textbf{Fit Criterion:} Users shall be able to access current and historical progress information at any time.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-01}{LF-APP-01}, \hyperlink{req:UHR-EOU-02}{UHR-EOU-02}, \hyperlink{req:PR-RFT-04}{PR-RFT-04}, \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:PR-L-02}{PR-L-02}\\
 \hline
 
 \end{xltabular}
@@ -1846,49 +1892,59 @@ Progress Reporting &
 \hline
 \endhead
 
-LF-APP-01 &
+LF-APP-01\hypertarget{req:LF-APP-01}{} &
 Visual Hierarchy &
 \textbf{Description:} The dashboard shall present fitness metrics and financial metrics in a balanced, uncluttered layout using unified summary cards.
 
 \textbf{Rationale:} Equal emphasis reinforces the relationship between physical activity and simulated investment growth.
 
-\textbf{Fit Criterion:} In user testing, at least 80\% of participants identify both their current fitness progress and their portfolio value from the dashboard within 5 seconds.\\
+\textbf{Fit Criterion:} In user testing, at least 80\% of participants identify both their current fitness progress and their portfolio value from the dashboard within 5 seconds.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:UHR-EOU-02}{UHR-EOU-02}\\
 \hline
 
-LF-APP-02 &
+LF-APP-02\hypertarget{req:LF-APP-02}{} &
 Compounding Chart &
 \textbf{Description:} The portfolio chart shall distinguish cumulative workout earnings from simulated investment gains and dividends.
 
 \textbf{Rationale:} Users should understand the difference between contributions and compounded returns.
 
-\textbf{Fit Criterion:} Two visually distinct chart traces shall allow users to distinguish these values within 5 seconds.\\
+\textbf{Fit Criterion:} Two visually distinct chart traces shall allow users to distinguish these values within 5 seconds.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-12}{FUNC-12}, \hyperlink{req:UHR-ACC-03}{UHR-ACC-03}\\
 \hline
 
-LF-APP-03 &
+LF-APP-03\hypertarget{req:LF-APP-03}{} &
 Responsive Layout &
 \textbf{Description:} The interface shall adapt to Android screen sizes, aspect ratios, pixel densities, and system font scaling.
 
 \textbf{Rationale:} Flexin' must remain usable across supported Android devices.
 
-\textbf{Fit Criterion:} On Android 10+ devices with 5.5--6.8-inch screens, no text shall clip or touch targets overlap, including at 130\% font scaling.\\
+\textbf{Fit Criterion:} On Android 10+ devices with 5.5--6.8-inch screens, no text shall clip or touch targets overlap, including at 130\% font scaling.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-ACC-02}{UHR-ACC-02}, \hyperlink{req:UHR-ACC-04}{UHR-ACC-04}, \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:PROD-02}{PROD-02}\\
 \hline
 
-LF-APP-04 &
+LF-APP-04\hypertarget{req:LF-APP-04}{} &
 Theme and Contrast &
 \textbf{Description:} The interface shall support Light and Dark modes with distinguishable fitness and financial status indicators.
 
 \textbf{Rationale:} Consistent contrast improves readability and accessibility in different environments.
 
-\textbf{Fit Criterion:} Both Light and Dark modes meet the colour contrast ratios required by COMP-STD-02, and fitness and financial status indicators remain distinguishable in both modes.\\
+\textbf{Fit Criterion:} Both Light and Dark modes meet the colour contrast ratios required by \hyperlink{req:COMP-STD-02}{COMP-STD-02}, and fitness and financial status indicators remain distinguishable in both modes.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-ACC-03}{UHR-ACC-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-LF-APP-05 &
+LF-APP-05\hypertarget{req:LF-APP-05}{} &
 Navigation &
 \textbf{Description:} A persistent bottom navigation bar shall link to Dashboard, Activity, Market/Portfolio, Learn, and Community.
 
 \textbf{Rationale:} Simple navigation reduces user effort.
 
-\textbf{Fit Criterion:} The bottom navigation bar with these five destinations is visible on every primary screen. How many taps primary operations may take is specified in UHR-EOU-03.\\
+\textbf{Fit Criterion:} The bottom navigation bar with these five destinations is visible on every primary screen. How many taps primary operations may take is specified in \hyperlink{req:UHR-EOU-03}{UHR-EOU-03}.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-03}{UHR-EOU-03}\\
 \hline
 
 \end{xltabular}
@@ -1906,40 +1962,48 @@ Navigation &
 \hline
 \endhead
 
-LF-STY-01 &
+LF-STY-01\hypertarget{req:LF-STY-01}{} &
 Approachable Tone &
 \textbf{Description:} Typography, interface styling, and copy shall be welcoming and accessible. Financial terminology shall use clear language with contextual tooltips.
 
 \textbf{Rationale:} Reducing intimidation encourages financial learning and exploration.
 
-\textbf{Fit Criterion:} At least 80\% of target-demographic evaluators shall rate the interface as approachable, supportive, or inviting.\\
+\textbf{Fit Criterion:} At least 80\% of target-demographic evaluators shall rate the interface as approachable, supportive, or inviting.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:UHR-POL-01}{UHR-POL-01}\\
 \hline
 
-LF-STY-02 &
+LF-STY-02\hypertarget{req:LF-STY-02}{} &
 Virtual Currency Symbol &
 \textbf{Description:} All amounts of virtual currency shall be shown with the \acr{FLX}{virtual currency symbol}{FLX}, never with a real-world currency symbol.
 
 \textbf{Rationale:} Users must not confuse \progname{} with a real brokerage or financial account.
 
-\textbf{Fit Criterion:} No screen shows a virtual amount with a real-world currency symbol such as \$, and every virtual amount uses FLX. The label marking the market as simulated is specified in PR-SC-03.\\
+\textbf{Fit Criterion:} No screen shows a virtual amount with a real-world currency symbol such as \$, and every virtual amount uses FLX. The label marking the market as simulated is specified in \hyperlink{req:PR-SC-03}{PR-SC-03}.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-07}{FUNC-07}, \hyperlink{req:PR-SC-03}{PR-SC-03}\\
 \hline
 
-LF-STY-03 &
+LF-STY-03\hypertarget{req:LF-STY-03}{} &
 Non-Intrusive Gamification &
 \textbf{Description:} Milestone rewards shall use subtle, encouraging animations without disrupting normal use.
 
 \textbf{Rationale:} Rewards should support sustainable habits rather than distract users.
 
-\textbf{Fit Criterion:} Reward animations shall last no longer than 1.5 seconds and be immediately dismissible by tapping the background or swiping.\\
+\textbf{Fit Criterion:} Reward animations shall last no longer than 1.5 seconds and be immediately dismissible by tapping the background or swiping.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-POL-02}{UHR-POL-02}, \hyperlink{req:PR-SL-02}{PR-SL-02}\\
 \hline
 
-LF-STY-04 &
+LF-STY-04\hypertarget{req:LF-STY-04}{} &
 Component Consistency &
 \textbf{Description:} Buttons, forms, modals, tooltips, cards, and toggles shall follow a shared styling system.
 
 \textbf{Rationale:} Consistency builds trust and reduces the learning curve.
 
-\textbf{Fit Criterion:} A design review of every screen finds no button, form, modal, tooltip, card, or toggle that departs from the shared style guide.\\
+\textbf{Fit Criterion:} A design review of every screen finds no button, form, modal, tooltip, card, or toggle that departs from the shared style guide.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-07}{UHR-EOU-07}\\
 \hline
 
 \end{xltabular}
@@ -1962,34 +2026,40 @@ This section outlines the usability and humanity requirements for the system, in
 \hline
 \endhead
 
-UHR-EOU-01 & 
+UHR-EOU-01\hypertarget{req:UHR-EOU-01}{} & 
 Onboarding Completion Time & 
 \textbf{Description:} The system shall enable new users to complete initial account setup and onboarding within 5 minutes. 
 
 \textbf{Rationale:} Users should be able to begin using the application almost immediately without excessive setup requirements. Within 5 minutes allows users to maintain their engagement with the system. If the setup and onboarding take too long, users may become frustrated and disengaged. 
 
-\textbf{Fit Criterion:} A first-time user shall be able to setup their account, complete onboarding and reach the main dashboard/screen within 5 minutes. This will be tested later in the project through user testing and observation.\\ 
+\textbf{Fit Criterion:} A first-time user shall be able to setup their account, complete onboarding and reach the main dashboard/screen within 5 minutes. This will be tested later in the project through user testing and observation.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01}\\
 \hline
 
-UHR-EOU-02 & 
+UHR-EOU-02\hypertarget{req:UHR-EOU-02}{} & 
 Dashboard Accessibility & 
 \textbf{Description:} The system shall provide direct access to fitness progress, portfolio information, and rewards through the main dashboard.
 
 \textbf{Rationale:} Users should not need to navigate through multiple screens to access frequently used information. 
 
-\textbf{Fit Criterion:} Important high-level \acr{KPI}{key performance indicators}{KPIs} pertaining to fitness progress, portfolio value, and virtual currency balance shall be visible from the application's primary screen after login. Users should be able to answer questions like "How much currency do I have available?", "What percentage of my fitness goal is complete?" and "How is my portfolio performing?" within 1 minute after logging into the system. \\ 
+\textbf{Fit Criterion:} Important high-level \acr{KPI}{key performance indicators}{KPIs} pertaining to fitness progress, portfolio value, and virtual currency balance shall be visible from the application's primary screen after login. Users should be able to answer questions like "How much currency do I have available?", "What percentage of my fitness goal is complete?" and "How is my portfolio performing?" within 1 minute after logging into the system. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:LF-APP-01}{LF-APP-01}\\
 \hline
 
-UHR-EOU-03 & 
+UHR-EOU-03\hypertarget{req:UHR-EOU-03}{} & 
 Minimal Screen Navigation & 
 \textbf{Description:} The system shall minimize navigation complexity by ensuring that portfolio management and lower-level metric viewing can be reached from the main dashboard within two taps.
 
 \textbf{Rationale:} Users should not need to navigate through multiple screens to access detailed metrics and adjust their portfolios. Excessive navigation increases user frustration and decreases engagement. 
 
-\textbf{Fit Criterion:} Users shall be able to access detailed fitness statistics, portfolio management, virtual currency transactions, and goal tracking within two taps from the main dashboard.\\
+\textbf{Fit Criterion:} Users shall be able to access detailed fitness statistics, portfolio management, virtual currency transactions, and goal tracking within two taps from the main dashboard.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-05}{LF-APP-05}\\
 \hline
 
-UHR-EOU-04 &
+UHR-EOU-04\hypertarget{req:UHR-EOU-04}{} &
 Error Feedback and Recovery &
 \textbf{Description:} The system shall provide clear, actionable, and immediate feedback to the user whenever a user action cannot be completed, including failed account creation and sign-in.
 
@@ -1997,52 +2067,64 @@ Error Feedback and Recovery &
 
 \textbf{Fit Criterion:} Every error shown during testing appears immediately, states what went wrong, and gives at least one action the user can take to fix it.
 
-\textbf{Hazard Analysis:} SR4 (H1.1)\\
+\textbf{Hazard Analysis:} SR4 (H1.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:MAS-SUP-01}{MAS-SUP-01}\\
 \hline
 
-UHR-EOU-05 & 
+UHR-EOU-05\hypertarget{req:UHR-EOU-05}{} & 
 Positive Feedback & 
 \textbf{Description:} The system shall provide immediate visual feedback following user actions to confirm whether the requested operation was completed successfully.
 
 \textbf{Rationale:} Users should be able to easily determine whether an action has been executed correctly without needing to manually verify the system state. Clear feedback increases user confidence and reduces confusion.
 
-\textbf{Fit Criterion:} All user-initiated actions, including goal updates, portfolio transactions, account modifications, and fitness device connections, shall display a confirmation message, notification, or visual state change within 2 seconds of successful completion.\\
+\textbf{Fit Criterion:} All user-initiated actions, including goal updates, portfolio transactions, account modifications, and fitness device connections, shall display a confirmation message, notification, or visual state change within 2 seconds of successful completion.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03}\\
 \hline
 
-UHR-EOU-06 & 
+UHR-EOU-06\hypertarget{req:UHR-EOU-06}{} & 
 Simple and Reliable Device Connectivity & 
 \textbf{Description:} The system shall simplify the process of connecting supported fitness devices and applications and maintain strong and reliable connections to these devices. 
 
 \textbf{Rationale:} Integration with existing fitness technologies is a core project goal. Users should be able to link their existing devices without requiring technical expertise. Once connected, the system shall maintain a stable connection to ensure continuous data synchronization so that the user is not constantly required to re-establish the connection - as this will cause user frustration.
 
-\textbf{Fit Criterion:} Users shall be able to perform a one-time action to connect a supported fitness data source through a guided setup workflow. Once connected the first time, the system shall not sever this connection more than three times per year without explicit user intervention.\\ 
+\textbf{Fit Criterion:} Users shall be able to perform a one-time action to connect a supported fitness data source through a guided setup workflow. Once connected the first time, the system shall not sever this connection more than three times per year without explicit user intervention.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:DOC-02}{DOC-02}\\
 \hline
 
-UHR-EOU-07 & 
+UHR-EOU-07\hypertarget{req:UHR-EOU-07}{} & 
 Consistent User Interface & 
 \textbf{Description:} The system shall maintain consistent visual design, terminology, and navigation patterns across all screens. 
 
 \textbf{Rationale:} Consistency improves user familiarity and reduces the effort required to learn new functionality. 
 
-\textbf{Fit Criterion:} A design review checklist covering icons, terminology, colours, and interaction patterns finds no inconsistency between screens for the same action.\\ 
+\textbf{Fit Criterion:} A design review checklist covering icons, terminology, colours, and interaction patterns finds no inconsistency between screens for the same action.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-04}{LF-STY-04}\\
 \hline
 
-UHR-EOU-08 & 
+UHR-EOU-08\hypertarget{req:UHR-EOU-08}{} & 
 Learnability & 
 \textbf{Description:} The system shall require no more than 10 minutes for users to become proficient in performing core tasks and navigating the application. 
 
 \textbf{Rationale:} Users should not require an excessive amount of time to learn and use the application effectively. Excessive time required to learn how to use the core functionalities of the application may lead to user frustration and disengagement.
 
-\textbf{Fit Criterion:} First-time users shall be able to make their first investment, set one fitness goal, and view fitness and portfolio performance metrics within 10 minutes from landing on the main screen after login.\\ 
+\textbf{Fit Criterion:} First-time users shall be able to make their first investment, set one fitness goal, and view fitness and portfolio performance metrics within 10 minutes from landing on the main screen after login.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-09}{UHR-EOU-09}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01}, \hyperlink{req:TRN-01}{TRN-01}, \hyperlink{req:TRN-02}{TRN-02}\\
 \hline
 
-UHR-EOU-09 & 
+UHR-EOU-09\hypertarget{req:UHR-EOU-09}{} & 
 Efficient Re-Learnability & 
 \textbf{Description:} The system shall require no more than 5 minutes for former users to re-learn how to execute core tasks and navigating the application. 
 
 \textbf{Rationale:} Even after time away from the system, users should be able to pick back up right where they left off. If a user has to spend too much time re-learning the application, it may lead to frustration and discourage users from re-engaging with the system.
 
-\textbf{Fit Criterion:} Former users with at least 1 month of consistent daily usage shall be able to re-learn how to manage at least one investment, manage at least one fitness goal, and view fitness and portfolio performance metrics within 5 minutes of returning to the system after 6+ months of inactivity.\\ 
+\textbf{Fit Criterion:} Former users with at least 1 month of consistent daily usage shall be able to re-learn how to manage at least one investment, manage at least one fitness goal, and view fitness and portfolio performance metrics within 5 minutes of returning to the system after 6+ months of inactivity.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}\\
 \hline
 
 \end{xltabular}
@@ -2061,49 +2143,59 @@ Efficient Re-Learnability &
 \hline
 \endhead
 
-UHR-PER-01 &
+UHR-PER-01\hypertarget{req:UHR-PER-01}{} &
 Personalized Fitness Goals &
 \textbf{Description:} The system shall allow users to configure fitness goals based on their personal fitness level and preferences.
 
 \textbf{Rationale:} Users will possess different fitness capabilities and activity levels. Personalized goals encourage engagement while remaining achievable.
 
-\textbf{Fit Criterion:} Users shall be able to modify daily and weekly fitness goals that will take effect the next time period.\\
+\textbf{Fit Criterion:} Users shall be able to modify daily and weekly fitness goals that will take effect the next time period.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-04}{FUNC-04}\\
 \hline
 
-UHR-PER-02 &
+UHR-PER-02\hypertarget{req:UHR-PER-02}{} &
 Customizable Notifications &
 \textbf{Description:} The system shall allow users to configure which notifications they receive and how frequently they are delivered.
 
 \textbf{Rationale:} Users have varying preferences regarding reminders and activity notifications.
 
-\textbf{Fit Criterion:} Users shall be able to independently enable or disable workout reminders, portfolio updates, and achievement notifications.\\
+\textbf{Fit Criterion:} Users shall be able to independently enable or disable workout reminders, portfolio updates, and achievement notifications.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-ACC-05}{UHR-ACC-05}, \hyperlink{req:PR-SC-07}{PR-SC-07}\\
 \hline
 
-UHR-PER-03 &
+UHR-PER-03\hypertarget{req:UHR-PER-03}{} &
 Customizable Privacy Settings &
 \textbf{Description:} The system shall allow users to control the visibility of their fitness achievements, portfolio statistics, and leaderboard participation.
 
 \textbf{Rationale:} Users have different privacy expectations and comfort levels regarding public sharing of personal information.
 
-\textbf{Fit Criterion:} Users shall be able to independently configure visibility settings for all community-facing features that will take immediate effect.\\
+\textbf{Fit Criterion:} Users shall be able to independently configure visibility settings for all community-facing features that will take immediate effect.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-13}{FUNC-13}\\
 \hline
 
-UHR-PER-04 &
+UHR-PER-04\hypertarget{req:UHR-PER-04}{} &
 Customizable Competition Groups &
 \textbf{Description:} The system shall allow users to customize the set of users with whom they share and compare fitness and portfolio progress.
 
 \textbf{Rationale:} Users may have different comfort levels regarding competition and sharing personal achievements. Allowing users to select their competition group creates a more personalized and engaging experience where friends can motivate each other.
 
-\textbf{Fit Criterion:} Users shall be able to choose between not participating (the default), joining a private friends-only group, and joining the public community-wide leaderboard.\\
+\textbf{Fit Criterion:} Users shall be able to choose between not participating (the default), joining a private friends-only group, and joining the public community-wide leaderboard.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:FUNC-14}{FUNC-14}, \hyperlink{req:FUNC-15}{FUNC-15}\\
 \hline
 
-UHR-INT-01 &
+UHR-INT-01\hypertarget{req:UHR-INT-01}{} &
 Canadian Time Zone Support &
 \textbf{Description:} The system shall automatically detect and utilize the user's local Canadian time zone when calculating daily goals, rewards, and streaks.
 
 \textbf{Rationale:} Users may access the application from any Canadian province or territory.
 
-\textbf{Fit Criterion:} Daily statistics and streak calculations shall correspond to the user's local device time zone.\\
+\textbf{Fit Criterion:} Daily statistics and streak calculations shall correspond to the user's local device time zone.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-05}{FUNC-05}, \hyperlink{req:PR-PA-05}{PR-PA-05}, \hyperlink{req:CUL-01}{CUL-01}\\
 \hline
 
 \end{xltabular}
@@ -2122,40 +2214,48 @@ Canadian Time Zone Support &
 \hline
 \endhead
 
-UHR-LRN-01 & 
+UHR-LRN-01\hypertarget{req:UHR-LRN-01}{} & 
 Minimal User Training & 
 \textbf{Description:} The system shall enable first-time users to successfully use the application's core functionality without requiring formal training.
 
 \textbf{Rationale:} The application targets users with varying expertise and should be intuitive for a broad audience.
 
-\textbf{Fit Criterion:} At least 80\% of first-time users shall be able to synchronize fitness data, earn virtual currency, and purchase an investment asset without external assistance.\\
+\textbf{Fit Criterion:} At least 80\% of first-time users shall be able to synchronize fitness data, earn virtual currency, and purchase an investment asset without external assistance.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-01}{UHR-EOU-01}, \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}, \hyperlink{req:TRN-01}{TRN-01}\\
 \hline
 
-UHR-LRN-02 & 
+UHR-LRN-02\hypertarget{req:UHR-LRN-02}{} & 
 Learning Curve of Financial Concepts & 
 \textbf{Description:} The system shall present investment concepts in a manner that can be understood by users with little or no prior experience. 
 
 \textbf{Rationale:} One of the system's primary goals is to educate users on financial investing. This means that all users, regardless of their prior financial experience, should be capable of learning and understanding the financial concepts presented.
 
-\textbf{Fit Criterion:} During user testing, at least 80\% of first-time investors shall successfully complete their first virtual investment and view their portfolio's growth after one week without assistance.\\ 
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time investors shall successfully complete their first virtual investment and view their portfolio's growth after one week without assistance.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:DOC-01}{DOC-01}\\
 \hline
 
-UHR-LRN-03 & 
+UHR-LRN-03\hypertarget{req:UHR-LRN-03}{} & 
 Learning Curve of Fitness Based Concepts & 
 \textbf{Description:} The system shall present fitness concepts in a manner that can be understood by users with little or no prior experience. 
 
 \textbf{Rationale:} One of the system's primary goals is to educate users on fitness and health related activities. This means that all users, regardless of their prior fitness experience, should be capable of learning and understanding the fitness concepts presented.
 
-\textbf{Fit Criterion:} During user testing, at least 80\% of first-time participants in a new fitness activity shall successfully accomplish their set goal and view their health metrics after one week without assistance.\\ 
+\textbf{Fit Criterion:} During user testing, at least 80\% of first-time participants in a new fitness activity shall successfully accomplish their set goal and view their health metrics after one week without assistance.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-04}{FUNC-04}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}\\
 \hline
 
-UHR-LRN-04 &
+UHR-LRN-04\hypertarget{req:UHR-LRN-04}{} &
 Integrated Educational Assistance &
 \textbf{Description:} The system shall provide a plain-language explanation, reachable directly from the screen where it appears, for every financial term, investment metric, fitness metric, and health term shown to users. Explanations shall not assume any prior investing or fitness knowledge.
 
 \textbf{Rationale:} Users have very different levels of financial and fitness knowledge, and many target users have little experience with investing. Explaining each term where it appears lets them learn while they use the app instead of leaving to look things up.
 
-\textbf{Fit Criterion:} A review of every screen finds an explanation for each financial and fitness term or metric shown. In user testing, at least 80\% of participants rate the explanations as clear (4 or 5 on a 5-point scale).\\
+\textbf{Fit Criterion:} A review of every screen finds an explanation for each financial and fitness term or metric shown. In user testing, at least 80\% of participants rate the explanations as clear (4 or 5 on a 5-point scale).
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-LRN-03}{UHR-LRN-03}, \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:CUL-02}{CUL-02}, \hyperlink{req:COMP-LEG-05}{COMP-LEG-05}, \hyperlink{req:DOC-01}{DOC-01}\\
 \hline
 
 \end{xltabular}
@@ -2174,76 +2274,92 @@ Integrated Educational Assistance &
 \hline
 \endhead
 
-UHR-UND-01 &
+UHR-UND-01\hypertarget{req:UHR-UND-01}{} &
 Plain Language Communication &
 \textbf{Description:} The system shall present information using clear and concise language appropriate for users with limited financial and fitness knowledge.
 
 \textbf{Rationale:} The system targets users with varying levels of experience in personal finance and physical fitness. Clear language improves comprehension and engagement.
 
-\textbf{Fit Criterion:} User-facing content shall avoid unexplained technical terminology and provide explanations for all specialized terms.\\
+\textbf{Fit Criterion:} User-facing content shall avoid unexplained technical terminology and provide explanations for all specialized terms.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-01}{LF-STY-01}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:CUL-01}{CUL-01}, \hyperlink{req:CUL-02}{CUL-02}\\
 \hline
 
-UHR-UND-02 &
+UHR-UND-02\hypertarget{req:UHR-UND-02}{} &
 Compounding Transparency and Distinction &
 \textbf{Description:} The system shall clearly distinguish between currency gains through the completion of fitness-related activities and gains resulting from portfolio performance.
 
 \textbf{Rationale:} One of the primary educational goals of the application is to demonstrate the concept of compounding over time. Users should not focus solely on gaining currency through fitness-related activities - nor should they solely focus on portfolio performance. The system should clearly communicate the distinction between these two sources of currency gains to ensure users understand the impact of both fitness and investment decisions on their overall success.
 
-\textbf{Fit Criterion:} Portfolio views shall separately display user-earned virtual currency contributions and investment gains or losses.\\
+\textbf{Fit Criterion:} Portfolio views shall separately display user-earned virtual currency contributions and investment gains or losses.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-12}{FUNC-12}\\
 \hline
 
-UHR-UND-03 &
+UHR-UND-03\hypertarget{req:UHR-UND-03}{} &
 Action Outcome Transparency &
 \textbf{Description:} The system shall clearly communicate the outcome of actions affecting fitness progress, virtual currency balances, and portfolio holdings.
 
 \textbf{Rationale:} Users should understand how their actions impact system state and long-term progress at all times.
 
-\textbf{Fit Criterion:} Following any successful transaction or activity synchronization, the system shall immediately identify the resulting changes to affected data.\\
+\textbf{Fit Criterion:} Following any successful transaction or activity synchronization, the system shall immediately identify the resulting changes to affected data.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05}\\
 \hline
 
-UHR-POL-01 &
+UHR-POL-01\hypertarget{req:UHR-POL-01}{} &
 Respectful User Communication &
 \textbf{Description:} The system shall communicate with users in a respectful and professional manner at all times.
 
 \textbf{Rationale:} Positive interactions improve user satisfaction and promote long-term engagement with the application.
 
-\textbf{Fit Criterion:} User-facing notifications, prompts, and messages shall \textbf{never} contain insulting, belittling, or derogatory language.\\
+\textbf{Fit Criterion:} User-facing notifications, prompts, and messages shall \textbf{never} contain insulting, belittling, or derogatory language.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-01}{LF-STY-01}, \hyperlink{req:UHR-POL-03}{UHR-POL-03}, \hyperlink{req:UHR-POL-04}{UHR-POL-04}, \hyperlink{req:CUL-02}{CUL-02}\\
 \hline
 
-UHR-POL-02 &
+UHR-POL-02\hypertarget{req:UHR-POL-02}{} &
 Positive Motivational Feedback &
 \textbf{Description:} The system shall provide encouraging feedback regarding fitness activity and portfolio performance.
 
 \textbf{Rationale:} Long-term engagement is a primary project goal and positive reinforcement supports continued participation.
 
-\textbf{Fit Criterion:} Achievement notifications and milestone messages shall always use positive and supportive language.\\
+\textbf{Fit Criterion:} Achievement notifications and milestone messages shall always use positive and supportive language.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-03}{LF-STY-03}, \hyperlink{req:PR-SC-07}{PR-SC-07}\\
 \hline
 
-UHR-POL-03 &
+UHR-POL-03\hypertarget{req:UHR-POL-03}{} &
 Non-Punitive Performance Messaging &
 \textbf{Description:} The system shall avoid language that shames users for missed goals, inactivity, or poor portfolio performance.
 
 \textbf{Rationale:} Users should remain motivated even when progress is temporarily reduced. Users may experience setbacks but should not be discouraged from continuing.
 
-\textbf{Fit Criterion:} Notifications regarding missed goals or declining portfolio performance shall focus on future opportunities for improvement rather than negative judgement. During user testing, a survey will be sent out to users to gauge their satisfaction with the feedback provided when they encounter performance challenges - it is expected that survey results will return that no more than 10\% of users were discouraged to continue after failing to meet a fitness and/or financial goal.\\
+\textbf{Fit Criterion:} Notifications regarding missed goals or declining portfolio performance shall focus on future opportunities for improvement rather than negative judgement. During user testing, a survey will be sent out to users to gauge their satisfaction with the feedback provided when they encounter performance challenges - it is expected that survey results will return that no more than 10\% of users were discouraged to continue after failing to meet a fitness and/or financial goal.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-POL-01}{UHR-POL-01}, \hyperlink{req:PR-SC-07}{PR-SC-07}\\
 \hline
 
-UHR-POL-04 &
+UHR-POL-04\hypertarget{req:UHR-POL-04}{} &
 Respectful Competitive Features &
 \textbf{Description:} The system shall present leaderboard rankings and competitive information in a respectful and encouraging manner.
 
 \textbf{Rationale:} Users may be motivated by competition, but competitive features should not create a negative user experience.
 
-\textbf{Fit Criterion:} Leaderboard interfaces shall not contain derogatory labels or language that demeans lower-ranked users.\\
+\textbf{Fit Criterion:} Leaderboard interfaces shall not contain derogatory labels or language that demeans lower-ranked users.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:UHR-POL-01}{UHR-POL-01}\\
 \hline
 
-UHR-POL-05 &
+UHR-POL-05\hypertarget{req:UHR-POL-05}{} &
 Respectful User-Generated Content &
 \textbf{Description:} The system shall prevent users from creating usernames, profile information, or public content containing offensive, discriminatory, harassing, or abusive language.
 
 \textbf{Rationale:} The system should foster a welcoming and respectful environment for all users participating in community and competitive features. No users should be subject to offensive or derogatory content when competing with other users online.
 
-\textbf{Fit Criterion:} Attempts to create or modify public-facing content containing prohibited language shall be rejected and the user shall be notified that the content violates community guidelines.\\
+\textbf{Fit Criterion:} Attempts to create or modify public-facing content containing prohibited language shall be rejected and the user shall be notified that the content violates community guidelines.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-14}{FUNC-14}\\
 \hline
 
 \end{xltabular}
@@ -2262,58 +2378,70 @@ Respectful User-Generated Content &
 \hline
 \endhead
 
-UHR-ACC-01 &
+UHR-ACC-01\hypertarget{req:UHR-ACC-01}{} &
 Screen Reader Compatibility &
 \textbf{Description:} The system shall support screen reader technologies for all primary application workflows.
 
 \textbf{Rationale:} Users with visual impairments may rely on screen readers to navigate the application. Users with visual impairments should not be excluded from benefitting from this application.
 
-\textbf{Fit Criterion:} All interactive interface elements shall have descriptive accessibility labels that can be read aloud.\\
+\textbf{Fit Criterion:} All interactive interface elements shall have descriptive accessibility labels that can be read aloud.
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-UHR-ACC-02 &
+UHR-ACC-02\hypertarget{req:UHR-ACC-02}{} &
 Scalable Text Support &
 \textbf{Description:} The system shall support device-configured text scaling without loss of functionality.
 
 \textbf{Rationale:} Users with reduced vision may require larger text sizes to comfortably use the application.
 
-\textbf{Fit Criterion:} All application screens shall remain usable when the device text size is increased to the maximum supported accessibility setting.\\
+\textbf{Fit Criterion:} All application screens shall remain usable when the device text size is increased to the maximum supported accessibility setting.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-UHR-ACC-03 &
+UHR-ACC-03\hypertarget{req:UHR-ACC-03}{} &
 Color Independent Information &
 \textbf{Description:} The system shall not rely solely on color to communicate information or system status.
 
 \textbf{Rationale:} Users with color vision deficiencies may be unable to distinguish information represented exclusively through color.
 
-\textbf{Fit Criterion:} All status indicators, icons, buttons, graphs, and notifications shall include a secondary visual indicator in addition to color.\\
+\textbf{Fit Criterion:} All status indicators, icons, buttons, graphs, and notifications shall include a secondary visual indicator in addition to color.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-02}{LF-APP-02}, \hyperlink{req:LF-APP-04}{LF-APP-04}, \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-UHR-ACC-04 &
+UHR-ACC-04\hypertarget{req:UHR-ACC-04}{} &
 Touch Target Accessibility &
 \textbf{Description:} The system shall provide interface controls that are sufficiently large for reliable touch interaction.
 
 \textbf{Rationale:} Users with limited dexterity or motor impairments may have difficulty selecting small interface elements.
 
-\textbf{Fit Criterion:} All touch-interactive elements shall meet the minimum touch target size recommended by Android accessibility guidelines.\\
+\textbf{Fit Criterion:} All touch-interactive elements shall meet the minimum touch target size recommended by Android accessibility guidelines.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-UHR-ACC-05 &
+UHR-ACC-05\hypertarget{req:UHR-ACC-05}{} &
 Alternative Notification Methods &
 \textbf{Description:} The system shall signal important events (a completed goal, currency earned, a failed sync, and security alerts) in at least two ways: visually, and by sound or vibration.
 
 \textbf{Rationale:} Users who are deaf or hard of hearing may not perceive audio notifications. Users with visual impairments may not be able to perceive visual notifications. Providing alternative notification methods ensures that all users can stay informed of important events.
 
-\textbf{Fit Criterion:} In testing, each important event is signalled visually and by sound or vibration, and with the device's sound turned off the visual and vibration signals still occur.\\
+\textbf{Fit Criterion:} In testing, each important event is signalled visually and by sound or vibration, and with the device's sound turned off the visual and vibration signals still occur.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-02}{UHR-PER-02}, \hyperlink{req:COMP-STD-02}{COMP-STD-02}\\
 \hline
 
-UHR-ACC-06 &
+UHR-ACC-06\hypertarget{req:UHR-ACC-06}{} &
 Inclusive Activity Tracking &
 \textbf{Description:} The system shall not require a single type of physical activity as the sole method of earning rewards.
 
 \textbf{Rationale:} Users with disabilities, injuries, temporary medical conditions, or differing fitness abilities may be unable to participate in certain forms of exercise.
 
-\textbf{Fit Criterion:} The system shall support multiple reward-eligible activity types and allow users to select activities appropriate to their abilities.\\
+\textbf{Fit Criterion:} The system shall support multiple reward-eligible activity types and allow users to select activities appropriate to their abilities.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-04}{FUNC-04}, \hyperlink{req:MAS-MNT-01}{MAS-MNT-01}\\
 \hline
 
 \end{xltabular}
@@ -2338,40 +2466,48 @@ typical mobile data or Wi-Fi connection.
 \hline
 \endhead
 
-PR-SL-01 &
+PR-SL-01\hypertarget{req:PR-SL-01}{} &
 App launch &
 \textbf{Description:} The app shall show the home screen within 3 seconds of being opened from a closed state.
 
 \textbf{Rationale:} Users will mostly open the app for short check-ins, such as after a walk or workout. A slow start makes those check-ins less likely.
 
-\textbf{Fit Criterion:} Across 20 cold starts on the reference phone, the home screen appears in 3 seconds or less in at least 19 of them.\\
+\textbf{Fit Criterion:} Across 20 cold starts on the reference phone, the home screen appears in 3 seconds or less in at least 19 of them.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-C-01}{PR-C-01}\\
 \hline
 
-PR-SL-02 &
+PR-SL-02\hypertarget{req:PR-SL-02}{} &
 Response to input &
 \textbf{Description:} The app shall respond to a tap or navigation action within 1 second.
 
 \textbf{Rationale:} Supports the goal of a simple and delightful user experience. Delays longer than about a second make an app feel broken.
 
-\textbf{Fit Criterion:} At least 95\% of measured screen transitions and button responses complete within 1 second.\\
+\textbf{Fit Criterion:} At least 95\% of measured screen transitions and button responses complete within 1 second.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-STY-03}{LF-STY-03}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05}, \hyperlink{req:PR-C-01}{PR-C-01}, \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:PR-SE-03}{PR-SE-03}\\
 \hline
 
-PR-SL-03 &
+PR-SL-03\hypertarget{req:PR-SL-03}{} &
 Trades &
 \textbf{Description:} After a user confirms a buy or sell order, the updated holdings and currency balance shall be shown within 2 seconds.
 
 \textbf{Rationale:} Users need to see the result of a trade straight away to connect the action with its effect on their portfolio.
 
-\textbf{Fit Criterion:} At least 95\% of test trades show the updated portfolio within 2 seconds of confirmation.\\
+\textbf{Fit Criterion:} At least 95\% of test trades show the updated portfolio within 2 seconds of confirmation.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05}, \hyperlink{req:PR-C-01}{PR-C-01}, \hyperlink{req:PR-SE-03}{PR-SE-03}\\
 \hline
 
-PR-SL-04 &
+PR-SL-04\hypertarget{req:PR-SL-04}{} &
 Activity sync &
 \textbf{Description:} When the app is opened, activity recorded since the last sync shall be read and turned into currency within 10 seconds.
 
 \textbf{Rationale:} The reward has to feel tied to the activity that earned it. The whole point of the product is to make a distant payoff feel immediate.
 
-\textbf{Fit Criterion:} In testing, the currency balance reflects all activity available in Health Connect within 10 seconds of opening the app.\\
+\textbf{Fit Criterion:} In testing, the currency balance reflects all activity available in Health Connect within 10 seconds of opening the app.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}\\
 \hline
 
 \end{xltabular}
@@ -2396,7 +2532,7 @@ that it traces to.
 \hline
 \endhead
 
-PR-SC-01 &
+PR-SC-01\hypertarget{req:PR-SC-01}{} &
 Daily earning limits &
 \textbf{Description:} The currency a user can earn from activity in one day shall not exceed \const{DailyEarnCap}, and activity beyond \const{HealthyDailyActivity} in a day shall earn currency at a reduced rate.
 
@@ -2404,10 +2540,12 @@ Daily earning limits &
 
 \textbf{Fit Criterion:} No amount of activity recorded in a single day earns more than \const{DailyEarnCap}, and activity beyond \const{HealthyDailyActivity} earns less per unit than activity below it.
 
-\textbf{Hazard Analysis:} SR8 (H4.1, H5.1)\\
+\textbf{Hazard Analysis:} SR8 (H4.1, H5.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-06}{FUNC-06}\\
 \hline
 
-PR-SC-02 &
+PR-SC-02\hypertarget{req:PR-SC-02}{} &
 No penalties for missed days &
 \textbf{Description:} The product shall not take away currency or holdings when a user misses a goal or a day of activity. Users shall be able to freeze their streak for days missed because of illness, injury, rest, or a delayed sync.
 
@@ -2415,21 +2553,25 @@ No penalties for missed days &
 
 \textbf{Fit Criterion:} No feature of the product reduces a user's balance or holdings because of inactivity, and a user can freeze their streak so that a missed day does not reset it.
 
-\textbf{Hazard Analysis:} SR8 (H3.1, H4.1, H11.1)\\
+\textbf{Hazard Analysis:} SR8 (H3.1, H4.1, H11.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-05}{FUNC-05}\\
 \hline
 
-PR-SC-03 &
+PR-SC-03\hypertarget{req:PR-SC-03}{} &
 Simulated market is labelled &
 \textbf{Description:} Every screen that shows prices, holdings, or returns shall state that the market is simulated and that results do not predict real returns. Each of these screens shall link to an explanation of what the simulation does not model, such as fees, taxes, and real-world volatility.
 
-\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money. Currency amounts on these screens use the FLX symbol (LF-STY-02).
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money. Currency amounts on these screens use the FLX symbol (\hyperlink{req:LF-STY-02}{LF-STY-02}).
 
 \textbf{Fit Criterion:} A review of every market and portfolio screen finds the notice visible on each one, and the explanation of the simulation's limits can be reached from each one.
 
-\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
+\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:LF-STY-02}{LF-STY-02}\\
 \hline
 
-PR-SC-04 &
+PR-SC-04\hypertarget{req:PR-SC-04}{} &
 Not financial advice &
 \textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, portfolio insights, and any other content that discusses investing shall not recommend specific real-world investments to a user.
 
@@ -2437,10 +2579,12 @@ Not financial advice &
 
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the statement, the statement can be reached from settings, and a review of all educational content finds no recommendations to buy or sell specific real-world investments.
 
-\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
+\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}\\
 \hline
 
-PR-SC-05 &
+PR-SC-05\hypertarget{req:PR-SC-05}{} &
 Exercise injury warning &
 \textbf{Description:} The product shall warn users that physical activity carries a risk of injury, that they should exercise within their own limits, and that they should consult a doctor before starting a new exercise routine if they have health concerns. The product's terms of use shall state that users exercise at their own risk and that the \progname{} team is not responsible for any injury that happens while using the app. The user must acknowledge both during sign-up before continuing.
 
@@ -2448,10 +2592,12 @@ Exercise injury warning &
 
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.
 
-\textbf{Hazard Analysis:} H4.2\\
+\textbf{Hazard Analysis:} H4.2
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}\\
 \hline
 
-PR-SC-06 &
+PR-SC-06\hypertarget{req:PR-SC-06}{} &
 Safe goal progression &
 \textbf{Description:} Goals that the product raises automatically shall increase gradually and include regular rest days. When a goal is missed \const{MissedGoalLimit} times in a row, the product shall suggest lowering it. Users shall be able to lower or override any goal themselves.
 
@@ -2459,29 +2605,35 @@ Safe goal progression &
 
 \textbf{Fit Criterion:} Automatic goals never rise by more than \const{MaxGoalIncrease} per week, every goal plan includes at least one rest day per week, a lower goal is suggested after \const{MissedGoalLimit} misses in a row, and a user can lower any goal from the goal screen.
 
-\textbf{Hazard Analysis:} SR6 (H4.1, H4.2)\\
+\textbf{Hazard Analysis:} SR6 (H4.1, H4.2)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-04}{FUNC-04}\\
 \hline
 
-PR-SC-07 &
+PR-SC-07\hypertarget{req:PR-SC-07}{} &
 Notification limits &
-\textbf{Description:} Users shall be able to set quiet hours during which no notifications are sent. By default, the product shall send no more than \const{MaxDailyNotifications} goal-related notifications per day. The wording of these messages is specified in UHR-POL-03, and which notifications a user receives is set under UHR-PER-02.
+\textbf{Description:} Users shall be able to set quiet hours during which no notifications are sent. By default, the product shall send no more than \const{MaxDailyNotifications} goal-related notifications per day. The wording of these messages is specified in \hyperlink{req:UHR-POL-03}{UHR-POL-03}, and which notifications a user receives is set under \hyperlink{req:UHR-PER-02}{UHR-PER-02}.
 
 \textbf{Rationale:} Too many notifications, or notifications at the wrong time, harm users' mental health and encourage compulsive use of the app.
 
 \textbf{Fit Criterion:} In testing, no notifications are sent during the user's quiet hours, and no more than \const{MaxDailyNotifications} goal-related notifications are sent in a day unless the user raises the limit.
 
-\textbf{Hazard Analysis:} SR7 (H4.1, H10.1)\\
+\textbf{Hazard Analysis:} SR7 (H4.1, H10.1)
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-PER-02}{UHR-PER-02}, \hyperlink{req:UHR-POL-02}{UHR-POL-02}, \hyperlink{req:UHR-POL-03}{UHR-POL-03}\\
 \hline
 
-PR-SC-08 &
+PR-SC-08\hypertarget{req:PR-SC-08}{} &
 Safe leaderboard rules &
-\textbf{Description:} Leaderboards shall never rank users by absolute performance and shall never award currency or other rewards. Leaderboard participation is off by default (SEC-PRV-02).
+\textbf{Description:} Leaderboards shall never rank users by absolute performance and shall never award currency or other rewards. Leaderboard participation is off by default (\hyperlink{req:SEC-PRV-02}{SEC-PRV-02}).
 
 \textbf{Rationale:} Ranking users by absolute performance causes shame and anxiety for those who rank poorly. Rewarding leaderboard positions would also push users to overexert themselves to climb the rankings.
 
 \textbf{Fit Criterion:} Rankings are computed from each user's percentage of their own or the group's agreed goal, users who leave a group stop appearing on its leaderboard, and no currency is credited because of a ranking.
 
-\textbf{Hazard Analysis:} SR9 (H4.1, H8.1)\\
+\textbf{Hazard Analysis:} SR9 (H4.1, H8.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:FUNC-15}{FUNC-15}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}\\
 \hline
 
 \end{xltabular}
@@ -2500,43 +2652,51 @@ Safe leaderboard rules &
 \hline
 \endhead
 
-PR-PA-01 &
+PR-PA-01\hypertarget{req:PR-PA-01}{} &
 Exact money values &
 \textbf{Description:} Currency balances, prices, and trade amounts shall be exact to the cent, with no rounding error building up across operations, and shall be shown to two decimal places.
 
 \textbf{Rationale:} Floating-point rounding errors build up over many trades and would show users balances that do not add up.
 
-\textbf{Fit Criterion:} After a scripted sequence of 1,000 trades, the stored balance matches the expected balance exactly.\\
+\textbf{Fit Criterion:} After a scripted sequence of 1,000 trades, the stored balance matches the expected balance exactly.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-07}{FUNC-07}\\
 \hline
 
-PR-PA-02 &
+PR-PA-02\hypertarget{req:PR-PA-02}{} &
 Consistent currency awards &
 \textbf{Description:} The currency awarded for a set of activity data shall follow the published conversion rules exactly, and the same data shall always earn the same amount.
 
 \textbf{Rationale:} Users must be able to trust that effort is rewarded fairly, and the team must be able to check that it is.
 
-\textbf{Fit Criterion:} For a set of test activity records, the awarded currency matches the amount calculated by hand from the conversion rules.\\
+\textbf{Fit Criterion:} For a set of test activity records, the awarded currency matches the amount calculated by hand from the conversion rules.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-06}{FUNC-06}\\
 \hline
 
-PR-PA-03 &
+PR-PA-03\hypertarget{req:PR-PA-03}{} &
 No double counting &
 \textbf{Description:} Activity reported by more than one source, such as the phone and a watch both counting the same steps, shall be counted only once.
 
 \textbf{Rationale:} Counting the same steps twice would over-reward users who own more devices, which the Hazard Analysis lists as a cause of poor learning.
 
-\textbf{Fit Criterion:} When the same walk is recorded by two sources, the currency earned equals the amount for one recording.\\
+\textbf{Fit Criterion:} When the same walk is recorded by two sources, the currency earned equals the amount for one recording.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}\\
 \hline
 
-PR-PA-04 &
+PR-PA-04\hypertarget{req:PR-PA-04}{} &
 Portfolio value &
 \textbf{Description:} The displayed portfolio value shall equal the sum of each holding's quantity times its current simulated price, plus uninvested currency.
 
 \textbf{Rationale:} The portfolio graph is the main tool for teaching compounding, so it has to be correct.
 
-\textbf{Fit Criterion:} For test portfolios, the displayed value matches the value calculated by hand to the cent.\\
+\textbf{Fit Criterion:} For test portfolios, the displayed value matches the value calculated by hand to the cent.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-12}{FUNC-12}\\
 \hline
 
-PR-PA-05 &
+PR-PA-05\hypertarget{req:PR-PA-05}{} &
 Workout dates &
 \textbf{Description:} Each workout shall be dated by the time it happened on the source device, not the time it was synced. When workout data arrives late, the affected streaks and rewards shall be recalculated.
 
@@ -2544,10 +2704,12 @@ Workout dates &
 
 \textbf{Fit Criterion:} Workouts synced after midnight or from a different time zone are recorded on the day they happened, and the affected streaks and rewards are updated once the late data arrives.
 
-\textbf{Hazard Analysis:} SR5 (H3.1, H11.1)\\
+\textbf{Hazard Analysis:} SR5 (H3.1, H11.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-05}{FUNC-05}, \hyperlink{req:UHR-INT-01}{UHR-INT-01}\\
 \hline
 
-PR-PA-06 &
+PR-PA-06\hypertarget{req:PR-PA-06}{} &
 Realistic market simulation &
 \textbf{Description:} The market simulation shall be calibrated against historical market data, so that its volatility and downturns are consistent with real markets.
 
@@ -2555,7 +2717,9 @@ Realistic market simulation &
 
 \textbf{Fit Criterion:} Over a long simulated period, the average annual return and volatility are consistent with historical data for a broad market index, and downturns occur.
 
-\textbf{Hazard Analysis:} SR10 (H6.1)\\
+\textbf{Hazard Analysis:} SR10 (H6.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-12}{FUNC-12}\\
 \hline
 
 \end{xltabular}
@@ -2574,16 +2738,18 @@ Realistic market simulation &
 \hline
 \endhead
 
-PR-RFT-01 &
+PR-RFT-01\hypertarget{req:PR-RFT-01}{} &
 Offline activity &
 \textbf{Description:} Activity recorded while the phone is offline, or while the app is closed, shall be credited the next time the app syncs, for gaps of up to \const{OfflineSyncWindow}.
 
 \textbf{Rationale:} Users exercise in places without signal and will not open the app every day. Losing that activity would discourage them.
 
-\textbf{Fit Criterion:} Activity recorded during a gap of \const{OfflineSyncWindow} with no syncing is fully credited at the next sync.\\
+\textbf{Fit Criterion:} Activity recorded during a gap of \const{OfflineSyncWindow} with no syncing is fully credited at the next sync.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}\\
 \hline
 
-PR-RFT-02 &
+PR-RFT-02\hypertarget{req:PR-RFT-02}{} &
 Atomic writes &
 \textbf{Description:} Every operation that changes balances, holdings, rewards, or progress shall either complete fully or be rolled back. A trade shall update both the currency balance and the holdings, at the price the user confirmed, or not happen at all.
 
@@ -2591,10 +2757,12 @@ Atomic writes &
 
 \textbf{Fit Criterion:} Tests that simulate a failure at each step of a multi-step write leave the data unchanged. When the connection or server is cut during a test trade, the balance and holdings afterwards match either the state before the trade or the state after it, and completed trades execute at the confirmed price. A stress test of 100 concurrent trade requests against one account leaves every operation either fully completed or fully rolled back, with no negative balance.
 
-\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-08}{FUNC-08}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}\\
 \hline
 
-PR-RFT-03 &
+PR-RFT-03\hypertarget{req:PR-RFT-03}{} &
 Failing data sources &
 \textbf{Description:} If a fitness data source is unavailable or returns invalid data, the app shall keep working with its other sources and credit no currency for the invalid data. A failed workout sync shall be retried automatically, and if it still fails, the app shall tell the user which source has a problem and why.
 
@@ -2602,16 +2770,20 @@ Failing data sources &
 
 \textbf{Fit Criterion:} With one source disabled or returning malformed data in testing, the app stays usable, retries the sync, then shows a message naming that source and the cause, and awards nothing for the bad data.
 
-\textbf{Hazard Analysis:} SR4 (H3.1)\\
+\textbf{Hazard Analysis:} SR4 (H3.1)
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04}\\
 \hline
 
-PR-RFT-04 &
+PR-RFT-04\hypertarget{req:PR-RFT-04}{} &
 Backend unavailable &
 \textbf{Description:} If the backend cannot be reached, the app shall show the last data it received, marked as possibly out of date, instead of crashing or showing empty screens.
 
 \textbf{Rationale:} Users on poor connections should still be able to see their progress.
 
-\textbf{Fit Criterion:} With the backend stopped, the app opens, shows the last known balance and portfolio, and displays an offline notice.\\
+\textbf{Fit Criterion:} With the backend stopped, the app opens, shows the last known balance and portfolio, and displays an offline notice.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-07}{FUNC-07}, \hyperlink{req:FUNC-12}{FUNC-12}, \hyperlink{req:FUNC-16}{FUNC-16}\\
 \hline
 
 \end{xltabular}
@@ -2630,22 +2802,26 @@ Backend unavailable &
 \hline
 \endhead
 
-PR-C-01 &
+PR-C-01\hypertarget{req:PR-C-01}{} &
 Users &
 \textbf{Description:} The system shall support at least 500 registered users, with at least 100 using the app at the same time, without breaking the speed requirements above.
 
 \textbf{Rationale:} This covers the expected load during user testing, the final demo, and the Capstone EXPO, where many people may try the app at once.
 
-\textbf{Fit Criterion:} A load test with 100 simulated concurrent users meets PR-SL-02 and PR-SL-03.\\
+\textbf{Fit Criterion:} A load test with 100 simulated concurrent users meets \hyperlink{req:PR-SL-02}{PR-SL-02} and \hyperlink{req:PR-SL-03}{PR-SL-03}.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-SL-01}{PR-SL-01}, \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-SE-03}{PR-SE-03}\\
 \hline
 
-PR-C-02 &
+PR-C-02\hypertarget{req:PR-C-02}{} &
 History &
 \textbf{Description:} The system shall store at least two years of activity and trade history for each user.
 
 \textbf{Rationale:} Compounding only shows up over long periods, so users need to be able to look back over their history.
 
-\textbf{Fit Criterion:} A test account loaded with two years of daily activity and weekly trades can display its full history, and its screens still meet PR-SL-02.\\
+\textbf{Fit Criterion:} A test account loaded with two years of daily activity and weekly trades can display its full history, and its screens still meet \hyperlink{req:PR-SL-02}{PR-SL-02}.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-11}{FUNC-11}, \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:PR-SL-02}{PR-SL-02}\\
 \hline
 
 \end{xltabular}
@@ -2664,31 +2840,37 @@ History &
 \hline
 \endhead
 
-PR-SE-01 &
+PR-SE-01\hypertarget{req:PR-SE-01}{} &
 Adding fitness sources &
 \textbf{Description:} A new fitness data source shall be addable without changing the currency conversion logic.
 
 \textbf{Rationale:} The team expects to add device integrations over time, and the Problem Statement lists integration with existing fitness technologies as a goal.
 
-\textbf{Fit Criterion:} Adding a new source only requires changes inside the integration module.\\
+\textbf{Fit Criterion:} Adding a new source only requires changes inside the integration module.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01}\\
 \hline
 
-PR-SE-02 &
+PR-SE-02\hypertarget{req:PR-SE-02}{} &
 Adding asset types &
 \textbf{Description:} New types of assets shall be addable to the simulated market without changing the trading logic.
 
 \textbf{Rationale:} The product starts with stocks, bonds, and ETFs, and other asset types may be added later.
 
-\textbf{Fit Criterion:} Adding a new asset type only requires new asset definitions and market engine configuration, not changes to the buy and sell code.\\
+\textbf{Fit Criterion:} Adding a new asset type only requires new asset definitions and market engine configuration, not changes to the buy and sell code.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:MAS-MNT-02}{MAS-MNT-02}\\
 \hline
 
-PR-SE-03 &
+PR-SE-03\hypertarget{req:PR-SE-03}{} &
 More server capacity &
-\textbf{Description:} The system shall be able to serve more users than PR-C-01 by adding server capacity, without any change to the mobile app.
+\textbf{Description:} The system shall be able to serve more users than \hyperlink{req:PR-C-01}{PR-C-01} by adding server capacity, without any change to the mobile app.
 
-\textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than PR-C-01.
+\textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than \hyperlink{req:PR-C-01}{PR-C-01}.
 
-\textbf{Fit Criterion:} A load test at twice the PR-C-01 load, run after adding server capacity, meets PR-SL-02 and PR-SL-03 with the same version of the mobile app.\\
+\textbf{Fit Criterion:} A load test at twice the \hyperlink{req:PR-C-01}{PR-C-01} load, run after adding server capacity, meets \hyperlink{req:PR-SL-02}{PR-SL-02} and \hyperlink{req:PR-SL-03}{PR-SL-03} with the same version of the mobile app.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-C-01}{PR-C-01}\\
 \hline
 
 \end{xltabular}
@@ -2707,22 +2889,26 @@ More server capacity &
 \hline
 \endhead
 
-PR-L-01 &
+PR-L-01\hypertarget{req:PR-L-01}{} &
 Supported Android versions &
 \textbf{Description:} The app shall target the Android version that Google Play requires for new apps at the time of release, and keep working on Android versions released through the end of the capstone in April 2027.
 
 \textbf{Rationale:} Google Play stops accepting apps that target old Android versions, and the app must stay usable for the final demo and the EXPO.
 
-\textbf{Fit Criterion:} The release build meets Google Play's target version requirement and passes the test suite on the newest Android version available in April 2027.\\
+\textbf{Fit Criterion:} The release build meets Google Play's target version requirement and passes the test suite on the newest Android version available in April 2027.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:COMP-STD-01}{COMP-STD-01}\\
 \hline
 
-PR-L-02 &
+PR-L-02\hypertarget{req:PR-L-02}{} &
 Keeping user history &
 \textbf{Description:} Activity and portfolio history shall be kept for as long as the user's account exists, unless the user deletes it.
 
 \textbf{Rationale:} The product teaches that habits pay off over years. Deleting old history would remove the evidence of that.
 
-\textbf{Fit Criterion:} The system has no automatic deletion of history for active accounts.\\
+\textbf{Fit Criterion:} The system has no automatic deletion of history for active accounts.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-16}{FUNC-16}\\
 \hline
 
 \end{xltabular}
@@ -2731,7 +2917,7 @@ Keeping user history &
 \subsection{Expected Physical Environment}
 The application will be operable through Android smartphones with cellular/Wi-Fi connectivity. Tablets are not supported. Inputs will be completed through health tracking services that will be provided by the smart device that is running the software, or optionally received through other technologies used for health tracking.
 \subsection{Wider Environment Requirements}
-The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the Google Play Store (SC-06). 
+The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the Google Play Store (\hyperlink{req:SC-06}{SC-06}). 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 Many outside systems will be used:
 \begin{itemize}
@@ -2762,22 +2948,26 @@ Many outside systems will be used:
 \hline
 \endhead
 
-PROD-01 &
+PROD-01\hypertarget{req:PROD-01}{} &
 Build and Quality Assurance & 
 \textbf{Description:} The application will be subject to all the basic coding tests and standards needed to be published on the Google Play Store.
 
 \textbf{Rationale:} An app must be whole and completely working to provide value to the user base.
 
-\textbf{Fit Criterion:} All automated and manual written code tests must pass (100\%) to be deemed fully complete.\\
+\textbf{Fit Criterion:} All automated and manual written code tests must pass (100\%) to be deemed fully complete.
+
+\textbf{Related Requirements:} \hyperlink{req:MAS-MNT-03}{MAS-MNT-03}, \hyperlink{req:COMP-STD-06}{COMP-STD-06}, \hyperlink{req:SC-06}{SC-06}\\
 \hline
 
-PROD-02 &
+PROD-02\hypertarget{req:PROD-02}{} &
 Installability &
 \textbf{Description:} The application shall install from the Google Play Store onto any supported Android device without any setup beyond granting the permissions it asks for.
 
 \textbf{Rationale:} Users should be able to get started without technical help. Health Connect is built into recent versions of Android but must be installed separately on older ones, so the app has to guide users through that case.
 
-\textbf{Fit Criterion:} On each supported test device (see LF-APP-03), installing from Google Play completes in under 2 minutes on Wi-Fi and the app opens to the sign-up screen on first launch. Each permission is requested only when the feature that needs it is first used. If Health Connect is missing, the app directs the user to install it. Uninstalling removes all app data stored on the device.\\
+\textbf{Fit Criterion:} On each supported test device (see \hyperlink{req:LF-APP-03}{LF-APP-03}), installing from Google Play completes in under 2 minutes on Wi-Fi and the app opens to the sign-up screen on first launch. Each permission is requested only when the feature that needs it is first used. If Health Connect is missing, the app directs the user to install it. Uninstalling removes all app data stored on the device.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:COMP-STD-01}{COMP-STD-01}\\
 \hline
 \end{xltabular}
 \subsection{Release Requirements}
@@ -2810,49 +3000,59 @@ This section outlines the requirements for maintaining and supporting the softwa
 \hline
 \endhead
 
-MAS-MNT-01 &
+MAS-MNT-01\hypertarget{req:MAS-MNT-01}{} &
 Fitness Activity Addition Effort &
 \textbf{Description:} The system shall support the addition of new reward-eligible fitness activity types with minimal maintenance effort.
 
 \textbf{Rationale:} Future releases may introduce additional forms of exercise and adaptive fitness activities.
 
-\textbf{Fit Criterion:} A new activity type shall be implemented, deployed, and fully tested within 2 months.\\
+\textbf{Fit Criterion:} A new activity type shall be implemented, deployed, and fully tested within 2 months.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:UHR-ACC-06}{UHR-ACC-06}\\
 \hline
 
-MAS-MNT-02 &
+MAS-MNT-02\hypertarget{req:MAS-MNT-02}{} &
 Investment Asset Addition Effort &
 \textbf{Description:} The system shall support the addition of new simulated investment assets with minimal maintenance effort.
 
 \textbf{Rationale:} Future versions of the application may expand the types of simulated investments available to users.
 
-\textbf{Fit Criterion:} A new investment asset shall be implemented, deployed, and fully tested within 2 months.\\
+\textbf{Fit Criterion:} A new investment asset shall be implemented, deployed, and fully tested within 2 months.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-SE-02}{PR-SE-02}\\
 \hline
 
-MAS-MNT-03 &
+MAS-MNT-03\hypertarget{req:MAS-MNT-03}{} &
 Corrective Maintenance Effort &
 \textbf{Description:} The system shall efficiently handle and correct software defects.
 
 \textbf{Rationale:} Timely defect resolution improves reliability and user satisfaction.
 
-\textbf{Fit Criterion:} Critical production defects shall be fixed and deployed within 5 business days of the defect being reported.\\
+\textbf{Fit Criterion:} Critical production defects shall be fixed and deployed within 5 business days of the defect being reported.
+
+\textbf{Related Requirements:} \hyperlink{req:PROD-01}{PROD-01}, \hyperlink{req:MAS-SUP-01}{MAS-SUP-01}\\
 \hline
 
-MAS-MNT-04 &
+MAS-MNT-04\hypertarget{req:MAS-MNT-04}{} &
 Third-Party Integration Maintenance &
 \textbf{Description:} The system shall support updates to external fitness platform integrations with minimal impact on overall system functionality.
 
 \textbf{Rationale:} External APIs may change independently of the application and require maintenance.
 
-\textbf{Fit Criterion:} Changes required to maintain compatibility with a supported fitness provider shall be deployed within 5 business days of identifying the incompatibility.\\
+\textbf{Fit Criterion:} Changes required to maintain compatibility with a supported fitness provider shall be deployed within 5 business days of identifying the incompatibility.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:PR-RFT-03}{PR-RFT-03}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01}\\
 \hline
 
-MAS-MNT-05 &
+MAS-MNT-05\hypertarget{req:MAS-MNT-05}{} &
 Traceability &
 \textbf{Description:} The system shall provide sufficient documentation and traceability to allow future developers to efficiently understand previous changes and maintenance activities.
 
 \textbf{Rationale:} Accurate and up-to-date documentation improves maintainability by allowing future developers to understand previous modifications, known issues, and the reasoning behind architectural and implementation decisions.
 
-\textbf{Fit Criterion:} For every production release, developers shall be able to identify the implemented changes, associated issues, and documented design decisions within 30 minutes of searching project records.\\
+\textbf{Fit Criterion:} For every production release, developers shall be able to identify the implemented changes, associated issues, and documented design decisions within 30 minutes of searching project records.
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:DOC-04}{DOC-04}\\
 \hline
 
 \end{xltabular}
@@ -2871,13 +3071,15 @@ Traceability &
 \hline
 \endhead
 
-MAS-SUP-01 &
+MAS-SUP-01\hypertarget{req:MAS-SUP-01}{} &
 Contact Support Capability &
 \textbf{Description:} The system shall provide users with a mechanism to submit feedback or support requests for more complicated issues.
 
 \textbf{Rationale:} Some issues may require assistance beyond self-service documentation.
 
-\textbf{Fit Criterion:} Users shall be able to submit feedback or support requests from within the application at any time. These requests must be processed within 2 business days with a response sent back to the user regarding details pertaining to the plans and timeline to address the issue.\\
+\textbf{Fit Criterion:} Users shall be able to submit feedback or support requests from within the application at any time. These requests must be processed within 2 business days with a response sent back to the user regarding details pertaining to the plans and timeline to address the issue.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-04}{UHR-EOU-04}, \hyperlink{req:MAS-MNT-03}{MAS-MNT-03}, \hyperlink{req:DOC-03}{DOC-03}\\
 \hline
 
 \end{xltabular}
@@ -2896,31 +3098,37 @@ Contact Support Capability &
 \hline
 \endhead
 
-MAS-ADPT-01 &
+MAS-ADPT-01\hypertarget{req:MAS-ADPT-01}{} &
 External Fitness Provider Adaptability &
 \textbf{Description:} The system shall support the addition of new fitness data providers without requiring major changes to user workflows.
 
 \textbf{Rationale:} The ecosystem of fitness tracking applications and devices will evolve over time and additional providers may become desirable.
 
-\textbf{Fit Criterion:} Users shall be able to successfully connect newly supported fitness providers using the same workflow used for existing providers.\\
+\textbf{Fit Criterion:} Users shall be able to successfully connect newly supported fitness providers using the same workflow used for existing providers.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04}, \hyperlink{req:DOC-02}{DOC-02}\\
 \hline
 
-MAS-ADPT-02 &
+MAS-ADPT-02\hypertarget{req:MAS-ADPT-02}{} &
 Mobile Platform Portability &
 \textbf{Description:} The system shall support future deployment on additional mobile platforms beyond the initially targeted platform, Android.
 
-\textbf{Rationale:} Initial deployment is limited to Android (SC-01), but future releases may target additional mobile operating systems, such as iOS.
+\textbf{Rationale:} Initial deployment is limited to Android (\hyperlink{req:SC-01}{SC-01}), but future releases may target additional mobile operating systems, such as iOS.
 
-\textbf{Fit Criterion:} A test client running outside Android can sign in to an existing account and retrieve the user's full account, activity, and portfolio data, with no migration step.\\
+\textbf{Fit Criterion:} A test client running outside Android can sign in to an existing account and retrieve the user's full account, activity, and portfolio data, with no migration step.
+
+\textbf{Related Requirements:} \hyperlink{req:SC-01}{SC-01}\\
 \hline
 
-MAS-ADPT-03 &
+MAS-ADPT-03\hypertarget{req:MAS-ADPT-03}{} &
 Future Artificial Intelligence Service Adaptability &
 \textbf{Description:} The system shall support future integration of educational content assisted by \acr{AI}{artificial intelligence}{AI}.
 
 \textbf{Rationale:} With the rapid growth of AI technologies, future releases may provide personalized fitness and financial learning experiences using AI technologies.
 
-\textbf{Fit Criterion:} AI-powered educational services shall be deployable without requiring modifications to existing user accounts.\\
+\textbf{Fit Criterion:} AI-powered educational services shall be deployable without requiring modifications to existing user accounts.
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-LEG-05}{COMP-LEG-05}\\
 \hline
 
 \end{xltabular}
@@ -2940,16 +3148,18 @@ Future Artificial Intelligence Service Adaptability &
 \hline
 \endhead
 
-SEC-ACC-01 &
+SEC-ACC-01\hypertarget{req:SEC-ACC-01}{} &
 Authenticated Access &
-\textbf{Description:} Access granted when a user signs in (FUNC-02) shall be checked on every request for personal fitness data, portfolios, or transactions, and shall expire after \const{AccessExpiry}.
+\textbf{Description:} Access granted when a user signs in (\hyperlink{req:FUNC-02}{FUNC-02}) shall be checked on every request for personal fitness data, portfolios, or transactions, and shall expire after \const{AccessExpiry}.
 
 \textbf{Rationale:} Authentication protects personal data and virtual assets from unauthorized access. Expiring access limits the damage if a device or access credential is stolen.
 
-\textbf{Fit Criterion:} Every protected request with missing, invalid, or expired access is rejected with \acr{HTTP}{Hypertext Transfer Protocol}{HTTP} status 401. After \const{AccessExpiry}, the app must refresh its access or the user must sign in again.\\
+\textbf{Fit Criterion:} Every protected request with missing, invalid, or expired access is rejected with \acr{HTTP}{Hypertext Transfer Protocol}{HTTP} status 401. After \const{AccessExpiry}, the app must refresh its access or the user must sign in again.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}, \hyperlink{req:COMP-STD-07}{COMP-STD-07}\\
 \hline
 
-SEC-ACC-02 &
+SEC-ACC-02\hypertarget{req:SEC-ACC-02}{} &
 Role-Based Authorization &
 \textbf{Description:} Role-based access control shall restrict users to their own records and limit administrative or evaluator access to authorized functions.
 
@@ -2957,19 +3167,23 @@ Role-Based Authorization &
 
 \textbf{Fit Criterion:} JUnit security tests shall confirm that attempts by standard users to access or modify another user's records return HTTP 403 in all tested cases.
 
-\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1) \\
+\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1) 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}\\
 \hline
 
-SEC-ACC-03 &
+SEC-ACC-03\hypertarget{req:SEC-ACC-03}{} &
 Fitness Integration Authorization &
 \textbf{Description:} Flexin' shall request only necessary read permissions for supported integrations, Android Health Connect and Garmin. Integration credentials shall be stored encrypted on the device, where other apps cannot read them.
 
 \textbf{Rationale:} Secure credential handling protects external accounts and limits access to fitness data.
 
-\textbf{Fit Criterion:} A security review confirms that integration tokens are stored only in encrypted device storage that other apps cannot read, and finds no credentials, tokens, or secrets in the project repository. \\
+\textbf{Fit Criterion:} A security review confirms that integration tokens are stored only in encrypted device storage that other apps cannot read, and finds no credentials, tokens, or secrets in the project repository. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}\\
 \hline
 
-SEC-ACC-04 &
+SEC-ACC-04\hypertarget{req:SEC-ACC-04}{} &
 Password and Sign-In Protection &
 \textbf{Description:} Flexin' shall enforce a minimum password strength, offer optional multi-factor authentication through the user's email, and temporarily lock sign-in after repeated failed attempts. Users shall be able to reset their password through email.
 
@@ -2977,10 +3191,12 @@ Password and Sign-In Protection &
 
 \textbf{Fit Criterion:} Passwords shorter than \const{MinPasswordLength} characters or found on a common-password list shall be rejected. Sign-in to an account shall be locked for \const{LockoutDuration} after \const{LockoutAttempts} consecutive failed attempts. A user who enables multi-factor authentication shall be asked for an email code at each new sign-in, and a password reset email shall let a locked-out user sign in again.
 
-\textbf{Hazard Analysis:} SR1 (H1.1, H1.2) \\
+\textbf{Hazard Analysis:} SR1 (H1.1, H1.2) 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}\\
 \hline
 
-SEC-ACC-05 &
+SEC-ACC-05\hypertarget{req:SEC-ACC-05}{} &
 Session End and Device Unlinking &
 \textbf{Description:} Flexin' shall end a user's session after a period of inactivity or when the user signs out, and shall unlink the user's fitness devices on sign-out.
 
@@ -2988,7 +3204,9 @@ Session End and Device Unlinking &
 
 \textbf{Fit Criterion:} A session unused for \const{SessionTimeout} shall require the user to sign in again. After sign-out, the user's access and refresh tokens shall be rejected with HTTP 401, and no integration from that device shall be able to submit activity to the account.
 
-\textbf{Hazard Analysis:} SR2 (H1.2, H11.2) \\
+\textbf{Hazard Analysis:} SR2 (H1.2, H11.2) 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-02}{FUNC-02}\\
 \hline
 
 \end{xltabular}
@@ -3006,25 +3224,29 @@ Session End and Device Unlinking &
 \hline
 \endhead
 
-SEC-INT-01 &
+SEC-INT-01\hypertarget{req:SEC-INT-01}{} &
 Activity Validation &
-\textbf{Description:} The system shall validate activity metrics and detect overlapping timestamps and implausible activity values before awarding virtual currency. Activity reported more than once is handled by PR-PA-03.
+\textbf{Description:} The system shall validate activity metrics and detect overlapping timestamps and implausible activity values before awarding virtual currency. Activity reported more than once is handled by \hyperlink{req:PR-PA-03}{PR-PA-03}.
 
 \textbf{Rationale:} Validation prevents activity manipulation and unauthorized currency generation.
 
-\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above \const{MaxCadence} shall be flagged for verification. \\
+\textbf{Fit Criterion:} Automated tests shall confirm that duplicate or flagged implausible activity records are marked unverified and receive zero virtual currency. Sustained cadence above \const{MaxCadence} shall be flagged for verification. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03}\\
 \hline
 
-SEC-INT-02 &
+SEC-INT-02\hypertarget{req:SEC-INT-02}{} &
 Server-Side Valuation &
 \textbf{Description:} Asset prices, portfolio valuations, and currency amounts shall be calculated by the system's servers. Values sent by the mobile app shall never be accepted as authoritative.
 
 \textbf{Rationale:} Server-side calculations prevent client manipulation of prices and balances.
 
-\textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. \\
+\textbf{Fit Criterion:} Trade requests attempting to specify unauthorized execution prices shall be rejected with HTTP 400. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}\\
 \hline
 
-SEC-INT-03 &
+SEC-INT-03\hypertarget{req:SEC-INT-03}{} &
 Data Backups and Recovery &
 \textbf{Description:} \progname{} shall keep regular backups of all user data, including accounts, activity history, balances, and portfolios, and shall be able to restore that data after data corruption or an infrastructure failure.
 
@@ -3032,7 +3254,9 @@ Data Backups and Recovery &
 
 \textbf{Fit Criterion:} The production database is backed up at least once every \const{BackupInterval}, and each backup is kept for \const{BackupRetention}. Data can be restored from the most recent backup within \const{RestoreTime}, and a restore into a test environment is performed successfully before each release.
 
-\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}\\
 \hline
 
 \end{xltabular}
@@ -3050,16 +3274,18 @@ Data Backups and Recovery &
 \hline
 \endhead
 
-SEC-PRV-01 &
+SEC-PRV-01\hypertarget{req:SEC-PRV-01}{} &
 Health Data Protection &
 \textbf{Description:} Sensitive personal information and fitness telemetry shall be protected through encryption in transit and at rest.
 
 \textbf{Rationale:} Encryption protects confidential user information against unauthorized disclosure.
 
-\textbf{Fit Criterion:} Client-server communications shall use \acr{TLS}{Transport Layer Security}{TLS} 1.3. Stored health and biometric data shall be encrypted at rest using the \acr{AES}{Advanced Encryption Standard}{AES} with 256-bit keys, or stronger. \\
+\textbf{Fit Criterion:} Client-server communications shall use \acr{TLS}{Transport Layer Security}{TLS} 1.3. Stored health and biometric data shall be encrypted at rest using the \acr{AES}{Advanced Encryption Standard}{AES} with 256-bit keys, or stronger. 
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}, \hyperlink{req:COMP-STD-07}{COMP-STD-07}\\
 \hline
 
-SEC-PRV-02 &
+SEC-PRV-02\hypertarget{req:SEC-PRV-02}{} &
 Private by Default &
 \textbf{Description:} All profile and health data shall be private by default. A field shall be shared with other users only after the user opts in, and backend access rules shall deny access to any data that has not been shared. Leaderboard participation shall be opt-in, and users may share activity streaks and simulated portfolio returns using a chosen alias.
 
@@ -3067,16 +3293,20 @@ Private by Default &
 
 \textbf{Fit Criterion:} All sharing settings, including leaderboard sharing, shall be disabled for new accounts. Enabling sharing shall require explicit consent and disclose which pseudonymous information and statistics will be shared. Automated access-rule tests run in the CI/CD pipeline shall confirm before each release that no user can read another user's unshared data.
 
-\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1), SR9 (H4.1, H8.1) \\
+\textbf{Hazard Analysis:} SR3 (H2.1, H8.1, H9.1), SR9 (H4.1, H8.1) 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}\\
 \hline
 
-SEC-PRV-03 &
+SEC-PRV-03\hypertarget{req:SEC-PRV-03}{} &
 User Data Deletion &
 \textbf{Description:} Users shall be able to delete their account and associated personal information at any time from the application's settings menu.
 
 \textbf{Rationale:} Users should retain control over their personal information and account history.
 
-\textbf{Fit Criterion:} After a deletion request, personal health metrics, credentials, and fitness history are removed from the active database within \const{DeletionWindow}. Because data is backed up by default (SEC-INT-03), copies held in backups are removed as those backups expire, within \const{BackupRetention}. Audit records (SEC-AUD-01) keep only an anonymized account identifier that can no longer be linked to the deleted user.\\
+\textbf{Fit Criterion:} After a deletion request, personal health metrics, credentials, and fitness history are removed from the active database within \const{DeletionWindow}. Because data is backed up by default (\hyperlink{req:SEC-INT-03}{SEC-INT-03}), copies held in backups are removed as those backups expire, within \const{BackupRetention}. Audit records (\hyperlink{req:SEC-AUD-01}{SEC-AUD-01}) keep only an anonymized account identifier that can no longer be linked to the deleted user.
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-INT-03}{SEC-INT-03}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}, \hyperlink{req:COMP-LEG-04}{COMP-LEG-04}\\
 \hline
 
 \end{xltabular}
@@ -3094,22 +3324,26 @@ User Data Deletion &
 \hline
 \endhead
 
-SEC-AUD-01 &
+SEC-AUD-01\hypertarget{req:SEC-AUD-01}{} &
 Economic Event Logging &
 \textbf{Description:} Flexin' shall maintain an append-only audit ledger for currency rewards, simulated trades, dividends, and market price updates.
 
 \textbf{Rationale:} Auditable records support troubleshooting, transaction verification, and evaluation of the simulated economy.
 
-\textbf{Fit Criterion:} Database permissions shall prevent UPDATE and DELETE operations on audit records. Every recorded transaction shall reference a valid source activity or market event, where applicable. \\
+\textbf{Fit Criterion:} Database permissions shall prevent UPDATE and DELETE operations on audit records. Every recorded transaction shall reference a valid source activity or market event, where applicable. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-11}{FUNC-11}, \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}\\
 \hline
 
-SEC-AUD-02 &
+SEC-AUD-02\hypertarget{req:SEC-AUD-02}{} &
 Security Event Logging &
 \textbf{Description:} The backend shall log failed authentication, token validation failures, duplicate activity submissions, anti-exploit flags, and runtime exceptions.
 
 \textbf{Rationale:} Security logs help identify suspicious activity and diagnose integration or system failures.
 
-\textbf{Fit Criterion:} Structured logs shall capture severity, client \acr{IP}{Internet Protocol}{IP} address where available, authenticated user ID where applicable, and exception details for runtime errors. \\
+\textbf{Fit Criterion:} Structured logs shall capture severity, client \acr{IP}{Internet Protocol}{IP} address where available, authenticated user ID where applicable, and exception details for runtime errors. 
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}\\
 \hline
 
 \end{xltabular}
@@ -3127,31 +3361,37 @@ Security Event Logging &
 \hline
 \endhead
 
-SEC-IMM-01 &
+SEC-IMM-01\hypertarget{req:SEC-IMM-01}{} &
 Injection Defense &
 \textbf{Description:} The system shall be protected against \acr{SQL}{Structured Query Language}{SQL} injection, \acr{XSS}{cross-site scripting}{XSS}, and command injection.
 
 \textbf{Rationale:} Injection vulnerabilities could compromise database integrity and expose user information.
 
-\textbf{Fit Criterion:} Before each release, an automated security scan and a code review find zero unresolved high-severity injection vulnerabilities. \\
+\textbf{Fit Criterion:} Before each release, an automated security scan and a code review find zero unresolved high-severity injection vulnerabilities. 
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-STD-07}{COMP-STD-07}\\
 \hline
 
-SEC-IMM-02 &
+SEC-IMM-02\hypertarget{req:SEC-IMM-02}{} &
 Rate Limiting &
 \textbf{Description:} The system shall limit request rates for authentication, trade submission, and activity synchronization endpoints.
 
 \textbf{Rationale:} Rate limiting reduces brute-force attempts, automated abuse, and service overload.
 
-\textbf{Fit Criterion:} A limit of \const{RateLimit} per authenticated user or client IP address shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. \\
+\textbf{Fit Criterion:} A limit of \const{RateLimit} per authenticated user or client IP address shall be enforced. Excess requests shall receive HTTP 429. Automated tests shall verify enforcement. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}\\
 \hline
 
-SEC-IMM-03 &
+SEC-IMM-03\hypertarget{req:SEC-IMM-03}{} &
 Client Environment Validation &
 \textbf{Description:} The Android client shall detect supported indicators of rooted or otherwise untrusted environments and restrict sensitive functionality when tampering is detected outside developer builds.
 
 \textbf{Rationale:} Compromised environments can increase the risk of credential exposure and activity manipulation.
 
-\textbf{Fit Criterion:} In supported production configurations, detected root or tampering indicators shall trigger restrictions on community leaderboard access and virtual currency minting. Developer builds shall remain available for authorized testing. \\
+\textbf{Fit Criterion:} In supported production configurations, detected root or tampering indicators shall trigger restrictions on community leaderboard access and virtual currency minting. Developer builds shall remain available for authorized testing. 
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}\\
 \hline
 
 \end{xltabular}
@@ -3174,22 +3414,26 @@ This section outlines the cultural requirements for the software system. Cultura
 \hline
 \endhead
 
-CUL-01 & 
+CUL-01\hypertarget{req:CUL-01}{} & 
 Supports Canadian Languages & 
 \textbf{Description:} The system shall present all user-facing functionality with the option to choose between English and French. 
 
 \textbf{Rationale:} The application will initially be deployed strictly within Canada, where English and French are the country's official languages. 
 
-\textbf{Fit Criterion:} Every screen can be shown in English or French, chosen in settings, with no untranslated text.\\ 
+\textbf{Fit Criterion:} Every screen can be shown in English or French, chosen in settings, with no untranslated text.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-INT-01}{UHR-INT-01}, \hyperlink{req:UHR-UND-01}{UHR-UND-01}\\
 \hline
 
-CUL-02 & 
+CUL-02\hypertarget{req:CUL-02}{} & 
 Culturally Neutral Educational Content & 
 \textbf{Description:} The system shall present fitness and financial education content using culturally neutral language and examples (i.e. sample companies in the virtual market). 
 
 \textbf{Rationale:} The Canadian population consists of individuals from diverse cultural, religious, and socioeconomic backgrounds. Educational content should be inclusive and broadly applicable. 
 
-\textbf{Fit Criterion:} Educational content shall not require familiarity with a specific cultural background, religion, ethnicity, or region to be understood.\\ 
+\textbf{Fit Criterion:} Educational content shall not require familiarity with a specific cultural background, religion, ethnicity, or region to be understood.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:UHR-POL-01}{UHR-POL-01}\\
 \hline
 
 \end{xltabular}
@@ -3202,7 +3446,7 @@ This section outlines the legal and regulatory requirements that the system must
 
 The financial advice disclaimer and the exercise risk acknowledgement are legal
 requirements as well as safety requirements. To keep each requirement in one
-place, they are specified only in PR-SC-04 and PR-SC-05 (Safety-Critical
+place, they are specified only in \hyperlink{req:PR-SC-04}{PR-SC-04} and \hyperlink{req:PR-SC-05}{PR-SC-05} (Safety-Critical
 Requirements).
 
 
@@ -3218,67 +3462,81 @@ Requirements).
 \hline
 \endhead
 
-COMP-LEG-01 &
+COMP-LEG-01\hypertarget{req:COMP-LEG-01}{} &
 User Consent for Health Data Collection &
 \textbf{Description:} The system shall obtain explicit user consent before collecting, storing, or processing any health or fitness related data from external devices or applications.
 
-\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement FUNC-03. Obtaining explicit user consent ensures compliance with PIPEDA and the \acr{PHIPA}{Personal Health Information Protection Act}{PHIPA}.
+\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement \hyperlink{req:FUNC-03}{FUNC-03}. Obtaining explicit user consent ensures compliance with PIPEDA and the \acr{PHIPA}{Personal Health Information Protection Act}{PHIPA}.
 
-\textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.\\
+\textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}\\
 \hline
 
-COMP-LEG-02 &
+COMP-LEG-02\hypertarget{req:COMP-LEG-02}{} &
 Protection of Personal Information &
 \textbf{Description:} The collection, use, storage, and disclosure of \acr{PII}{personally identifiable information}{PII}, beyond just fitness data, shall follow the fair information principles of PIPEDA, and of PHIPA if it applies (see Open Issues).
 
 \textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risks H2.1 and H11.2 identified in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}.
 
-\textbf{Fit Criterion:} Before each release, a privacy review checks the product against each of PIPEDA's ten fair information principles and records how each one is met, with none left unaddressed. The technical protections the review relies on are specified in SEC-ACC-01, SEC-PRV-01, and SEC-PRV-02.\\
+\textbf{Fit Criterion:} Before each release, a privacy review checks the product against each of PIPEDA's ten fair information principles and records how each one is met, with none left unaddressed. The technical protections the review relies on are specified in \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, and \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}.
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}, \hyperlink{req:COMP-LEG-04}{COMP-LEG-04}\\
 \hline
 
-COMP-LEG-03 & 
+COMP-LEG-03\hypertarget{req:COMP-LEG-03}{} & 
 Sharing of User Data & 
 \textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA. 
 
-\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03). If sponsored rewards (FUNC-17, a stretch goal) are added later, sponsors will also be third parties covered by this requirement. Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA. 
+\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - \hyperlink{req:FUNC-03}{FUNC-03}). If sponsored rewards (\hyperlink{req:FUNC-17}{FUNC-17}, a stretch goal) are added later, sponsors will also be third parties covered by this requirement. Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA. 
 
-\textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
-\hline 
+\textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.
 
-COMP-LEG-04 &
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-17}{FUNC-17}\\
+\hline
+
+COMP-LEG-04\hypertarget{req:COMP-LEG-04}{} &
 User Data Deletion Rights &
-\textbf{Description:} Account deletion, as specified in SEC-PRV-03, shall meet PIPEDA's requirements for withdrawing consent and disposing of personal information.
+\textbf{Description:} Account deletion, as specified in \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}, shall meet PIPEDA's requirements for withdrawing consent and disposing of personal information.
 
 \textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and PPCDA regarding data ownership and the user's right to disposal.
 
-\textbf{Fit Criterion:} The privacy review in COMP-LEG-02 confirms that account deletion under SEC-PRV-03 meets these requirements.\\
+\textbf{Fit Criterion:} The privacy review in \hyperlink{req:COMP-LEG-02}{COMP-LEG-02} confirms that account deletion under \hyperlink{req:SEC-PRV-03}{SEC-PRV-03} meets these requirements.
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}\\
 \hline
 
-COMP-LEG-05 & 
+COMP-LEG-05\hypertarget{req:COMP-LEG-05}{} & 
 AI-Content Disclosure & 
 \textbf{Description:} The system shall disclose when educational content is generated or assisted by an artificial intelligence system. 
 
 \textbf{Rationale:} With the potential for AI to aid in the virtual market simulation, users should be informed when content is generated by AI to promote transparency and allow them to appropriately evaluate the information received. 
 
-\textbf{Fit Criterion:} All AI-generated educational content shall include a visible notification indicating that the content was generated or assisted by AI. Additionally, the settings menu will contain an information section that explicitly discloses all components generated with the assistance of AI.\\ 
-\hline 
+\textbf{Fit Criterion:} All AI-generated educational content shall include a visible notification indicating that the content was generated or assisted by AI. Additionally, the settings menu will contain an information section that explicitly discloses all components generated with the assistance of AI.
 
-COMP-LEG-06 & 
+\textbf{Related Requirements:} \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:MAS-ADPT-03}{MAS-ADPT-03}\\
+\hline
+
+COMP-LEG-06\hypertarget{req:COMP-LEG-06}{} & 
 Age Verification & 
 \textbf{Description:} The system shall verify a user's age to be a legal adult (\const{MinAge} or older) during account creation. 
 
 \textbf{Rationale:} The system collects personal and health-related information that may be subject to additional restrictions for minors. It is important that users are of age to provide informed consent and understand the implications of sharing their personal information.
 
-\textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (\const{MinAge} or older).\\ 
-\hline 
+\textbf{Fit Criterion:} During onboarding, users shall validate their age before account activation and their accounts will not be activated if they are not of legal age (\const{MinAge} or older).
 
-COMP-LEG-07 & 
+\textbf{Related Requirements:} \hyperlink{req:FUNC-01}{FUNC-01}\\
+\hline
+
+COMP-LEG-07\hypertarget{req:COMP-LEG-07}{} & 
 Third-Party Licensing Compliance & 
 \textbf{Description:} The system shall comply with all licensing requirements associated with third-party libraries, APIs, SDKs, and external content used by the application. 
 
 \textbf{Rationale:} The application relies on external technologies and services whose licenses impose legal obligations on software developers during the development of this system. 
 
-\textbf{Fit Criterion:} All third-party components included in a release shall have documented license reviews and approval prior to deployment.\\ 
+\textbf{Fit Criterion:} All third-party components included in a release shall have documented license reviews and approval prior to deployment.
+
+\textbf{Related Requirements:} \hyperlink{req:MAS-MNT-05}{MAS-MNT-05}, \hyperlink{req:SC-02}{SC-02}, \hyperlink{req:SC-03}{SC-03}, \hyperlink{req:SC-04}{SC-04}\\
 \hline
 
 \end{xltabular}
@@ -3297,67 +3555,81 @@ Third-Party Licensing Compliance &
 \hline
 \endhead
 
-COMP-STD-01 & 
+COMP-STD-01\hypertarget{req:COMP-STD-01}{} & 
 Android Platform Compliance & 
 \textbf{Description:} The system shall comply with the Google Play Developer Program Policies. 
 
 \textbf{Rationale:} The application is intended to be deployed on the Google Play Store as to be accessible on Android devices and as a result must conform to platform requirements. 
 
-\textbf{Fit Criterion:} The application shall successfully pass all mandatory checks required for distribution through the Google Play Store.\\ 
+\textbf{Fit Criterion:} The application shall successfully pass all mandatory checks required for distribution through the Google Play Store.
+
+\textbf{Related Requirements:} \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:SC-06}{SC-06}\\
 \hline
 
-COMP-STD-02 & 
+COMP-STD-02\hypertarget{req:COMP-STD-02}{} & 
 Accessibility Compliance & 
 \textbf{Description:} The system shall comply with the \acr{WCAG}{Web Content Accessibility Guidelines}{WCAG} 2.1 Level AA for user-facing functionality. 
 
 \textbf{Rationale:} The system should offer a simple and delightful user experience that should be accessible to users with varying abilities (i.e. users with colourblindness, hearing impairments, etc.).
 
-\textbf{Fit Criterion:} All major user workflows shall satisfy WCAG 2.1 Level AA success criteria as evaluated using automated accessibility tools and manual testing.\\ 
+\textbf{Fit Criterion:} All major user workflows shall satisfy WCAG 2.1 Level AA success criteria as evaluated using automated accessibility tools and manual testing.
+
+\textbf{Related Requirements:} \hyperlink{req:LF-APP-04}{LF-APP-04}, \hyperlink{req:UHR-ACC-01}{UHR-ACC-01}, \hyperlink{req:UHR-ACC-02}{UHR-ACC-02}, \hyperlink{req:UHR-ACC-03}{UHR-ACC-03}, \hyperlink{req:UHR-ACC-04}{UHR-ACC-04}, \hyperlink{req:UHR-ACC-05}{UHR-ACC-05}\\
 \hline
 
-COMP-STD-03 & 
+COMP-STD-03\hypertarget{req:COMP-STD-03}{} & 
 TypeScript Coding Standards Compliance & 
 \textbf{Description:} The frontend codebase shall comply with the Google TypeScript Style Guide. 
 
 \textbf{Rationale:} Consistent coding standards improve maintainability, readability, and long-term project quality. 
 
-\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.
+
+\textbf{Related Requirements:} \hyperlink{req:SC-02}{SC-02}\\
 \hline
 
-COMP-STD-04 & 
+COMP-STD-04\hypertarget{req:COMP-STD-04}{} & 
 Java Coding Standards Compliance & 
 \textbf{Description:} The backend codebase shall comply with the Oracle Java Code Conventions. 
 
 \textbf{Rationale:} Standardized coding practices improve maintainability, code review effectiveness, and software quality. 
 
-\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.\\ 
+\textbf{Fit Criterion:} All pull requests shall pass configured linting and formatting checks before merging into the main branch.
+
+\textbf{Related Requirements:} \hyperlink{req:SC-03}{SC-03}\\
 \hline
 
-COMP-STD-05 & 
+COMP-STD-05\hypertarget{req:COMP-STD-05}{} & 
 Database Compliance & 
 \textbf{Description:} The system shall store data in compliance with the MySQL Reference Manual and the SQL Standard (\acr{ISOIEC}{International Organization for Standardization and International Electrotechnical Commission}{ISO/IEC} 9075). 
 
 \textbf{Rationale:} The project architecture relies upon MySQL as the primary relational database system. 
 
-\textbf{Fit Criterion:} All schema definitions and queries will be tested to execute successfully on the supported MySQL version without compatibility warnings or errors.\\ 
+\textbf{Fit Criterion:} All schema definitions and queries will be tested to execute successfully on the supported MySQL version without compatibility warnings or errors.
+
+\textbf{Related Requirements:} \hyperlink{req:SC-03}{SC-03}\\
 \hline
 
-COMP-STD-06 & 
+COMP-STD-06\hypertarget{req:COMP-STD-06}{} & 
 Software Testing Standard Compliance & 
 \textbf{Description:} The system shall undergo thorough and complete testing in accordance with the \acr{IEEE}{Institute of Electrical and Electronics Engineers}{IEEE} 29119 Software Testing Standard. 
 
 \textbf{Rationale:} Consistent testing practices reduce defects and improve software reliability. The system will comply with this standard to provide a unified, process-driven framework for software testing.
 
-\textbf{Fit Criterion:} All code merged into the main branch shall pass automated test execution in the CI/CD pipeline based on tests that were developed in accordance with the IEEE 29119 Software Testing Standard.\\ 
+\textbf{Fit Criterion:} All code merged into the main branch shall pass automated test execution in the CI/CD pipeline based on tests that were developed in accordance with the IEEE 29119 Software Testing Standard.
+
+\textbf{Related Requirements:} \hyperlink{req:PROD-01}{PROD-01}\\
 \hline
 
-COMP-STD-07 & 
+COMP-STD-07\hypertarget{req:COMP-STD-07}{} & 
 Information Security Compliance & 
 \textbf{Description:} The system shall be designed in accordance with the security principles outlined in ISO/IEC 27001. 
 
 \textbf{Rationale:} The application stores personal, financial-learning, and fitness-related information that must be protected against unauthorized access and disclosure. 
 
-\textbf{Fit Criterion:} Before release, a checklist maps the security requirements to the applicable ISO/IEC 27001 Annex A controls, and every applicable control is either addressed or justified as out of scope.\\ 
+\textbf{Fit Criterion:} Before release, a checklist maps the security requirements to the applicable ISO/IEC 27001 Annex A controls, and every applicable control is either addressed or justified as out of scope.
+
+\textbf{Related Requirements:} \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, \hyperlink{req:SEC-IMM-01}{SEC-IMM-01}\\
 \hline
 
 \end{xltabular}
@@ -3379,7 +3651,7 @@ and have not yet been resolved.
   currency by completing financial lessons. Currency is now earned only through
   physical activity, so the image needs to be updated.
   \item \textbf{Privacy legislation.} The team needs to confirm whether PHIPA
-  applies to \progname{}, and what ``PPCDA'' in COMP-LEG-04 refers to.
+  applies to \progname{}, and what ``PPCDA'' in \hyperlink{req:COMP-LEG-04}{COMP-LEG-04} refers to.
   \item \textbf{API hosting.} The database will be hosted on McMaster
   University's MySQL server, but where the Spring API will be hosted has not
   been decided.
@@ -3403,10 +3675,10 @@ and have not yet been resolved.
   expected to be adjusted as testing shows how users respond.
   \item[LC-03 Supported fitness data sources.] Health Connect and Garmin are
   supported first; more devices and services are likely to be added
-  (PR-SE-01, MAS-ADPT-01).
+  (\hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01}).
   \item[LC-04 Asset types and market calibration.] New fictional asset types
-  may be added (PR-SE-02, MAS-MNT-02), and the market engine's calibration will
-  be refined (PR-PA-06).
+  may be added (\hyperlink{req:PR-SE-02}{PR-SE-02}, \hyperlink{req:MAS-MNT-02}{MAS-MNT-02}), and the market engine's calibration will
+  be refined (\hyperlink{req:PR-PA-06}{PR-PA-06}).
   \item[LC-05 User interface details.] Screen layouts, navigation, wording, and
   educational content will change after each round of user testing.
   \item[LC-06 Notifications.] The kinds of notifications and their default
@@ -3414,11 +3686,11 @@ and have not yet been resolved.
   \item[LC-07 API hosting.] Where the API is hosted is still open (see Open
   Issues).
   \item[LC-08 Additional platforms.] An iOS version is a stretch goal
-  (MAS-ADPT-02).
+  (\hyperlink{req:MAS-ADPT-02}{MAS-ADPT-02}).
   \item[LC-09 Sponsored rewards.] Redeeming currency for sponsor rewards may be
-  added if partnerships are found (FUNC-17).
+  added if partnerships are found (\hyperlink{req:FUNC-17}{FUNC-17}).
   \item[LC-10 AI-assisted content.] Educational content assisted by AI may be
-  added later (MAS-ADPT-03, COMP-LEG-05).
+  added later (\hyperlink{req:MAS-ADPT-03}{MAS-ADPT-03}, \hyperlink{req:COMP-LEG-05}{COMP-LEG-05}).
 \end{description}
 
 \subsection{Unlikely Changes}
@@ -3428,22 +3700,22 @@ and have not yet been resolved.
   invested in a simulated market. This is the product concept from the Problem
   Statement; changing it would make a different product.
   \item[UC-02 No real money.] The product will not handle real money or real
-  trades (SC-05). Doing so would bring financial regulation that is outside the
+  trades (\hyperlink{req:SC-05}{SC-05}). Doing so would bring financial regulation that is outside the
   project's scope and would expose users to real losses.
   \item[UC-03 Fictional market.] Assets and prices are fictional and generated
   by the product's own engine, not live market data. This avoids paid data
   feeds (Budget Constraints) and makes it clear that nothing in the app is
-  advice about real investments (PR-SC-04).
+  advice about real investments (\hyperlink{req:PR-SC-04}{PR-SC-04}).
   \item[UC-04 Android first.] The capstone release targets Android only
-  (SC-01); this follows from the schedule and the team's scope decisions.
+  (\hyperlink{req:SC-01}{SC-01}); this follows from the schedule and the team's scope decisions.
   \item[UC-05 Privacy and age obligations.] Consent, data protection, deletion,
-  and the minimum age (COMP-LEG-01 to COMP-LEG-06) come from law and will not be
+  and the minimum age (\hyperlink{req:COMP-LEG-01}{COMP-LEG-01} to \hyperlink{req:COMP-LEG-06}{COMP-LEG-06}) come from law and will not be
   relaxed.
   \item[UC-06 Leaderboard rules.] Leaderboards stay opt-in, ranked by progress
-  towards goals, and reward-free (PR-SC-08), because they address hazards
+  towards goals, and reward-free (\hyperlink{req:PR-SC-08}{PR-SC-08}), because they address hazards
   identified in the Hazard Analysis.
   \item[UC-07 Technology stack.] The frontend and backend technologies
-  (SC-02, SC-03) were agreed in the Development Plan and development has been
+  (\hyperlink{req:SC-02}{SC-02}, \hyperlink{req:SC-03}{SC-03}) were agreed in the Development Plan and development has been
   planned around them.
 \end{description}
 
@@ -3471,7 +3743,7 @@ connects fitness habits to learning how investments grow.
   cryptocurrency tokens that have real market value. They link exercise to
   money, but expose users to real financial loss. STEPN's reward token lost
   most of its value within months in 2022. This approach conflicts with
-  constraint SC-05 (simulated market only) and is not suitable.
+  constraint \hyperlink{req:SC-05}{SC-05} (simulated market only) and is not suitable.
 
   \item[Fitness trackers (e.g.\ Strava, Garmin Connect, Health Connect):]
   These record activity accurately but do not offer any financial component.
@@ -3513,7 +3785,7 @@ use within the project's budget.
 
   \item[Historical market data:] A freely available historical data set for a
   broad market index, used only to calibrate the market engine so that its
-  fictional prices follow real-world trends (see PR-PA-06). The product does
+  fictional prices follow real-world trends (see \hyperlink{req:PR-PA-06}{PR-PA-06}). The product does
   not use live prices.
 
   \item[Testing and tooling:] JUnit, Detox, ESLint, and GitHub Actions, as
@@ -3532,7 +3804,7 @@ protected material.
   explanations of financial terms placed next to where the terms are used.
 
   \item[Step reward apps:] Converting steps into currency at a fixed rate, with
-  a daily limit on how much can be earned (see PR-SC-01).
+  a daily limit on how much can be earned (see \hyperlink{req:PR-SC-01}{PR-SC-01}).
 
   \item[Strava:] Leaderboards, clubs, and activity feeds that let friends
   follow each other's progress. These can be adapted for the community
@@ -3540,7 +3812,7 @@ protected material.
 
   \item[Habit and learning apps (e.g.\ Duolingo):] Streaks, short daily goals,
   and reminders that build a daily habit. These must be adapted carefully so
-  that missing a day is not punished (see PR-SC-02).
+  that missing a day is not punished (see \hyperlink{req:PR-SC-02}{PR-SC-02}).
 \end{description}
 
 \section{New Problems}
@@ -3588,35 +3860,35 @@ Each phase's deadline is the date its last task finishes in Table~\ref{tab:flexi
 
 This phase establishes the core application infrastructure including account management, authentication, fitness integration, virtual currency generation, and synchronization with supported health platforms. The primary objective is to demonstrate the end-to-end workflow of completing fitness activity and receiving virtual currency rewards. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-01 through FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04, PR-SC-01, PR-SC-04, PR-SC-05, PR-PA-02, PR-PA-03, PR-PA-05, PR-RFT-01, PR-RFT-03, PR-SE-01, SEC-ACC-02, UHR-PER-01, UHR-INT-01
+\noindent\textbf{Priority Requirements:} \hyperlink{req:FUNC-01}{FUNC-01} through \hyperlink{req:FUNC-07}{FUNC-07}, \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-ACC-03}{SEC-ACC-03}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, \hyperlink{req:PR-SL-01}{PR-SL-01}, \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-04}{PR-SL-04}, \hyperlink{req:PR-SC-01}{PR-SC-01}, \hyperlink{req:PR-SC-04}{PR-SC-04}, \hyperlink{req:PR-SC-05}{PR-SC-05}, \hyperlink{req:PR-PA-02}{PR-PA-02}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:PR-PA-05}{PR-PA-05}, \hyperlink{req:PR-RFT-01}{PR-RFT-01}, \hyperlink{req:PR-RFT-03}{PR-RFT-03}, \hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:UHR-PER-01}{UHR-PER-01}, \hyperlink{req:UHR-INT-01}{UHR-INT-01}
 
 \subsubsection{Phase 2 --- Simulated Investing} 
 \noindent\textbf{Deadline:} February 21, 2027 \\
 
 This phase introduces the simulated financial market and portfolio management capabilities. Users will be able to purchase and sell investment assets, manage portfolios, and view investment performance using virtual currency earned through physical activity. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-08 through FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-AUD-01, PR-SL-03, PR-SC-03, PR-RFT-02, PR-SE-02
+\noindent\textbf{Priority Requirements:} \hyperlink{req:FUNC-08}{FUNC-08} through \hyperlink{req:FUNC-12}{FUNC-12}, \hyperlink{req:PR-PA-01}{PR-PA-01}, \hyperlink{req:PR-PA-04}{PR-PA-04}, \hyperlink{req:PR-PA-06}{PR-PA-06}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:SEC-INT-02}{SEC-INT-02}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-SC-03}{PR-SC-03}, \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:PR-SE-02}{PR-SE-02}
 
 \subsubsection{Phase 3 --- Community and Gamification} 
 \noindent\textbf{Deadline:} February 21, 2027 \\
 
-This phase focuses on user engagement features including leaderboards, friend groups, private competitions, and progress reporting. Sponsor-based reward redemption (FUNC-17) is a stretch goal and is not scheduled (see the Waiting Room). \\
+This phase focuses on user engagement features including leaderboards, friend groups, private competitions, and progress reporting. Sponsor-based reward redemption (\hyperlink{req:FUNC-17}{FUNC-17}) is a stretch goal and is not scheduled (see the Waiting Room). \\
 
-\noindent\textbf{Priority Requirements:} FUNC-13 through FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05, UHR-PER-02, PR-SC-02, PR-SC-06 through PR-SC-08, SEC-PRV-02
+\noindent\textbf{Priority Requirements:} \hyperlink{req:FUNC-13}{FUNC-13} through \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:UHR-PER-03}{UHR-PER-03}, \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:UHR-POL-04}{UHR-POL-04}, \hyperlink{req:UHR-POL-05}{UHR-POL-05}, \hyperlink{req:UHR-PER-02}{UHR-PER-02}, \hyperlink{req:PR-SC-02}{PR-SC-02}, \hyperlink{req:PR-SC-06}{PR-SC-06} through \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}
 
 \subsubsection{Phase 4 --- Usability, Accessibility, and Learning} 
 \noindent\textbf{Deadline:} February 28, 2027 \\
 
 This phase refines the overall user experience through interface improvements, educational content, accessibility enhancements, personalization features, and user feedback gathered through testing activities. \\
 
-\noindent\textbf{Priority Requirements:} LF-APP-01 through LF-APP-05, LF-STY-01 through LF-STY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-04, UHR-UND-01 through UHR-UND-03, UHR-ACC-01 through UHR-ACC-06, UHR-POL-01 through UHR-POL-03, CUL-01, CUL-02, PR-RFT-04
+\noindent\textbf{Priority Requirements:} \hyperlink{req:LF-APP-01}{LF-APP-01} through \hyperlink{req:LF-APP-05}{LF-APP-05}, \hyperlink{req:LF-STY-01}{LF-STY-01} through \hyperlink{req:LF-STY-04}{LF-STY-04}, \hyperlink{req:UHR-EOU-01}{UHR-EOU-01} through \hyperlink{req:UHR-EOU-09}{UHR-EOU-09}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01} through \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:UHR-UND-01}{UHR-UND-01} through \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:UHR-ACC-01}{UHR-ACC-01} through \hyperlink{req:UHR-ACC-06}{UHR-ACC-06}, \hyperlink{req:UHR-POL-01}{UHR-POL-01} through \hyperlink{req:UHR-POL-03}{UHR-POL-03}, \hyperlink{req:CUL-01}{CUL-01}, \hyperlink{req:CUL-02}{CUL-02}, \hyperlink{req:PR-RFT-04}{PR-RFT-04}
 
 \subsubsection{Phase 5 --- Security, Compliance, and Release Preparation} 
 \noindent\textbf{Deadline:} March 14, 2027 \\
 
 This phase focuses on hardening the application prior to release. Security controls, privacy requirements, documentation, training materials, legal compliance requirements, maintenance support, and final validation activities are completed during this phase.\\
 
-\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-07, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-MNT-05, MAS-SUP-01, MAS-ADPT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-03, SEC-INT-03, SEC-PRV-03, SEC-AUD-02, PROD-01, PROD-02, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
+\noindent\textbf{Priority Requirements:} \hyperlink{req:COMP-LEG-01}{COMP-LEG-01} through \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:COMP-STD-01}{COMP-STD-01} through \hyperlink{req:COMP-STD-07}{COMP-STD-07}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-ACC-05}{SEC-ACC-05}, \hyperlink{req:SEC-IMM-01}{SEC-IMM-01} through \hyperlink{req:SEC-IMM-03}{SEC-IMM-03}, \hyperlink{req:MAS-MNT-01}{MAS-MNT-01} through \hyperlink{req:MAS-MNT-05}{MAS-MNT-05}, \hyperlink{req:MAS-SUP-01}{MAS-SUP-01}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01} through \hyperlink{req:MAS-ADPT-03}{MAS-ADPT-03}, \hyperlink{req:DOC-01}{DOC-01} through \hyperlink{req:DOC-04}{DOC-04}, \hyperlink{req:TRN-01}{TRN-01} through \hyperlink{req:TRN-03}{TRN-03}, \hyperlink{req:SEC-INT-03}{SEC-INT-03}, \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}, \hyperlink{req:PROD-01}{PROD-01}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:PR-C-01}{PR-C-01}, \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:PR-SE-03}{PR-SE-03}, \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:PR-L-02}{PR-L-02}
 
 \section{Migration to the New Product}
 \noindent N/A \\
@@ -3649,40 +3921,48 @@ This phase focuses on hardening the application prior to release. Security contr
 \hline
 \endhead
 
-DOC-01 &
+DOC-01\hypertarget{req:DOC-01}{} &
 Financial and Fitness Glossary &
-\textbf{Description:} \progname{} shall provide a searchable in-app glossary of the terms explained under UHR-LRN-04, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
+\textbf{Description:} \progname{} shall provide a searchable in-app glossary of the terms explained under \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, including compound interest, inflation, ETFs, bond yields, and portfolio diversification.
 
 \textbf{Rationale:} A single list of terms lets novice users review concepts they have met in the app, separately from the screen where they first saw them.
 
-\textbf{Fit Criterion:} Every term that has a contextual explanation under UHR-LRN-04 also appears in the glossary. At least 90\% of novice test participants locate and understand an ETF or compound return definition within 15 seconds.\\
+\textbf{Fit Criterion:} Every term that has a contextual explanation under \hyperlink{req:UHR-LRN-04}{UHR-LRN-04} also appears in the glossary. At least 90\% of novice test participants locate and understand an ETF or compound return definition within 15 seconds.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}\\
 \hline
 
-DOC-02 &
+DOC-02\hypertarget{req:DOC-02}{} &
 Fitness Integration Guide &
 \textbf{Description:} Flexin' shall provide an illustrated setup guide explaining how to authorize and configure supported fitness integrations and troubleshoot synchronization issues.
 
 \textbf{Rationale:} Clear instructions help users connect their fitness data sources successfully.
 
-\textbf{Fit Criterion:} Screenshot-assisted instructions shall cover all supported providers. At least 95\% of test participants shall complete authorization using the guide alone.\\
+\textbf{Fit Criterion:} Screenshot-assisted instructions shall cover all supported providers. At least 95\% of test participants shall complete authorization using the guide alone.
+
+\textbf{Related Requirements:} \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:UHR-EOU-06}{UHR-EOU-06}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01}\\
 \hline
 
-DOC-03 &
+DOC-03\hypertarget{req:DOC-03}{} &
 Searchable Help Center &
 \textbf{Description:} \progname{} shall provide an in-app, searchable help center, reachable from the settings menu, that explains all major features and covers account management and recovery, activity synchronization, activity rewards, portfolio management, simulated market mechanics, virtual currency disclaimers, and health-data privacy.
 
 \textbf{Rationale:} Users should be able to resolve common questions themselves without contacting the team. Accessible documentation also improves transparency and builds user trust.
 
-\textbf{Fit Criterion:} The help center covers every topic listed above, can be opened from the settings menu at any time, works without an external browser, supports real-time keyword filtering, and returns search results in under 200 milliseconds.\\
+\textbf{Fit Criterion:} The help center covers every topic listed above, can be opened from the settings menu at any time, works without an external browser, supports real-time keyword filtering, and returns search results in under 200 milliseconds.
+
+\textbf{Related Requirements:} \hyperlink{req:MAS-SUP-01}{MAS-SUP-01}\\
 \hline
 
-DOC-04 &
+DOC-04\hypertarget{req:DOC-04}{} &
 Digital Manual and Release Notes &
 \textbf{Description:} The team shall maintain a digital user manual and release notes in the project GitHub documentation repository.
 
 \textbf{Rationale:} Documentation enables supervisors, reviewers, and evaluators to verify functionality and assess project deliverables.
 
-\textbf{Fit Criterion:} A self-contained \acr{PDF}{Portable Document Format}{PDF} and Markdown manual shall document architecture, navigation, data flows, and troubleshooting, with release notes for major project milestones.\\
+\textbf{Fit Criterion:} A self-contained \acr{PDF}{Portable Document Format}{PDF} and Markdown manual shall document architecture, navigation, data flows, and troubleshooting, with release notes for major project milestones.
+
+\textbf{Related Requirements:} \hyperlink{req:MAS-MNT-05}{MAS-MNT-05}, \hyperlink{req:TRN-03}{TRN-03}\\
 \hline
 
 \end{xltabular}
@@ -3700,31 +3980,37 @@ Digital Manual and Release Notes &
 \hline
 \endhead
 
-TRN-01 &
+TRN-01\hypertarget{req:TRN-01}{} &
 Interactive Onboarding &
 \textbf{Description:} After account creation, Flexin' shall offer an optional, dismissible four-step walkthrough covering fitness goals, activity rewards, simulated investing, and the compounding chart.
 
 \textbf{Rationale:} Guided interaction introduces the application's core features through practical examples.
 
-\textbf{Fit Criterion:} The walkthrough shall take under 90 seconds, provide a visible ``Skip Tour'' option on every step, and remain accessible through settings.\\
+\textbf{Fit Criterion:} The walkthrough shall take under 90 seconds, provide a visible ``Skip Tour'' option on every step, and remain accessible through settings.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01}\\
 \hline
 
-TRN-02 &
+TRN-02\hypertarget{req:TRN-02}{} &
 Progressive Feature Discovery &
 \textbf{Description:} Flexin' shall progressively introduce advanced features, including portfolio rebalancing, volatility filters, and leaderboard sharing, as users gain experience.
 
 \textbf{Rationale:} Gradual feature discovery reduces cognitive overload for novice users.
 
-\textbf{Fit Criterion:} Advanced trading indicators and portfolio analytics shall remain collapsed or secondary until the user completes an initial trade or logs at least three days of physical activity.\\
+\textbf{Fit Criterion:} Advanced trading indicators and portfolio analytics shall remain collapsed or secondary until the user completes an initial trade or logs at least three days of physical activity.
+
+\textbf{Related Requirements:} \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}\\
 \hline
 
-TRN-03 &
+TRN-03\hypertarget{req:TRN-03}{} &
 Demonstrator Quick-Start Kit &
 \textbf{Description:} The team shall provide a demonstrator guide and automated demo-data seeding script for project evaluations and presentations.
 
 \textbf{Rationale:} Preloaded data enables evaluators to verify application features without completing real-time workouts.
 
-\textbf{Fit Criterion:} A preset configuration or debug toggle shall load 30 days of simulated activity and portfolio history within 10 seconds, enabling demonstrations of trading and compounding charts.\\
+\textbf{Fit Criterion:} A preset configuration or debug toggle shall load 30 days of simulated activity and portfolio history within 10 seconds, enabling demonstrations of trading and compounding charts.
+
+\textbf{Related Requirements:} \hyperlink{req:DOC-04}{DOC-04}\\
 \hline
 
 \end{xltabular}
@@ -3746,13 +4032,15 @@ capstone and will only be considered if time allows.
 \hline
 \endhead
 
-FUNC-17 &
+FUNC-17\hypertarget{req:FUNC-17}{} &
 Sponsored Reward Redemption &
 \textbf{Description:} The system shall allow users to redeem virtual currency for discounts, coupons, products, or services provided by participating sponsors.
 
 \textbf{Rationale:} Real-world rewards strengthen user engagement by connecting fitness achievements to tangible benefits. This is a stretch goal because it needs sponsor partnerships the team does not have, and because it gives the currency real-world value, which the Hazard Analysis assumes it does not have.
 
-\textbf{Fit Criterion:} Users shall be able to view available rewards, view redemption costs, and successfully redeem rewards when sufficient virtual currency is available.\\
+\textbf{Fit Criterion:} Users shall be able to view available rewards, view redemption costs, and successfully redeem rewards when sufficient virtual currency is available.
+
+\textbf{Related Requirements:} \hyperlink{req:COMP-LEG-03}{COMP-LEG-03}, \hyperlink{req:SC-05}{SC-05}\\
 \hline
 
 \end{xltabular}
@@ -3760,6 +4048,354 @@ Sponsored Reward Redemption &
 \section{Ideas for Solution}
 \noindent N/A \\
 \textbf{Reason:} To avoid focusing on the "how" within this requirements document, the team has not included any ideas for solution. The main purpose of this requirements document is to focus on the "what".
+
+\newpage{}
+\section{Appendix --- Traceability Matrix}
+\label{sec:traceability}
+
+Table~\ref{tab:trace-matrix} lists, for every requirement and constraint,
+the requirements it is related to. A relationship appears in both rows: if A
+refers to B, or B refers to A, each is listed under the other. The same list
+appears in each requirement's \emph{Related Requirements} field. All IDs are
+links. Table~\ref{tab:trace-ha} maps each safety requirement in the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard
+Analysis} to the SRS requirements that satisfy it.
+
+\small
+\begin{xltabular}{\textwidth}{|p{2.3cm}|p{4.2cm}|X|}
+\caption{Traceability matrix}\label{tab:trace-matrix}\\
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Related requirements} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Related requirements} \\
+\hline
+\endhead
+\hyperlink{req:FUNC-01}{FUNC-01} & User Registration & \hyperlink{req:UHR-EOU-01}{UHR-EOU-01}, \hyperlink{req:PR-SC-04}{PR-SC-04}, \hyperlink{req:PR-SC-05}{PR-SC-05}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:COMP-LEG-06}{COMP-LEG-06} \\
+\hline
+\hyperlink{req:FUNC-02}{FUNC-02} & User Authentication & \hyperlink{req:UHR-EOU-04}{UHR-EOU-04}, \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-ACC-05}{SEC-ACC-05}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02} \\
+\hline
+\hyperlink{req:FUNC-03}{FUNC-03} & Third-Party Fitness Data Import & \hyperlink{req:UHR-EOU-06}{UHR-EOU-06}, \hyperlink{req:PR-SL-04}{PR-SL-04}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:PR-PA-05}{PR-PA-05}, \hyperlink{req:PR-RFT-01}{PR-RFT-01}, \hyperlink{req:PR-RFT-03}{PR-RFT-03}, \hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:MAS-MNT-01}{MAS-MNT-01}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04}, \hyperlink{req:SEC-ACC-03}{SEC-ACC-03}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:COMP-LEG-01}{COMP-LEG-01}, \hyperlink{req:COMP-LEG-03}{COMP-LEG-03}, \hyperlink{req:DOC-02}{DOC-02}, \hyperlink{req:SC-04}{SC-04} \\
+\hline
+\hyperlink{req:FUNC-04}{FUNC-04} & Fitness Goal Creation & \hyperlink{req:UHR-PER-01}{UHR-PER-01}, \hyperlink{req:UHR-LRN-03}{UHR-LRN-03}, \hyperlink{req:UHR-ACC-06}{UHR-ACC-06}, \hyperlink{req:PR-SC-06}{PR-SC-06} \\
+\hline
+\hyperlink{req:FUNC-05}{FUNC-05} & Fitness Goal Tracking & \hyperlink{req:UHR-INT-01}{UHR-INT-01}, \hyperlink{req:PR-SC-02}{PR-SC-02}, \hyperlink{req:PR-PA-05}{PR-PA-05} \\
+\hline
+\hyperlink{req:FUNC-06}{FUNC-06} & Reward Allocation & \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SC-01}{PR-SC-01}, \hyperlink{req:PR-PA-02}{PR-PA-02}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03} \\
+\hline
+\hyperlink{req:FUNC-07}{FUNC-07} & Virtual Currency Tracking & \hyperlink{req:LF-STY-02}{LF-STY-02}, \hyperlink{req:PR-PA-01}{PR-PA-01}, \hyperlink{req:PR-RFT-04}{PR-RFT-04} \\
+\hline
+\hyperlink{req:FUNC-08}{FUNC-08} & Portfolio Creation & \hyperlink{req:PR-RFT-02}{PR-RFT-02} \\
+\hline
+\hyperlink{req:FUNC-09}{FUNC-09} & Asset Purchase & \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-SC-03}{PR-SC-03}, \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:PR-SE-02}{PR-SE-02}, \hyperlink{req:SEC-INT-02}{SEC-INT-02}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02}, \hyperlink{req:SC-05}{SC-05} \\
+\hline
+\hyperlink{req:FUNC-10}{FUNC-10} & Asset Sale & \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:SEC-INT-02}{SEC-INT-02}, \hyperlink{req:SC-05}{SC-05} \\
+\hline
+\hyperlink{req:FUNC-11}{FUNC-11} & Transaction Recording & \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01} \\
+\hline
+\hyperlink{req:FUNC-12}{FUNC-12} & Portfolio Performance Calculation & \hyperlink{req:LF-APP-02}{LF-APP-02}, \hyperlink{req:UHR-UND-02}{UHR-UND-02}, \hyperlink{req:PR-PA-04}{PR-PA-04}, \hyperlink{req:PR-PA-06}{PR-PA-06}, \hyperlink{req:PR-RFT-04}{PR-RFT-04} \\
+\hline
+\hyperlink{req:FUNC-13}{FUNC-13} & Leaderboard Participation & \hyperlink{req:UHR-PER-03}{UHR-PER-03}, \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:UHR-POL-04}{UHR-POL-04}, \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03} \\
+\hline
+\hyperlink{req:FUNC-14}{FUNC-14} & Friend Management & \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:UHR-POL-05}{UHR-POL-05} \\
+\hline
+\hyperlink{req:FUNC-15}{FUNC-15} & Private Leaderboards & \hyperlink{req:UHR-PER-04}{UHR-PER-04}, \hyperlink{req:PR-SC-08}{PR-SC-08} \\
+\hline
+\hyperlink{req:FUNC-16}{FUNC-16} & Progress Reporting & \hyperlink{req:LF-APP-01}{LF-APP-01}, \hyperlink{req:UHR-EOU-02}{UHR-EOU-02}, \hyperlink{req:PR-RFT-04}{PR-RFT-04}, \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:PR-L-02}{PR-L-02} \\
+\hline
+\hyperlink{req:LF-APP-01}{LF-APP-01} & Visual Hierarchy & \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:UHR-EOU-02}{UHR-EOU-02} \\
+\hline
+\hyperlink{req:LF-APP-02}{LF-APP-02} & Compounding Chart & \hyperlink{req:FUNC-12}{FUNC-12}, \hyperlink{req:UHR-ACC-03}{UHR-ACC-03} \\
+\hline
+\hyperlink{req:LF-APP-03}{LF-APP-03} & Responsive Layout & \hyperlink{req:UHR-ACC-02}{UHR-ACC-02}, \hyperlink{req:UHR-ACC-04}{UHR-ACC-04}, \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:PROD-02}{PROD-02} \\
+\hline
+\hyperlink{req:LF-APP-04}{LF-APP-04} & Theme and Contrast & \hyperlink{req:UHR-ACC-03}{UHR-ACC-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:LF-APP-05}{LF-APP-05} & Navigation & \hyperlink{req:UHR-EOU-03}{UHR-EOU-03} \\
+\hline
+\hyperlink{req:LF-STY-01}{LF-STY-01} & Approachable Tone & \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:UHR-POL-01}{UHR-POL-01} \\
+\hline
+\hyperlink{req:LF-STY-02}{LF-STY-02} & Virtual Currency Symbol & \hyperlink{req:FUNC-07}{FUNC-07}, \hyperlink{req:PR-SC-03}{PR-SC-03} \\
+\hline
+\hyperlink{req:LF-STY-03}{LF-STY-03} & Non-Intrusive Gamification & \hyperlink{req:UHR-POL-02}{UHR-POL-02}, \hyperlink{req:PR-SL-02}{PR-SL-02} \\
+\hline
+\hyperlink{req:LF-STY-04}{LF-STY-04} & Component Consistency & \hyperlink{req:UHR-EOU-07}{UHR-EOU-07} \\
+\hline
+\hyperlink{req:UHR-EOU-01}{UHR-EOU-01} & Onboarding Completion Time & \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01} \\
+\hline
+\hyperlink{req:UHR-EOU-02}{UHR-EOU-02} & Dashboard Accessibility & \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:LF-APP-01}{LF-APP-01} \\
+\hline
+\hyperlink{req:UHR-EOU-03}{UHR-EOU-03} & Minimal Screen Navigation & \hyperlink{req:LF-APP-05}{LF-APP-05} \\
+\hline
+\hyperlink{req:UHR-EOU-04}{UHR-EOU-04} & Error Feedback and Recovery & \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:MAS-SUP-01}{MAS-SUP-01} \\
+\hline
+\hyperlink{req:UHR-EOU-05}{UHR-EOU-05} & Positive Feedback & \hyperlink{req:UHR-UND-03}{UHR-UND-03}, \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03} \\
+\hline
+\hyperlink{req:UHR-EOU-06}{UHR-EOU-06} & Simple and Reliable Device Connectivity & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:DOC-02}{DOC-02} \\
+\hline
+\hyperlink{req:UHR-EOU-07}{UHR-EOU-07} & Consistent User Interface & \hyperlink{req:LF-STY-04}{LF-STY-04} \\
+\hline
+\hyperlink{req:UHR-EOU-08}{UHR-EOU-08} & Learnability & \hyperlink{req:UHR-EOU-09}{UHR-EOU-09}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01}, \hyperlink{req:TRN-01}{TRN-01}, \hyperlink{req:TRN-02}{TRN-02} \\
+\hline
+\hyperlink{req:UHR-EOU-09}{UHR-EOU-09} & Efficient Re-Learnability & \hyperlink{req:UHR-EOU-08}{UHR-EOU-08} \\
+\hline
+\hyperlink{req:UHR-PER-01}{UHR-PER-01} & Personalized Fitness Goals & \hyperlink{req:FUNC-04}{FUNC-04} \\
+\hline
+\hyperlink{req:UHR-PER-02}{UHR-PER-02} & Customizable Notifications & \hyperlink{req:UHR-ACC-05}{UHR-ACC-05}, \hyperlink{req:PR-SC-07}{PR-SC-07} \\
+\hline
+\hyperlink{req:UHR-PER-03}{UHR-PER-03} & Customizable Privacy Settings & \hyperlink{req:FUNC-13}{FUNC-13} \\
+\hline
+\hyperlink{req:UHR-PER-04}{UHR-PER-04} & Customizable Competition Groups & \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:FUNC-14}{FUNC-14}, \hyperlink{req:FUNC-15}{FUNC-15} \\
+\hline
+\hyperlink{req:UHR-INT-01}{UHR-INT-01} & Canadian Time Zone Support & \hyperlink{req:FUNC-05}{FUNC-05}, \hyperlink{req:PR-PA-05}{PR-PA-05}, \hyperlink{req:CUL-01}{CUL-01} \\
+\hline
+\hyperlink{req:UHR-LRN-01}{UHR-LRN-01} & Minimal User Training & \hyperlink{req:UHR-EOU-01}{UHR-EOU-01}, \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}, \hyperlink{req:TRN-01}{TRN-01} \\
+\hline
+\hyperlink{req:UHR-LRN-02}{UHR-LRN-02} & Learning Curve of Financial Concepts & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:DOC-01}{DOC-01} \\
+\hline
+\hyperlink{req:UHR-LRN-03}{UHR-LRN-03} & Learning Curve of Fitness Based Concepts & \hyperlink{req:FUNC-04}{FUNC-04}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04} \\
+\hline
+\hyperlink{req:UHR-LRN-04}{UHR-LRN-04} & Integrated Educational Assistance & \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-LRN-03}{UHR-LRN-03}, \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:CUL-02}{CUL-02}, \hyperlink{req:COMP-LEG-05}{COMP-LEG-05}, \hyperlink{req:DOC-01}{DOC-01} \\
+\hline
+\hyperlink{req:UHR-UND-01}{UHR-UND-01} & Plain Language Communication & \hyperlink{req:LF-STY-01}{LF-STY-01}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:CUL-01}{CUL-01}, \hyperlink{req:CUL-02}{CUL-02} \\
+\hline
+\hyperlink{req:UHR-UND-02}{UHR-UND-02} & Compounding Transparency and Distinction & \hyperlink{req:FUNC-12}{FUNC-12} \\
+\hline
+\hyperlink{req:UHR-UND-03}{UHR-UND-03} & Action Outcome Transparency & \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05} \\
+\hline
+\hyperlink{req:UHR-POL-01}{UHR-POL-01} & Respectful User Communication & \hyperlink{req:LF-STY-01}{LF-STY-01}, \hyperlink{req:UHR-POL-03}{UHR-POL-03}, \hyperlink{req:UHR-POL-04}{UHR-POL-04}, \hyperlink{req:CUL-02}{CUL-02} \\
+\hline
+\hyperlink{req:UHR-POL-02}{UHR-POL-02} & Positive Motivational Feedback & \hyperlink{req:LF-STY-03}{LF-STY-03}, \hyperlink{req:PR-SC-07}{PR-SC-07} \\
+\hline
+\hyperlink{req:UHR-POL-03}{UHR-POL-03} & Non-Punitive Performance Messaging & \hyperlink{req:UHR-POL-01}{UHR-POL-01}, \hyperlink{req:PR-SC-07}{PR-SC-07} \\
+\hline
+\hyperlink{req:UHR-POL-04}{UHR-POL-04} & Respectful Competitive Features & \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:UHR-POL-01}{UHR-POL-01} \\
+\hline
+\hyperlink{req:UHR-POL-05}{UHR-POL-05} & Respectful User-Generated Content & \hyperlink{req:FUNC-14}{FUNC-14} \\
+\hline
+\hyperlink{req:UHR-ACC-01}{UHR-ACC-01} & Screen Reader Compatibility & \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:UHR-ACC-02}{UHR-ACC-02} & Scalable Text Support & \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:UHR-ACC-03}{UHR-ACC-03} & Color Independent Information & \hyperlink{req:LF-APP-02}{LF-APP-02}, \hyperlink{req:LF-APP-04}{LF-APP-04}, \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:UHR-ACC-04}{UHR-ACC-04} & Touch Target Accessibility & \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:UHR-ACC-05}{UHR-ACC-05} & Alternative Notification Methods & \hyperlink{req:UHR-PER-02}{UHR-PER-02}, \hyperlink{req:COMP-STD-02}{COMP-STD-02} \\
+\hline
+\hyperlink{req:UHR-ACC-06}{UHR-ACC-06} & Inclusive Activity Tracking & \hyperlink{req:FUNC-04}{FUNC-04}, \hyperlink{req:MAS-MNT-01}{MAS-MNT-01} \\
+\hline
+\hyperlink{req:PR-SL-01}{PR-SL-01} & App launch & \hyperlink{req:PR-C-01}{PR-C-01} \\
+\hline
+\hyperlink{req:PR-SL-02}{PR-SL-02} & Response to input & \hyperlink{req:LF-STY-03}{LF-STY-03}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05}, \hyperlink{req:PR-C-01}{PR-C-01}, \hyperlink{req:PR-C-02}{PR-C-02}, \hyperlink{req:PR-SE-03}{PR-SE-03} \\
+\hline
+\hyperlink{req:PR-SL-03}{PR-SL-03} & Trades & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:UHR-EOU-05}{UHR-EOU-05}, \hyperlink{req:PR-C-01}{PR-C-01}, \hyperlink{req:PR-SE-03}{PR-SE-03} \\
+\hline
+\hyperlink{req:PR-SL-04}{PR-SL-04} & Activity sync & \hyperlink{req:FUNC-03}{FUNC-03} \\
+\hline
+\hyperlink{req:PR-SC-01}{PR-SC-01} & Daily earning limits & \hyperlink{req:FUNC-06}{FUNC-06} \\
+\hline
+\hyperlink{req:PR-SC-02}{PR-SC-02} & No penalties for missed days & \hyperlink{req:FUNC-05}{FUNC-05} \\
+\hline
+\hyperlink{req:PR-SC-03}{PR-SC-03} & Simulated market is labelled & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:LF-STY-02}{LF-STY-02} \\
+\hline
+\hyperlink{req:PR-SC-04}{PR-SC-04} & Not financial advice & \hyperlink{req:FUNC-01}{FUNC-01} \\
+\hline
+\hyperlink{req:PR-SC-05}{PR-SC-05} & Exercise injury warning & \hyperlink{req:FUNC-01}{FUNC-01} \\
+\hline
+\hyperlink{req:PR-SC-06}{PR-SC-06} & Safe goal progression & \hyperlink{req:FUNC-04}{FUNC-04} \\
+\hline
+\hyperlink{req:PR-SC-07}{PR-SC-07} & Notification limits & \hyperlink{req:UHR-PER-02}{UHR-PER-02}, \hyperlink{req:UHR-POL-02}{UHR-POL-02}, \hyperlink{req:UHR-POL-03}{UHR-POL-03} \\
+\hline
+\hyperlink{req:PR-SC-08}{PR-SC-08} & Safe leaderboard rules & \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:FUNC-15}{FUNC-15}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02} \\
+\hline
+\hyperlink{req:PR-PA-01}{PR-PA-01} & Exact money values & \hyperlink{req:FUNC-07}{FUNC-07} \\
+\hline
+\hyperlink{req:PR-PA-02}{PR-PA-02} & Consistent currency awards & \hyperlink{req:FUNC-06}{FUNC-06} \\
+\hline
+\hyperlink{req:PR-PA-03}{PR-PA-03} & No double counting & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:SEC-INT-01}{SEC-INT-01} \\
+\hline
+\hyperlink{req:PR-PA-04}{PR-PA-04} & Portfolio value & \hyperlink{req:FUNC-12}{FUNC-12} \\
+\hline
+\hyperlink{req:PR-PA-05}{PR-PA-05} & Workout dates & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-05}{FUNC-05}, \hyperlink{req:UHR-INT-01}{UHR-INT-01} \\
+\hline
+\hyperlink{req:PR-PA-06}{PR-PA-06} & Realistic market simulation & \hyperlink{req:FUNC-12}{FUNC-12} \\
+\hline
+\hyperlink{req:PR-RFT-01}{PR-RFT-01} & Offline activity & \hyperlink{req:FUNC-03}{FUNC-03} \\
+\hline
+\hyperlink{req:PR-RFT-02}{PR-RFT-02} & Atomic writes & \hyperlink{req:FUNC-08}{FUNC-08}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10} \\
+\hline
+\hyperlink{req:PR-RFT-03}{PR-RFT-03} & Failing data sources & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04} \\
+\hline
+\hyperlink{req:PR-RFT-04}{PR-RFT-04} & Backend unavailable & \hyperlink{req:FUNC-07}{FUNC-07}, \hyperlink{req:FUNC-12}{FUNC-12}, \hyperlink{req:FUNC-16}{FUNC-16} \\
+\hline
+\hyperlink{req:PR-C-01}{PR-C-01} & Users & \hyperlink{req:PR-SL-01}{PR-SL-01}, \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-SE-03}{PR-SE-03} \\
+\hline
+\hyperlink{req:PR-C-02}{PR-C-02} & History & \hyperlink{req:FUNC-11}{FUNC-11}, \hyperlink{req:FUNC-16}{FUNC-16}, \hyperlink{req:PR-SL-02}{PR-SL-02} \\
+\hline
+\hyperlink{req:PR-SE-01}{PR-SE-01} & Adding fitness sources & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01} \\
+\hline
+\hyperlink{req:PR-SE-02}{PR-SE-02} & Adding asset types & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:MAS-MNT-02}{MAS-MNT-02} \\
+\hline
+\hyperlink{req:PR-SE-03}{PR-SE-03} & More server capacity & \hyperlink{req:PR-SL-02}{PR-SL-02}, \hyperlink{req:PR-SL-03}{PR-SL-03}, \hyperlink{req:PR-C-01}{PR-C-01} \\
+\hline
+\hyperlink{req:PR-L-01}{PR-L-01} & Supported Android versions & \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:COMP-STD-01}{COMP-STD-01} \\
+\hline
+\hyperlink{req:PR-L-02}{PR-L-02} & Keeping user history & \hyperlink{req:FUNC-16}{FUNC-16} \\
+\hline
+\hyperlink{req:PROD-01}{PROD-01} & Build and Quality Assurance & \hyperlink{req:MAS-MNT-03}{MAS-MNT-03}, \hyperlink{req:COMP-STD-06}{COMP-STD-06}, \hyperlink{req:SC-06}{SC-06} \\
+\hline
+\hyperlink{req:PROD-02}{PROD-02} & Installability & \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:LF-APP-03}{LF-APP-03}, \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:COMP-STD-01}{COMP-STD-01} \\
+\hline
+\hyperlink{req:MAS-MNT-01}{MAS-MNT-01} & Fitness Activity Addition Effort & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:UHR-ACC-06}{UHR-ACC-06} \\
+\hline
+\hyperlink{req:MAS-MNT-02}{MAS-MNT-02} & Investment Asset Addition Effort & \hyperlink{req:PR-SE-02}{PR-SE-02} \\
+\hline
+\hyperlink{req:MAS-MNT-03}{MAS-MNT-03} & Corrective Maintenance Effort & \hyperlink{req:PROD-01}{PROD-01}, \hyperlink{req:MAS-SUP-01}{MAS-SUP-01} \\
+\hline
+\hyperlink{req:MAS-MNT-04}{MAS-MNT-04} & Third-Party Integration Maintenance & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:PR-RFT-03}{PR-RFT-03}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01} \\
+\hline
+\hyperlink{req:MAS-MNT-05}{MAS-MNT-05} & Traceability & \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:DOC-04}{DOC-04} \\
+\hline
+\hyperlink{req:MAS-SUP-01}{MAS-SUP-01} & Contact Support Capability & \hyperlink{req:UHR-EOU-04}{UHR-EOU-04}, \hyperlink{req:MAS-MNT-03}{MAS-MNT-03}, \hyperlink{req:DOC-03}{DOC-03} \\
+\hline
+\hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01} & External Fitness Provider Adaptability & \hyperlink{req:PR-SE-01}{PR-SE-01}, \hyperlink{req:MAS-MNT-04}{MAS-MNT-04}, \hyperlink{req:DOC-02}{DOC-02} \\
+\hline
+\hyperlink{req:MAS-ADPT-02}{MAS-ADPT-02} & Mobile Platform Portability & \hyperlink{req:SC-01}{SC-01} \\
+\hline
+\hyperlink{req:MAS-ADPT-03}{MAS-ADPT-03} & Future Artificial Intelligence Service Adaptability & \hyperlink{req:COMP-LEG-05}{COMP-LEG-05} \\
+\hline
+\hyperlink{req:SEC-ACC-01}{SEC-ACC-01} & Authenticated Access & \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}, \hyperlink{req:COMP-STD-07}{COMP-STD-07} \\
+\hline
+\hyperlink{req:SEC-ACC-02}{SEC-ACC-02} & Role-Based Authorization & \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02} \\
+\hline
+\hyperlink{req:SEC-ACC-03}{SEC-ACC-03} & Fitness Integration Authorization & \hyperlink{req:FUNC-03}{FUNC-03} \\
+\hline
+\hyperlink{req:SEC-ACC-04}{SEC-ACC-04} & Password and Sign-In Protection & \hyperlink{req:FUNC-01}{FUNC-01}, \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02} \\
+\hline
+\hyperlink{req:SEC-ACC-05}{SEC-ACC-05} & Session End and Device Unlinking & \hyperlink{req:FUNC-02}{FUNC-02} \\
+\hline
+\hyperlink{req:SEC-INT-01}{SEC-INT-01} & Activity Validation & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:PR-PA-03}{PR-PA-03}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02}, \hyperlink{req:SEC-IMM-03}{SEC-IMM-03} \\
+\hline
+\hyperlink{req:SEC-INT-02}{SEC-INT-02} & Server-Side Valuation & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10} \\
+\hline
+\hyperlink{req:SEC-INT-03}{SEC-INT-03} & Data Backups and Recovery & \hyperlink{req:SEC-PRV-03}{SEC-PRV-03} \\
+\hline
+\hyperlink{req:SEC-PRV-01}{SEC-PRV-01} & Health Data Protection & \hyperlink{req:COMP-LEG-02}{COMP-LEG-02}, \hyperlink{req:COMP-STD-07}{COMP-STD-07} \\
+\hline
+\hyperlink{req:SEC-PRV-02}{SEC-PRV-02} & Private by Default & \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02} \\
+\hline
+\hyperlink{req:SEC-PRV-03}{SEC-PRV-03} & User Data Deletion & \hyperlink{req:SEC-INT-03}{SEC-INT-03}, \hyperlink{req:SEC-AUD-01}{SEC-AUD-01}, \hyperlink{req:COMP-LEG-04}{COMP-LEG-04} \\
+\hline
+\hyperlink{req:SEC-AUD-01}{SEC-AUD-01} & Economic Event Logging & \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-11}{FUNC-11}, \hyperlink{req:SEC-PRV-03}{SEC-PRV-03} \\
+\hline
+\hyperlink{req:SEC-AUD-02}{SEC-AUD-02} & Security Event Logging & \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-INT-01}{SEC-INT-01}, \hyperlink{req:SEC-IMM-02}{SEC-IMM-02} \\
+\hline
+\hyperlink{req:SEC-IMM-01}{SEC-IMM-01} & Injection Defense & \hyperlink{req:COMP-STD-07}{COMP-STD-07} \\
+\hline
+\hyperlink{req:SEC-IMM-02}{SEC-IMM-02} & Rate Limiting & \hyperlink{req:FUNC-02}{FUNC-02}, \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:SEC-ACC-04}{SEC-ACC-04}, \hyperlink{req:SEC-AUD-02}{SEC-AUD-02} \\
+\hline
+\hyperlink{req:SEC-IMM-03}{SEC-IMM-03} & Client Environment Validation & \hyperlink{req:FUNC-06}{FUNC-06}, \hyperlink{req:FUNC-13}{FUNC-13}, \hyperlink{req:SEC-INT-01}{SEC-INT-01} \\
+\hline
+\hyperlink{req:CUL-01}{CUL-01} & Supports Canadian Languages & \hyperlink{req:UHR-INT-01}{UHR-INT-01}, \hyperlink{req:UHR-UND-01}{UHR-UND-01} \\
+\hline
+\hyperlink{req:CUL-02}{CUL-02} & Culturally Neutral Educational Content & \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:UHR-UND-01}{UHR-UND-01}, \hyperlink{req:UHR-POL-01}{UHR-POL-01} \\
+\hline
+\hyperlink{req:COMP-LEG-01}{COMP-LEG-01} & User Consent for Health Data Collection & \hyperlink{req:FUNC-03}{FUNC-03} \\
+\hline
+\hyperlink{req:COMP-LEG-02}{COMP-LEG-02} & Protection of Personal Information & \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02}, \hyperlink{req:COMP-LEG-04}{COMP-LEG-04} \\
+\hline
+\hyperlink{req:COMP-LEG-03}{COMP-LEG-03} & Sharing of User Data & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:FUNC-17}{FUNC-17} \\
+\hline
+\hyperlink{req:COMP-LEG-04}{COMP-LEG-04} & User Data Deletion Rights & \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}, \hyperlink{req:COMP-LEG-02}{COMP-LEG-02} \\
+\hline
+\hyperlink{req:COMP-LEG-05}{COMP-LEG-05} & AI-Content Disclosure & \hyperlink{req:UHR-LRN-04}{UHR-LRN-04}, \hyperlink{req:MAS-ADPT-03}{MAS-ADPT-03} \\
+\hline
+\hyperlink{req:COMP-LEG-06}{COMP-LEG-06} & Age Verification & \hyperlink{req:FUNC-01}{FUNC-01} \\
+\hline
+\hyperlink{req:COMP-LEG-07}{COMP-LEG-07} & Third-Party Licensing Compliance & \hyperlink{req:MAS-MNT-05}{MAS-MNT-05}, \hyperlink{req:SC-02}{SC-02}, \hyperlink{req:SC-03}{SC-03}, \hyperlink{req:SC-04}{SC-04} \\
+\hline
+\hyperlink{req:COMP-STD-01}{COMP-STD-01} & Android Platform Compliance & \hyperlink{req:PR-L-01}{PR-L-01}, \hyperlink{req:PROD-02}{PROD-02}, \hyperlink{req:SC-06}{SC-06} \\
+\hline
+\hyperlink{req:COMP-STD-02}{COMP-STD-02} & Accessibility Compliance & \hyperlink{req:LF-APP-04}{LF-APP-04}, \hyperlink{req:UHR-ACC-01}{UHR-ACC-01}, \hyperlink{req:UHR-ACC-02}{UHR-ACC-02}, \hyperlink{req:UHR-ACC-03}{UHR-ACC-03}, \hyperlink{req:UHR-ACC-04}{UHR-ACC-04}, \hyperlink{req:UHR-ACC-05}{UHR-ACC-05} \\
+\hline
+\hyperlink{req:COMP-STD-03}{COMP-STD-03} & TypeScript Coding Standards Compliance & \hyperlink{req:SC-02}{SC-02} \\
+\hline
+\hyperlink{req:COMP-STD-04}{COMP-STD-04} & Java Coding Standards Compliance & \hyperlink{req:SC-03}{SC-03} \\
+\hline
+\hyperlink{req:COMP-STD-05}{COMP-STD-05} & Database Compliance & \hyperlink{req:SC-03}{SC-03} \\
+\hline
+\hyperlink{req:COMP-STD-06}{COMP-STD-06} & Software Testing Standard Compliance & \hyperlink{req:PROD-01}{PROD-01} \\
+\hline
+\hyperlink{req:COMP-STD-07}{COMP-STD-07} & Information Security Compliance & \hyperlink{req:SEC-ACC-01}{SEC-ACC-01}, \hyperlink{req:SEC-PRV-01}{SEC-PRV-01}, \hyperlink{req:SEC-IMM-01}{SEC-IMM-01} \\
+\hline
+\hyperlink{req:DOC-01}{DOC-01} & Financial and Fitness Glossary & \hyperlink{req:UHR-LRN-02}{UHR-LRN-02}, \hyperlink{req:UHR-LRN-04}{UHR-LRN-04} \\
+\hline
+\hyperlink{req:DOC-02}{DOC-02} & Fitness Integration Guide & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:UHR-EOU-06}{UHR-EOU-06}, \hyperlink{req:MAS-ADPT-01}{MAS-ADPT-01} \\
+\hline
+\hyperlink{req:DOC-03}{DOC-03} & Searchable Help Center & \hyperlink{req:MAS-SUP-01}{MAS-SUP-01} \\
+\hline
+\hyperlink{req:DOC-04}{DOC-04} & Digital Manual and Release Notes & \hyperlink{req:MAS-MNT-05}{MAS-MNT-05}, \hyperlink{req:TRN-03}{TRN-03} \\
+\hline
+\hyperlink{req:TRN-01}{TRN-01} & Interactive Onboarding & \hyperlink{req:UHR-EOU-08}{UHR-EOU-08}, \hyperlink{req:UHR-LRN-01}{UHR-LRN-01} \\
+\hline
+\hyperlink{req:TRN-02}{TRN-02} & Progressive Feature Discovery & \hyperlink{req:UHR-EOU-08}{UHR-EOU-08} \\
+\hline
+\hyperlink{req:TRN-03}{TRN-03} & Demonstrator Quick-Start Kit & \hyperlink{req:DOC-04}{DOC-04} \\
+\hline
+\hyperlink{req:FUNC-17}{FUNC-17} & Sponsored Reward Redemption & \hyperlink{req:COMP-LEG-03}{COMP-LEG-03}, \hyperlink{req:SC-05}{SC-05} \\
+\hline
+\hyperlink{req:SC-01}{SC-01} & Android platform & \hyperlink{req:MAS-ADPT-02}{MAS-ADPT-02} \\
+\hline
+\hyperlink{req:SC-02}{SC-02} & Frontend technology & \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:COMP-STD-03}{COMP-STD-03} \\
+\hline
+\hyperlink{req:SC-03}{SC-03} & Backend technology & \hyperlink{req:COMP-LEG-07}{COMP-LEG-07}, \hyperlink{req:COMP-STD-04}{COMP-STD-04}, \hyperlink{req:COMP-STD-05}{COMP-STD-05} \\
+\hline
+\hyperlink{req:SC-04}{SC-04} & Fitness data sources & \hyperlink{req:FUNC-03}{FUNC-03}, \hyperlink{req:COMP-LEG-07}{COMP-LEG-07} \\
+\hline
+\hyperlink{req:SC-05}{SC-05} & Simulated market only & \hyperlink{req:FUNC-09}{FUNC-09}, \hyperlink{req:FUNC-10}{FUNC-10}, \hyperlink{req:FUNC-17}{FUNC-17} \\
+\hline
+\hyperlink{req:SC-06}{SC-06} & Distribution & \hyperlink{req:PROD-01}{PROD-01}, \hyperlink{req:COMP-STD-01}{COMP-STD-01} \\
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{|p{3.6cm}|X|}
+\caption{Hazard Analysis safety requirements and the SRS requirements that satisfy them}\label{tab:trace-ha}\\
+\hline
+\textbf{Safety requirement} & \textbf{SRS requirements} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Safety requirement} & \textbf{SRS requirements} \\
+\hline
+\endhead
+SR1 & \hyperlink{req:SEC-ACC-04}{SEC-ACC-04} \\
+\hline
+SR2 & \hyperlink{req:SEC-ACC-05}{SEC-ACC-05} \\
+\hline
+SR3 & \hyperlink{req:SEC-ACC-02}{SEC-ACC-02}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02} \\
+\hline
+SR4 & \hyperlink{req:UHR-EOU-04}{UHR-EOU-04}, \hyperlink{req:PR-RFT-03}{PR-RFT-03} \\
+\hline
+SR5 & \hyperlink{req:PR-PA-05}{PR-PA-05} \\
+\hline
+SR6 & \hyperlink{req:PR-SC-06}{PR-SC-06} \\
+\hline
+SR7 & \hyperlink{req:PR-SC-07}{PR-SC-07} \\
+\hline
+SR8 & \hyperlink{req:PR-SC-01}{PR-SC-01}, \hyperlink{req:PR-SC-02}{PR-SC-02} \\
+\hline
+SR9 & \hyperlink{req:PR-SC-08}{PR-SC-08}, \hyperlink{req:SEC-PRV-02}{SEC-PRV-02} \\
+\hline
+SR10 & \hyperlink{req:PR-PA-06}{PR-PA-06} \\
+\hline
+SR11 & \hyperlink{req:PR-SC-03}{PR-SC-03}, \hyperlink{req:PR-SC-04}{PR-SC-04} \\
+\hline
+SR12 & \hyperlink{req:PR-RFT-02}{PR-RFT-02}, \hyperlink{req:SEC-INT-03}{SEC-INT-03} \\
+\hline
+\end{xltabular}
+\normalsize
 
 \newpage{}
 \section{Appendix --- Generative AI Use Disclosure}
