@@ -281,13 +281,12 @@ The product will run on the environment its users already have:
 \begin{itemize}
   \item An Android phone with Health Connect, which collects activity data from
   the phone's sensors and from other fitness apps the user has installed.
-  \item Optionally, a wearable such as a Garmin watch, or an account with a
-  fitness service such as Strava.
+  \item Optionally, a Garmin watch.
   \item A mobile data or Wi-Fi connection to reach the \progname{} backend.
 \end{itemize}
 
-The backend (Spring API and MySQL database, see SC3) will be hosted on servers
-run by the team.
+The MySQL database (see SC-03) will be hosted on McMaster University's MySQL
+server, provided to the team for the course.
 
 \subsection{Partner or Collaborative Applications}
 
@@ -300,8 +299,6 @@ model (see SC4).
   data. The user must grant \progname{} permission to read each data type.
   \item[Garmin Connect IQ:] Gives access to activity data from Garmin watches
   for users who own one.
-  \item[Strava API:] Gives access to runs, rides, and other activities logged
-  in Strava, after the user authorizes \progname{} on their Strava account.
 \end{description}
 
 The simulated market does not depend on any external price feed. Its assets and
@@ -451,7 +448,7 @@ The following assumptions will be made during the process of development:
 \begin{itemize}
     \item \textbf{Fitness Devices Properly Track Workouts}: Flexin' will assume that data provided by fitness devices is correct and only changed through the intended means. Any artificial changes will be deemed as dishonest use and Flexin' will not provide value.
     \item \textbf{The User's Device Is Not Compromised}: Flexin' assumes that the device running the app has not been rooted, "jailbroken", or infected with malware. 
-    \item \textbf{Cloud Infrastructure Provides Its Advertised Guarantees}: Flexin' assumes that its hosting and database provider meets its stated durability and encryption-at-rest guarantees. All private information will not be in jeopardy of a data leak.
+    \item \textbf{The University Database Server Provides Its Advertised Guarantees}: Flexin' assumes that McMaster University's MySQL server, which hosts its database, meets its stated availability, durability, and security guarantees, so that private information is not put at risk by the server itself.
     \item \textbf{Users Provide Truthful Personal Information}: Flexin' assumes that the height, weight, fitness level, and health conditions users enter are accurate to the best of their knowledge.
 \end{itemize}
 
@@ -2280,7 +2277,7 @@ PR-RFT3 &
 Failing data sources &
 \textbf{Description:} If a fitness data source is unavailable or returns invalid data, the app shall keep working with its other sources and credit no currency for the invalid data. A failed workout sync shall be retried automatically, and if it still fails, the app shall tell the user which source has a problem and why.
 
-\textbf{Rationale:} Outages at Garmin, Strava, or Health Connect are outside the team's control and should not make the whole app unusable. Users should find out about a failed sync from the app, not from a broken streak.
+\textbf{Rationale:} Outages at Garmin or Health Connect are outside the team's control and should not make the whole app unusable. Users should find out about a failed sync from the app, not from a broken streak.
 
 \textbf{Fit Criterion:} With one source disabled or returning malformed data in testing, the app stays usable, retries the sync, then shows a message naming that source and the cause, and awards nothing for the bad data.
 
@@ -2431,15 +2428,15 @@ Keeping user history &
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
-The application will be operable through mobile smartphones and smart tablets with cellular/Wi-Fi connectivity. Inputs will be completed through health tracking services that will be provided by the smart device that is running the software, or optionally received through other technologies used for health tracking.
+The application will be operable through Android smartphones with cellular/Wi-Fi connectivity. Tablets are not supported. Inputs will be completed through health tracking services that will be provided by the smart device that is running the software, or optionally received through other technologies used for health tracking.
 \subsection{Wider Environment Requirements}
-The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the device specific application store (i.e. Google Play Store and various Android App Stores). 
+The app will be designed for the Android operating system for the Capstone Project. We must adhere to regulations/policies and limitations of the system. Software distribution and update management will be handled through the Google Play Store. 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 Many outside systems will be used:
 \begin{itemize}
     \item HTTPS connection to external APIs
     \begin{enumerate}
-        \item External Technology Connection (e.g., Garmin API, Strava SDK)
+        \item External Technology Connection (Garmin Connect IQ SDK)
         \item Software-specific API for health-related tracking (Android Health Connect)
     \end{enumerate}
     \item HTTPS connection to internal APIs
@@ -2448,7 +2445,7 @@ Many outside systems will be used:
     \end{enumerate}
     \item Database Connection
     \begin{enumerate}
-        \item Privately hosted MySQL server
+        \item McMaster University's MySQL server
     \end{enumerate}
 \end{itemize}
 \subsection{Productization Requirements}
@@ -2466,13 +2463,13 @@ Many outside systems will be used:
 
 PROD-01 &
 Installation and Updates channels &
-\textbf{Description:} The application distribution and update management shall be handled through the supported Android app stores.
+\textbf{Description:} The application distribution and update management shall be handled through the Google Play Store.
 \textbf{Rationale:} The app store system is an established process that users will already be familiar with. This allows the user base to continue a process they have become accustomed too.
-\textbf{Fit Criterion:} Users will be able to download and update the application through the Android app store.\\
+\textbf{Fit Criterion:} Users will be able to download and update the application through the Google Play Store.\\
 \hline
 PROD-02 &
 Build and Quality Assurance & 
-\textbf{Description:} The application will be subject to all the basic coding tests and standards needed to be published on the Android app store.
+\textbf{Description:} The application will be subject to all the basic coding tests and standards needed to be published on the Google Play Store.
 \textbf{Rationale:} An app must be whole and completely working to provide value to the user base.
 \textbf{Fit Criterion:} All automated and manual written code tests must pass (100\%) to be deemed fully complete.\\
 \hline
@@ -2480,10 +2477,12 @@ Build and Quality Assurance &
 \subsection{Release Requirements}
 The project releases will be aligned with the deliverables of the capstone project schedule:
 \begin{enumerate}
-    \item Design Document Revision -1 + Fall Term User Interview Revision 0 in week 10.
-    \item PoC Demonstration Build and Interview in Week 11-12.
-    \item Final Demonstration Revision 1 in week 24.
-    \item Final Documents (Revision 1) and Expo Product + Demonstration in Week 26.
+    \item Design Document Revision -1 and Fall Term User Interview report (CD-Fall) in Week 10.
+    \item Proof of Concept demonstration build in Weeks 11--12.
+    \item Revision 0 demonstration build in Weeks 18--19.
+    \item Final demonstration build in Week 23.
+    \item Final Documents (Revision 1), EXPO poster, and video in Week 25.
+    \item Capstone EXPO product and demonstration in Week 26.
 \end{enumerate}   
 
 
@@ -2995,7 +2994,7 @@ User Data Deletion Rights &
 
 \textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding privacy regulations and PPCDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding data ownership and the user's right to disposal. 
 
-\textbf{Fit Criterion:} Users shall be able to initiate account deletion through the application's settings menu at any time, after which all traces of the user's personal information shall be removed from the system.\\ 
+\textbf{Fit Criterion:} Users shall be able to initiate account deletion through the application's settings menu at any time. The user's personal information shall be removed from the active database within 24 hours of the request (SEC-PRV-03). Data is backed up by default (SEC-INT-04), so copies held in backups shall be removed as those backups expire, within 30 days. Audit records (SEC-AUD-01) shall keep only an anonymized account identifier that can no longer be linked to the deleted user.\\
 \hline 
 
 COMP-LEG-06 & 
@@ -3147,7 +3146,8 @@ connects fitness habits to learning how investments grow.
 
   \item[Fitness trackers (e.g.\ Strava, Garmin Connect, Health Connect):]
   These record activity accurately but do not offer any financial component.
-  \progname{} will use them as data sources rather than replace them.
+  \progname{} will use Health Connect and Garmin as data sources rather than
+  replace them.
 \end{description}
 
 Since no ready-made product covers both halves of the problem, the team will
@@ -3164,8 +3164,7 @@ use within the project's budget.
   \begin{itemize}
     \item \texttt{react-native-health-connect}, an open-source (MIT) React
     Native library for reading data from Android Health Connect.
-    \item The Garmin Connect IQ SDK and Strava API for external devices and
-    services.
+    \item The Garmin Connect IQ SDK for Garmin watches.
   \end{itemize}
 
   \item[Mobile client:]\leavevmode
