@@ -434,7 +434,8 @@ involved in the Project}
 
 \begin{itemize} 
   \item Only validated fitness activity may be used to generate virtual currency rewards. 
-  \item Virtual currency has no real-world monetary value but may potentially be exchanged for real life rewards with sponsored brands. 
+  \item Virtual currency has no real-world monetary value and cannot be exchanged for money, goods, or services. Exchanging currency for real-world rewards from sponsors is a stretch goal (see the Waiting Room).
+  \item Virtual currency is earned only through physical activity, and a user's balance grows otherwise only through the returns on their simulated investments.
   \item All investment activity shall occur within a simulated market environment. 
   \item Users must possess sufficient virtual currency before a simulated purchase can be executed. 
   \item Users may only sell assets that they currently own within their simulated portfolio. 
@@ -1276,12 +1277,12 @@ Register and setup fitness/finance goals &
 The user upon opening the application will be able to login to an existing account or register a new account. Upon registering a new account the user will complete a fitness and finance questionnaire to assess their current level of understanding. \textbf{See section 8.3 - Figure 1}.
 \\ \hline
 Claim Virtual Currency&
-Users will be able to work toward their fitness goals and complete fitness challenges (i.e. Steps/workout challenges) to collect virtual currency. Users will also have objectives and be able to complete financial lessons for virtual currency. \textbf{See section 8.3 - Figure 2}.
+Users will be able to work toward their fitness goals and complete fitness challenges (i.e. Steps/workout challenges) to collect virtual currency. Physical activity is the only way to earn new currency. \textbf{See section 8.3 - Figure 2}.
 \\ \hline
 View Portfolio and Growth Graphs&
 Users will have a virtual portfolio to be managed. This is where they will be able to practice their financial teachings and investment strategies. \textbf{See section 8.3 - Figure 3}.
 \\ \hline
-Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a completely virtual stock exchange simulator that will allow users to study investment strategies and buy/sell investments. This stock exchange will be another means for users to earn virtual currency. \textbf{See section 8.3 - Figure 4}. 
+Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a completely virtual stock exchange simulator that will allow users to study investment strategies and buy/sell investments. Returns on these investments are the only way, other than physical activity, for a user's balance to grow. \textbf{See section 8.3 - Figure 4}.
 \\ \hline
 \end{tabular}
 \caption{Product Use Case Table}
@@ -1473,15 +1474,6 @@ Progress Reporting &
 \textbf{Rationale:} Summaries help users understand their overall progress and achievements.
 
 \textbf{Fit Criterion:} Users shall be able to access current and historical progress information at any time.\\
-\hline
-
-FUNC-17 & 
-Sponsored Reward Redemption & 
-\textbf{Description:} The system shall allow users to redeem virtual currency for discounts, coupons, products, or services provided by participating sponsors.
-
-\textbf{Rationale:} Real-world rewards strengthen user engagement by connecting fitness achievements to tangible benefits.
-
-\textbf{Fit Criterion:} Users shall be able to view available rewards, view redemption costs, and successfully redeem rewards when sufficient virtual currency is available.\\
 \hline
 
 \end{xltabular}
@@ -2984,7 +2976,7 @@ COMP-LEG-03 &
 Sharing of User Data & 
 \textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA (***LINK TO ACRONYM DEFINITIONS**). 
 
-\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03) and companies (for incentivising rewards to motivate users and offer brand sponsoring - FUNC-17). Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
+\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03). If sponsored rewards (FUNC-17, a stretch goal) are added later, sponsors will also be third parties covered by this requirement. Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
 
 \textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
 \hline 
@@ -3037,7 +3029,7 @@ COMP-LEG-09 &
 Fitness Activity Risk Acknowledgement & 
 \textbf{Description:} The system shall require users to acknowledge that participation in physical activities undertaken while using the application is performed at their own risk. 
 
-\textbf{Rationale:} The system rewards users for completing physical activities, where more rewards are available for higher-intensity or a higher quantity of activities. As a result, users may push their physical limits to gain more rewards and that may lead to injury (see H4.2 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
+\textbf{Rationale:} The system rewards users with currency for completing physical activities. Although daily earnings are capped and activity beyond a healthy volume earns less (PR-SC-01), users may still push their physical limits to gain more rewards and that may lead to injury (see H4.2 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
 
 \textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu.\\ 
 \hline
@@ -3280,9 +3272,9 @@ This phase introduces the simulated financial market and portfolio management ca
 \subsubsection{Phase 3 --- Community and Gamification} 
 \noindent\textbf{Deadline:} February 14, 2027 \\
 
-This phase focuses on user engagement features including leaderboards, friend groups, private competitions, progress reporting, and sponsor-based reward redemption. \\
+This phase focuses on user engagement features including leaderboards, friend groups, private competitions, and progress reporting. Sponsor-based reward redemption (FUNC-17) is a stretch goal and is not scheduled (see the Waiting Room). \\
 
-\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, FUNC-17, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05
+\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05
 
 \subsubsection{Phase 4 --- Usability, Accessibility, and Learning} 
 \noindent\textbf{Deadline:} February 28, 2027 \\
@@ -3428,7 +3420,32 @@ Demonstrator Quick-Start Kit &
 \end{longtable}
 
 \section{Waiting Room}
-\noindent N/A
+
+The requirements below are stretch goals. They are out of scope for the
+capstone and will only be considered if time allows.
+
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
+
+FUNC-17 &
+Sponsored Reward Redemption &
+\textbf{Description:} The system shall allow users to redeem virtual currency for discounts, coupons, products, or services provided by participating sponsors.
+
+\textbf{Rationale:} Real-world rewards strengthen user engagement by connecting fitness achievements to tangible benefits. This is a stretch goal because it needs sponsor partnerships the team does not have, and because it gives the currency real-world value, which the Hazard Analysis assumes it does not have.
+
+\textbf{Fit Criterion:} Users shall be able to view available rewards, view redemption costs, and successfully redeem rewards when sufficient virtual currency is available.\\
+\hline
+
+\end{xltabular}
 
 \section{Ideas for Solution}
 \noindent N/A \\
