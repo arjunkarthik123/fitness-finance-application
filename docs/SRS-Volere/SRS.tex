@@ -32,7 +32,7 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
+\title{Software Requirements Specification for \progname} 
 \author{\authname}
 \date{\today}
 	
@@ -51,8 +51,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+October 19, 2026 & 1.0 & Revision 0\\
 \bottomrule
 \end{tabularx}
 
@@ -104,7 +103,6 @@ Chris was responsible for providing the initial idea and will work throughout ea
     \item \textbf{Financial Institution/Banks:} which benefit from financially literate consumers who will engage more with their finances.
     \item \textbf{Gyms/Training Facilities:} which can benefit from increased user activity by providing a place to exercise. 
 \end{itemize}
-\lips
 \subsection{Hands-On Users of the Project}
 \begin{itemize}
     \item \textbf{Mobile (Android) Smartphone Users:} users will be able to interact with the app and utilize the different features to view and track financial and fitness goals. For the purpose of Capstone our final deployed app will be for Android users only.
@@ -157,13 +155,13 @@ Connor maintains a demanding schedule focused on academics, career development, 
 Connor finds it difficult to balance his academic workload, career ambitions, and personal interests while maintaining an active lifestyle. Beginner-focused financial platforms may not provide enough depth or challenge to keep him engaged, while traditional fitness applications may not offer the competitive elements that motivate him. Connor wants an efficient, challenging experience that allows him to demonstrate his financial knowledge while encouraging him to make time for exercise.
 \subsubsection{Daniella — The All-Arounder}
 \subsubsection*{Background}
-Daniella is a recent Civil Engineering graduate from the University of Guelph who gained valuable work experience and earned a substantial amount of money through multiple co-op placements throughout his degree. Through personal curiosity and working with her bank to understand her finances, Daniella developed a strong awareness of saving and managing money. Following graduation, she dedicated significant time to building her own investment portfolio and developing her financial knowledge. Although she has gained practical experience managing her savings, Daniella wants to become more confident in making independent investment decisions.
+Daniella is a recent Civil Engineering graduate from the University of Guelph who gained valuable work experience and earned a substantial amount of money through multiple co-op placements throughout her degree. Through personal curiosity and working with her bank to understand her finances, Daniella developed a strong awareness of saving and managing money. Following graduation, she dedicated significant time to building her own investment portfolio and developing her financial knowledge. Although she has gained practical experience managing her savings, Daniella wants to become more confident in making independent investment decisions.
 
 \subsubsection*{Goals and Motivations}
-Daniella enjoys staying active through a variety of organized sports which he participates in throughout the year. She worries that the time commitment required by multiple sports leagues may eventually become unsustainable, and makes the decision to cut back on some of the organized leagues that she participates in. She is interested in beginning a more traditional circuit-style workout as these tend to be more convenient. Financially, she wants to continue growing her investment portfolio while gaining more experience evaluating opportunities and making important investment decisions independently.
+Daniella enjoys staying active through a variety of organized sports which she participates in throughout the year. She worries that the time commitment required by multiple sports leagues may eventually become unsustainable, and makes the decision to cut back on some of the organized leagues that she participates in. She is interested in beginning a more traditional circuit-style workout as these tend to be more convenient. Financially, she wants to continue growing her investment portfolio while gaining more experience evaluating opportunities and making important investment decisions independently.
 
 \subsubsection*{Behaviours and Habits}
-Daniella balances her professional responsibilities and personal interests while maintaining an active social life through organized sports. She prefers physical activities that are engaging, competitive, and social. Financially, Daniella takes an active role in monitoring his savings and managing his investment portfolio. She is curious, self-motivated, and willing to learn independently, but recognizes that managing a portfolio with real money offers limited opportunities to experiment with unfamiliar strategies without risking her savings.
+Daniella balances her professional responsibilities and personal interests while maintaining an active social life through organized sports. She prefers physical activities that are engaging, competitive, and social. Financially, Daniella takes an active role in monitoring her savings and managing her investment portfolio. She is curious, self-motivated, and willing to learn independently, but recognizes that managing a portfolio with real money offers limited opportunities to experiment with unfamiliar strategies without risking her savings.
 
 \subsubsection*{Needs and Expectations}
 \begin{itemize}
@@ -176,7 +174,7 @@ Daniella balances her professional responsibilities and personal interests while
 \end{itemize}
 
 \subsubsection*{Frustrations}
-Daniella finds it challenging to balance his professional life, multiple sports leagues, and financial goals without over-committing her time. Although she enjoys sports, she recognizes that relying entirely on organized leagues may make it difficult to maintain a consistent fitness routine year-round. Similarly, while she has successfully developed her own investment portfolio, she wants more opportunities to test strategies and learn from her decisions without putting his savings at risk. Daniella wants a flexible and practical solution that supports her financial growth and physical well-being while fitting naturally into his lifestyle.
+Daniella finds it challenging to balance her professional life, multiple sports leagues, and financial goals without over-committing her time. Although she enjoys sports, she recognizes that relying entirely on organized leagues may make it difficult to maintain a consistent fitness routine year-round. Similarly, while she has successfully developed her own investment portfolio, she wants more opportunities to test strategies and learn from her decisions without putting her savings at risk. Daniella wants a flexible and practical solution that supports her financial growth and physical well-being while fitting naturally into her lifestyle.
 
 \subsection{Priorities Assigned to Users}
 The project's main priority will be to focus on the beginner - novice users of the application. The goal will be to teach the basis of health/fitness and financial literacy.
@@ -339,8 +337,8 @@ the design in a few ways:
   readable on a small screen in bright light and usable with one hand.
   \item The connection may be slow or drop out. Activity data must not be lost
   when the phone is offline; it should sync once the connection returns.
-  \item Users will not have a manual or training. The interface has to explain
-  financial terms itself, in line with the goal of a simple and delightful user
+  \item Users should not need a manual or formal training to use the app (see
+  TRN-01). The interface has to explain financial terms itself, in line with the goal of a simple and delightful user
   experience.
   \item Step counting runs in the background through Health Connect, so the
   app must not drain the battery noticeably during a normal day.
@@ -401,7 +399,8 @@ Android emulator, so no test hardware will be bought.
   such as height, weight, health conditions, and activity history. It must
   handle that data in line with Canadian privacy law (PIPEDA): collect only
   what is needed, get the user's consent, and let users see and delete their
-  data. Details will be set out in the security and privacy requirements.
+  data. Details are set out in the Privacy Requirements (SEC-PRV-01 to
+  SEC-PRV-03) and Legal Requirements (COMP-LEG-01 to COMP-LEG-05).
   \item \textbf{No financial advice.} The product teaches general investing
   concepts. It must not present anything as personalized financial advice, and
   any content that could be read that way needs a clear disclaimer.
@@ -1067,7 +1066,28 @@ Each of the rectangles represents a class of business data. The attributes of ea
     User ID & Integer & Unique identifier for a user account & Primary Key, Not Null \\ 
     \hline 
     
-    Password & String & User authentication credential & Encrypted, Not Null \\ 
+    Email & String & Email address used to sign in and to reset the password (FUNC-01, SEC-ACC-04) & Unique, Not Null \\ 
+    \hline 
+    
+    Password & String & User authentication credential, stored as a salted hash & Hashed, Not Null \\ 
+    \hline 
+    
+    Date of Birth & Date & Used to confirm the user is 18 or older (COMP-LEG-07) & Not Null, Age $\geq 18$ \\ 
+    \hline 
+    
+    Height & Decimal & User's height, used to tailor fitness goals & Optional, Encrypted \\ 
+    \hline 
+    
+    Weight & Decimal & User's weight, used to tailor fitness goals & Optional, Encrypted \\ 
+    \hline 
+    
+    Health Conditions & String & Health conditions the user chooses to share & Optional, Encrypted \\ 
+    \hline 
+    
+    Display Alias & String & Name shown to other users on leaderboards (SEC-PRV-02) & Unique, Optional \\ 
+    \hline 
+    
+    Leaderboard Opt-In & Boolean & Whether the user has joined any leaderboard group (PR-SC-08) & Default False \\ 
     \hline 
     
     Currency & Decimal & Current virtual currency balance & $\geq 0$ \\ 
@@ -1169,6 +1189,15 @@ Each of the rectangles represents a class of business data. The attributes of ea
     
     Activity Details & String & What is required/associated with carrying out the activity (i.e. 10,000 steps, burn 100 calories, etc.) & Not Null \\ 
     \hline 
+    
+    Start Time & DateTime & When the activity happened on the source device, not when it was synced (PR-PA-05) & Not Null \\ 
+    \hline 
+    
+    Source & Enum & Where the activity data came from & Health Connect, Garmin \\ 
+    \hline 
+    
+    Source Record ID & String & The source's identifier for the record, used to prevent double counting (PR-PA-03) & Unique per Source \\ 
+    \hline
 \end{xltabular}
 
 \subsubsection{Portfolio} 
@@ -1230,6 +1259,12 @@ Each of the rectangles represents a class of business data. The attributes of ea
     Asset ID & Integer & Asset involved in the transaction & Foreign Key \\ 
     \hline 
     
+    Transaction Type & Enum & Whether the transaction bought or sold the asset & Buy, Sell \\ 
+    \hline 
+    
+    Quantity & Integer & Number of units bought or sold & $> 0$ \\ 
+    \hline 
+    
     Transaction Cost & Decimal & Cost of the asset at the time of transaction & $\geq 0$ \\ 
     \hline 
     
@@ -1271,15 +1306,15 @@ Additionally, many external fitness devices (e.g., Garmin watches) offer APIs an
 \textbf{Use Case} & \textbf{Description} \\ \hline
 
 Register and setup fitness/finance goals &
-The user upon opening the application will be able to login to an existing account or register a new account. Upon registering a new account the user will complete a fitness and finance questionnaire to assess their current level of understanding. \textbf{See section 8.3 - Figure 1}.
+The user upon opening the application will be able to login to an existing account or register a new account. Upon registering a new account the user will complete a fitness and finance questionnaire to assess their current level of understanding. \textbf{See Figure~\ref{fig:puc-onboarding}}.
 \\ \hline
 Claim Virtual Currency&
-Users will be able to work toward their fitness goals and complete fitness challenges (i.e. Steps/workout challenges) to collect virtual currency. Physical activity is the only way to earn new currency. \textbf{See section 8.3 - Figure 2}.
+Users will be able to work toward their fitness goals and complete fitness challenges (i.e. Steps/workout challenges) to collect virtual currency. Physical activity is the only way to earn new currency. \textbf{See Figure~\ref{fig:puc-claim-currency}}.
 \\ \hline
 View Portfolio and Growth Graphs&
-Users will have a virtual portfolio to be managed. This is where they will be able to practice their financial teachings and investment strategies. \textbf{See section 8.3 - Figure 3}.
+Users will have a virtual portfolio to be managed. This is where they will be able to practice their financial teachings and investment strategies. \textbf{See Figure~\ref{fig:puc-portfolio}}.
 \\ \hline
-Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a completely virtual stock exchange simulator that will allow users to study investment strategies and buy/sell investments. Returns on these investments are the only way, other than physical activity, for a user's balance to grow. \textbf{See section 8.3 - Figure 4}.
+Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a completely virtual stock exchange simulator that will allow users to study investment strategies and buy/sell investments. Returns on these investments are the only way, other than physical activity, for a user's balance to grow. \textbf{See Figure~\ref{fig:puc-exchange}}.
 \\ \hline
 \end{tabular}
 \caption{Product Use Case Table}
@@ -1290,24 +1325,28 @@ Use the Flexin' exchange to practice investing& "The Flexin' Exchange" will be a
     \centering 
     \includegraphics[width=0.85\textwidth]{../../assets/images/UserOnboardingFlowchart.png} 
     \caption{Product Use Case: User Onboarding} 
+    \label{fig:puc-onboarding}
 \end{figure}
 
 \begin{figure}[H] 
     \centering 
-    \includegraphics[width=0.85\textwidth]{../../assets/images/UserOnboardingFlowchart.png} 
+    \includegraphics[width=0.85\textwidth]{../../assets/images/VirtualCurrencyUserJourneyFlowchart.png} 
     \caption{Product Use Case: Claim Virtual Currency} 
+    \label{fig:puc-claim-currency}
 \end{figure}
 
 \begin{figure}[H] 
     \centering 
     \includegraphics[width=0.85\textwidth]{../../assets/images/PortfolioDashboardFlowchart.png} 
     \caption{Product Use Case: View Stock Portfolios} 
+    \label{fig:puc-portfolio}
 \end{figure}
 
 \begin{figure}[H] 
     \centering 
     \includegraphics[width=0.85\textwidth]{../../assets/images/InvestmentPlatformNavigationFlowchart.png} 
     \caption{Product Use Case: Use the Flexin' Stock Exchange} 
+    \label{fig:puc-exchange}
 \end{figure}
 
 
@@ -1565,7 +1604,7 @@ Simulated Finance Clarity &
 
 \textbf{Rationale:} Users must not confuse Flexin with a real brokerage or financial account.
 
-\textbf{Fit Criterion:} Every screen displaying financial values shall show the virtual currency symbol (e.g., FLX) and a clearly visible ``Simulated Market'' label.\\
+\textbf{Fit Criterion:} Every screen displaying financial values shall show the virtual currency symbol (e.g., FLX) and a clearly visible ``Simulated Market'' label (see also PR-SC-03).\\
 \hline
 
 LF-STY-03 &
@@ -2091,7 +2130,7 @@ PR-SC-03 &
 Simulated market is labelled &
 \textbf{Description:} Every screen that shows prices, holdings, or returns shall state that the market is simulated and that results do not predict real returns. Each of these screens shall link to an explanation of what the simulation does not model, such as fees, taxes, and real-world volatility.
 
-\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money.
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money. The on-screen label itself is specified in LF-STY-02.
 
 \textbf{Fit Criterion:} A review of every market and portfolio screen finds the notice visible on each one, and the explanation of the simulation's limits can be reached from each one.
 
@@ -2102,7 +2141,7 @@ PR-SC-04 &
 Not financial advice &
 \textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, and any other content that discusses investing shall not recommend specific real-world investments to a user.
 
-\textbf{Rationale:} The Hazard Analysis lists financial loss from users acting on what they learn in the app. \progname{} is not a licensed financial advisor, so users must understand that nothing in the app is personal advice about their real money.
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users acting on what they learn in the app. \progname{} is not a licensed financial advisor, so users must understand that nothing in the app is personal advice about their real money. The legal side of this disclaimer is covered by COMP-LEG-04.
 
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the statement, the statement can be reached from settings, and a review of all educational content finds no recommendations to buy or sell specific real-world investments.
 
@@ -2113,7 +2152,7 @@ PR-SC-05 &
 Exercise injury warning &
 \textbf{Description:} The product shall warn users that physical activity carries a risk of injury, that they should exercise within their own limits, and that they should consult a doctor before starting a new exercise routine if they have health concerns. The product's terms of use shall state that users exercise at their own risk and that the \progname{} team is not responsible for any injury that happens while using the app. The user must acknowledge both during sign-up before continuing.
 
-\textbf{Rationale:} The product rewards physical activity, so some users will exercise more because of it. The Hazard Analysis assumes users only attempt exercises they are able to do safely, and places injuries from exercise outside the product's control. Users need to be told this directly. The responsibility statement is a legal matter as well as a safety one, so it should also be listed under the Legal Requirements in Compliance Requirements, and its exact wording should be checked against the course's guidance before release.
+\textbf{Rationale:} The product rewards physical activity, so some users will exercise more because of it. The Hazard Analysis assumes users only attempt exercises they are able to do safely, and places injuries from exercise outside the product's control. Users need to be told this directly. The responsibility statement is a legal matter as well as a safety one and is also covered by COMP-LEG-09. Its exact wording should be checked against the course's guidance before release.
 
 \textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.\\
 \hline
@@ -2950,14 +2989,14 @@ COMP-LEG-01 &
 User Consent for Health Data Collection &
 \textbf{Description:} The system shall obtain explicit user consent before collecting, storing, or processing any health or fitness related data from external devices or applications.
 
-\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement FUNC-03. Obtaining explicit user consent ensures compliance with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws.
+\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement FUNC-03. Obtaining explicit user consent ensures compliance with the Personal Information Protection and Electronic Documents Act (PIPEDA) and the Personal Health Information Protection Act (PHIPA).
 
 \textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.\\
 \hline
 
 COMP-LEG-02 & 
 Protection of Personal Information & 
-\textbf{Description:} The system shall store and collect PII (*****LINK TO DICTIONARY****), beyond just fitness data, using security measures that comply with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws. 
+\textbf{Description:} The system shall store and collect personally identifiable information (PII), beyond just fitness data, using security measures that comply with PIPEDA and PHIPA privacy laws. 
 
 \textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risks H2.1 and H11.2 identified in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}.
 
@@ -2966,26 +3005,26 @@ Protection of Personal Information &
 
 COMP-LEG-03 & 
 Sharing of User Data & 
-\textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA (***LINK TO ACRONYM DEFINITIONS**). 
+\textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA. 
 
-\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03). If sponsored rewards (FUNC-17, a stretch goal) are added later, sponsors will also be third parties covered by this requirement. Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
+\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03). If sponsored rewards (FUNC-17, a stretch goal) are added later, sponsors will also be third parties covered by this requirement. Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA. 
 
 \textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
 \hline 
 
 COMP-LEG-04 & Financial Education Disclaimer & 
-\textbf{Description:} The system shall clearly identify all portfolio recommendations, educational materials, and simulated investment activities as educational content and \textbf{not professional financial advice}. 
+\textbf{Description:} The system shall clearly identify all portfolio insights, educational materials, and simulated investment activities as educational content and \textbf{not professional financial advice}. 
 
 \textbf{Rationale:} The application is designed to teach investing concepts through simulated portfolios and virtual currency. Users must understand that the application does not provide regulated financial advice. This is intended to prevent legal action against the system and its developers for any financial losses incurred by users in the real market - ultimately, the system is not responsible for any incurred losses by the users in the real market (see H7.1 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). 
 
-\textbf{Fit Criterion:} A financial disclaimer shall be displayed during user onboarding and remain accessible through the application's settings menu.\\ 
+\textbf{Fit Criterion:} A financial disclaimer shall be displayed during user onboarding and remain accessible through the application's settings menu (see PR-SC-04).\\ 
 \hline 
 
 COMP-LEG-05 & 
 User Data Deletion Rights & 
 \textbf{Description:} The system shall provide users with the ability to permanently delete their account and associated personal information from the system at any time, if and when they wish to do so. 
 
-\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding privacy regulations and PPCDA (*****LINK TO ACRONYM DEFINITIONS*****) regarding data ownership and the user's right to disposal. 
+\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and PPCDA regarding data ownership and the user's right to disposal. 
 
 \textbf{Fit Criterion:} Users shall be able to initiate account deletion through the application's settings menu at any time. The user's personal information shall be removed from the active database within 24 hours of the request (SEC-PRV-03). Data is backed up by default (SEC-INT-04), so copies held in backups shall be removed as those backups expire, within 30 days. Audit records (SEC-AUD-01) shall keep only an anonymized account identifier that can no longer be linked to the deleted user.\\
 \hline 
@@ -3023,7 +3062,7 @@ Fitness Activity Risk Acknowledgement &
 
 \textbf{Rationale:} The system rewards users with currency for completing physical activities. Although daily earnings are capped and activity beyond a healthy volume earns less (PR-SC-01), users may still push their physical limits to gain more rewards and that may lead to injury (see H4.2 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
 
-\textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu.\\ 
+\textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu (see PR-SC-05).\\ 
 \hline
 
 \end{xltabular}
@@ -3108,8 +3147,37 @@ Information Security Compliance &
 \end{xltabular}
 
 \section{Open Issues}
-\noindent N/A \\
-\textbf{Reason:} Due to being in the early stages of the project, there are no open issues at this time. This section is subject to change as issues arise in later revisions of this document. \\
+
+The following issues were found while reviewing this document for consistency
+and have not yet been resolved.
+
+\begin{enumerate}
+  \item \textbf{Phase deadlines and task dates.} Several phase deadlines in
+  Planning of the Development Phases fall before the tasks that deliver them
+  finish in the task table. For example, Phase 1 (which includes fitness
+  integration) is due January 17, 2027, but Fitness Provider Integration runs
+  from January 18 to February 21, 2027. The team needs to decide whether to
+  move the phase deadlines or the task dates.
+  \item \textbf{First round of user testing.} User Participation and the
+  Schedule Constraints place the first round of user testing in Week 17
+  (January 25, 2027), while the task table starts it on February 1, 2027,
+  after the Rev 0 demo.
+  \item \textbf{Business data model.} The Business Data Model figure has not yet
+  been updated for the attributes added to the Data Dictionary (for example
+  Email, Date of Birth, Goal Progress, and Transaction Type). The Portfolio
+  class also holds a single Asset ID, so a portfolio cannot hold more than one
+  asset; a separate holding class is likely needed.
+  \item \textbf{Privacy legislation.} The team needs to confirm whether PHIPA
+  applies to \progname{}, and what ``PPCDA'' in COMP-LEG-05 refers to.
+  \item \textbf{Glossary.} The Glossary of terms and acronyms (Naming
+  Conventions and Terminology) has not been written yet.
+  \item \textbf{API hosting.} The database will be hosted on McMaster
+  University's MySQL server, but where the Spring API will be hosted has not
+  been decided.
+  \item \textbf{Other documents.} The Problem Statement describes users buying
+  real financial assets at a simulated price, which differs from the fictional
+  market decided on in this document.
+\end{enumerate}
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
@@ -3252,35 +3320,35 @@ The requirements identified below represent the planned allocation at the time o
 
 This phase establishes the core application infrastructure including account management, authentication, fitness integration, virtual currency generation, and synchronization with supported health platforms. The primary objective is to demonstrate the end-to-end workflow of completing fitness activity and receiving virtual currency rewards. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04
+\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL-01, PR-SL-02, PR-SL-04, PR-SC-01, PR-SC-04, PR-SC-05, PR-PA-02, PR-PA-03, PR-PA-05, PR-RFT-01, PR-RFT-03, PR-RFT-05, PR-SE-01, PR-SE-04, SEC-ACC-02, UHR-PER-01, UHR-INT-01
 
 \subsubsection{Phase 2 --- Simulated Investing} 
 \noindent\textbf{Deadline:} January 31, 2027 \\
 
 This phase introduces the simulated financial market and portfolio management capabilities. Users will be able to purchase and sell investment assets, manage portfolios, and view investment performance using virtual currency earned through physical activity. \\
 
-\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01
+\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA-01, PR-PA-04, PR-PA-06, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01, PR-SL-03, PR-SC-03, PR-RFT-02, PR-SE-02
 
 \subsubsection{Phase 3 --- Community and Gamification} 
 \noindent\textbf{Deadline:} February 14, 2027 \\
 
 This phase focuses on user engagement features including leaderboards, friend groups, private competitions, and progress reporting. Sponsor-based reward redemption (FUNC-17) is a stretch goal and is not scheduled (see the Waiting Room). \\
 
-\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05
+\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05, UHR-PER-02, PR-SC-02, PR-SC-06, PR-SC-07, PR-SC-08, SEC-PRV-02
 
 \subsubsection{Phase 4 --- Usability, Accessibility, and Learning} 
 \noindent\textbf{Deadline:} February 28, 2027 \\
 
 This phase refines the overall user experience through interface improvements, educational content, accessibility enhancements, personalization features, and user feedback gathered through testing activities. \\
 
-\noindent\textbf{Priority Requirements:} LFAPP-01 through LFAPP-05, LFSTY-01 through LFSTY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-05, UHR-UND-01 through UHR-UND-05, UHR-ACC-01 through UHR-ACC-06
+\noindent\textbf{Priority Requirements:} LF-APP-01 through LF-APP-05, LF-STY-01 through LF-STY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-05, UHR-UND-01 through UHR-UND-05, UHR-ACC-01 through UHR-ACC-06, UHR-POL-01 through UHR-POL-03, CUL-01 through CUL-04, PR-RFT-04
 
 \subsubsection{Phase 5 --- Security, Compliance, and Release Preparation} 
 \noindent\textbf{Deadline:} March 14, 2027 \\
 
 This phase focuses on hardening the application prior to release. Security controls, privacy requirements, documentation, training materials, legal compliance requirements, maintenance support, and final validation activities are completed during this phase.\\
 
-\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-09, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-04
+\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-09, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-04, SEC-INT-04, SEC-PRV-03, SEC-AUD-02, PROD-01, PROD-02, PR-C-01, PR-C-02, PR-SE-03, PR-L-01, PR-L-02
 
 \section{Migration to the New Product}
 \noindent N/A \\
@@ -3444,6 +3512,7 @@ Sponsored Reward Redemption &
     \item \textbf{ChatGPT 5.6} 
     \item \textbf{Microsoft Copilot} 
     \item \textbf{Claude Opus 5.5} 
+    \item \textbf{Claude Opus 5.5} 
 
 \end{itemize}
 
@@ -3470,6 +3539,13 @@ refining the Software Requirements Specification:
     grammatical flow. Content was reworded where necessary to eliminate
     ambiguity, enhance readability, and adhere to formal technical documentation
     standards.
+    \item \textbf{Section Drafting and Consistency Review (Sections 3, 12,
+    and 19):} Claude was used to draft the Mandated Constraints, Performance
+    Requirements, and Off-the-Shelf Solutions sections from the team's
+    Problem Statement, Development Plan, and Hazard Analysis, and to review the
+    whole document for inconsistencies between sections. Team members reviewed
+    and edited the drafts, and made the decisions used to resolve the
+    inconsistencies.
     \item \textbf{LaTex Formatting, Images, and Tables (Document-wide):} The
     tools assisted in authoring and debugging LaTex markup, particularly the
     configuration, alignment, and formatting of multi-page requirement tables
