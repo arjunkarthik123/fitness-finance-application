@@ -3209,8 +3209,47 @@ The detailed breakdown of weekly tasks and deliverables can be found in \href{ht
 \setlength{\tabcolsep}{4pt}
 % Table below generated with the help of Copilot (tasks taken from dev plan section 9)
 \begin{xltabular}{\textwidth}{|p{4.0cm}|p{2.0cm}|p{1.7cm}|p{1.7cm}|X|} \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endfirsthead \hline \textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} \\ \hline \endhead Requirements Gathering \& Analysis & 4 weeks & 21-Sep-26 & 18-Oct-26 & None \\ \hline User Interviews \& Validation & 3 weeks & 05-Oct-26 & 25-Oct-26 & Requirements Gathering \& Analysis \\ \hline Fitness API Research \& Integration Design & 3 weeks & 12-Oct-26 & 01-Nov-26 & Requirements Gathering \& Analysis \\ \hline Virtual Currency System Design & 2 weeks & 26-Oct-26 & 08-Nov-26 & User Interviews \& Validation \\ \hline Market Simulation Design & 3 weeks & 19-Oct-26 & 08-Nov-26 & Requirements Gathering \& Analysis \\ \hline UI/UX Design \& Prototyping & 4 weeks & 26-Oct-26 & 22-Nov-26 & User Interviews \& Validation \\ \hline Proof of Concept Development & 5 weeks & 02-Nov-26 & 06-Dec-26 & Fitness API Design, Currency Design \\ \hline Backend Architecture \& Database Development & 5 weeks & 11-Jan-27 & 14-Feb-27 & Design Document \\ \hline Frontend Development & 6 weeks & 11-Jan-27 & 21-Feb-27 & UI Design \\ \hline Fitness Provider Integration & 5 weeks & 18-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Portfolio Management Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Backend Development \\ \hline Gamification \& Rewards Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Currency Design \\ \hline Rev 0 Demo Preparation & 2 weeks & 25-Jan-27 & 07-Feb-27 & Core Features Complete \\ \hline User Testing Round 1 & 2 weeks & 01-Feb-27 & 14-Feb-27 & Rev 0 Demo \\ \hline Accessibility, Security, \& Compliance Improvements & 2 weeks & 15-Feb-27 & 28-Feb-27 & User Testing Round 1 \\ \hline Final User Testing & 2 weeks & 01-Mar-27 & 14-Mar-27 & Accessibility, Security, \& Compliance Improvements \\ \hline V\&V Execution & 4 weeks & 15-Feb-27 & 14-Mar-27 & Most Development Tasks Complete \\ \hline Final Bug Fixes \& Stabilization & 2 weeks & 08-Mar-27 & 21-Mar-27 & V\&V Execution \\ \hline Final Demo Preparation & 1 week & 15-Mar-27 & 21-Mar-27 & Final Bug Fixes \& Stabilization \\ \hline EXPO Preparation & 2 weeks & 22-Mar-27 & 05-Apr-27 & Final Demo Preparation \\ \hline \caption{Project Schedule and Task Breakdown} \label{tab:flexin_gantt_tasks} \end{xltabular}
+
 \subsection{Planning of the Development Phases}
-\lips
+
+The Flexin project will be implemented incrementally through a series of development phases. Requirements are allocated to phases based on technical dependencies, implementation risk, stakeholder priority, and project milestones. Earlier phases focus on establishing the core platform infrastructure and fitness-to-investment workflow, while later phases introduce engagement features, usability enhancements, accessibility improvements, and compliance requirements. 
+
+The requirements identified below represent the planned allocation at the time of writing. Requirement assignments and phase deadlines may be refined during development as new information becomes available through user testing, stakeholder feedback, and technical investigation.
+
+\subsubsection{Phase 1 --- Foundation and Core Platform}
+\noindent\textbf{Deadline:} January 17, 2027 \\
+
+This phase establishes the core application infrastructure including account management, authentication, fitness integration, virtual currency generation, and synchronization with supported health platforms. The primary objective is to demonstrate the end-to-end workflow of completing fitness activity and receiving virtual currency rewards. \\
+
+\noindent\textbf{Priority Requirements:} FUNC-01, FUNC-02, FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07, SEC-ACC-01, SEC-ACC-03, SEC-PRV-01, PR-SL1, PR-SL2, PR-SL4
+
+\subsubsection{Phase 2 --- Simulated Investing} 
+\noindent\textbf{Deadline:} January 31, 2027 \\
+
+This phase introduces the simulated financial market and portfolio management capabilities. Users will be able to purchase and sell investment assets, manage portfolios, and view investment performance using virtual currency earned through physical activity. \\
+
+\noindent\textbf{Priority Requirements:} FUNC-08, FUNC-09, FUNC-10, FUNC-11, FUNC-12, PR-PA1, PR-PA4, PR-PA6, SEC-INT-01, SEC-INT-02, SEC-INT-03, SEC-AUD-01
+
+\subsubsection{Phase 3 --- Community and Gamification} 
+\noindent\textbf{Deadline:} February 14, 2027 \\
+
+This phase focuses on user engagement features including leaderboards, friend groups, private competitions, progress reporting, and sponsor-based reward redemption. \\
+
+\noindent\textbf{Priority Requirements:} FUNC-13, FUNC-14, FUNC-15, FUNC-16, FUNC-17, UHR-PER-03, UHR-PER-04, UHR-POL-04, UHR-POL-05
+
+\subsubsection{Phase 4 --- Usability, Accessibility, and Learning} 
+\noindent\textbf{Deadline:} February 28, 2027 \\
+
+This phase refines the overall user experience through interface improvements, educational content, accessibility enhancements, personalization features, and user feedback gathered through testing activities. \\
+
+\noindent\textbf{Priority Requirements:} LFAPP-01 through LFAPP-05, LFSTY-01 through LFSTY-04, UHR-EOU-01 through UHR-EOU-09, UHR-LRN-01 through UHR-LRN-05, UHR-UND-01 through UHR-UND-05, UHR-ACC-01 through UHR-ACC-06
+
+\subsubsection{Phase 5 --- Security, Compliance, and Release Preparation} 
+\noindent\textbf{Deadline:} March 14, 2027 \\
+
+This phase focuses on hardening the application prior to release. Security controls, privacy requirements, documentation, training materials, legal compliance requirements, maintenance support, and final validation activities are completed during this phase.\\
+
+\noindent\textbf{Priority Requirements:} COMP-LEG-01 through COMP-LEG-09, COMP-STD-01 through COMP-STD-07, SEC-ACC-04, SEC-ACC-05, SEC-IMM-01 through SEC-IMM-03, MAS-MNT-01 through MAS-ADPT-03, DOC-01 through DOC-04, TRN-01 through TRN-04
 
 \section{Migration to the New Product}
 \noindent N/A \\
