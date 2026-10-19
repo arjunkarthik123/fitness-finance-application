@@ -2012,48 +2012,55 @@ typical mobile data or Wi-Fi connection.
 
 \subsection{Speed and Latency Requirements}
 
-\begin{description}
-  \item[PR-SL1: App launch]\leavevmode
-  \begin{description}
-    \item[Description:] The app shall show the home screen within 3 seconds of
-    being opened from a closed state.
-    \item[Rationale:] Users will mostly open the app for short check-ins, such
-    as after a walk or workout. A slow start makes those check-ins less likely.
-    \item[Fit Criterion:] Across 20 cold starts on the reference phone, the
-    home screen appears in 3 seconds or less in at least 19 of them.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-SL2: Response to input]\leavevmode
-  \begin{description}
-    \item[Description:] The app shall respond to a tap or navigation action
-    within 1 second.
-    \item[Rationale:] Supports the goal of a simple and delightful user
-    experience. Delays longer than about a second make an app feel broken.
-    \item[Fit Criterion:] At least 95\% of measured screen transitions and
-    button responses complete within 1 second.
-  \end{description}
+PR-SL1 &
+App launch &
+\textbf{Description:} The app shall show the home screen within 3 seconds of being opened from a closed state.
 
-  \item[PR-SL3: Trades]\leavevmode
-  \begin{description}
-    \item[Description:] After a user confirms a buy or sell order, the updated
-    holdings and currency balance shall be shown within 2 seconds.
-    \item[Rationale:] Users need to see the result of a trade straight away to
-    connect the action with its effect on their portfolio.
-    \item[Fit Criterion:] At least 95\% of test trades show the updated
-    portfolio within 2 seconds of confirmation.
-  \end{description}
+\textbf{Rationale:} Users will mostly open the app for short check-ins, such as after a walk or workout. A slow start makes those check-ins less likely.
 
-  \item[PR-SL4: Activity sync]\leavevmode
-  \begin{description}
-    \item[Description:] When the app is opened, activity recorded since the
-    last sync shall be read and turned into currency within 10 seconds.
-    \item[Rationale:] The reward has to feel tied to the activity that earned
-    it. The whole point of the product is to make a distant payoff feel
-    immediate.
-    \item[Fit Criterion:] In testing, the currency balance reflects all
-    activity available in Health Connect within 10 seconds of opening the app.
-  \end{description}
-\end{description}
+\textbf{Fit Criterion:} Across 20 cold starts on the reference phone, the home screen appears in 3 seconds or less in at least 19 of them.\\
+\hline
+
+PR-SL2 &
+Response to input &
+\textbf{Description:} The app shall respond to a tap or navigation action within 1 second.
+
+\textbf{Rationale:} Supports the goal of a simple and delightful user experience. Delays longer than about a second make an app feel broken.
+
+\textbf{Fit Criterion:} At least 95\% of measured screen transitions and button responses complete within 1 second.\\
+\hline
+
+PR-SL3 &
+Trades &
+\textbf{Description:} After a user confirms a buy or sell order, the updated holdings and currency balance shall be shown within 2 seconds.
+
+\textbf{Rationale:} Users need to see the result of a trade straight away to connect the action with its effect on their portfolio.
+
+\textbf{Fit Criterion:} At least 95\% of test trades show the updated portfolio within 2 seconds of confirmation.\\
+\hline
+
+PR-SL4 &
+Activity sync &
+\textbf{Description:} When the app is opened, activity recorded since the last sync shall be read and turned into currency within 10 seconds.
+
+\textbf{Rationale:} The reward has to feel tied to the activity that earned it. The whole point of the product is to make a distant payoff feel immediate.
+
+\textbf{Fit Criterion:} In testing, the currency balance reflects all activity available in Health Connect within 10 seconds of opening the app.\\
+\hline
+
+\end{xltabular}
 
 \subsection{Safety-Critical Requirements}
 
@@ -2063,378 +2070,366 @@ could encourage harm, and the requirements below address them. Each
 requirement lists the safety requirements and hazards from the Hazard Analysis
 that it traces to.
 
-\begin{description}
-  \item[PR-SC1: Daily earning limits]\leavevmode
-  \begin{description}
-    \item[Description:] The amount of currency a user can earn from activity
-    in one day shall be capped, and activity beyond a healthy daily volume
-    shall earn currency at a reduced rate.
-    \item[Rationale:] Without these limits, the product would reward users for
-    exercising past safe limits, or while injured, to earn more.
-    \item[Fit Criterion:] No amount of activity recorded in a single day earns
-    more than the daily cap, and activity beyond the healthy daily volume earns
-    less per unit than activity below it.
-    \item[Hazard Analysis:] SR8 (H4.1, H5.1)
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-SC2: No penalties for missed days]\leavevmode
-  \begin{description}
-    \item[Description:] The product shall not take away currency or holdings
-    when a user misses a goal or a day of activity. Users shall be able to
-    freeze their streak for days missed because of illness, injury, rest, or a
-    delayed sync.
-    \item[Rationale:] The Hazard Analysis lists shame over missed goals as a
-    psychological hazard. Losing earned progress or a long streak would make
-    that worse, could push users to exercise while injured or unwell, and
-    makes users feel they have failed through no fault of their own.
-    \item[Fit Criterion:] No feature of the product reduces a user's balance
-    or holdings because of inactivity, and a user can freeze their streak so
-    that a missed day does not reset it.
-    \item[Hazard Analysis:] SR8 (H3.1, H4.1, H11.1)
-  \end{description}
+PR-SC1 &
+Daily earning limits &
+\textbf{Description:} The amount of currency a user can earn from activity in one day shall be capped, and activity beyond a healthy daily volume shall earn currency at a reduced rate.
 
-  \item[PR-SC3: Simulated market is labelled]\leavevmode
-  \begin{description}
-    \item[Description:] Every screen that shows prices, holdings, or returns
-    shall state that the market is simulated and that results do not predict
-    real returns. Each of these screens shall link to an explanation of what
-    the simulation does not model, such as fees, taxes, and real-world
-    volatility.
-    \item[Rationale:] The Hazard Analysis lists financial loss from users
-    applying strategies from the app to real markets. Users who treat
-    simulated results as real-world truth may lose real money.
-    \item[Fit Criterion:] A review of every market and portfolio screen finds
-    the notice visible on each one, and the explanation of the simulation's
-    limits can be reached from each one.
-    \item[Hazard Analysis:] SR11 (H6.1, H7.1)
-  \end{description}
+\textbf{Rationale:} Without these limits, the product would reward users for exercising past safe limits, or while injured, to earn more.
 
-  \item[PR-SC4: Not financial advice]\leavevmode
-  \begin{description}
-    \item[Description:] The product shall state that its content is for
-    education only and is not financial advice. The statement shall be shown
-    during sign-up, where the user must acknowledge it before continuing, and
-    shall stay available from the settings screen. Lessons, tips, and any other
-    content that discusses investing shall not recommend specific real-world
-    investments to a user.
-    \item[Rationale:] The Hazard Analysis lists financial loss from users
-    acting on what they learn in the app. \progname{} is not a licensed
-    financial advisor, so users must understand that nothing in the app is
-    personal advice about their real money.
-    \item[Fit Criterion:] A new account cannot be created without
-    acknowledging the statement, the statement can be reached from settings,
-    and a review of all educational content finds no recommendations to buy
-    or sell specific real-world investments.
-    \item[Hazard Analysis:] SR11 (H6.1, H7.1)
-  \end{description}
+\textbf{Fit Criterion:} No amount of activity recorded in a single day earns more than the daily cap, and activity beyond the healthy daily volume earns less per unit than activity below it.
 
-  \item[PR-SC5: Exercise injury warning]\leavevmode
-  \begin{description}
-    \item[Description:] The product shall warn users that physical activity
-    carries a risk of injury, that they should exercise within their own
-    limits, and that they should consult a doctor before starting a new
-    exercise routine if they have health concerns. The product's terms of use
-    shall state that users exercise at their own risk and that the
-    \progname{} team is not responsible for any injury that happens while
-    using the app. The user must acknowledge both during sign-up before
-    continuing.
-    \item[Rationale:] The product rewards physical activity, so some users
-    will exercise more because of it. The Hazard Analysis assumes users only
-    attempt exercises they are able to do safely, and places injuries from
-    exercise outside the product's control. Users need to be told this
-    directly. The responsibility statement is a legal matter as well as a
-    safety one, so it should also be listed under the Legal Requirements in
-    Compliance Requirements, and its exact wording should be checked against
-    the course's guidance before release.
-    \item[Fit Criterion:] A new account cannot be created without
-    acknowledging the injury warning and the terms of use, and both can be
-    reached from the settings screen at any time.
-  \end{description}
+\textbf{Hazard Analysis:} SR8 (H4.1, H5.1)\\
+\hline
 
-  \item[PR-SC6: Safe goal progression]\leavevmode
-  \begin{description}
-    \item[Description:] Goals that the product raises automatically shall
-    increase gradually and include regular rest days. When a goal is missed
-    several times in a row, the product shall suggest lowering it. Users shall
-    be able to lower or override any goal themselves.
-    \item[Rationale:] Goals that rise too quickly push users to overexert
-    themselves, while goals that are missed again and again lead to shame and
-    users giving up on exercise.
-    \item[Fit Criterion:] Automatic goals never rise by more than the set
-    maximum step, every goal plan includes regular rest days, a lower goal is
-    suggested after the set number of misses in a row, and a user can lower
-    any goal from the goal screen.
-    \item[Hazard Analysis:] SR6 (H4.1, H4.2)
-  \end{description}
+PR-SC2 &
+No penalties for missed days &
+\textbf{Description:} The product shall not take away currency or holdings when a user misses a goal or a day of activity. Users shall be able to freeze their streak for days missed because of illness, injury, rest, or a delayed sync.
 
-  \item[PR-SC7: Supportive messages and notifications]\leavevmode
-  \begin{description}
-    \item[Description:] All goal-related messages and reminders shall use
-    supportive language that does not shame or guilt the user. Users shall be
-    able to choose how often they get notifications and set quiet hours.
-    \item[Rationale:] Guilt-based messages and too many notifications harm
-    users' mental health and encourage compulsive use of the app.
-    \item[Fit Criterion:] Every goal-related message passes a team review for
-    shaming or guilt-based language, and in testing no notifications are sent
-    during the user's quiet hours or more often than the frequency they chose.
-    \item[Hazard Analysis:] SR7 (H4.1, H10.1)
-  \end{description}
+\textbf{Rationale:} The Hazard Analysis lists shame over missed goals as a psychological hazard. Losing earned progress or a long streak would make that worse, could push users to exercise while injured or unwell, and makes users feel they have failed through no fault of their own.
 
-  \item[PR-SC8: Leaderboards]\leavevmode
-  \begin{description}
-    \item[Description:] Users shall be able to opt out of group leaderboards.
-    Leaderboards shall rank users by progress towards their own goals, not by
-    absolute performance.
-    \item[Rationale:] Ranking users by absolute performance causes shame and
-    anxiety for those who rank poorly.
-    \item[Fit Criterion:] Users who opt out do not appear on any leaderboard,
-    and rankings are computed from each user's percentage of their own goal.
-    \item[Hazard Analysis:] SR9 (H4.1, H8.1)
-  \end{description}
-\end{description}
+\textbf{Fit Criterion:} No feature of the product reduces a user's balance or holdings because of inactivity, and a user can freeze their streak so that a missed day does not reset it.
+
+\textbf{Hazard Analysis:} SR8 (H3.1, H4.1, H11.1)\\
+\hline
+
+PR-SC3 &
+Simulated market is labelled &
+\textbf{Description:} Every screen that shows prices, holdings, or returns shall state that the market is simulated and that results do not predict real returns. Each of these screens shall link to an explanation of what the simulation does not model, such as fees, taxes, and real-world volatility.
+
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users applying strategies from the app to real markets. Users who treat simulated results as real-world truth may lose real money.
+
+\textbf{Fit Criterion:} A review of every market and portfolio screen finds the notice visible on each one, and the explanation of the simulation's limits can be reached from each one.
+
+\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
+\hline
+
+PR-SC4 &
+Not financial advice &
+\textbf{Description:} The product shall state that its content is for education only and is not financial advice. The statement shall be shown during sign-up, where the user must acknowledge it before continuing, and shall stay available from the settings screen. Lessons, tips, and any other content that discusses investing shall not recommend specific real-world investments to a user.
+
+\textbf{Rationale:} The Hazard Analysis lists financial loss from users acting on what they learn in the app. \progname{} is not a licensed financial advisor, so users must understand that nothing in the app is personal advice about their real money.
+
+\textbf{Fit Criterion:} A new account cannot be created without acknowledging the statement, the statement can be reached from settings, and a review of all educational content finds no recommendations to buy or sell specific real-world investments.
+
+\textbf{Hazard Analysis:} SR11 (H6.1, H7.1)\\
+\hline
+
+PR-SC5 &
+Exercise injury warning &
+\textbf{Description:} The product shall warn users that physical activity carries a risk of injury, that they should exercise within their own limits, and that they should consult a doctor before starting a new exercise routine if they have health concerns. The product's terms of use shall state that users exercise at their own risk and that the \progname{} team is not responsible for any injury that happens while using the app. The user must acknowledge both during sign-up before continuing.
+
+\textbf{Rationale:} The product rewards physical activity, so some users will exercise more because of it. The Hazard Analysis assumes users only attempt exercises they are able to do safely, and places injuries from exercise outside the product's control. Users need to be told this directly. The responsibility statement is a legal matter as well as a safety one, so it should also be listed under the Legal Requirements in Compliance Requirements, and its exact wording should be checked against the course's guidance before release.
+
+\textbf{Fit Criterion:} A new account cannot be created without acknowledging the injury warning and the terms of use, and both can be reached from the settings screen at any time.\\
+\hline
+
+PR-SC6 &
+Safe goal progression &
+\textbf{Description:} Goals that the product raises automatically shall increase gradually and include regular rest days. When a goal is missed several times in a row, the product shall suggest lowering it. Users shall be able to lower or override any goal themselves.
+
+\textbf{Rationale:} Goals that rise too quickly push users to overexert themselves, while goals that are missed again and again lead to shame and users giving up on exercise.
+
+\textbf{Fit Criterion:} Automatic goals never rise by more than the set maximum step, every goal plan includes regular rest days, a lower goal is suggested after the set number of misses in a row, and a user can lower any goal from the goal screen.
+
+\textbf{Hazard Analysis:} SR6 (H4.1, H4.2)\\
+\hline
+
+PR-SC7 &
+Supportive messages and notifications &
+\textbf{Description:} All goal-related messages and reminders shall use supportive language that does not shame or guilt the user. Users shall be able to choose how often they get notifications and set quiet hours.
+
+\textbf{Rationale:} Guilt-based messages and too many notifications harm users' mental health and encourage compulsive use of the app.
+
+\textbf{Fit Criterion:} Every goal-related message passes a team review for shaming or guilt-based language, and in testing no notifications are sent during the user's quiet hours or more often than the frequency they chose.
+
+\textbf{Hazard Analysis:} SR7 (H4.1, H10.1)\\
+\hline
+
+PR-SC8 &
+Leaderboards &
+\textbf{Description:} Users shall be able to opt out of group leaderboards. Leaderboards shall rank users by progress towards their own goals, not by absolute performance.
+
+\textbf{Rationale:} Ranking users by absolute performance causes shame and anxiety for those who rank poorly.
+
+\textbf{Fit Criterion:} Users who opt out do not appear on any leaderboard, and rankings are computed from each user's percentage of their own goal.
+
+\textbf{Hazard Analysis:} SR9 (H4.1, H8.1)\\
+\hline
+
+\end{xltabular}
 
 \subsection{Precision or Accuracy Requirements}
 
-\begin{description}
-  \item[PR-PA1: Exact money values]\leavevmode
-  \begin{description}
-    \item[Description:] Currency balances, prices, and trade amounts shall be
-    stored and calculated as exact decimal values, not floating-point numbers,
-    and shown to two decimal places.
-    \item[Rationale:] Floating-point rounding errors build up over many trades
-    and would show users balances that do not add up.
-    \item[Fit Criterion:] After a scripted sequence of 1,000 trades, the
-    stored balance matches the expected balance exactly.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-PA2: Consistent currency awards]\leavevmode
-  \begin{description}
-    \item[Description:] The currency awarded for a set of activity data shall
-    follow the published conversion rules exactly, and the same data shall
-    always earn the same amount.
-    \item[Rationale:] Users must be able to trust that effort is rewarded
-    fairly, and the team must be able to check that it is.
-    \item[Fit Criterion:] For a set of test activity records, the awarded
-    currency matches the amount calculated by hand from the conversion rules.
-  \end{description}
+PR-PA1 &
+Exact money values &
+\textbf{Description:} Currency balances, prices, and trade amounts shall be stored and calculated as exact decimal values, not floating-point numbers, and shown to two decimal places.
 
-  \item[PR-PA3: No double counting]\leavevmode
-  \begin{description}
-    \item[Description:] Activity reported by more than one source, such as the
-    phone and a watch both counting the same steps, shall be counted only once.
-    \item[Rationale:] Counting the same steps twice would over-reward users who
-    own more devices, which the Hazard Analysis lists as a cause of poor
-    learning.
-    \item[Fit Criterion:] When the same walk is recorded by two sources, the
-    currency earned equals the amount for one recording.
-  \end{description}
+\textbf{Rationale:} Floating-point rounding errors build up over many trades and would show users balances that do not add up.
 
-  \item[PR-PA4: Portfolio value]\leavevmode
-  \begin{description}
-    \item[Description:] The displayed portfolio value shall equal the sum of
-    each holding's quantity times its current simulated price, plus uninvested
-    currency.
-    \item[Rationale:] The portfolio graph is the main tool for teaching
-    compounding, so it has to be correct.
-    \item[Fit Criterion:] For test portfolios, the displayed value matches the
-    value calculated by hand to the cent.
-  \end{description}
+\textbf{Fit Criterion:} After a scripted sequence of 1,000 trades, the stored balance matches the expected balance exactly.\\
+\hline
 
-  \item[PR-PA5: Workout dates]\leavevmode
-  \begin{description}
-    \item[Description:] Each workout shall be dated by the time it happened on
-    the source device, not the time it was synced. When workout data arrives
-    late, the affected streaks and rewards shall be recalculated.
-    \item[Rationale:] Users who exercised on time should not lose their streak
-    or currency because their device synced late or across a day boundary.
-    \item[Fit Criterion:] Workouts synced after midnight or from a different
-    time zone are recorded on the day they happened, and the affected streaks
-    and rewards are updated once the late data arrives.
-    \item[Hazard Analysis:] SR5 (H3.1, H11.1)
-  \end{description}
+PR-PA2 &
+Consistent currency awards &
+\textbf{Description:} The currency awarded for a set of activity data shall follow the published conversion rules exactly, and the same data shall always earn the same amount.
 
-  \item[PR-PA6: Realistic market simulation]\leavevmode
-  \begin{description}
-    \item[Description:] The market simulation shall be calibrated against
-    historical market data, so that its volatility and downturns are
-    consistent with real markets.
-    \item[Rationale:] Returns that are unrealistically smooth or high would
-    teach users a false understanding of risk and compounding.
-    \item[Fit Criterion:] Over a long simulated period, the average annual
-    return and volatility are consistent with historical data for a broad
-    market index, and downturns occur.
-    \item[Hazard Analysis:] SR10 (H6.1)
-  \end{description}
-\end{description}
+\textbf{Rationale:} Users must be able to trust that effort is rewarded fairly, and the team must be able to check that it is.
+
+\textbf{Fit Criterion:} For a set of test activity records, the awarded currency matches the amount calculated by hand from the conversion rules.\\
+\hline
+
+PR-PA3 &
+No double counting &
+\textbf{Description:} Activity reported by more than one source, such as the phone and a watch both counting the same steps, shall be counted only once.
+
+\textbf{Rationale:} Counting the same steps twice would over-reward users who own more devices, which the Hazard Analysis lists as a cause of poor learning.
+
+\textbf{Fit Criterion:} When the same walk is recorded by two sources, the currency earned equals the amount for one recording.\\
+\hline
+
+PR-PA4 &
+Portfolio value &
+\textbf{Description:} The displayed portfolio value shall equal the sum of each holding's quantity times its current simulated price, plus uninvested currency.
+
+\textbf{Rationale:} The portfolio graph is the main tool for teaching compounding, so it has to be correct.
+
+\textbf{Fit Criterion:} For test portfolios, the displayed value matches the value calculated by hand to the cent.\\
+\hline
+
+PR-PA5 &
+Workout dates &
+\textbf{Description:} Each workout shall be dated by the time it happened on the source device, not the time it was synced. When workout data arrives late, the affected streaks and rewards shall be recalculated.
+
+\textbf{Rationale:} Users who exercised on time should not lose their streak or currency because their device synced late or across a day boundary.
+
+\textbf{Fit Criterion:} Workouts synced after midnight or from a different time zone are recorded on the day they happened, and the affected streaks and rewards are updated once the late data arrives.
+
+\textbf{Hazard Analysis:} SR5 (H3.1, H11.1)\\
+\hline
+
+PR-PA6 &
+Realistic market simulation &
+\textbf{Description:} The market simulation shall be calibrated against historical market data, so that its volatility and downturns are consistent with real markets.
+
+\textbf{Rationale:} Returns that are unrealistically smooth or high would teach users a false understanding of risk and compounding.
+
+\textbf{Fit Criterion:} Over a long simulated period, the average annual return and volatility are consistent with historical data for a broad market index, and downturns occur.
+
+\textbf{Hazard Analysis:} SR10 (H6.1)\\
+\hline
+
+\end{xltabular}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
 
-\begin{description}
-  \item[PR-RFT1: Offline activity]\leavevmode
-  \begin{description}
-    \item[Description:] Activity recorded while the phone is offline, or while
-    the app is closed, shall be credited the next time the app syncs, for gaps
-    of up to 7 days.
-    \item[Rationale:] Users exercise in places without signal and will not
-    open the app every day. Losing that activity would discourage them.
-    \item[Fit Criterion:] Activity recorded during a 7-day gap with no syncing
-    is fully credited at the next sync.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-RFT2: Atomic writes]\leavevmode
-  \begin{description}
-    \item[Description:] Every database write with more than one step shall
-    either complete fully or be rolled back. A trade shall update both the
-    currency balance and the holdings, at the price the user confirmed, or not
-    happen at all.
-    \item[Rationale:] A write that fails halfway leaves balances, portfolios,
-    or progress wrong. For example, a failed trade could take a user's
-    currency without giving them the asset, or the other way around.
-    \item[Fit Criterion:] Tests that simulate a failure at each step of a
-    multi-step write leave the database unchanged. When the connection or
-    server is cut during a test trade, the balance and holdings afterwards
-    match either the state before the trade or the state after it, and
-    completed trades execute at the confirmed price.
-    \item[Hazard Analysis:] SR12 (H7.2, H9.2)
-  \end{description}
+PR-RFT1 &
+Offline activity &
+\textbf{Description:} Activity recorded while the phone is offline, or while the app is closed, shall be credited the next time the app syncs, for gaps of up to 7 days.
 
-  \item[PR-RFT3: Failing data sources]\leavevmode
-  \begin{description}
-    \item[Description:] If a fitness data source is unavailable or returns
-    invalid data, the app shall keep working with its other sources and credit
-    no currency for the invalid data. A failed workout sync shall be retried
-    automatically, and if it still fails, the app shall tell the user which
-    source has a problem and why.
-    \item[Rationale:] Outages at Garmin, Strava, or Health Connect are outside
-    the team's control and should not make the whole app unusable. Users
-    should find out about a failed sync from the app, not from a broken
-    streak.
-    \item[Fit Criterion:] With one source disabled or returning malformed data
-    in testing, the app stays usable, retries the sync, then shows a message
-    naming that source and the cause, and awards nothing for the bad data.
-    \item[Hazard Analysis:] SR4 (H3.1)
-  \end{description}
+\textbf{Rationale:} Users exercise in places without signal and will not open the app every day. Losing that activity would discourage them.
 
-  \item[PR-RFT4: Backend unavailable]\leavevmode
-  \begin{description}
-    \item[Description:] If the backend cannot be reached, the app shall show
-    the last data it received, marked as possibly out of date, instead of
-    crashing or showing empty screens.
-    \item[Rationale:] Users on poor connections should still be able to see
-    their progress.
-    \item[Fit Criterion:] With the backend stopped, the app opens, shows the
-    last known balance and portfolio, and displays an offline notice.
-  \end{description}
+\textbf{Fit Criterion:} Activity recorded during a 7-day gap with no syncing is fully credited at the next sync.\\
+\hline
 
-  \item[PR-RFT5: Account errors]\leavevmode
-  \begin{description}
-    \item[Description:] When account creation or sign-in fails, the app shall
-    show a clear error message that states the cause.
-    \item[Rationale:] Users should know why they cannot get into their
-    account, instead of being locked out with no explanation.
-    \item[Fit Criterion:] Every failed account creation or sign-in in testing
-    shows an error message that states the cause.
-    \item[Hazard Analysis:] SR4 (H1.1)
-  \end{description}
-\end{description}
+PR-RFT2 &
+Atomic writes &
+\textbf{Description:} Every database write with more than one step shall either complete fully or be rolled back. A trade shall update both the currency balance and the holdings, at the price the user confirmed, or not happen at all.
+
+\textbf{Rationale:} A write that fails halfway leaves balances, portfolios, or progress wrong. For example, a failed trade could take a user's currency without giving them the asset, or the other way around.
+
+\textbf{Fit Criterion:} Tests that simulate a failure at each step of a multi-step write leave the database unchanged. When the connection or server is cut during a test trade, the balance and holdings afterwards match either the state before the trade or the state after it, and completed trades execute at the confirmed price.
+
+\textbf{Hazard Analysis:} SR12 (H7.2, H9.2)\\
+\hline
+
+PR-RFT3 &
+Failing data sources &
+\textbf{Description:} If a fitness data source is unavailable or returns invalid data, the app shall keep working with its other sources and credit no currency for the invalid data. A failed workout sync shall be retried automatically, and if it still fails, the app shall tell the user which source has a problem and why.
+
+\textbf{Rationale:} Outages at Garmin, Strava, or Health Connect are outside the team's control and should not make the whole app unusable. Users should find out about a failed sync from the app, not from a broken streak.
+
+\textbf{Fit Criterion:} With one source disabled or returning malformed data in testing, the app stays usable, retries the sync, then shows a message naming that source and the cause, and awards nothing for the bad data.
+
+\textbf{Hazard Analysis:} SR4 (H3.1)\\
+\hline
+
+PR-RFT4 &
+Backend unavailable &
+\textbf{Description:} If the backend cannot be reached, the app shall show the last data it received, marked as possibly out of date, instead of crashing or showing empty screens.
+
+\textbf{Rationale:} Users on poor connections should still be able to see their progress.
+
+\textbf{Fit Criterion:} With the backend stopped, the app opens, shows the last known balance and portfolio, and displays an offline notice.\\
+\hline
+
+PR-RFT5 &
+Account errors &
+\textbf{Description:} When account creation or sign-in fails, the app shall show a clear error message that states the cause.
+
+\textbf{Rationale:} Users should know why they cannot get into their account, instead of being locked out with no explanation.
+
+\textbf{Fit Criterion:} Every failed account creation or sign-in in testing shows an error message that states the cause.
+
+\textbf{Hazard Analysis:} SR4 (H1.1)\\
+\hline
+
+\end{xltabular}
 
 \subsection{Capacity Requirements}
 
-\begin{description}
-  \item[PR-C1: Users]\leavevmode
-  \begin{description}
-    \item[Description:] The system shall support at least 500 registered users,
-    with at least 100 using the app at the same time, without breaking the
-    speed requirements above.
-    \item[Rationale:] This covers the expected load during user testing, the
-    final demo, and the Capstone EXPO, where many people may try the app at
-    once.
-    \item[Fit Criterion:] A load test with 100 simulated concurrent users meets
-    PR-SL2 and PR-SL3.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-C2: History]\leavevmode
-  \begin{description}
-    \item[Description:] The system shall store at least two years of activity
-    and trade history for each user.
-    \item[Rationale:] Compounding only shows up over long periods, so users
-    need to be able to look back over their history.
-    \item[Fit Criterion:] A test account loaded with two years of daily
-    activity and weekly trades can display its full history, and its screens
-    still meet PR-SL2.
-  \end{description}
-\end{description}
+PR-C1 &
+Users &
+\textbf{Description:} The system shall support at least 500 registered users, with at least 100 using the app at the same time, without breaking the speed requirements above.
+
+\textbf{Rationale:} This covers the expected load during user testing, the final demo, and the Capstone EXPO, where many people may try the app at once.
+
+\textbf{Fit Criterion:} A load test with 100 simulated concurrent users meets PR-SL2 and PR-SL3.\\
+\hline
+
+PR-C2 &
+History &
+\textbf{Description:} The system shall store at least two years of activity and trade history for each user.
+
+\textbf{Rationale:} Compounding only shows up over long periods, so users need to be able to look back over their history.
+
+\textbf{Fit Criterion:} A test account loaded with two years of daily activity and weekly trades can display its full history, and its screens still meet PR-SL2.\\
+\hline
+
+\end{xltabular}
 
 \subsection{Scalability or Extensibility Requirements}
 
-\begin{description}
-  \item[PR-SE1: Adding fitness sources]\leavevmode
-  \begin{description}
-    \item[Description:] A new fitness data source shall be addable without
-    changing the currency conversion logic.
-    \item[Rationale:] The team expects to add device integrations over time,
-    and the Problem Statement lists integration with existing fitness
-    technologies as a goal.
-    \item[Fit Criterion:] Adding a new source only requires changes inside the
-    integration module.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-SE2: Adding asset types]\leavevmode
-  \begin{description}
-    \item[Description:] New types of assets shall be addable to the simulated
-    market without changing the trading logic.
-    \item[Rationale:] The product starts with stocks, bonds, and ETFs, and
-    other asset types may be added later.
-    \item[Fit Criterion:] Adding a new asset type only requires new market
-    data and configuration, not changes to the buy and sell code.
-  \end{description}
+PR-SE1 &
+Adding fitness sources &
+\textbf{Description:} A new fitness data source shall be addable without changing the currency conversion logic.
 
-  \item[PR-SE3: More server capacity]\leavevmode
-  \begin{description}
-    \item[Description:] The backend API shall keep no per-user state between
-    requests, so more instances can be run if the number of users grows.
-    \item[Rationale:] If the product continues after the capstone, as the
-    business plan explores, it will need to serve more users than PR-C1.
-    \item[Fit Criterion:] Two API instances running against the same database
-    give the same results as one.
-  \end{description}
+\textbf{Rationale:} The team expects to add device integrations over time, and the Problem Statement lists integration with existing fitness technologies as a goal.
 
-  \item[PR-SE4: Other platforms]\leavevmode
-  \begin{description}
-    \item[Description:] Code that depends on Android-only features shall be
-    kept separate from the rest of the client.
-    \item[Rationale:] Support for iOS is a stretch goal, and keeping
-    Android-specific code separate keeps that option open.
-    \item[Fit Criterion:] All calls to Android-only APIs are in a clearly
-    marked platform layer.
-  \end{description}
-\end{description}
+\textbf{Fit Criterion:} Adding a new source only requires changes inside the integration module.\\
+\hline
+
+PR-SE2 &
+Adding asset types &
+\textbf{Description:} New types of assets shall be addable to the simulated market without changing the trading logic.
+
+\textbf{Rationale:} The product starts with stocks, bonds, and ETFs, and other asset types may be added later.
+
+\textbf{Fit Criterion:} Adding a new asset type only requires new market data and configuration, not changes to the buy and sell code.\\
+\hline
+
+PR-SE3 &
+More server capacity &
+\textbf{Description:} The backend API shall keep no per-user state between requests, so more instances can be run if the number of users grows.
+
+\textbf{Rationale:} If the product continues after the capstone, as the business plan explores, it will need to serve more users than PR-C1.
+
+\textbf{Fit Criterion:} Two API instances running against the same database give the same results as one.\\
+\hline
+
+PR-SE4 &
+Other platforms &
+\textbf{Description:} Code that depends on Android-only features shall be kept separate from the rest of the client.
+
+\textbf{Rationale:} Support for iOS is a stretch goal, and keeping Android-specific code separate keeps that option open.
+
+\textbf{Fit Criterion:} All calls to Android-only APIs are in a clearly marked platform layer.\\
+\hline
+
+\end{xltabular}
 
 \subsection{Longevity Requirements}
 
-\begin{description}
-  \item[PR-L1: Supported Android versions]\leavevmode
-  \begin{description}
-    \item[Description:] The app shall target the Android version that Google
-    Play requires for new apps at the time of release, and keep working on
-    Android versions released through the end of the capstone in April 2027.
-    \item[Rationale:] Google Play stops accepting apps that target old Android
-    versions, and the app must stay usable for the final demo and the EXPO.
-    \item[Fit Criterion:] The release build meets Google Play's target version
-    requirement and passes the test suite on the newest Android version
-    available in April 2027.
-  \end{description}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{xltabular}{\textwidth}{|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Requirement} & \textbf{Specification} \\
+\hline
+\endhead
 
-  \item[PR-L2: Keeping user history]\leavevmode
-  \begin{description}
-    \item[Description:] Activity and portfolio history shall be kept for as
-    long as the user's account exists, unless the user deletes it.
-    \item[Rationale:] The product teaches that habits pay off over years.
-    Deleting old history would remove the evidence of that.
-    \item[Fit Criterion:] The system has no automatic deletion of history for
-    active accounts.
-  \end{description}
-\end{description}
+PR-L1 &
+Supported Android versions &
+\textbf{Description:} The app shall target the Android version that Google Play requires for new apps at the time of release, and keep working on Android versions released through the end of the capstone in April 2027.
+
+\textbf{Rationale:} Google Play stops accepting apps that target old Android versions, and the app must stay usable for the final demo and the EXPO.
+
+\textbf{Fit Criterion:} The release build meets Google Play's target version requirement and passes the test suite on the newest Android version available in April 2027.\\
+\hline
+
+PR-L2 &
+Keeping user history &
+\textbf{Description:} Activity and portfolio history shall be kept for as long as the user's account exists, unless the user deletes it.
+
+\textbf{Rationale:} The product teaches that habits pay off over years. Deleting old history would remove the evidence of that.
+
+\textbf{Fit Criterion:} The system has no automatic deletion of history for active accounts.\\
+\hline
+
+\end{xltabular}
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
