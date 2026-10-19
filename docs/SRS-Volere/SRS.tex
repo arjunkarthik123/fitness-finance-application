@@ -983,8 +983,9 @@ is educational and does not execute trades on the user's behalf.
 
 \subsubsection*{BUC 9: Community Leaderboard}
 
-\textbf{Goal:} Allow users to view community rankings based on eligible
-activity or simulated portfolio metrics.
+\textbf{Goal:} Allow users who have opted in to a leaderboard group to view
+rankings based on progress towards their own goals or the group's agreed
+goals.
 
 \textbf{Actors:} End User.
 
@@ -1118,11 +1119,11 @@ Each of the rectangles represents a class of business data. The attributes of ea
     User ID & Integer & Associated user on the identified leaderboard & Foreign Key \\ 
     \hline 
     
-    User Score & Integer & User's competition score on the identified leaderboard & $\geq 0$ \\ 
-    \hline 
-    
-    Leaderboard Rank & String & Tier ranking (e.g., Bronze, Silver, Gold) & Enumerated Values \\ 
-    \hline 
+    Goal Progress & Decimal & User's percentage progress towards the goal they are ranked on & $\geq 0$ \\
+    \hline
+
+    Goal Type & Enum & Whether members are ranked on their own goals or the group's agreed goal & Own, Group \\
+    \hline
     
     User Rank & Integer & Position within the leaderboard & $\geq 1$ \\ 
     \hline 
@@ -1254,7 +1255,7 @@ The Flexin application is designed as an educational tool to help young adults i
     \item Enter, manage, and track fitness goals.
     \item Complete fitness challenges to earn virtual currency.
     \item Use virtual currency to invest in a simulated stock market environment to practice financial principles.
-    \item View other users' progress and compete to build the largest virtual investment portfolio.
+    \item Opt in to leaderboard groups that rank members by their progress towards their own goals or the group's agreed goals.
 \end{itemize}
 \subsection*{Excluded Functionality / Outside Scope}
 The Flexin' application will be developed specifically for the Android operating system and optimized for use within Canada. Support for other operating systems or international deployment is outside the scope of this project.
@@ -1440,11 +1441,11 @@ Portfolio Performance Calculation &
 
 FUNC-13 & 
 Leaderboard Participation & 
-\textbf{Description:} The system shall rank users on leaderboards based on their current leaderboard rank to compete with other users of similar ranking.
+\textbf{Description:} The system shall let users opt in to leaderboard groups. Leaderboards shall be off by default, and shall rank the members of a group by their progress towards their own goals or towards the goals the group has agreed on, not by absolute performance. Leaderboards shall not award currency or any other reward; the ranking itself is the reward.
 
-\textbf{Rationale:} Competitive features encourage continued engagement and motivation.
+\textbf{Rationale:} Competitive features encourage continued engagement and motivation. Ranking by progress towards personal or agreed goals keeps the competition fair between users of different fitness and financial levels (see PR-SC-08).
 
-\textbf{Fit Criterion:} Users shall be assigned a leaderboard rank based on their previous performance results. This rank can move up or down based on where the user places within the leaderboard each week. Users will compete on the leaderboard with other users of similar ranking.\\
+\textbf{Fit Criterion:} New accounts do not appear on any leaderboard until the user joins a group. Each member's position is computed from their percentage progress towards their own or the group's agreed goal, and no currency is credited because of a leaderboard position.\\
 \hline
 
 FUNC-14 & 
@@ -1458,7 +1459,7 @@ Friend Management &
 
 FUNC-15 & 
 Private Leaderboards & 
-\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. The rewards from private leaderboard groups will be significantly lower to prevent users from "gaming" the system with their friends to gain currency quickly.
+\textbf{Description:} The system shall allow users to create private leaderboard groups so they can invite friends to compete. Like all leaderboards, private groups give no rewards, so friends cannot use them to earn currency.
 
 \textbf{Rationale:} Users may wish to compare progress with selected friends rather than with unknown users.
 
@@ -1758,7 +1759,7 @@ Customizable Competition Groups &
 
 \textbf{Rationale:} Users may have different comfort levels regarding competition and sharing personal achievements. Allowing users to select their competition group creates a more personalized and engaging experience where friends can motivate each other.
 
-\textbf{Fit Criterion:} Users shall be able to choose between private, friends-only, and public, community-wide, leaderboard participation.\\
+\textbf{Fit Criterion:} Users shall be able to choose between not participating (the default), joining a private friends-only group, and joining the public community-wide leaderboard.\\
 \hline
 
 UHR-INT-01 &
@@ -2164,11 +2165,11 @@ Supportive messages and notifications &
 
 PR-SC8 &
 Leaderboards &
-\textbf{Description:} Users shall be able to opt out of group leaderboards. Leaderboards shall rank users by progress towards their own goals, not by absolute performance.
+\textbf{Description:} Leaderboards shall be off by default, and users shall appear on one only after opting in to a group. Leaderboards shall rank users by progress towards their own goals or the group's agreed goals, not by absolute performance, and shall not award currency or other rewards.
 
-\textbf{Rationale:} Ranking users by absolute performance causes shame and anxiety for those who rank poorly.
+\textbf{Rationale:} Ranking users by absolute performance causes shame and anxiety for those who rank poorly. Rewarding leaderboard positions would also push users to overexert themselves to climb the rankings.
 
-\textbf{Fit Criterion:} Users who opt out do not appear on any leaderboard, and rankings are computed from each user's percentage of their own goal.
+\textbf{Fit Criterion:} New accounts do not appear on any leaderboard, users who leave a group stop appearing on its leaderboard, rankings are computed from each user's percentage of their own or the group's agreed goal, and no currency is awarded for a ranking.
 
 \textbf{Hazard Analysis:} SR9 (H4.1, H8.1)\\
 \hline
