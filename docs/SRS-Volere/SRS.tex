@@ -227,7 +227,7 @@ COMP-LEG-01 &
 User Consent for Health Data Collection &
 \textbf{Description:} The system shall obtain explicit user consent before collecting, storing, or processing any health or fitness related data from external devices or applications.
 
-\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement (*******LINK ID HERE*******). Obtaining explicit user consent ensures compliance with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws.
+\textbf{Rationale:} The system requires the collection of sensitive health and fitness data in accordance with requirement FUNC-03. Obtaining explicit user consent ensures compliance with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws.
 
 \textbf{Fit Criterion:} No fitness data shall be retrieved until the user has completed the system's permission and consent process.\\
 \hline
@@ -236,16 +236,16 @@ COMP-LEG-02 &
 Protection of Personal Information & 
 \textbf{Description:} The system shall store and collect PII (*****LINK TO DICTIONARY****), beyond just fitness data, using security measures that comply with PIPEDA and PHIPA (***LINK TO ACRONYM DEFINITIONS**) privacy laws. 
 
-\textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risk ***LINK TO THE HAZARD IN HE HAZ ANALYSIS****
+\textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risks H2.1 and H11.2 identified in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}.
 
-\textbf{Fit Criterion:} All PII shall be encrypted during network transmission and during data storage. Access to this data shall require user authentication into the system as per requirement (*****LINK ACCESS REQ ID HERE*****).\\ 
+\textbf{Fit Criterion:} All PII shall be encrypted during network transmission and during data storage. Access to this data shall require user authentication into the system as per requirement FUNC-02.\\ 
 \hline 
 
 COMP-LEG-03 & 
 Sharing of User Data & 
 \textbf{Description:} The system shall not share \textbf{any} user data with third parties without explicit user consent, in accordance with PIPEDA (***LINK TO ACRONYM DEFINITIONS**). 
 
-\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data, ****LINK TO REQ ID?****) and companies (for incentivising rewards to motivate users and offer brand sponsoring, ****LINK TO REQ ID?****). Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
+\textbf{Rationale:} The system collects sensitive health, financial and personal information, and the system will be involved with other third party systems (for managing related health data - FUNC-03) and companies (for incentivising rewards to motivate users and offer brand sponsoring - FUNC-17). Sharing this data without consent would violate user privacy and the regulations outlined in PIPEDA (***LINK TO PIPEDA DEFINITION***). 
 
 \textbf{Fit Criterion:} All data will remain securely stored and not shared with third parties \textbf{under any circumstances} without the user explicitly completing the user permission and consent process.\\ 
 \hline 
@@ -253,7 +253,7 @@ Sharing of User Data &
 COMP-LEG-04 & Financial Education Disclaimer & 
 \textbf{Description:} The system shall clearly identify all portfolio recommendations, educational materials, and simulated investment activities as educational content and \textbf{not professional financial advice}. 
 
-\textbf{Rationale:} The application is designed to teach investing concepts through simulated portfolios and virtual currency. Users must understand that the application does not provide regulated financial advice. This is intended to prevent legal action against the system and its developers for any financial losses incurred by users in the real market - ultimately, the system is not responsible for any incurred losses by the users in the real market (see ***LINK TO THE HAZARD IN HE HAZ ANALYSIS****). 
+\textbf{Rationale:} The application is designed to teach investing concepts through simulated portfolios and virtual currency. Users must understand that the application does not provide regulated financial advice. This is intended to prevent legal action against the system and its developers for any financial losses incurred by users in the real market - ultimately, the system is not responsible for any incurred losses by the users in the real market (see H7.1 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). 
 
 \textbf{Fit Criterion:} A financial disclaimer shall be displayed during user onboarding and remain accessible through the application's settings menu.\\ 
 \hline 
@@ -298,7 +298,7 @@ COMP-LEG-09 &
 Fitness Activity Risk Acknowledgement & 
 \textbf{Description:} The system shall require users to acknowledge that participation in physical activities undertaken while using the application is performed at their own risk. 
 
-\textbf{Rationale:} The system rewards users for completing physical activities, where more rewards are available for higher-intensity or a higher quantity of activities. As a result, users may push their physical limits to gain more rewards and that may lead to injury (see ****LINK TO THE HAZARD IN HE HAZ ANALYSIS***). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
+\textbf{Rationale:} The system rewards users for completing physical activities, where more rewards are available for higher-intensity or a higher quantity of activities. As a result, users may push their physical limits to gain more rewards and that may lead to injury (see H4.2 in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}). Users should be informed that exercise carries inherent risks and that the application does not guarantee the safety or suitability of any fitness activity. 
 
 \textbf{Fit Criterion:} Upon the onboarding process, users shall be presented with a risk acknowledgement statement and must indicate acceptance before proceeding. This risk acknowledgement disclaimer will be readily accessible at all times in the settings menu.\\ 
 \hline
