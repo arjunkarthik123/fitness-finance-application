@@ -701,7 +701,7 @@ PII & Personally identifiable information & Section~\ref{acr:PII}, p.~\pageref{a
 \hline
 PIPEDA & Personal Information Protection and Electronic Documents Act & Section~\ref{acr:PIPEDA}, p.~\pageref{acr:PIPEDA} \\
 \hline
-PPCDA & To be confirmed by the team (see Open Issues) & --- \\
+PPCDA & Protecting Privacy and Consumer Data Act & Section~\ref{acr:PPCDA}, p.~\pageref{acr:PPCDA} \\
 \hline
 PUC & Product Use Case & Section~\ref{acr:PUC}, p.~\pageref{acr:PUC} \\
 \hline
@@ -3466,7 +3466,7 @@ User Consent for Health Data Collection &
 
 COMP-LEG-02\hypertarget{req:COMP-LEG-02}{} &
 Protection of Personal Information &
-\textbf{Description:} The collection, use, storage, and disclosure of \acr{PII}{personally identifiable information}{PII}, beyond just fitness data, shall follow the fair information principles of PIPEDA, and of PHIPA if it applies (see Open Issues).
+\textbf{Description:} The collection, use, storage, and disclosure of \acr{PII}{personally identifiable information}{PII}, beyond just fitness data, shall follow the fair information principles of PIPEDA, and of PHIPA.
 
 \textbf{Rationale:} The system stores personal information including name, height, weight, health conditions, and financial learning metrics/goals. Protecting this information is necessary to adhere to mandatory privacy regulations and maintain trust. This also helps mitigate the risks H2.1 and H11.2 identified in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{hazard analysis}.
 
@@ -3490,7 +3490,7 @@ COMP-LEG-04\hypertarget{req:COMP-LEG-04}{} &
 User Data Deletion Rights &
 \textbf{Description:} Account deletion, as specified in \hyperlink{req:SEC-PRV-03}{SEC-PRV-03}, shall meet PIPEDA's requirements for withdrawing consent and disposing of personal information.
 
-\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and PPCDA regarding data ownership and the user's right to disposal.
+\textbf{Rationale:} Users must have control over their personal information to comply with PIPEDA regarding privacy regulations and the \acr{PPCDA}{protecting privacy and consumer act}{PPCDA} regarding data ownership and the user's right to disposal.
 
 \textbf{Fit Criterion:} The privacy review in \hyperlink{req:COMP-LEG-02}{COMP-LEG-02} confirms that account deletion under \hyperlink{req:SEC-PRV-03}{SEC-PRV-03} meets these requirements.
 
@@ -3641,8 +3641,6 @@ and have not yet been resolved.
   case (Figure~\ref{fig:puc-claim-currency}) still shows users collecting
   currency by completing financial lessons. Currency is now earned only through
   physical activity, so the image needs to be updated.
-  \item \textbf{Privacy legislation.} The team needs to confirm whether PHIPA
-  applies to \progname{}, and what ``PPCDA'' in \hyperlink{req:COMP-LEG-04}{COMP-LEG-04} refers to.
   \item \textbf{API hosting.} The database will be hosted on McMaster
   University's MySQL server, but where the Spring API will be hosted has not
   been decided.
