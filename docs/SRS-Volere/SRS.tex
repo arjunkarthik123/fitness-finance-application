@@ -4524,7 +4524,98 @@ consistency, and appropriateness of this document.
 
 \input{../Reflection.text}
 
-\input{../SRS_Reflection.text}
+\begin{enumerate}
+  \item \textbf{What went well while writing this deliverable?}
+
+  Overall, the team maintained a high level of efficiency and productivity throughout the completion of this deliverable. Following our planning meetings, each team member took full accountability and stayed on top of their assigned tasks and sections, ensuring continuous forward momentum.
+
+  We established strong alignment across the entire team in terms of collaboration expectations, communication cadence, and work quality. When technical or domain challenges arose, such as diagnosing and resolving Git merge issues or standardizing the formal phrasing and fit criteria for Volere requirements---the team collaborated effectively through ad-hoc calls and discussions to solve problems collectively.
+
+  Additionally, the team successfully adapted to significant variations in individual availability and geographic dispersion. Despite several members taking vacations or traveling across distinct time zones (specifically with Noah traveling in Europe and Arjun located in Vancouver), the group maintained continuous communication through Microsoft Teams and GitHub. We adapted through asynchronous workflows, flexible scheduling, and clear issue tracking, ensuring that all sections progressed without disruption.
+
+  \item \textbf{What pain points did you experience during this deliverable, and how did you resolve them?}
+
+  The team experienced several key pain points during this deliverable cycle, which were addressed through proactive adjustments and teamwork:
+  \begin{itemize}
+    \item \textbf{Disparate Availability During Reading Week:} A large portion of the work occurred over Reading Week, during which team members experienced starkly differing availability schedules, vacations, and significant time-zone differences (Noah traveling in Europe and Arjun located in Vancouver). Finding mutual times for synchronous meetings proved difficult. We resolved this by relying primarily on asynchronous updates in Microsoft Teams, breaking work into modular GitHub issues, and holding focused, flexible meetings when schedules overlapped.
+    \item \textbf{Git PR Overload and Branch Protection Bottlenecks:} Because team members worked concurrently across multiple feature branches to draft different sections of the extensive Volere document, a surge of Pull Requests arrived simultaneously right before the deadline. This led to Git merge conflicts, review backlogs, and pipeline friction. To resolve this under tight time constraints, we temporarily disabled GitHub branch protection rules and joined a live group call. We reviewed, tested, and merged all branches together in real time, verifying document integrity and preventing regressions.
+    \item \textbf{Rushed Development Plan Integration:} Because branch merges took place until the day before the deadline, the downstream sections---notably the development plan and schedule---had to be completed last. Consequently, completing and polishing this section felt somewhat rushed. We resolved this by rallying as a group during our review call to finalize the section collaboratively, and we established an internal policy to enforce earlier merge freezes for future deliverables.
+    \item \textbf{Estimating Performance Requirements Without Baselines:} Formulating quantitative, measurable performance requirements was challenging because we were not provided with baseline benchmarks or existing system metrics. Establishing realistic thresholds for latency, throughput, and synchronization required significant estimation. We resolved this by conducting a dedicated team walkthrough, researching performance benchmarks of comparable commercial fitness and personal finance applications, and collaboratively establishing reasonable, verifiable metrics.
+  \end{itemize}
+
+  \item \textbf{How many of your requirements were inspired by speaking to your client(s) or their proxies (e.g. your peers, stakeholders, potential users)?}
+
+  A substantial portion of our requirements---particularly our functional requirements---were directly inspired by stakeholder and client discussions. The team conducted two primary interviews:
+  \begin{enumerate}
+    \item A formal mock interview with our client and supervisor, Chris Schankula, which helped establish the fundamental project scope, define educational learning goals, and clarify expectations around combining fitness habit-tracking with financial simulations.
+    \item A dedicated user interview with a representative end-user (documented in the Appendix), which provided direct insight into real-world fitness routines, financial literacy levels, and motivational drivers.
+  \end{enumerate}
+  These interviews revealed that while fitness habits are often self-motivated through routine, financial education requires structured, bite-sized gamification (such as daily objective challenges inspired by Wordle) to maintain user engagement. These insights directly inspired functional requirements regarding daily interactive challenges, simplified financial glossaries, and automated tracking integrations. Because our team has chosen to produce a comprehensive User Interview report as our Custom Document deliverable, these early interviews were pivotal in grounding our requirements in genuine user and client needs.
+
+  \item \textbf{Which of the courses you have taken, or are currently taking, will help your team to be successful with your capstone project.}
+
+  A cross-disciplinary set of software engineering and commerce courses provides the theoretical and practical knowledge needed for our capstone project:
+  \begin{itemize}
+    \item \textbf{SFWRENG 3RA3 (Software Requirements and Security Considerations):} Provided the direct framework for requirement engineering, writing unambiguous functional and non-functional requirements with the Volere template, establishing fit criteria, maintaining requirements traceability, and incorporating critical security and privacy considerations directly into our system requirements.
+    \item \textbf{SFWRENG 2AA4 (Software Design I --- Introduction to Software Development):} Taught modular decomposition, information hiding, object-oriented principles, design patterns, automated unit testing, and disciplined version control workflows with Git.
+    \item \textbf{SFWRENG 3A04 (Software Design III --- Large System Design):} Provided experience in high-level architectural styles (e.g., client-server, layered architecture), statechart and UML modeling, formal interface specifications, and decomposing complex software applications into manageable subsystems.
+    \item \textbf{COMMERCE 2FA3 (Introduction to Finance):} Introduced core personal and corporate finance concepts, the time value of money, compounding interest, financial market mechanisms, equity and fixed-income valuation, and risk/return principles that form the basis of the app's financial simulation engine.
+    \item \textbf{COMMERCE 2FB3 (Managerial Finance):} Built upon financial fundamentals with capital budgeting, financial valuation, and cash flow analysis, informing the design of realistic wealth-growth projections, budgeting logic, and portfolio tracking features.
+    \item \textbf{SFWRENG 3DB3 (Databases):} Provided essential skills in relational database modeling, entity-relationship (ER) diagrams, normalization (1NF--3NF), SQL database design, transaction management, and concurrency control, which will guide the architecture of our user data schema and persistence layer.
+    \item \textbf{SFWRENG 4X03 (Scientific Computation):} Provided knowledge of numerical methods, computer arithmetic error analysis, and mathematical algorithms, ensuring numerical precision and stability when executing financial compounding models, interest simulations, and fitness metric calculations.
+  \end{itemize}
+
+  \item \textbf{What knowledge and skills will the team collectively need to acquire to successfully complete this capstone project?}
+
+  To successfully execute and complete the Flexin capstone project, each team member has identified a specific domain knowledge area or technical skill they collectively need to acquire:
+  \begin{itemize}
+    \item \textbf{Daniel Hu --- Financial Domain Knowledge:} Because Daniel H.\ is enrolled in the core Software Engineering stream rather than Software Engineering and Management, he needs to acquire domain-specific knowledge in personal finance, financial instruments, compounding mechanics, portfolio diversification, and investment valuation to ensure the app's financial calculations and educational simulations are mathematically sound and realistic.
+    \item \textbf{Noah Goldschmied --- Frontend Development:} Noah needs to acquire practical skills in modern mobile frontend development frameworks (e.g., React Native/Expo or Flutter), specifically mastering component lifecycle management, mobile user interface design, styling, and navigation routing.
+    \item \textbf{Daniel Franze-Da Silva --- Backend Systems Development:} Daniel F.\ needs to acquire advanced backend engineering capabilities, focusing on architecting scalable server-side systems, RESTful API design, token-based authentication/authorization (JWT/OAuth), and robust business logic processing.
+    \item \textbf{Peter Deforest --- Database Design:} Peter needs to acquire specialized knowledge in database schema architecture, relational database normalization (3NF), data integrity constraints, migrations, and query optimization (using PostgreSQL or SQLite) to support efficient data storage for fitness telemetry and financial history.
+    \item \textbf{Arjun Karthik --- Frontend System Development:} Arjun needs to acquire deep expertise in frontend system architecture, specifically client-side state management patterns (such as Redux Toolkit or Zustand), asynchronous data synchronization with backend APIs, client caching, and offline state handling.
+  \end{itemize}
+
+  \item \textbf{For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?}
+
+  For each of the knowledge areas and skills identified in Question 5, the team evaluated two distinct learning approaches and selected the path best suited to project success:
+  \begin{itemize}
+    \item \textbf{Daniel Hu --- Financial Domain Knowledge:}
+    \begin{itemize}
+      \item \textit{Approach 1 (Self-Directed Study via Literature and Online Guides):} Reading financial textbooks, verified educational platforms (e.g., Investopedia), and personal finance literature independently.
+      \item \textit{Approach 2 (Peer-Mentoring and Collaborative Knowledge Transfer):} Participating in structured peer-learning sessions with team members enrolled in the Engineering and Management stream who have taken COMMERCE 2FA3 and 2FB3, reviewing relevant lecture slides and financial model templates.
+      \item \textit{Choice and Justification:} Daniel will pursue \textbf{Approach 2} supplemented by targeted reading from Approach 1. Peer-mentoring allows Daniel to focus specifically on the financial concepts, formulas, and market mechanics that directly apply to Flexin's features, ensuring consistency across the team while avoiding extraneous theoretical topics outside the project scope.
+    \end{itemize}
+
+    \item \textbf{Noah Goldschmied --- Frontend Development:}
+    \begin{itemize}
+      \item \textit{Approach 1 (Online Coursework and Documentation):} Completing guided video tutorials (e.g., React Native/Flutter courses) and systematically working through official framework documentation.
+      \item \textit{Approach 2 (Rapid Interactive Prototyping):} Developing experimental sandboxed UI components, interactive wireframes, and proof-of-concept mobile screens for Flexin.
+      \item \textit{Choice and Justification:} Noah will pursue \textbf{Approach 2}. Rapid prototyping provides immediate practical feedback, accelerates mastery of layout styling and component composition, and directly produces reusable UI screens that contribute to project deliverables.
+    \end{itemize}
+
+    \item \textbf{Daniel Franze-Da Silva --- Backend Systems Development:}
+    \begin{itemize}
+      \item \textit{Approach 1 (Theoretical Architectural Study):} Reading backend engineering literature and API design patterns focusing on microservices, request pipelining, and system security.
+      \item \textit{Approach 2 (Iterative API Prototyping and Testing):} Building functional mock backend endpoints, configuring routing and middleware, and performing live testing using API tools such as Postman.
+      \item \textit{Choice and Justification:} Daniel will pursue \textbf{Approach 2}. Iterative prototyping allows him to encounter and resolve concrete challenges in endpoint structure, JSON serialization, and status-code handling in real time, building practical backend competence that directly benefits the application.
+    \end{itemize}
+
+    \item \textbf{Peter Deforest --- Database Design:}
+    \begin{itemize}
+      \item \textit{Approach 1 (Textbook Study and Query Optimization Guides):} Studying relational database theory, database normalization rules, and query execution plans from textbooks and online documentation.
+      \item \textit{Approach 2 (Iterative Schema Construction and Stress Testing):} Creating mock relational database schemas (e.g., SQLite/PostgreSQL), writing schema migration scripts, and executing realistic query workloads against simulated fitness and transaction data.
+      \item \textit{Choice and Justification:} Peter will pursue \textbf{Approach 2} alongside reference material from Approach 1. Building and executing actual schema migrations against test data allows Peter to identify data integrity issues and relational constraints early, ensuring that the database schema is production-ready.
+    \end{itemize}
+
+    \item \textbf{Arjun Karthik --- Frontend System Development:}
+    \begin{itemize}
+      \item \textit{Approach 1 (Open-Source Codebase Analysis):} Studying production-grade open-source mobile applications to observe how global state stores, middleware, and caching layers are organized.
+      \item \textit{Approach 2 (Isolated Integration Spikes):} Building isolated test benches to connect UI components with mock API endpoints, focusing on handling loading states, cache invalidation, and asynchronous error boundaries.
+      \item \textit{Choice and Justification:} Arjun will pursue \textbf{Approach 1} combined with practical integration spikes from Approach 2. Analyzing established, mature open-source repositories provides immediate insight into proven architectural patterns, helping avoid state-management anti-patterns early in system design.
+    \end{itemize}
+  \end{itemize}
+\end{enumerate}
 
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
