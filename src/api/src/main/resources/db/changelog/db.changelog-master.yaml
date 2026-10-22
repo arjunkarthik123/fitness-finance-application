@@ -1,0 +1,6 @@
+# Master changelog. Add new changesets as numbered files in changes/ and include them here.
+# Never edit a changeset that has already been merged to main; write a new one instead.
+databaseChangeLog:
+  - include:
+      file: changes/001-create-users.yaml
+      relativeToChangelogFile: true

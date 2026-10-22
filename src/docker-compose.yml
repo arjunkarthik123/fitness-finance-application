@@ -1,0 +1,18 @@
+# Local MySQL for the API's dev profile. Start with `docker compose up -d` from src/.
+# Credentials match the defaults in api/src/main/resources/application.yml.
+services:
+  mysql:
+    image: mysql:9
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: flexin
+      MYSQL_USER: flexin
+      MYSQL_PASSWORD: flexin
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
