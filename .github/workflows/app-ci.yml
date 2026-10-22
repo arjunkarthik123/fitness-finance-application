@@ -1,0 +1,48 @@
+name: App CI
+
+on:
+  push:
+    branches: main
+    paths: [src/**, mise.toml, .github/workflows/app-ci.yml]
+  pull_request:
+    branches: main
+    paths: [src/**, mise.toml, .github/workflows/app-ci.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v5
+      - uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('src/mobile/package-lock.json') }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+      - run: npm test -- --ci
+
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/api
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v5
+      # The runner image presets JAVA_HOME to its own JDK, which mvnw prefers over PATH.
+      - run: echo "JAVA_HOME=$(mise where java)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('src/api/pom.xml') }}
+      - run: ./mvnw -B verify

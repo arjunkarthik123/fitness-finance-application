@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: flexin-api
+  profiles:
+    default: dev
+  jpa:
+    # Liquibase owns the schema; Hibernate only checks that entities match it.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/flexin}
+    username: ${DB_USER:flexin}
+    password: ${DB_PASSWORD:flexin}
