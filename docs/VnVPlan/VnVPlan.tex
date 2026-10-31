@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
@@ -944,6 +945,53 @@ Covers TRN-01 to TRN-03.
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+
+The table below maps each system test to the SRS requirement whose fit
+criterion it checks. The last column lists other requirements that the test
+also measures, such as load tests that rerun the speed checks. Rows for the
+remaining requirement sections are added as their test cases are written.
+
+\begin{xltabular}{\textwidth}{p{3cm}p{2.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.4cm}}
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  test-PR-SL-01 & PR-SL-01 & App launch time & ---\\
+  test-PR-SL-02 & PR-SL-02 & Response to input & ---\\
+  test-PR-SL-03 & PR-SL-03 & Trade confirmation time & ---\\
+  test-PR-SL-04 & PR-SL-04 & Activity sync time & ---\\
+  test-PR-SC-01 & PR-SC-01 & Daily earning limits & ---\\
+  test-PR-SC-02 & PR-SC-02 & No penalties for missed days & ---\\
+  test-PR-SC-03 & PR-SC-03 & Simulated market notice & ---\\
+  test-PR-SC-04 & PR-SC-04 & Not financial advice statement & ---\\
+  test-PR-SC-05 & PR-SC-05 & Exercise injury warning & ---\\
+  test-PR-SC-06 & PR-SC-06 & Safe goal progression & ---\\
+  test-PR-SC-07 & PR-SC-07 & Notification limits & ---\\
+  test-PR-SC-08 & PR-SC-08 & Safe leaderboard rules & ---\\
+  test-PR-PA-01 & PR-PA-01 & Exact money values & ---\\
+  test-PR-PA-02 & PR-PA-02 & Consistent currency awards & ---\\
+  test-PR-PA-03 & PR-PA-03 & No double counting & ---\\
+  test-PR-PA-04 & PR-PA-04 & Portfolio value & ---\\
+  test-PR-PA-05 & PR-PA-05 & Workout dates and late syncs & ---\\
+  test-PR-PA-06 & PR-PA-06 & Realistic market simulation & ---\\
+  test-PR-RFT-01 & PR-RFT-01 & Offline activity & ---\\
+  test-PR-RFT-02 & PR-RFT-02 & Atomic writes & ---\\
+  test-PR-RFT-03 & PR-RFT-03 & Failing data sources & ---\\
+  test-PR-RFT-04 & PR-RFT-04 & Backend unavailable & ---\\
+  test-PR-C-01 & PR-C-01 & Concurrent users & PR-SL-02, PR-SL-03\\
+  test-PR-C-02 & PR-C-02 & Two years of history & PR-SL-02\\
+  test-PR-SE-01 & PR-SE-01 & Adding a fitness source & ---\\
+  test-PR-SE-02 & PR-SE-02 & Adding an asset type & ---\\
+  test-PR-SE-03 & PR-SE-03 & Adding server capacity & PR-SL-02, PR-SL-03\\
+  test-PR-L-01 & PR-L-01 & Supported Android versions & ---\\
+  test-PR-L-02 & PR-L-02 & Keeping user history & ---\\
+\end{xltabular}
 
 \section{Unit Test Description}
 
