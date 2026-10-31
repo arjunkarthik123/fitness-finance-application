@@ -89,49 +89,54 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software being tested is \progname{}, an app that allows users to learn about the power of compounding through working out and investing.
+The team will be looking to test the following functions of the app:
+\begin{itemize}
+  \item Step tracking and integrations with fitness data sources (Android Health Connect and, optionally, Garmin watches)
+  \item Real-time updates of fitness data within the app
+  \item Converting fitness progress into virtual currency and depositing it into the user's account
+  \item Viewing account balances
+  \item Simulated/generated financial markets
+  \item Performance leaderboards
+\end{itemize}
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The main objective of the VnV plan is to ensure that \progname{} properly teaches the impact of compounding.
+For the VnV plan to achieve this objective, the team will prioritize the following qualities:
+\begin{itemize}
+  \item \textbf{Learnability:} The app is easy for new users to learn, as measured by the learnability requirement in the SRS (UHR-EOU-08).
+  \item \textbf{Correctness of currency calculations:} Virtual currency earned, deposited, and displayed in account balances is calculated correctly, and operations that change balances either complete fully or are rolled back (PR-RFT-02).
+  \item \textbf{Consistency of asset calculations:} Simulated asset values are consistent and produce the returns expected from the implemented market algorithms, including the calibration against historical market data required by PR-PA-06.
+  \item \textbf{User confidence in the financial lessons:} Users come away trusting and understanding the financial lessons the app is intended to convey.
+\end{itemize}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+The following objectives are out of scope for this VnV plan:
+\begin{itemize}
+  \item \textbf{Assumptions in the SRS and Hazard Analysis:} The assumptions listed in the SRS \citep{SRS} and the Critical Assumptions section of the Hazard Analysis are taken as given and will not be verified.
+  \item \textbf{Third-party packages and libraries:} External dependencies, such as Android Health Connect and the Garmin Connect IQ SDK, are assumed to be correct and already verified by their implementation teams (e.g.\ Garmin). The team does not have the time or resources to verify these libraries within the scope of this capstone. This matches the Hazard Analysis assumption that third-party health platforms keep their documented behaviour. \progname{}'s own handling of outages and malformed data from these sources is still in scope (PR-RFT-03).
+  \item \textbf{Internet connectivity:} The SRS lists a mobile data or Wi-Fi connection as part of the environment needed to reach the \progname{} backend. The strength and reliability of the user's connection will not be tested. The app's required offline behaviour (PR-RFT-01 and PR-RFT-04) is still in scope.
+  \item \textbf{Full verification of user-reported fitness activity:} The team will not attempt to fully verify that users are not lying about completing fitness goals, as this would require too much time and resources. The SRS already assumes that fitness devices report correct data and that artificial changes are dishonest use, and SC-04 limits this risk by not allowing manual entry of activity. Small checks may be used to gauge validity in some cases (e.g.\ checking that a Garmin watch's heart rate reading stays above a threshold for a period of time), but validity cannot be guaranteed, especially for users without a Garmin device who track activity solely through their phone.
+\end{itemize}
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The team is completing two custom documents (CDs), one per term:
+\begin{itemize}
+  \item \textbf{CD-Fall --- User/Stakeholder/Client Interview Report:} A report on interviews with the project's client and potential users, used to elicit requirements. The SRS appendix already summarizes the two interviews conducted so far: a mock interview with the client and supervisor, and an interview with a representative end user.
+  \item \textbf{CD-Winter --- Business Plan:} A business plan exploring how \progname{} could be monetized after the capstone, as the team believes the project has the potential to become a startup. It will cover the market need, market size and business model, costs, competition, and an execution plan.
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+The following documents are relevant to the VnV efforts:
+\begin{itemize}
+  \item \textbf{Software Requirements Specification (SRS)} \citep{SRS}: Defines the functional and non-functional requirements of \progname{}, each with a fit criterion. These fit criteria are what the tests in this plan check against. The SRS also lists the assumptions that bound what is in scope for verification, and names the testing tools the team will use (JUnit for backend unit and system tests, and Detox for end-to-end tests of the mobile client).
+  \item \textbf{Hazard Analysis:} Identifies the hazards of using \progname{} and defines twelve safety and security requirements (SR1--SR12) to mitigate them, each with a fit criterion. Its roadmap commits to implementing SR1, SR2, SR3, SR6, SR8, SR9, SR11, and SR12 within the capstone, so these are the safety and security requirements this plan verifies. Its Critical Assumptions are excluded from verification.
+  \item \textbf{Health Connect and Garmin Connect IQ SDK documentation:} Describes how activity data is provided to \progname{}. Since these platforms are assumed to keep their documented behaviour, their documentation defines the data the integration is expected to receive.
+  \item \textbf{Custom Documents:} The interview report (CD-Fall) records the user and client needs that the requirements were derived from, which is what validation testing checks the app against. The business plan (CD-Winter) has little direct bearing on VnV, but one SRS scalability requirement refers to it for how the product might grow after the capstone.
+  \item \textbf{User interviews and user testing:} The interviews in the SRS appendix ground the requirements in real user needs. The SRS also plans user testing on demo builds in Term 2 (Weeks 17 and 21), which will be used to assess learnability and user confidence in the financial lessons.
+\end{itemize}
 
 \section{Plan}
 
