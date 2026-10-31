@@ -732,7 +732,31 @@ Covers PR-RFT-01 to PR-RFT-04.
 
 Covers PR-C-01, PR-C-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-01} & \textbf{Concurrent users}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed to the test server with 500 registered test accounts.\\
+  \textbf{Input/Condition} & A load test runs 100 simulated users at the same time. Each one browses screens and places trades.\\
+  \textbf{Output/Result} & Response times during the load test meet PR-SL-02 and PR-SL-03.\\
+  \textbf{How test will be performed} & The load testing tool sends the API calls that the app makes for each action and records the response times. While the load runs, test-PR-SL-02 and test-PR-SL-03 are also run on the reference phone.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-02} & \textbf{Two years of history}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account loaded with two years of daily activity and weekly trades.\\
+  \textbf{Input/Condition} & The user opens the activity history, trade history, and progress screens and scrolls to the oldest records.\\
+  \textbf{Output/Result} & The full two years of history is shown, and the screens meet PR-SL-02.\\
+  \textbf{How test will be performed} & A seeding script creates the test data. A Detox script opens each history screen, checks that the oldest records are shown, and times each transition.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Scalability or Extensibility}
 
