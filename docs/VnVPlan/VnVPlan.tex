@@ -310,6 +310,42 @@ These tests cover the portfolio and trading features of the simulated market.
   \bottomrule
 \end{tabularx}
 
+\begin{enumerate}
+
+\item \textbf{FR-09: Asset Purchase}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in and has enough virtual currency to purchase the asset.\\
+\textbf{Input:} The \texttt{UserID}, the \texttt{AssetID}, and a call to the buy action.\\
+\textbf{Output:} The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
+\textbf{Test Case Derivation:} This test covers FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
+\textbf{How test will be performed:} After the purchase of an asset the balance will be updated (currency removed) and the asset will be added to the user's portfolio.
+
+\item \textbf{FR-10: Asset Sale}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+\textbf{Input:} The \texttt{UserID}, the \texttt{AssetID}, and a call to the sell action.\\
+\textbf{Output:} The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
+\textbf{Test Case Derivation:} This test covers FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the holding removed.\\
+\textbf{How test will be performed:} After the sale of an asset the balance will be updated (currency added) and the asset will be removed from the user's portfolio.
+
+\item \textbf{FR-11: Transaction Recording}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} The user is logged in and has a non-empty transaction history.\\
+\textbf{Input:} The \texttt{UserID}, and a request to view previous market transactions.\\
+\textbf{Output:} A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
+\textbf{Test Case Derivation:} This test covers FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
+\textbf{How test will be performed:} After completing transaction(s) on an account, the transaction list for a user will be viewed and verified.
+
+\item \textbf{FR-12: Portfolio Performance Calculation}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in and has a portfolio containing at least one asset.\\
+\textbf{Input:} The \texttt{UserID}, and a request to retrieve all assets in the portfolio and calculate performance.\\
+\textbf{Output:} The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
+\textbf{Test Case Derivation:} This test covers FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
+\textbf{How test will be performed:} Through manual inspection and use of financial calculators the performance will be measured and verified
+
+\end{enumerate}
+
 \wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
@@ -326,7 +362,33 @@ These tests cover friends lists and public and private leaderboard groups.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item \textbf{FR-13: Leaderboard Participation}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} The user is logged in, and a leaderboard with open spaces is available to join.\\
+\textbf{Input:} The \texttt{UserID} and the \texttt{LeaderboardID} of a leaderboard with open spaces.\\
+\textbf{Output:} The user joins the intended leaderboard and appears in its member list.\\
+\textbf{Test Case Derivation:} This test covers FUNC-13. A user can join a group, so after the join request the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+\textbf{How test will be performed:} After the user attempts to join the leaderboard, check that the user's \texttt{UserID} is linked to that \texttt{LeaderboardID}.
+
+\item \textbf{FR-14: Friend Management}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in and can search for other users by \texttt{UserID}.\\
+\textbf{Input:} The \texttt{UserID} of another application user.\\
+\textbf{Output:} A friend request is sent to that user, and the invitee can respond to it.\\
+\textbf{Test Case Derivation:} This test covers FUNC-14. Users can add and remove friends, so a request must reach the invitee, and the result of their response (approved or denied) must be reflected in both users' friends lists. This gives users the social aspect of comparing progress with selected friends.\\
+\textbf{How test will be performed:} After the user sends a friend request, check that both the requester and the invitee can see the request and, once the invitee responds, the result of the action (approved or denied).
+
+\item \textbf{FR-15: Private Leaderboard Creation}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in.\\
+\textbf{Input:} A valid \texttt{UserID} and a request to create a new leaderboard.\\
+\textbf{Output:} A new private leaderboard is created with a unique \texttt{LeaderboardID}.\\
+\textbf{Test Case Derivation:} This test covers FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+\textbf{How test will be performed:} After the user completes the steps to create a leaderboard, check that a valid \texttt{LeaderboardID} exists and that the creator is a member of the new leaderboard.
+
+\end{enumerate}
 
 \subsubsection{Progress Reporting}
 
@@ -340,7 +402,17 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item \textbf{FR-16: Progress Reporting}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
+\textbf{Input:} A valid \texttt{UserID} and a request to view the progress data connected to that ID.\\
+\textbf{Output:} Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
+\textbf{Test Case Derivation:} This test covers FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
+\textbf{How test will be performed:} After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings and portfolio performance, and compare each value with the seeded data.
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
