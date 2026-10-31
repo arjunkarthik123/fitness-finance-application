@@ -235,118 +235,322 @@ the contents of the subsections.}
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+The subsections below group the functional requirements in the Functional Requirements section of the
+SRS \citep{SRS} by feature area. Together they cover FUNC-01 to FUNC-16.
+FUNC-17 (Sponsored Reward Redemption) is a stretch goal in the SRS Waiting
+Room, so it is not tested.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+\wss{Each test uses the fields Control, Initial State, Input, Output, Test
+Case Derivation, and How test will be performed.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Account Management}
 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
+These tests cover creating an account and signing in.
 
-\begin{enumerate}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-01 & User Registration \\
+  FUNC-02 & User Authentication \\
+  \bottomrule
+\end{tabularx}
 
-\item{test-id1\\}
+\wss{Add the test cases for these requirements.}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+\subsubsection{Fitness Tracking and Goals}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+These tests cover importing activity data from third-party providers and creating and tracking fitness goals.
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-03 & Third-Party Fitness Data Import \\
+  FUNC-04 & Fitness Goal Creation \\
+  FUNC-05 & Fitness Goal Tracking \\
+  \bottomrule
+\end{tabularx}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\wss{Add the test cases for these requirements.}
 
-How test will be performed: 
+\subsubsection{Rewards and Virtual Currency}
 
-\end{enumerate}
+These tests cover awarding virtual currency for activity and keeping each user's balance.
 
-\subsubsection{Area of Testing2}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-06 & Reward Allocation \\
+  FUNC-07 & Virtual Currency Tracking \\
+  \bottomrule
+\end{tabularx}
 
-...
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Simulated Investing}
+
+These tests cover the portfolio and trading features of the simulated market.
+
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-08 & Portfolio Creation \\
+  FUNC-09 & Asset Purchase \\
+  FUNC-10 & Asset Sale \\
+  FUNC-11 & Transaction Recording \\
+  FUNC-12 & Portfolio Performance Calculation \\
+  \bottomrule
+\end{tabularx}
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Community and Leaderboards}
+
+These tests cover friends lists and public and private leaderboard groups.
+
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-13 & Leaderboard Participation \\
+  FUNC-14 & Friend Management \\
+  FUNC-15 & Private Leaderboards \\
+  \bottomrule
+\end{tabularx}
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Progress Reporting}
+
+These tests cover the summaries of activity, goals, earnings, portfolio performance, and standings.
+
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  FUNC-16 & Progress Reporting \\
+  \bottomrule
+\end{tabularx}
+
+\wss{Add the test cases for these requirements.}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+The subsections below follow the nonfunctional requirement sections of the
+SRS \citep{SRS}. Each one lists the SRS subsections and requirement IDs that
+its tests cover.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
+\wss{Each test uses the fields Type, Initial State, Input/Condition,
+Output/Result, and How test will be performed. Static tests, such as reviews,
+inspections, and walkthroughs, should instead say who is involved and how the
+review is run.}
 
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
+\subsubsection{Look and Feel}
 
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
+These tests cover the Look and Feel Requirements section of the SRS.
 
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
+\paragraph{Appearance}
 
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
+Covers LF-APP-01 to LF-APP-05.
 
-\begin{enumerate}
+\wss{Add the test cases for these requirements.}
 
-\item{test-id1\\}
+\paragraph{Style}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Covers LF-STY-01 to LF-STY-04.
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+\wss{Add the test cases for these requirements.}
 
-\end{enumerate}
+\subsubsection{Usability and Humanity}
 
-\subsubsection{Area of Testing2}
+These tests cover the Usability and Humanity Requirements section of the SRS.
 
-...
+\paragraph{Ease of Use}
+
+Covers UHR-EOU-01 to UHR-EOU-09.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Personalization and Internationalization}
+
+Covers UHR-PER-01 to UHR-PER-04, UHR-INT-01.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Learning}
+
+Covers UHR-LRN-01 to UHR-LRN-04.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Understandability and Politeness}
+
+Covers UHR-UND-01 to UHR-UND-03, UHR-POL-01 to UHR-POL-05.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Accessibility}
+
+Covers UHR-ACC-01 to UHR-ACC-06.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Performance}
+
+These tests cover the Performance Requirements section of the SRS.
+
+\paragraph{Speed and Latency}
+
+Covers PR-SL-01 to PR-SL-04.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Safety-Critical}
+
+Covers PR-SC-01 to PR-SC-08.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Precision or Accuracy}
+
+Covers PR-PA-01 to PR-PA-06.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Robustness or Fault-Tolerance}
+
+Covers PR-RFT-01 to PR-RFT-04.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Capacity}
+
+Covers PR-C-01, PR-C-02.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Scalability or Extensibility}
+
+Covers PR-SE-01 to PR-SE-03.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Longevity}
+
+Covers PR-L-01, PR-L-02.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Operational and Environmental}
+
+These tests cover the Operational and Environmental Requirements section of the SRS.
+
+\paragraph{Productization}
+
+Covers PROD-01, PROD-02.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Maintainability and Support}
+
+These tests cover the Maintainability and Support Requirements section of the SRS.
+
+\paragraph{Maintenance}
+
+Covers MAS-MNT-01 to MAS-MNT-05.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Supportability}
+
+Covers MAS-SUP-01.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Adaptability}
+
+Covers MAS-ADPT-01 to MAS-ADPT-03.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Security}
+
+These tests cover the Security Requirements section of the SRS.
+
+\paragraph{Access}
+
+Covers SEC-ACC-01 to SEC-ACC-05.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Integrity}
+
+Covers SEC-INT-01 to SEC-INT-03.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Privacy}
+
+Covers SEC-PRV-01 to SEC-PRV-03.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Audit}
+
+Covers SEC-AUD-01, SEC-AUD-02.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Immunity}
+
+Covers SEC-IMM-01 to SEC-IMM-03.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Cultural}
+
+These tests cover the Cultural Requirements section of the SRS.
+
+\paragraph{Cultural}
+
+Covers CUL-01, CUL-02.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{Compliance}
+
+These tests cover the Compliance Requirements section of the SRS.
+
+\paragraph{Legal}
+
+Covers COMP-LEG-01 to COMP-LEG-07.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Standards Compliance}
+
+Covers COMP-STD-01 to COMP-STD-07.
+
+\wss{Add the test cases for these requirements.}
+
+\subsubsection{User Documentation and Training}
+
+These tests cover the User Documentation and Training Requirements section of the SRS.
+
+\paragraph{User Documentation}
+
+Covers DOC-01 to DOC-04.
+
+\wss{Add the test cases for these requirements.}
+
+\paragraph{Training}
+
+Covers TRN-01 to TRN-03.
+
+\wss{Add the test cases for these requirements.}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
