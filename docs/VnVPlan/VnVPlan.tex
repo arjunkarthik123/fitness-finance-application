@@ -405,13 +405,70 @@ Covers UHR-ACC-01 to UHR-ACC-06.
 
 \subsubsection{Performance}
 
-These tests cover the Performance Requirements section of the SRS.
+These tests cover the Performance Requirements section of the SRS. Timing
+tests run on the reference phone, which is the Android phone the team uses
+for every timing measurement. Its model and Android version are recorded in
+the VnV Report so the results can be repeated. Names in \textsf{sans serif}
+are symbolic constants defined in the SRS, and tests use their values from
+there.
 
 \paragraph{Speed and Latency}
 
 Covers PR-SL-01 to PR-SL-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-01} & \textbf{App launch time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The release build is installed on the reference phone, the user is signed in, and the app is fully closed (removed from recent apps).\\
+  \textbf{Input/Condition} & The tester opens the app from the home screen icon 20 times, closing it fully between each launch.\\
+  \textbf{Output/Result} & The home screen appears within 3 seconds in at least 19 of the 20 launches.\\
+  \textbf{How test will be performed} & The tester records each launch as a screen recording and measures the time from the icon tap to the first frame where the home screen is fully drawn. All 20 times are recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-02} & \textbf{Response to input}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The release build is installed on the reference phone with a signed-in test account that has activity, goals, and a portfolio.\\
+  \textbf{Input/Condition} & A Detox script visits every main screen and presses the main buttons on each one, for at least 100 measured actions in total.\\
+  \textbf{Output/Result} & At least 95\% of the measured transitions and button responses finish within 1 second.\\
+  \textbf{How test will be performed} & The script logs the time between each action and the moment the expected element on the next screen becomes visible. A summary script reports the share of actions under 1 second.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-03} & \textbf{Trade confirmation time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A signed-in test account has enough currency to buy, and some holdings to sell, in several assets.\\
+  \textbf{Input/Condition} & A Detox script places 50 buy orders and 50 sell orders of different sizes and confirms each one.\\
+  \textbf{Output/Result} & In at least 95\% of the trades, the updated holdings and currency balance appear within 2 seconds of confirmation.\\
+  \textbf{How test will be performed} & The script records the time from the confirm tap until the new balance and holding quantity are shown, and checks that the shown values match the expected values after the trade.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-04} & \textbf{Activity sync time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account is signed in on the reference phone. Health Connect holds new step and workout records that the app has not synced yet. The app is closed.\\
+  \textbf{Input/Condition} & The tester opens the app.\\
+  \textbf{Output/Result} & Within 10 seconds of opening, the currency balance includes the currency for all of the new Health Connect activity.\\
+  \textbf{How test will be performed} & The tester calculates the expected balance from the conversion rules beforehand, opens the app with a timer running, and records when the balance reaches the expected value. This is repeated 10 times with different amounts of new activity.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Safety-Critical}
 
