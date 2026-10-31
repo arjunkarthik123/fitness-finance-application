@@ -2,6 +2,9 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{eurosym}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -345,21 +348,168 @@ Output/Result, and How test will be performed. Static tests, such as reviews,
 inspections, and walkthroughs, should instead say who is involved and how the
 review is run.}
 
-\subsubsection{Look and Feel}
+\subsubsection{Look and Feel}\label{sec:tests_nfr_lf}
 
-These tests cover the Look and Feel Requirements section of the SRS.
+These tests cover the Look and Feel Requirements section of the SRS \citep{SRS}, spanning appearance and style.
 
 \paragraph{Appearance}
 
-Covers LF-APP-01 to LF-APP-05.
+Covers LF-APP-01 to LF-APP-05. The appearance tests verify that \progname{} delivers an uncluttered visual hierarchy balancing physical activity with simulated financial portfolios, distinguishable compounding data visualizations, responsive layout scaling across diverse Android displays, WCAG-compliant color contrast across Light and Dark themes, and persistent core navigation.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X p{3.5cm}}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} & \textbf{Test Case ID} \\
+  \midrule
+  LF-APP-01 & Visual Hierarchy & test-lf-app-01 \\
+  LF-APP-02 & Compounding Chart & test-lf-app-02 \\
+  LF-APP-03 & Responsive Layout & test-lf-app-03 \\
+  LF-APP-04 & Theme and Contrast & test-lf-app-04 \\
+  LF-APP-05 & Navigation & test-lf-app-05 \\
+  \bottomrule
+\end{tabularx}
+
+\begin{enumerate}
+
+\item{\textbf{test-lf-app-01: Visual Hierarchy (Dashboard Balance)}\label{test:lf-app-01}\\}
+
+Type: Dynamic, Manual (Timed Usability Test)
+
+Initial State: The application is running on a physical Android test device or emulator. The test user account is fully logged in and populated with active fitness metrics (e.g., current weekly workout and step goal progress) and simulated investment portfolio data (e.g., total portfolio valuation and daily gain/loss). The application is opened to the main Dashboard screen.
+
+Input/Condition: Present a participant from the target user cohort with the populated Dashboard and deliver the standardized verbal prompt: ``Locate your current fitness progress and your overall portfolio value.''
+
+Output/Result: At least 80\% of participants in the testing cohort locate and point out both their current fitness progress and their portfolio value within $T_{\text{locate\_max}} = 5\text{ seconds}$ without prompting or external assistance.
+
+How test will be performed: Conduct individual usability evaluation sessions with a cohort of at least 10 participants matching the target demographic. A test administrator starts a digital stopwatch and video/screen capture upon completing the verbal task prompt and stops timing once the participant verbally points to or touches both target summary cards. The elapsed time and success status (pass if $\le 5\text{ s}$, fail otherwise) are recorded in the usability test log.
+
+\item{\textbf{test-lf-app-02: Compounding Chart (Trace Distinction)}\label{test:lf-app-02}\\}
+
+Type: Dynamic, Manual (Usability Visual Identification Test)
+
+Initial State: The application is running and navigated to the Portfolio Compounding Chart view. The compounding chart displays dual historical/projected traces: one representing cumulative workout earnings (contributions) and the other representing simulated investment returns (capital gains and dividends). The chart includes a visible legend.
+
+Input/Condition: Open the Portfolio compounding chart view and instruct the participant: ``Identify and distinguish which visual trace represents your workout earnings and which represents your investment gains/dividends.''
+
+Output/Result: Participant correctly identifies and distinguishes between the two visual traces within $T_{\text{chart\_max}} = 5\text{ seconds}$. The visual traces must exhibit distinct color hues (tested for color-blind accessibility) and distinct visual line patterns (e.g., solid vs.\ dashed line), supported by an unambiguous legend.
+
+How test will be performed: Administered during participant usability sessions. The evaluator records participant accuracy, time-to-identification via stopwatch, and qualitative remarks regarding chart readability and trace distinction. Both quantitative identification speed and qualitative feedback are documented in the test report.
+
+\item{\textbf{test-lf-app-03: Responsive Layout (Screen Sizes and Font Scaling)}\label{test:lf-app-03}\\}
+
+Type: Dynamic, Semi-Automated / Manual (Multi-Device Emulator and Device Matrix)
+
+Initial State: Application build deployed across an emulator/device matrix encompassing Android 10+ (API level 29+) with physical screen sizes ranging from 5.5'' to 6.8'' (including Google Pixel 4a, Pixel 7, and Samsung Galaxy S21 Ultra profiles). System font scaling in Android Accessibility settings is configured to $S_{\text{font}} = 130\%$.
+
+Input/Condition: Launch the application on each device configuration and systematically navigate through all primary views (Dashboard, Activity, Market, Learn, Community) and key secondary modal/form dialogs.
+
+Output/Result: Zero text truncations, text clipping, or unreadable overlapping text across all screens. Zero overlapping interactive UI elements. All touch targets maintain a minimum interactive hit area of $48 \times 48\text{ dp}$ in accordance with UHR-ACC-04.
+
+How test will be performed: Automated Jetpack Compose UI tests evaluate semantic node bounds to programmatically assert that touch targets meet the $\ge 48 \times 48\text{ dp}$ constraint and verify layout bounds do not collide. Additionally, a manual visual inspection across the multi-device emulator matrix is conducted by two QA team members using a responsive layout verification checklist, logging any visual clipping defects into GitHub Issues.
+
+\item{\textbf{test-lf-app-04: Theme and Contrast (Light/Dark Mode and Indicators)}\label{test:lf-app-04}\\}
+
+Type: Static / Automated Tool-Assisted Accessibility Audit
+
+Initial State: Application installed with both Light and Dark theme palettes fully implemented. Mock data populated displaying positive/negative financial returns and active/completed fitness milestones.
+
+Input/Condition: Toggle the device system theme between Light mode and Dark mode across all screens. Render all fitness status indicators (e.g., progress rings, streak badges) and financial status indicators (e.g., asset performance, gain/loss markers).
+
+Output/Result: All text and interactive graphical components meet WCAG 2.1 AA contrast requirements: contrast ratio $\ge 4.5:1$ for normal body text and $\ge 3:1$ for large text ($\ge 18\text{ pt}$ or bold $\ge 14\text{ pt}$) and graphical icons, complying with COMP-STD-02. Fitness and financial status indicators remain readily distinguishable in both Light and Dark modes without semantic confusion.
+
+How test will be performed: The accessibility audit is conducted by two QA team members using automated scanning tools (Google Accessibility Scanner for Android and the Colour Contrast Analyser tool) on captured UI screen frames. Automated tool reports are cross-checked against WCAG 2.1 Success Criteria 1.4.3 (Contrast Minimum) and 1.4.11 (Non-text Contrast). Any color contrast violations or indistinguishable state indicators are logged as critical UI bugs.
+
+\item{\textbf{test-lf-app-05: Navigation (Persistent Bottom Bar)}\label{test:lf-app-05}\\}
+
+Type: Dynamic, Automated UI Test
+
+Initial State: Application launched in a clean state with an authenticated user session.
+
+Input/Condition: Programmatically trigger navigation through each of the five top-level primary screens: Dashboard, Activity, Market/Portfolio, Learn, and Community.
+
+Output/Result: The persistent bottom navigation bar is present and visible on every primary screen. The bar contains exactly five navigation destinations with correct iconography and labels (Dashboard, Activity, Market, Learn, Community). The active destination is distinctly highlighted corresponding to the active route.
+
+How test will be performed: Automated Android UI test implemented using Kotlin and Compose UI Test Framework (\texttt{ComposeTestRule}). The test script simulates tap events on each navigation destination in sequence, asserting that the navigation bar component tag (\texttt{bottom\_}\allowbreak\texttt{navigation\_}\allowbreak\texttt{bar}) remains visible (\texttt{assertIsDisplayed()}) and that the \texttt{isSelected} semantic property evaluates to true for the active screen and false for the other four destinations.
+
+\end{enumerate}
 
 \paragraph{Style}
 
-Covers LF-STY-01 to LF-STY-04.
+Covers LF-STY-01 to LF-STY-04. The style tests verify that \progname{} maintains an approachable and encouraging tone, ensures strict virtual currency branding to prevent confusion with real-world financial assets, provides non-intrusive gamification reward animations, and enforces component consistency across the shared design system.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X p{3.5cm}}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} & \textbf{Test Case ID} \\
+  \midrule
+  LF-STY-01 & Approachable Tone & test-lf-sty-01 \\
+  LF-STY-02 & Virtual Currency Symbol & test-lf-sty-02 \\
+  LF-STY-03 & Non-Intrusive Gamification & test-lf-sty-03 \\
+  LF-STY-04 & Component Consistency & test-lf-sty-04 \\
+  \bottomrule
+\end{tabularx}
+
+\begin{enumerate}
+
+\item{\textbf{test-lf-sty-01: Approachable Tone (Typography, Terminology, and Tooltips)}\label{test:lf-sty-01}\\}
+
+Type: Static / User Survey Evaluation
+
+Initial State: A representative testing cohort ($N \ge 10$) matching the target user demographic (novice investors and general fitness users) is assembled. A staging build of \progname{} is loaded on test devices with simulated market and fitness data.
+
+Input/Condition: Participants complete a self-directed walkthrough of the financial education, trading, and portfolio tracking screens, followed by completing the structured post-test usability survey defined in Appendix~\ref{sec:survey_questions}.
+
+Output/Result: At least 80\% of target-demographic evaluators rate the application's interface tone as approachable, supportive, and non-intimidating (Likert score $\ge 4$ out of 5 on survey questions Q1--Q3). Contextual explanatory tooltips are confirmed present and functional for 100\% of complex financial terms (e.g., ``dividends'', ``unrealized return'', ``expense ratio'').
+
+How test will be performed: Usability evaluators administer the survey questionnaire immediately after the participant walkthrough. Survey ratings are compiled to calculate the proportion of positive ratings ($\ge 4/5$). In addition, a static inspection of all financial UI screens is performed by two team members against a pre-approved glossary of financial terminology to verify that every designated financial term displays an interactive tooltip icon that renders plain-language definitions upon tap.
+
+\item{\textbf{test-lf-sty-02: Virtual Currency Symbol (FLX vs.\ Real-World Currency)}\label{test:lf-sty-02}\\}
+
+Type: Static Code/String Audit and Dynamic UI Inspection
+
+Initial State: Clean repository workspace on the release candidate branch. Application installed on a test device with simulated user balances and market quotes displayed.
+
+Input/Condition: Execute automated static regex and linter scripts across all application source code, string resources (\texttt{strings.xml}), and currency formatters. Perform manual inspection across all views displaying balances, prices, rewards, and portfolio values.
+
+Output/Result: Zero occurrences of real-world fiat currency symbols (\$, \pounds, \euro, \yen) associated with virtual currency amounts. 100\% compliance with the application's virtual currency symbol (FLX). Prominent simulated market disclaimers remain visible in accordance with PR-SC-03.
+
+How test will be performed:
+\begin{enumerate}
+    \item \emph{Static Analysis}: A continuous integration (CI) script executes a static regex search over the UI codebase and XML localization resources to verify that no hardcoded fiat currency symbols (\$, \pounds, \euro, \yen) exist in balance formatting paths.
+    \item \emph{Dynamic Inspection}: A QA engineer performs an end-to-end screen walkthrough verifying that every balance indicator on the Dashboard, Market, Activity, and History screens explicitly displays the ``FLX'' label.
+\end{enumerate}
+
+\item{\textbf{test-lf-sty-03: Non-Intrusive Gamification (Reward Animations)}\label{test:lf-sty-03}\\}
+
+Type: Dynamic, Automated / Manual Timing Test
+
+Initial State: Application installed and running. Test account configured with a near-complete milestone (e.g., logging a completed workout that triggers an achievement celebration).
+
+Input/Condition: Trigger a milestone reward celebration animation. Evaluate two test conditions:
+\begin{itemize}
+    \item Condition A: Allow the animation to play to completion without user touch input.
+    \item Condition B: Tap the background area or perform a swipe gesture while the animation is actively rendering.
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+    \item Condition A: Total animation playback duration does not exceed $T_{\text{anim\_max}} = 1.5\text{ seconds}$, smoothly returning control to the standard view.
+    \item Condition B: Tapping the background or swiping immediately dismisses the animation within $T_{\text{dismiss\_max}} = 200\text{ ms}$, immediately restoring user interaction to the underlying interface.
+\end{itemize}
+
+How test will be performed: Automated Jetpack Compose UI benchmark tests use the Compose test clock (\texttt{mainClock}) to advance frames and assert exact animation start, dismiss, and end timestamps. In addition, manual verification using a high-frame-rate (60 fps) screen recording is conducted to measure the frame delay between user tap interrupt and visual dismissal.
+
+\item{\textbf{test-lf-sty-04: Component Consistency (Style Guide Compliance)}\label{test:lf-sty-04}\\}
+
+Type: Static Inspection (Design Walkthrough)
+
+Initial State: Complete design system specification (Figma component library and Compose theme tokens) approved by the UI/UX lead. Staging build of the application containing all user-facing screens.
+
+Input/Condition: Compare all UI components (buttons, forms/input fields, modal dialogs, contextual tooltips, summary cards, and toggle switches) across every screen against the shared design system specifications.
+
+Output/Result: Zero discrepancies, undocumented custom components, or unstandardized styling found. All UI elements adhere to defined typography, border radiuses, color tokens, and elevation levels.
+
+How test will be performed: A formal peer-review inspection meeting is conducted by three team members: the UI/UX designer, the lead frontend developer, and a QA reviewer. The review team steps through each screen using a structured Component Consistency Checklist covering buttons, form controls, modals, tooltips, cards, and toggles. Any identified departures from the style guide are documented with screenshot evidence and logged as defects in GitHub Issues.
+
+\end{enumerate}
 
 \subsubsection{Usability and Humanity}
 
