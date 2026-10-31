@@ -674,7 +674,59 @@ Covers PR-PA-01 to PR-PA-06.
 
 Covers PR-RFT-01 to PR-RFT-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-01} & \textbf{Offline activity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account signed in on the reference phone, synced, then put in airplane mode with the app closed.\\
+  \textbf{Input/Condition} & Activity is recorded in Health Connect over a gap of \textsf{OfflineSyncWindow} (set by moving the activity timestamps back, or by waiting out the period). The phone is then reconnected and the app is opened.\\
+  \textbf{Output/Result} & All of the activity from the gap is credited at the next sync.\\
+  \textbf{How test will be performed} & The tester compares the credited currency with the amount calculated by hand for the recorded activity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-02} & \textbf{Atomic writes}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known balance and holdings.\\
+  \textbf{Input/Condition} & (1) A failure is injected at each step of every multi-step write: trades, reward credits, and progress updates. (2) The connection or server is cut in the middle of a test trade. (3) 100 trade requests are sent at the same time against one account.\\
+  \textbf{Output/Result} & (1) Each failed write leaves the data as it was. (2) After the cut, the balance and holdings match either the state before the trade or the state after it, and a completed trade used the confirmed price. (3) Every request is either fully completed or fully rolled back, and the balance is never negative.\\
+  \textbf{How test will be performed} & JUnit tests use fault injection in the service layer to fail each step in turn. The concurrent test sends the 100 requests from parallel threads, then checks that the final balance and holdings equal the starting state plus the completed trades.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-03} & \textbf{Failing data sources}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & One source is made unavailable. In a second run, it returns malformed data.\\
+  \textbf{Output/Result} & The app stays usable with the other source, retries the failed sync, then shows a message naming the failing source and the cause. No currency is awarded for the malformed data.\\
+  \textbf{How test will be performed} & The failing source is replaced with a mock that times out or returns malformed records. Backend tests check the retries and the awards, and a Detox script checks the app and the message.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-04} & \textbf{Backend unavailable}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account that has synced at least once on the reference phone.\\
+  \textbf{Input/Condition} & The backend is stopped, then the app is opened.\\
+  \textbf{Output/Result} & The app opens without crashing, shows the last known balance and portfolio, and shows a notice that the data may be out of date.\\
+  \textbf{How test will be performed} & The tester stops the backend, opens the app, visits each main screen, and records whether any screen crashes or is empty.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Capacity}
 
