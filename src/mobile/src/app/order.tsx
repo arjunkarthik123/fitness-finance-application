@@ -1,9 +1,13 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 
 import { WireframeScreen } from '@/components/WireframeScreen';
 
 export default function OrderScreen() {
-  const { symbol, side } = useLocalSearchParams<{ symbol: string; side: 'buy' | 'sell' }>();
+  const { symbol, side } = useLocalSearchParams<{ symbol?: string; side?: string }>();
+  // Deep links can arrive with missing or bad params; never guess a side for an order.
+  if (!symbol || (side !== 'buy' && side !== 'sell')) {
+    return <Redirect href="/exchange" />;
+  }
   return (
     <WireframeScreen
       title={`${side === 'sell' ? 'Sell' : 'Buy'} ${symbol}`}

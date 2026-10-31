@@ -6,7 +6,7 @@ export default function FitnessQuestionnaireScreen() {
       title="Fitness Questionnaire"
       purpose="Learn the user's activity level and fitness goals."
       todos={['Activity level', 'Fitness goals', 'Connect a fitness device (optional)']}
-      links={[{ label: 'Finish and enter app', href: '/dashboard' }]}
+      links={[{ label: 'Finish and enter app', href: '/dashboard', replace: true }]}
     />
   );
 }

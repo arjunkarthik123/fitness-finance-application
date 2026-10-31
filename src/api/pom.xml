@@ -56,7 +56,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Tests run against in-memory H2 (MySQL mode) so no database install is needed. -->
+        <!-- Tests run against in-memory H2 (MySQL mode) locally so no database install is needed; CI uses real MySQL. -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

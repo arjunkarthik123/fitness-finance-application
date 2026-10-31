@@ -6,6 +6,8 @@ import { colors, spacing } from '@/theme';
 export type WireframeLink = {
   label: string;
   href: Href;
+  /** Replace the current screen instead of pushing, e.g. when logging in or out. */
+  replace?: boolean;
 };
 
 type Props = {
@@ -40,7 +42,7 @@ export function WireframeScreen({ title, purpose, todos = [], links = [] }: Prop
       )}
 
       {links.map((link) => (
-        <Link key={link.label} href={link.href} asChild>
+        <Link key={link.label} href={link.href} replace={link.replace} asChild>
           <Pressable style={styles.button}>
             <Text style={styles.buttonText}>{link.label}</Text>
           </Pressable>

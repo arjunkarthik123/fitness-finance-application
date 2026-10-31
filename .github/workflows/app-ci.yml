@@ -33,6 +33,27 @@ jobs:
 
   api:
     runs-on: ubuntu-latest
+    # Real MySQL so the Liquibase schema and Hibernate validation are checked against
+    # the database we ship on, not just H2. Same image as src/docker-compose.yml.
+    services:
+      mysql:
+        image: mysql:9
+        env:
+          MYSQL_DATABASE: flexin_test
+          MYSQL_USER: flexin
+          MYSQL_PASSWORD: flexin
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/flexin_test
+      SPRING_DATASOURCE_USERNAME: flexin
+      SPRING_DATASOURCE_PASSWORD: flexin
     defaults:
       run:
         working-directory: src/api

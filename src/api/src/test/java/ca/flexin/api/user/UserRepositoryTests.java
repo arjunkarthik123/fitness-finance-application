@@ -16,7 +16,9 @@ class UserRepositoryTests {
 
     @Test
     void savesAndFindsByUsername() {
-        users.saveAndFlush(new User("alex", "alex@example.com", "hash"));
+        User saved = users.saveAndFlush(new User("alex", "alex@example.com", "hash"));
+
+        assertThat(saved.getCreatedAt()).isNotNull();
 
         assertThat(users.findByUsername("alex"))
             .hasValueSatisfying(user -> assertThat(user.getEmail()).isEqualTo("alex@example.com"));

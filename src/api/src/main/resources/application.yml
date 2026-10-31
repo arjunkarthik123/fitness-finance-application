@@ -17,6 +17,11 @@ management:
       exposure:
         include: health,info
 
+flexin:
+  cors:
+    # Expo web dev server. Comma-separated; override with FLEXIN_CORS_ALLOWED_ORIGINS.
+    allowed-origins: http://localhost:8081
+
 ---
 spring:
   config:

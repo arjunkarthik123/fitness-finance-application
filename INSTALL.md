@@ -61,8 +61,15 @@ To use different credentials, set `DB_URL`, `DB_USER` and `DB_PASSWORD` before s
 
 ```sh
 cd src/api
-./mvnw spring-boot:run      # http://localhost:8080/api/health
+./mvnw spring-boot:run      # http://localhost:8080/actuator/health
 ./mvnw verify               # tests (H2, no database needed) + Checkstyle
+```
+
+CI runs the same tests against real MySQL. To do that locally, point the tests at a MySQL database
+(it can be the `flexin` one above; repository tests roll back their data):
+
+```sh
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/flexin SPRING_DATASOURCE_USERNAME=flexin SPRING_DATASOURCE_PASSWORD=flexin ./mvnw verify
 ```
 
 ## 4. Mobile app

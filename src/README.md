@@ -18,7 +18,7 @@ Tool versions (Node, Java) are pinned in [`/mise.toml`](../mise.toml). Maven is 
 ```sh
 mise install          # once, installs Node 22 + Java 21
 mise run db           # start MySQL (or use a local MySQL install, see INSTALL.md)
-mise run api          # API on http://localhost:8080 (try /api/health)
+mise run api          # API on http://localhost:8080 (try /actuator/health)
 mise run mobile       # Expo dev server; press w for web, a for Android
 mise run test         # everything CI runs
 ```
@@ -75,7 +75,7 @@ src/main/java/ca/flexin/api/
 src/main/resources/
   application.yml            Default profile is dev (MySQL from DB_URL / DB_USER / DB_PASSWORD)
   db/changelog/              Liquibase changelogs
-src/test/                    JUnit tests; run on in-memory H2 with the `test` profile
+src/test/                    JUnit tests; run on in-memory H2 with the `test` profile (real MySQL in CI)
 ```
 
 ### Database migrations (Liquibase)
