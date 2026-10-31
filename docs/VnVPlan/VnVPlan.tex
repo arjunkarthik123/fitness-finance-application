@@ -762,7 +762,45 @@ Covers PR-C-01, PR-C-02.
 
 Covers PR-SE-01 to PR-SE-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-01} & \textbf{Adding a fitness source}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with the fitness sources available at release.\\
+  \textbf{Input/Condition} & The team adds a mock fitness source.\\
+  \textbf{Output/Result} & All of the changes needed are inside the integration module, and the currency conversion code is unchanged.\\
+  \textbf{How test will be performed} & A team member adds the mock source on a branch. The reviewers check the diff to confirm that every changed file is inside the integration module.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-02} & \textbf{Adding an asset type}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with stocks, bonds, and ETFs.\\
+  \textbf{Input/Condition} & The team adds a new test asset type.\\
+  \textbf{Output/Result} & The change only adds asset definitions and market engine configuration. The buy and sell code is unchanged, and the existing trading tests pass with the new asset type.\\
+  \textbf{How test will be performed} & A team member adds the asset type on a branch. The reviewers check the diff, and the trading tests are run with the new asset type.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-03} & \textbf{Adding server capacity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed with extra server capacity, and the app version is the same one used in test-PR-C-01.\\
+  \textbf{Input/Condition} & The load test from test-PR-C-01 is run with 200 simulated users.\\
+  \textbf{Output/Result} & Response times meet PR-SL-02 and PR-SL-03, with no change to the mobile app.\\
+  \textbf{How test will be performed} & The team adds server capacity, reruns the load test at double the load, and confirms that the app's version number is the same as in test-PR-C-01.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Longevity}
 
