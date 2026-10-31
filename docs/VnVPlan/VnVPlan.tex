@@ -588,7 +588,87 @@ Covers PR-SC-01 to PR-SC-08.
 
 Covers PR-PA-01 to PR-PA-06.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-01} & \textbf{Exact money values}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known starting balance.\\
+  \textbf{Input/Condition} & A scripted sequence of 1,000 buy and sell trades at prices that do not divide evenly, such as 33.33 and 0.07.\\
+  \textbf{Output/Result} & The stored balance after the sequence matches the expected balance exactly, and every amount shown in the app has two decimal places.\\
+  \textbf{How test will be performed} & A JUnit test runs the trades through the trading service and compares the final balance with a value computed separately using exact decimal arithmetic. A Detox check reads the displayed balance and trade amounts and checks their format.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-02} & \textbf{Consistent currency awards}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & An empty test account for each activity record set.\\
+  \textbf{Input/Condition} & A fixed set of test activity records covering steps, workouts of each type, and edge values such as zero activity. Each set is processed twice.\\
+  \textbf{Output/Result} & The awarded currency matches the hand-calculated amount from the published conversion rules, and both runs award the same amount.\\
+  \textbf{How test will be performed} & The team calculates the expected amounts by hand and stores them as test fixtures. A JUnit test compares the reward service's output against them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-03} & \textbf{No double counting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & The same walk is reported by both sources with overlapping times. A second case has two separate walks, one from each source, that do not overlap.\\
+  \textbf{Output/Result} & The overlapping walk earns the amount for one recording. The two separate walks each earn currency.\\
+  \textbf{How test will be performed} & A JUnit test sends both cases through the import and reward services and compares the awards with the expected amounts.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-04} & \textbf{Portfolio value}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & Several test portfolios with different holdings, fixed simulated prices, and some uninvested currency.\\
+  \textbf{Input/Condition} & The portfolio screen is opened for each test portfolio.\\
+  \textbf{Output/Result} & The displayed value equals the sum of quantity times price for each holding, plus uninvested currency, to the cent.\\
+  \textbf{How test will be performed} & The expected values are calculated by hand. A JUnit test checks the value returned by the API, and a Detox script checks the value shown on screen.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-05} & \textbf{Workout dates and late syncs}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an active streak.\\
+  \textbf{Input/Condition} & (1) A workout done at 11:30 pm is synced after midnight. (2) A workout recorded in a different time zone is synced. (3) A workout from two days ago arrives after the streak was already marked as broken.\\
+  \textbf{Output/Result} & Each workout is recorded on the day it happened on the source device. In case (3) the streak and the rewards for that day are recalculated to include the late workout.\\
+  \textbf{How test will be performed} & A JUnit test sends records with set source timestamps and time zones, using a fixed server clock, then checks the stored dates, the streak, and the rewards.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-06} & \textbf{Realistic market simulation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The market simulation with its calibrated settings and a fixed random seed.\\
+  \textbf{Input/Condition} & The simulation is run over at least 30 simulated years for a broad market asset, with several different seeds.\\
+  \textbf{Output/Result} & The average annual return and the annual volatility are consistent with historical data for a broad market index, and each run includes downturns.\\
+  \textbf{How test will be performed} & A script computes the average annual return, annual volatility, and largest drop for each run and compares them with the same measures from the historical data used for calibration. The acceptable ranges are agreed with the supervisor before the test and recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Robustness or Fault-Tolerance}
 
