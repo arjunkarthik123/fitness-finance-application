@@ -806,7 +806,31 @@ Covers PR-SE-01 to PR-SE-03.
 
 Covers PR-L-01, PR-L-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-01} & \textbf{Supported Android versions}\\
+  \midrule
+  \textbf{Type} & Static and Dynamic, Automatic\\
+  \textbf{Initial State} & The release build.\\
+  \textbf{Input/Condition} & (1) The target Android version in the build settings is compared with Google Play's requirement for new apps at release time. (2) The test suite is run on an emulator with the newest Android version available in April 2027.\\
+  \textbf{Output/Result} & The build meets Google Play's target version requirement, and the test suite passes on the newest Android version.\\
+  \textbf{How test will be performed} & A team member checks the build settings against Google Play's published requirement before release. The Detox suite is run on the newest Android emulator image before the final demo.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-02} & \textbf{Keeping user history}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The backend code, database schema, and server configuration.\\
+  \textbf{Input/Condition} & The team searches for every scheduled job, database event, and retention setting that deletes data.\\
+  \textbf{Output/Result} & None of them deletes activity or portfolio history for an active account. History is deleted only when the user deletes it or deletes their account.\\
+  \textbf{How test will be performed} & A team member lists every delete path in the code and database configuration. A second team member reviews the list and confirms that each one is started by the user.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Operational and Environmental}
 
