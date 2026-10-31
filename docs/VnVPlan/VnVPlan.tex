@@ -474,7 +474,115 @@ Covers PR-SL-01 to PR-SL-04.
 
 Covers PR-SC-01 to PR-SC-08.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-01} & \textbf{Daily earning limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with no activity recorded for the test day.\\
+  \textbf{Input/Condition} & Activity records for one day at 0.5, 1, 1.5, 2, and 5 times \textsf{HealthyDailyActivity}, each sent to a fresh test account.\\
+  \textbf{Output/Result} & No account earns more than \textsf{DailyEarnCap} for the day. The currency earned per unit of activity above \textsf{HealthyDailyActivity} is lower than the rate below it.\\
+  \textbf{How test will be performed} & A JUnit test sends each set of records through the reward service and compares the earned amount against the cap and against the earned amount for the lower levels.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-02} & \textbf{No penalties for missed days}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A test account with a currency balance, holdings, and an active streak.\\
+  \textbf{Input/Condition} & (1) The account records no activity for several days. (2) The user freezes their streak before a missed day.\\
+  \textbf{Output/Result} & (1) The balance and holdings are unchanged after the inactive days. (2) The frozen streak is not reset by the missed day.\\
+  \textbf{How test will be performed} & A JUnit test advances the server clock over the inactive days and checks the balance, holdings, and streak. A code review of every place that writes to balances and holdings confirms that none of them lowers a value because of inactivity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-03} & \textbf{Simulated market notice}\\
+  \midrule
+  \textbf{Type} & Static, Manual inspection\\
+  \textbf{Initial State} & The release build with a test account that holds assets.\\
+  \textbf{Input/Condition} & The tester visits every screen that shows prices, holdings, or returns.\\
+  \textbf{Output/Result} & Each of these screens shows the notice that the market is simulated and that results do not predict real returns, and links to the explanation of what the simulation does not model.\\
+  \textbf{How test will be performed} & Two team members go through a checklist of all market and portfolio screens taken from the app's navigation. For each screen they record whether the notice is visible and whether the link opens the explanation.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-04} & \textbf{Not financial advice statement}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the statement, then acknowledges it and finishes sign-up, then opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until the statement is acknowledged, and the statement can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script checks the sign-up and settings behaviour. Separately, a team member reviews all lessons, tips, and portfolio insights against the list in the SRS and records any text that recommends a specific real-world investment. The test passes when none is found.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-05} & \textbf{Exercise injury warning}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the injury warning and the terms of use, then acknowledges both, finishes sign-up, and opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until both are acknowledged, and both can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script runs the sign-up flow with each acknowledgement left out in turn, then checks that settings links to both.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-06} & \textbf{Safe goal progression}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an automatically raised goal plan.\\
+  \textbf{Input/Condition} & (1) The goal service generates eight weeks of goals after the user meets every goal. (2) The user misses \textsf{MissedGoalLimit} goals in a row. (3) The user lowers a goal from the goal screen.\\
+  \textbf{Output/Result} & (1) No weekly goal is more than \textsf{MaxGoalIncrease} above the week before, and every week has at least one rest day. (2) The app suggests a lower goal. (3) The lower goal is saved and used.\\
+  \textbf{How test will be performed} & JUnit tests check the generated plan and the suggestion. A Detox script lowers a goal from the goal screen and checks the saved value.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-07} & \textbf{Notification limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with notifications on and quiet hours set.\\
+  \textbf{Input/Condition} & Events that would send goal-related notifications are created throughout a simulated day, including during quiet hours.\\
+  \textbf{Output/Result} & No notifications are sent during quiet hours, and no more than \textsf{MaxDailyNotifications} goal-related notifications are sent in the day. After the user raises the limit, the new limit is used.\\
+  \textbf{How test will be performed} & A JUnit test runs the notification scheduler with a fixed clock and counts the notifications it sends and the times it sends them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-08} & \textbf{Safe leaderboard rules}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A leaderboard group with several test users who have different goals and different amounts of activity.\\
+  \textbf{Input/Condition} & The leaderboard is computed, one user leaves the group, and the leaderboard is computed again. A new account is also created.\\
+  \textbf{Output/Result} & Rankings are ordered by each user's percentage of their goal, not by raw activity. The user who left no longer appears. No user's balance changes because of their ranking. The new account is not on any leaderboard until the user opts in.\\
+  \textbf{How test will be performed} & A JUnit test sets up users where ranking by raw activity and ranking by goal percentage give different orders, then checks the order, the membership, and every balance before and after.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Precision or Accuracy}
 
