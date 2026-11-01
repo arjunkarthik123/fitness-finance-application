@@ -286,3 +286,10 @@ __pycache__/
 
 # IntelliJ generated files
 .idea
+
+## Node / Expo
+node_modules/
+.expo/
+
+## Maven
+target/
