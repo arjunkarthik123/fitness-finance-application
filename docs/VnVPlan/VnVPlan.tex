@@ -1339,7 +1339,31 @@ Covers MAS-SUP-01.
 
 Covers MAS-ADPT-01 to MAS-ADPT-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-01-T-01} & \textbf{New Fitness Provider Integration}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A new third party fitness provider has been approved to integrate with the Flexin' application.\\
+  \textbf{Input/Condition} & User attempts to connect the new provider to their account to track activivty data.\\
+  \textbf{Output/Result} & The provider can be connected using the same workflow as existing providers.\\
+  \textbf{Covers} & MAS-ADPT-01 and verifies adaptability to future potential fitness providers.\\
+  \textbf{How test will be performed} & The tester will connect both an existing provider and the newly added provider. The setup process will be compared to verify workflow consistency.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-02-T-01} & \textbf{Mobile Platform Portability}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User has an existing account and they wish to access the application on an iOS mobile device.\\
+  \textbf{Input/Condition} & User signs in using an existing account from the iOS device.\\
+  \textbf{Output/Result} & Account information, activity history, and portfolio data are successfully retrieved without migration steps.\\
+  \textbf{Covers} & MAS-ADPT-02 and verifies future cross-platform portability.\\
+  \textbf{How test will be performed} & A compatible iOS client will authenticate using an existing account. The tester will verify successful data retrieval and consistency with Android data.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Security}
 
