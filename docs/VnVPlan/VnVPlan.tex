@@ -1210,9 +1210,40 @@ These tests cover the Operational and Environmental Requirements section of the 
 
 \paragraph{Productization}
 
-Covers PROD-01, PROD-02.
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  PROD-01 & Build and Quality Assurance \\
+  PROD-02 & Installability \\
+  \bottomrule
+\end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PROD-01} & \textbf{Build and Quality Assurance}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The final version of the app is in a pre-final revision and has been tested.\\
+  \textbf{Input/Condition} & The internally developed test suite and the Android pre-release test package.\\
+  \textbf{Output/Result} & All tests pass with no warnings caused by technical issues.\\
+  \textbf{Covers} & PROD-01. By passing these tests, the development team receives confirmation that the application is ready for release.\\
+  \textbf{How test will be performed} & The test is completed through the automated test suites and the process of publishing the app to the Android app store.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-02} & \textbf{Public Store Installation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The app is published on a publicly accessible Google Play Store listing.\\
+  \textbf{Input/Condition} & The user attempts to find and install the application.\\
+  \textbf{Output/Result} & The app is installed and ready for the user to use.\\
+  \textbf{Covers} & PROD-01, and verifies the effects of PROD-02. Users must be able to access, download, install and update the app from a public source.\\
+  \textbf{How test will be performed} & Users are asked to install the app on a phone before launch. This shows how familiar users are with finding applications in the app store and confirms that the app is accessible.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Maintainability and Support}
 
