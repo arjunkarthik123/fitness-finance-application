@@ -2,6 +2,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -89,141 +91,148 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software being tested is \progname{}, an app that allows users to learn about the power of compounding through working out and investing.
+The team will be looking to test the following functions of the app:
+\begin{itemize}
+  \item Step tracking and integrations with fitness data sources (Android Health Connect and, optionally, Garmin watches)
+  \item Real-time updates of fitness data within the app
+  \item Converting fitness progress into virtual currency and depositing it into the user's account
+  \item Viewing account balances
+  \item Simulated/generated financial markets
+  \item Performance leaderboards
+\end{itemize}
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The main objective of the VnV plan is to ensure that \progname{} properly teaches the impact of compounding.
+For the VnV plan to achieve this objective, the team will prioritize the following qualities:
+\begin{itemize}
+  \item \textbf{Learnability:} The app is easy for new users to learn, as measured by the learnability requirement in the SRS (UHR-EOU-08).
+  \item \textbf{Correctness of currency calculations:} Virtual currency earned, deposited, and displayed in account balances is calculated correctly, and operations that change balances either complete fully or are rolled back (PR-RFT-02).
+  \item \textbf{Consistency of asset calculations:} Simulated asset values are consistent and produce the returns expected from the implemented market algorithms, including the calibration against historical market data required by PR-PA-06.
+  \item \textbf{User confidence in the financial lessons:} Users come away trusting and understanding the financial lessons the app is intended to convey.
+\end{itemize}
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+The following objectives are out of scope for this VnV plan:
+\begin{itemize}
+  \item \textbf{Assumptions in the SRS and Hazard Analysis:} The assumptions listed in the SRS \citep{SRS} and the Critical Assumptions section of the Hazard Analysis are taken as given and will not be verified.
+  \item \textbf{Third-party packages and libraries:} External dependencies, such as Android Health Connect and the Garmin Connect IQ SDK, are assumed to be correct and already verified by their implementation teams (e.g.\ Garmin). The team does not have the time or resources to verify these libraries within the scope of this capstone. This matches the Hazard Analysis assumption that third-party health platforms keep their documented behaviour. \progname{}'s own handling of outages and malformed data from these sources is still in scope (PR-RFT-03).
+  \item \textbf{Internet connectivity:} The SRS lists a mobile data or Wi-Fi connection as part of the environment needed to reach the \progname{} backend. The strength and reliability of the user's connection will not be tested. The app's required offline behaviour (PR-RFT-01 and PR-RFT-04) is still in scope.
+  \item \textbf{Full verification of user-reported fitness activity:} The team will not attempt to fully verify that users are not lying about completing fitness goals, as this would require too much time and resources. The SRS already assumes that fitness devices report correct data and that artificial changes are dishonest use, and SC-04 limits this risk by not allowing manual entry of activity. Small checks may be used to gauge validity in some cases (e.g.\ checking that a Garmin watch's heart rate reading stays above a threshold for a period of time), but validity cannot be guaranteed, especially for users without a Garmin device who track activity solely through their phone.
+\end{itemize}
 
 \subsection{Custom Documents}
 
-\wss{Summarize the CDs (Custom Documents) that were tackled by this project.  CDs 
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  CDs should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your CDs (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The team is completing two custom documents (CDs), one per term:
+\begin{itemize}
+  \item \textbf{CD-Fall --- User/Stakeholder/Client Interview Report:} A report on interviews with the project's client and potential users, used to elicit requirements. The SRS appendix already summarizes the two interviews conducted so far: a mock interview with the client and supervisor, and an interview with a representative end user.
+  \item \textbf{CD-Winter --- Business Plan:} A business plan exploring how \progname{} could be monetized after the capstone, as the team believes the project has the potential to become a startup. It will cover the market need, market size and business model, costs, competition, and an execution plan.
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+The following documents are relevant to the VnV efforts:
+\begin{itemize}
+  \item \textbf{Software Requirements Specification (SRS)} \citep{SRS}: Defines the functional and non-functional requirements of \progname{}, each with a fit criterion. These fit criteria are what the tests in this plan check against. The SRS also lists the assumptions that bound what is in scope for verification, and names the testing tools the team will use (JUnit for backend unit and system tests, and Detox for end-to-end tests of the mobile client).
+  \item \textbf{Hazard Analysis:} Identifies the hazards of using \progname{} and defines twelve safety and security requirements (SR1--SR12) to mitigate them, each with a fit criterion. Its roadmap commits to implementing SR1, SR2, SR3, SR6, SR8, SR9, SR11, and SR12 within the capstone, so these are the safety and security requirements this plan verifies. Its Critical Assumptions are excluded from verification.
+  \item \textbf{Health Connect and Garmin Connect IQ SDK documentation:} Describes how activity data is provided to \progname{}. Since these platforms are assumed to keep their documented behaviour, their documentation defines the data the integration is expected to receive.
+  \item \textbf{Custom Documents:} The interview report (CD-Fall) records the user and client needs that the requirements were derived from, which is what validation testing checks the app against. The business plan (CD-Winter) has little direct bearing on VnV, but one SRS scalability requirement refers to it for how the product might grow after the capstone.
+  \item \textbf{User interviews and user testing:} The interviews in the SRS appendix ground the requirements in real user needs. The SRS also plans user testing on demo builds in Term 2 (Weeks 17 and 21), which will be used to assess learnability and user confidence in the financial lessons.
+\end{itemize}
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section outlines the plan to verify and validate Flexin' across its project development lifecycle.
+The plan will detail the roles and responsibilities of the team, and will specify the approach to verify the SRS document, design and implementation, as well as how to verify the VnV itself.
+Lastly, it will describe the automated tools and software validation framework that the team plans on using.
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+The process of VnV will be a collective effort spread across the team and supervisor.
+All members will have defined roles that altogether will cover the process.
+These roles can be seen in Table~\ref{TblVnVTeamRoles}.
+
+\begin{table}[H]
+  \centering
+  \caption{Verification and Validation Team Roles}
+  \label{TblVnVTeamRoles}
+  \begin{tabularx}{\textwidth}{|p{3cm}|p{3cm}|X|}
+  \hline
+  \textbf{Team Member} & \textbf{Project Role} & \textbf{VnV Responsibilities} \\ \hline
+  Peter Deforest & Testing Lead & Coordinating all VnV activities, ensuring unit, integration and regression tests are written and maintained, and performing the final review of all test cases before each milestone. \\ \hline
+  Arjun Karthik & GitHub Manager, CI/CD Lead & Implementing and maintaining the CI/CD pipeline and static analysis tools, monitoring automated test coverage metrics, and resolving issues with VnV tooling. \\ \hline
+  Shao (Daniel) Hu & Lead Developer & Leading code inspections using a defined checklist, verifying that the design and implementation satisfy the SRS, and leading the code walkthrough for the supervisor. \\ \hline
+  Daniel Franze-Da Silva & Scribe, UI/UX Design Lead & Documenting VnV meeting minutes, preparing and running the usability survey, and verifying that the UI and UX meet the usability requirements in the SRS. \\ \hline
+  Noah Goldschmied & Team Liaison, Chairman & Maintaining traceability between requirements and test cases, coordinating SRS and VnV Plan reviews, and ensuring feedback from the supervisor, TAs and peer reviewers is addressed through GitHub issues. \\ \hline
+  Chris Schankula & Project Supervisor & Providing technical oversight and domain feedback on the fitness and finance features, reviewing the SRS and VnV Plan, and participating in the Revision 0 demonstration to validate the requirements. \\ \hline
+  \end{tabularx}
+\end{table}
+
 
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+The SRS will be verified to ensure that all requirements detailed in the document are reasonable, accurate, understandable and complete.
+The bullet list below describes the different avenues in which the SRS may be reviewed.
+\begin{itemize}
+  \item \textbf{Submission to TA:} The SRS will be submitted to our course TA, who will thoroughly read and analyze the document and provide feedback where needed.
+  \item \textbf{Peer Review:} Classmates will review the SRS document and ensure its content makes sense from a course standpoint.
+  \item \textbf{Presentation to Supervisor:} The team may meet with the project supervisor to ensure that the requirements described in the SRS are high quality and in line with what they expect to be delivered.
+\end{itemize}
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+If any problem are found with the SRS, the team will utilize our issue board to keep track and fix them.
+Once development begins, these issues may also coincide with a bugfix.
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+Design verification will begin after the submission of the Design Document on November 16th.
+This verification will ensure that Flexin's architecture meets requirements and is implementable.
+The bullet list below describes how the Design Document may be reviewed.
+\begin{itemize}
+  \item \textbf{Submission to TA:} The Design Document will be submitted to our course TA, who will thoroughly read and analyze the document and provide feedback where needed.
+  \item \textbf{Peer Review:} Classmates will review the Design document and ensure its content makes sense from a course standpoint.
+  \item \textbf{Presentation to Supervisor:} The team may meet with the project supervisor to ensure that the design is feasible from an implementation point of view.
+\end{itemize}
 
-\wss{The review will include reviews by your classmates}
+Any problems with the Design Document will be handled through the teams issue board.
 
-\wss{Create a checklists?}
 
 \subsection{Verification and Validation Plan Verification}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+VnV plan verification will take place before the document is submitted by the team, as well as post submission by other members.
+\begin{itemize}
+  \item \textbf{Team Review:} The team will review the VnV Plan ensuring that the defined tasks are feasible within the timeframe of the course and that the detail described in the document is appropriate.
+  \item \textbf{Peer Review:} Classmates will review the VnV Plan and ensure its content makes sense from a course standpoint.
+  \item \textbf{Presentation to Supervisor:} The team may meet with the project supervisor to ensure that the VnV Plan is feasible.
+  \item \textbf{Submission to TA:} The VnV Plan will be submitted to the TA for grading and feedback.
+\end{itemize}
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
-
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+Implementation verification ensures that the system, as built, correctly implements the SRS and design document.
+This will be done through a combination of the following:
+\begin{itemize}
+  \item \textbf{Unit Testing and System Testing:} All functional and non-functional requirements will be verified through the tests described in the below sections of this document.
+  \item \textbf{Static Analysis and Linting:} The team will enforce a coding standard using linters and static analyzers.
+  \item \textbf{Code Review:} All code changes will require a pull request and approval from at least one team member.
+  The team members will be looking for code correctness, standards, and proper error handling.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+The team plans on creating standard unit tests that will run during the CI stage of the code development lifecycle.
+The framework used for the backend will most likely be JUnit, and for the frontend, Detox.
+The team may also create integration tests and end-to-end tests to ensure that application functionality doesn't degrade in the grand scheme.
+Code coverage will be top of mind while developing this test plan, and a tool to ensure that a minimum agreed threshold of 80\% coverage will be implemented.
 
 \subsection{Software Validation}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
-
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
-
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
-
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
-
-\wss{This section might reference back to the SRS verification section.}
+The software validation step of the VnV plan will ensure that the near-final product lives up to its expectations.
+This validation will be done from the perspective of the users and the stakeholders.
+\begin{itemize}
+  \item \textbf{Rev-0 Demonstration:} The Rev-0 demo will be used to ensure that the core functionality of Flexin' is up to the standards of what the supervisor expects.
+  \item \textbf{Usability Tests:} The team plans on giving Flexin' to a select group of prospective users for a period of roughly 2 weeks.
+  This will help the team understand what needs work, and what worked well for the users.
+\end{itemize}
 
 \section{System Tests}
 
@@ -302,6 +311,64 @@ These tests cover the portfolio and trading features of the simulated market.
   \bottomrule
 \end{tabularx}
 
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-09} & \textbf{Asset Purchase}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has enough virtual currency to purchase the asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the buy action.\\
+  \textbf{Output/Result} & The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
+  \textbf{Covers} & FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
+  \textbf{How test will be performed} & After the purchase of an asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-10} & \textbf{Asset Sale}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the sell action.\\
+  \textbf{Output/Result} & The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
+  \textbf{Covers} & FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the holding removed.\\
+  \textbf{How test will be performed} & After the sale of an asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-11} & \textbf{Transaction Recording}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and has a non-empty transaction history.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to view previous market transactions.\\
+  \textbf{Output/Result} & A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
+  \textbf{Covers} & FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
+  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and checked against the trades that were made.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-12} & \textbf{Portfolio Performance Calculation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a portfolio containing at least one asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to retrieve all assets in the portfolio and calculate performance.\\
+  \textbf{Output/Result} & The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
+  \textbf{Covers} & FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
+  \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
+  \bottomrule
+\end{tabularx}
+
 \wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
@@ -318,7 +385,48 @@ These tests cover friends lists and public and private leaderboard groups.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-13} & \textbf{Leaderboard Participation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in, and a leaderboard with open spaces is available to join.\\
+  \textbf{Input/Condition} & The \texttt{UserID} and the \texttt{LeaderboardID} of a leaderboard with open spaces.\\
+  \textbf{Output/Result} & The user joins the intended leaderboard and appears in its member list.\\
+  \textbf{Covers} & FUNC-13. A user can join a group, so after the join request the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+  \textbf{How test will be performed} & After the user attempts to join the leaderboard, check that the user's \texttt{UserID} is linked to that \texttt{LeaderboardID}.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-14} & \textbf{Friend Management}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and can search for other users by \texttt{UserID}.\\
+  \textbf{Input/Condition} & The \texttt{UserID} of another application user.\\
+  \textbf{Output/Result} & A friend request is sent to that user, and the invitee can respond to it.\\
+  \textbf{Covers} & FUNC-14. Users can add and remove friends, so a request must reach the invitee, and the result of their response (approved or denied) must be reflected in both users' friends lists. This gives users the social aspect of comparing progress with selected friends.\\
+  \textbf{How test will be performed} & After the user sends a friend request, check that both the requester and the invitee can see the request and, once the invitee responds, the result of the action (approved or denied).\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-15} & \textbf{Private Leaderboard Creation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to create a new leaderboard.\\
+  \textbf{Output/Result} & A new private leaderboard is created with a unique \texttt{LeaderboardID}.\\
+  \textbf{Covers} & FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+  \textbf{How test will be performed} & After the user completes the steps to create a leaderboard, check that a valid \texttt{LeaderboardID} exists and that the creator is a member of the new leaderboard.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Progress Reporting}
 
@@ -332,7 +440,18 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-16} & \textbf{Progress Reporting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to view the progress data connected to that ID.\\
+  \textbf{Output/Result} & Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
+  \textbf{Covers} & FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
+  \textbf{How test will be performed} & After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
+  \bottomrule
+\end{tabularx}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -397,49 +516,432 @@ Covers UHR-ACC-01 to UHR-ACC-06.
 
 \subsubsection{Performance}
 
-These tests cover the Performance Requirements section of the SRS.
+These tests cover the Performance Requirements section of the SRS. Timing
+tests run on the reference phone, which is the Android phone the team uses
+for every timing measurement. Its model and Android version are recorded in
+the VnV Report so the results can be repeated. Names in \textsf{sans serif}
+are symbolic constants defined in the SRS, and tests use their values from
+there.
 
 \paragraph{Speed and Latency}
 
 Covers PR-SL-01 to PR-SL-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-01} & \textbf{App launch time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The release build is installed on the reference phone, the user is signed in, and the app is fully closed (removed from recent apps).\\
+  \textbf{Input/Condition} & The tester opens the app from the home screen icon 20 times, closing it fully between each launch.\\
+  \textbf{Output/Result} & The home screen appears within 3 seconds in at least 19 of the 20 launches.\\
+  \textbf{How test will be performed} & The tester records each launch as a screen recording and measures the time from the icon tap to the first frame where the home screen is fully drawn. All 20 times are recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-02} & \textbf{Response to input}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The release build is installed on the reference phone with a signed-in test account that has activity, goals, and a portfolio.\\
+  \textbf{Input/Condition} & A Detox script visits every main screen and presses the main buttons on each one, for at least 100 measured actions in total.\\
+  \textbf{Output/Result} & At least 95\% of the measured transitions and button responses finish within 1 second.\\
+  \textbf{How test will be performed} & The script logs the time between each action and the moment the expected element on the next screen becomes visible. A summary script reports the share of actions under 1 second.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-03} & \textbf{Trade confirmation time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A signed-in test account has enough currency to buy, and some holdings to sell, in several assets.\\
+  \textbf{Input/Condition} & A Detox script places 50 buy orders and 50 sell orders of different sizes and confirms each one.\\
+  \textbf{Output/Result} & In at least 95\% of the trades, the updated holdings and currency balance appear within 2 seconds of confirmation.\\
+  \textbf{How test will be performed} & The script records the time from the confirm tap until the new balance and holding quantity are shown, and checks that the shown values match the expected values after the trade.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-04} & \textbf{Activity sync time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account is signed in on the reference phone. Health Connect holds new step and workout records that the app has not synced yet. The app is closed.\\
+  \textbf{Input/Condition} & The tester opens the app.\\
+  \textbf{Output/Result} & Within 10 seconds of opening, the currency balance includes the currency for all of the new Health Connect activity.\\
+  \textbf{How test will be performed} & The tester calculates the expected balance from the conversion rules beforehand, opens the app with a timer running, and records when the balance reaches the expected value. This is repeated 10 times with different amounts of new activity.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Safety-Critical}
 
 Covers PR-SC-01 to PR-SC-08.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-01} & \textbf{Daily earning limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with no activity recorded for the test day.\\
+  \textbf{Input/Condition} & Activity records for one day at 0.5, 1, 1.5, 2, and 5 times \textsf{HealthyDailyActivity}, each sent to a fresh test account.\\
+  \textbf{Output/Result} & No account earns more than \textsf{DailyEarnCap} for the day. The currency earned per unit of activity above \textsf{HealthyDailyActivity} is lower than the rate below it.\\
+  \textbf{How test will be performed} & A JUnit test sends each set of records through the reward service and compares the earned amount against the cap and against the earned amount for the lower levels.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-02} & \textbf{No penalties for missed days}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A test account with a currency balance, holdings, and an active streak.\\
+  \textbf{Input/Condition} & (1) The account records no activity for several days. (2) The user freezes their streak before a missed day.\\
+  \textbf{Output/Result} & (1) The balance and holdings are unchanged after the inactive days. (2) The frozen streak is not reset by the missed day.\\
+  \textbf{How test will be performed} & A JUnit test advances the server clock over the inactive days and checks the balance, holdings, and streak. A code review of every place that writes to balances and holdings confirms that none of them lowers a value because of inactivity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-03} & \textbf{Simulated market notice}\\
+  \midrule
+  \textbf{Type} & Static, Manual inspection\\
+  \textbf{Initial State} & The release build with a test account that holds assets.\\
+  \textbf{Input/Condition} & The tester visits every screen that shows prices, holdings, or returns.\\
+  \textbf{Output/Result} & Each of these screens shows the notice that the market is simulated and that results do not predict real returns, and links to the explanation of what the simulation does not model.\\
+  \textbf{How test will be performed} & Two team members go through a checklist of all market and portfolio screens taken from the app's navigation. For each screen they record whether the notice is visible and whether the link opens the explanation.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-04} & \textbf{Not financial advice statement}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the statement, then acknowledges it and finishes sign-up, then opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until the statement is acknowledged, and the statement can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script checks the sign-up and settings behaviour. Separately, a team member reviews all lessons, tips, and portfolio insights against the list in the SRS and records any text that recommends a specific real-world investment. The test passes when none is found.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-05} & \textbf{Exercise injury warning}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the injury warning and the terms of use, then acknowledges both, finishes sign-up, and opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until both are acknowledged, and both can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script runs the sign-up flow with each acknowledgement left out in turn, then checks that settings links to both.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-06} & \textbf{Safe goal progression}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an automatically raised goal plan.\\
+  \textbf{Input/Condition} & (1) The goal service generates eight weeks of goals after the user meets every goal. (2) The user misses \textsf{MissedGoalLimit} goals in a row. (3) The user lowers a goal from the goal screen.\\
+  \textbf{Output/Result} & (1) No weekly goal is more than \textsf{MaxGoalIncrease} above the week before, and every week has at least one rest day. (2) The app suggests a lower goal. (3) The lower goal is saved and used.\\
+  \textbf{How test will be performed} & JUnit tests check the generated plan and the suggestion. A Detox script lowers a goal from the goal screen and checks the saved value.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-07} & \textbf{Notification limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with notifications on and quiet hours set.\\
+  \textbf{Input/Condition} & Events that would send goal-related notifications are created throughout a simulated day, including during quiet hours.\\
+  \textbf{Output/Result} & No notifications are sent during quiet hours, and no more than \textsf{MaxDailyNotifications} goal-related notifications are sent in the day. After the user raises the limit, the new limit is used.\\
+  \textbf{How test will be performed} & A JUnit test runs the notification scheduler with a fixed clock and counts the notifications it sends and the times it sends them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-08} & \textbf{Safe leaderboard rules}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A leaderboard group with several test users who have different goals and different amounts of activity.\\
+  \textbf{Input/Condition} & The leaderboard is computed, one user leaves the group, and the leaderboard is computed again. A new account is also created.\\
+  \textbf{Output/Result} & Rankings are ordered by each user's percentage of their goal, not by raw activity. The user who left no longer appears. No user's balance changes because of their ranking. The new account is not on any leaderboard until the user opts in.\\
+  \textbf{How test will be performed} & A JUnit test sets up users where ranking by raw activity and ranking by goal percentage give different orders, then checks the order, the membership, and every balance before and after.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Precision or Accuracy}
 
 Covers PR-PA-01 to PR-PA-06.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-01} & \textbf{Exact money values}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known starting balance.\\
+  \textbf{Input/Condition} & A scripted sequence of 1,000 buy and sell trades at prices that do not divide evenly, such as 33.33 and 0.07.\\
+  \textbf{Output/Result} & The stored balance after the sequence matches the expected balance exactly, and every amount shown in the app has two decimal places.\\
+  \textbf{How test will be performed} & A JUnit test runs the trades through the trading service and compares the final balance with a value computed separately using exact decimal arithmetic. A Detox check reads the displayed balance and trade amounts and checks their format.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-02} & \textbf{Consistent currency awards}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & An empty test account for each activity record set.\\
+  \textbf{Input/Condition} & A fixed set of test activity records covering steps, workouts of each type, and edge values such as zero activity. Each set is processed twice.\\
+  \textbf{Output/Result} & The awarded currency matches the hand-calculated amount from the published conversion rules, and both runs award the same amount.\\
+  \textbf{How test will be performed} & The team calculates the expected amounts by hand and stores them as test fixtures. A JUnit test compares the reward service's output against them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-03} & \textbf{No double counting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & The same walk is reported by both sources with overlapping times. A second case has two separate walks, one from each source, that do not overlap.\\
+  \textbf{Output/Result} & The overlapping walk earns the amount for one recording. The two separate walks each earn currency.\\
+  \textbf{How test will be performed} & A JUnit test sends both cases through the import and reward services and compares the awards with the expected amounts.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-04} & \textbf{Portfolio value}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & Several test portfolios with different holdings, fixed simulated prices, and some uninvested currency.\\
+  \textbf{Input/Condition} & The portfolio screen is opened for each test portfolio.\\
+  \textbf{Output/Result} & The displayed value equals the sum of quantity times price for each holding, plus uninvested currency, to the cent.\\
+  \textbf{How test will be performed} & The expected values are calculated by hand. A JUnit test checks the value returned by the API, and a Detox script checks the value shown on screen.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-05} & \textbf{Workout dates and late syncs}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an active streak.\\
+  \textbf{Input/Condition} & (1) A workout done at 11:30 pm is synced after midnight. (2) A workout recorded in a different time zone is synced. (3) A workout from two days ago arrives after the streak was already marked as broken.\\
+  \textbf{Output/Result} & Each workout is recorded on the day it happened on the source device. In case (3) the streak and the rewards for that day are recalculated to include the late workout.\\
+  \textbf{How test will be performed} & A JUnit test sends records with set source timestamps and time zones, using a fixed server clock, then checks the stored dates, the streak, and the rewards.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-06} & \textbf{Realistic market simulation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The market simulation with its calibrated settings and a fixed random seed.\\
+  \textbf{Input/Condition} & The simulation is run over at least 30 simulated years for a broad market asset, with several different seeds.\\
+  \textbf{Output/Result} & The average annual return and the annual volatility are consistent with historical data for a broad market index, and each run includes downturns.\\
+  \textbf{How test will be performed} & A script computes the average annual return, annual volatility, and largest drop for each run and compares them with the same measures from the historical data used for calibration. The acceptable ranges are agreed with the supervisor before the test and recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Robustness or Fault-Tolerance}
 
 Covers PR-RFT-01 to PR-RFT-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-01} & \textbf{Offline activity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account signed in on the reference phone, synced, then put in airplane mode with the app closed.\\
+  \textbf{Input/Condition} & Activity is recorded in Health Connect over a gap of \textsf{OfflineSyncWindow} (set by moving the activity timestamps back, or by waiting out the period). The phone is then reconnected and the app is opened.\\
+  \textbf{Output/Result} & All of the activity from the gap is credited at the next sync.\\
+  \textbf{How test will be performed} & The tester compares the credited currency with the amount calculated by hand for the recorded activity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-02} & \textbf{Atomic writes}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known balance and holdings.\\
+  \textbf{Input/Condition} & (1) A failure is injected at each step of every multi-step write: trades, reward credits, and progress updates. (2) The connection or server is cut in the middle of a test trade. (3) 100 trade requests are sent at the same time against one account.\\
+  \textbf{Output/Result} & (1) Each failed write leaves the data as it was. (2) After the cut, the balance and holdings match either the state before the trade or the state after it, and a completed trade used the confirmed price. (3) Every request is either fully completed or fully rolled back, and the balance is never negative.\\
+  \textbf{How test will be performed} & JUnit tests use fault injection in the service layer to fail each step in turn. The concurrent test sends the 100 requests from parallel threads, then checks that the final balance and holdings equal the starting state plus the completed trades.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-03} & \textbf{Failing data sources}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & One source is made unavailable. In a second run, it returns malformed data.\\
+  \textbf{Output/Result} & The app stays usable with the other source, retries the failed sync, then shows a message naming the failing source and the cause. No currency is awarded for the malformed data.\\
+  \textbf{How test will be performed} & The failing source is replaced with a mock that times out or returns malformed records. Backend tests check the retries and the awards, and a Detox script checks the app and the message.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-04} & \textbf{Backend unavailable}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account that has synced at least once on the reference phone.\\
+  \textbf{Input/Condition} & The backend is stopped, then the app is opened.\\
+  \textbf{Output/Result} & The app opens without crashing, shows the last known balance and portfolio, and shows a notice that the data may be out of date.\\
+  \textbf{How test will be performed} & The tester stops the backend, opens the app, visits each main screen, and records whether any screen crashes or is empty.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Capacity}
 
 Covers PR-C-01, PR-C-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-01} & \textbf{Concurrent users}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed to the test server with 500 registered test accounts.\\
+  \textbf{Input/Condition} & A load test runs 100 simulated users at the same time. Each one browses screens and places trades.\\
+  \textbf{Output/Result} & Response times during the load test meet PR-SL-02 and PR-SL-03.\\
+  \textbf{How test will be performed} & The load testing tool sends the API calls that the app makes for each action and records the response times. While the load runs, test-PR-SL-02 and test-PR-SL-03 are also run on the reference phone.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-02} & \textbf{Two years of history}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account loaded with two years of daily activity and weekly trades.\\
+  \textbf{Input/Condition} & The user opens the activity history, trade history, and progress screens and scrolls to the oldest records.\\
+  \textbf{Output/Result} & The full two years of history is shown, and the screens meet PR-SL-02.\\
+  \textbf{How test will be performed} & A seeding script creates the test data. A Detox script opens each history screen, checks that the oldest records are shown, and times each transition.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Scalability or Extensibility}
 
 Covers PR-SE-01 to PR-SE-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-01} & \textbf{Adding a fitness source}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with the fitness sources available at release.\\
+  \textbf{Input/Condition} & The team adds a mock fitness source.\\
+  \textbf{Output/Result} & All of the changes needed are inside the integration module, and the currency conversion code is unchanged.\\
+  \textbf{How test will be performed} & A team member adds the mock source on a branch. The reviewers check the diff to confirm that every changed file is inside the integration module.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-02} & \textbf{Adding an asset type}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with stocks, bonds, and ETFs.\\
+  \textbf{Input/Condition} & The team adds a new test asset type.\\
+  \textbf{Output/Result} & The change only adds asset definitions and market engine configuration. The buy and sell code is unchanged, and the existing trading tests pass with the new asset type.\\
+  \textbf{How test will be performed} & A team member adds the asset type on a branch. The reviewers check the diff, and the trading tests are run with the new asset type.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-03} & \textbf{Adding server capacity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed with extra server capacity, and the app version is the same one used in test-PR-C-01.\\
+  \textbf{Input/Condition} & The load test from test-PR-C-01 is run with 200 simulated users.\\
+  \textbf{Output/Result} & Response times meet PR-SL-02 and PR-SL-03, with no change to the mobile app.\\
+  \textbf{How test will be performed} & The team adds server capacity, reruns the load test at double the load, and confirms that the app's version number is the same as in test-PR-C-01.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Longevity}
 
 Covers PR-L-01, PR-L-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-01} & \textbf{Supported Android versions}\\
+  \midrule
+  \textbf{Type} & Static and Dynamic, Automatic\\
+  \textbf{Initial State} & The release build.\\
+  \textbf{Input/Condition} & (1) The target Android version in the build settings is compared with Google Play's requirement for new apps at release time. (2) The test suite is run on an emulator with the newest Android version available in April 2027.\\
+  \textbf{Output/Result} & The build meets Google Play's target version requirement, and the test suite passes on the newest Android version.\\
+  \textbf{How test will be performed} & A team member checks the build settings against Google Play's published requirement before release. The Detox suite is run on the newest Android emulator image before the final demo.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-02} & \textbf{Keeping user history}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The backend code, database schema, and server configuration.\\
+  \textbf{Input/Condition} & The team searches for every scheduled job, database event, and retention setting that deletes data.\\
+  \textbf{Output/Result} & None of them deletes activity or portfolio history for an active account. History is deleted only when the user deletes it or deletes their account.\\
+  \textbf{How test will be performed} & A team member lists every delete path in the code and database configuration. A second team member reviews the list and confirms that each one is started by the user.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Operational and Environmental}
 
@@ -741,24 +1243,159 @@ Covers COMP-STD-01 to COMP-STD-07.
 
 \subsubsection{User Documentation and Training}
 
-These tests cover the User Documentation and Training Requirements section of the SRS.
+These tests cover the User Documentation and Training Requirements section of the SRS \citep{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
 
 \paragraph{User Documentation}
 
 Covers DOC-01 to DOC-04.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-DOC-01: Financial and Fitness Glossary Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; glossary view accessible in-app.
+
+Input/Condition: Open the in-app glossary and search for required educational terms (compound interest, inflation, ETFs, bond yields, and portfolio diversification).
+
+Output/Result: Binary: Pass if the searchable glossary is present and contains entries for all required terms; Fail otherwise.
+
+How test will be performed: Manual walkthrough inspection of the glossary view verifying term presence and search functionality.
+
+\item{\textbf{T-DOC-02: Fitness Integration Guide Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; integration settings or help section open.
+
+Input/Condition: Navigate to the fitness integration configuration section and open the setup guide.
+
+Output/Result: Binary: Pass if illustrated setup instructions with screenshots are present for all supported fitness providers (e.g., Garmin, Android Health Connect) and include troubleshooting guidance; Fail otherwise.
+
+How test will be performed: Visual inspection confirming presence and completeness of illustrated setup and troubleshooting instructions.
+
+\item{\textbf{T-DOC-03: Searchable Help Center Presence}\\}
+
+Type: Dynamic, Semi-Automated
+
+Initial State: Application open to the settings menu.
+
+Input/Condition: Open the in-app help center from settings and enter search queries covering core topics (account management, activity sync, rewards, portfolio, simulated market, virtual currency, privacy).
+
+Output/Result: Binary: Pass if the in-app help center opens without an external browser, contains articles covering all required topics, and returns keyword search results in under 200 ms; Fail otherwise.
+
+How test will be performed: Manual walkthrough and automated UI test timing keyword search queries and asserting topic article presence.
+
+\item{\textbf{T-DOC-04: Digital Manual and Release Notes Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Project repository on GitHub checked out at latest milestone commit.
+
+Input/Condition: Inspect the documentation repository directory for the digital user manual and milestone release notes.
+
+Output/Result: Binary: Pass if a self-contained user manual (PDF and Markdown formats) documenting architecture, navigation, data flows, and troubleshooting, along with milestone release notes, is present in the repository; Fail otherwise.
+
+How test will be performed: Peer-review file audit by team members verifying presence and completeness of documentation artifacts in the repository.
+
+\end{enumerate}
 
 \paragraph{Training}
 
 Covers TRN-01 to TRN-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-TRN-01: Interactive Onboarding Walkthrough Presence}\\}
+
+Type: Dynamic, Manual
+
+Initial State: Clean application state immediately after creating a new user account.
+
+Input/Condition: Complete new account registration to trigger onboarding; inspect the four-step walkthrough (goals, rewards, simulated investing, compounding chart), test the ``Skip Tour'' option, and re-launch the walkthrough from settings.
+
+Output/Result: Binary: Pass if the four-step walkthrough is present, takes under 90 seconds to complete, provides a visible ``Skip Tour'' button on every step, and is re-accessible from settings; Fail otherwise.
+
+How test will be performed: Manual timed walkthrough verifying the presence of all four tour steps, skip buttons, and settings re-entry.
+
+\item{\textbf{T-TRN-02: Progressive Feature Discovery Presence}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Newly registered user account with zero trades and zero logged physical activity days.
+
+Input/Condition: Navigate to trading and portfolio analytics screens as a novice user; then simulate logging three days of physical activity or executing an initial trade, and re-examine the screens.
+
+Output/Result: Binary: Pass if advanced trading indicators and portfolio analytics remain hidden or collapsed initially and are revealed once the activity or trade threshold is met; Fail otherwise.
+
+How test will be performed: Automated Compose UI test asserting view hierarchy presence and visibility states of advanced features before and after threshold completion.
+
+\item{\textbf{T-TRN-03: Demonstrator Quick-Start Kit Presence}\\}
+
+Type: Dynamic Operational Verification
+
+Initial State: Application development/staging build running; demo seeding script available.
+
+Input/Condition: Execute the automated demo seeding script or trigger the demonstrator debug toggle.
+
+Output/Result: Binary: Pass if the demonstrator guide is present and the seeding script loads 30 days of simulated activity and portfolio history within 10 seconds; Fail otherwise.
+
+How test will be performed: Execution of the demonstrator script or debug toggle timing dataset initialization and verifying data display on trading and compounding charts.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+
+The table below maps each system test to the SRS requirement whose fit
+criterion it checks. The last column lists other requirements that the test
+also measures, such as load tests that rerun the speed checks. Rows for the
+remaining requirement sections are added as their test cases are written.
+
+\begin{xltabular}{\textwidth}{p{3cm}p{2.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.4cm}}
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  test-PR-SL-01 & PR-SL-01 & App launch time & ---\\
+  test-PR-SL-02 & PR-SL-02 & Response to input & ---\\
+  test-PR-SL-03 & PR-SL-03 & Trade confirmation time & ---\\
+  test-PR-SL-04 & PR-SL-04 & Activity sync time & ---\\
+  test-PR-SC-01 & PR-SC-01 & Daily earning limits & ---\\
+  test-PR-SC-02 & PR-SC-02 & No penalties for missed days & ---\\
+  test-PR-SC-03 & PR-SC-03 & Simulated market notice & ---\\
+  test-PR-SC-04 & PR-SC-04 & Not financial advice statement & ---\\
+  test-PR-SC-05 & PR-SC-05 & Exercise injury warning & ---\\
+  test-PR-SC-06 & PR-SC-06 & Safe goal progression & ---\\
+  test-PR-SC-07 & PR-SC-07 & Notification limits & ---\\
+  test-PR-SC-08 & PR-SC-08 & Safe leaderboard rules & ---\\
+  test-PR-PA-01 & PR-PA-01 & Exact money values & ---\\
+  test-PR-PA-02 & PR-PA-02 & Consistent currency awards & ---\\
+  test-PR-PA-03 & PR-PA-03 & No double counting & ---\\
+  test-PR-PA-04 & PR-PA-04 & Portfolio value & ---\\
+  test-PR-PA-05 & PR-PA-05 & Workout dates and late syncs & ---\\
+  test-PR-PA-06 & PR-PA-06 & Realistic market simulation & ---\\
+  test-PR-RFT-01 & PR-RFT-01 & Offline activity & ---\\
+  test-PR-RFT-02 & PR-RFT-02 & Atomic writes & ---\\
+  test-PR-RFT-03 & PR-RFT-03 & Failing data sources & ---\\
+  test-PR-RFT-04 & PR-RFT-04 & Backend unavailable & ---\\
+  test-PR-C-01 & PR-C-01 & Concurrent users & PR-SL-02, PR-SL-03\\
+  test-PR-C-02 & PR-C-02 & Two years of history & PR-SL-02\\
+  test-PR-SE-01 & PR-SE-01 & Adding a fitness source & ---\\
+  test-PR-SE-02 & PR-SE-02 & Adding an asset type & ---\\
+  test-PR-SE-03 & PR-SE-03 & Adding server capacity & PR-SL-02, PR-SL-03\\
+  test-PR-L-01 & PR-L-01 & Supported Android versions & ---\\
+  test-PR-L-02 & PR-L-02 & Keeping user history & ---\\
+\end{xltabular}
 
 \section{Unit Test Description}
 
