@@ -2,6 +2,10 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{eurosym}
+\usepackage{xltabular}
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
@@ -261,7 +265,94 @@ These tests cover creating an account and signing in.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-01-T-01} & \textbf{User Registration - Account Does Not Already Exist}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in and does not possess an existing Flexin' account.\\
+  \textbf{Inputs} & A valid email address, a valid password, and a call to the create account action.\\
+  \textbf{Output} & A new user account is created successfully and the user is granted access to the application using the newly created credentials.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-01. Users can create an account using a valid email address and password.\\
+  \textbf{How test will be performed} & On the registration screen a valid email (that is not already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was successful. Then, on the login screen, an attempt to log in with the new credentials will be made verifying access to the application under this newly created account.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-01-T-02} & \textbf{User Registration - Account Already Exists}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in and already possesses a Flexin' account.\\
+  \textbf{Inputs} & A valid email address (already associated with an existing account), a valid password, and a call to the create account action.\\
+  \textbf{Output} & The system rejects the request to create a new account and prompts the user to sign in instead.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-01. Users cannot create multiple accounts with the same email address.\\
+  \textbf{How test will be performed} & On the registration screen a valid email (that is already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was unsuccessful. Then, the system will prompt the user to sign in.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-02-T-01} & \textbf{User Authentication - Correct Credentials}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in and already possesses a Flexin' account.\\
+  \textbf{Inputs} & A valid email address (already associated with an existing account), a password that matches the one associated with the account, and a call to the login action.\\
+  \textbf{Output} & The user is successfully authenticated and the system grants access to the application using the provided credentials.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-02. Users are authenticated before accessing personalized application functionality.\\
+  \textbf{How test will be performed} & On the login screen, a valid email (already associated with an existing account) and the corresponding password will be entered, and the form will be submitted verifying that access to the application was granted. Any account information associated to the authenticated user will be available for viewing and editing.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-02-T-02} & \textbf{User Authentication - Incorrect Password}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in and already possesses a Flexin' account.\\
+  \textbf{Inputs} & A valid email address (already associated with an existing account), an incorrect password (one that does not match the one associated with the account), and a call to the login action.\\
+  \textbf{Output} & The user is denied access and the system displays an error message indicating invalid credentials were entered.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-02. Users are denied access to the application and to account-specific information with incorrect credentials.\\
+  \textbf{How test will be performed} & On the login screen, a valid email (already associated with an existing account) and a password that does not match the one associated with the email will be entered, and the form will be submitted verifying that access to the application was denied.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-02-T-03} & \textbf{User Authentication - Incorrect Email}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in and already possesses a Flexin' account.\\
+  \textbf{Inputs} & An invalid email address (not associated with any existing account).\\
+  \textbf{Output} & The user is denied access and the system displays an error message indicating that an account with the entered email address does not exist.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-02. Users are denied access to the application without existing and valid credentials.\\
+  \textbf{How test will be performed} & On the login screen, an invalid email (not associated with any existing account) will be entered, and the form will be submitted verifying that access to the application was denied. Then, the system will prompt the user to create a new account with the entered email address.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-02-T-04} & \textbf{User Authentication - Reset Password}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is not logged in, already possesses a Flexin' account, and has forgotten their password.\\
+  \textbf{Inputs} & A valid email address (already associated with an existing account) and a call to the reset password action.\\
+  \textbf{Output} & The system sends a password reset link to the user's email address. The user can then use this link to succesfully set a new password and login.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-02. Users can reset their password and gain access to their account once the reset process is completed.\\
+  \textbf{How test will be performed} & On the login screen, a valid email (already associated with an existing account) will be entered and the reset password action will be triggered, and then instructions will be followed to complete the password reset process. Upon completion, an attempt to log in with the new password will be made verifying that access to the application was granted.\\
+  \bottomrule
+\end{tabularx}
+
 
 \subsubsection{Fitness Tracking and Goals}
 
@@ -277,7 +368,78 @@ These tests cover importing activity data from third-party providers and creatin
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-03-T-01} & \textbf{Third-Party Fitness Data Import}\\
+  \midrule
+  \textbf{Control} & Automatic\\
+  \textbf{Initial State} & User already possesses a Flexin' account, and has granted permission for their data to be imported to the Flexin' application from their desired and approved third-party provider.\\
+  \textbf{Inputs} & Sync a fitness activity that consists of 1,000 or more recorded steps.\\
+  \textbf{Output} & The imported fitness activity appears in the user's activity history after synchronization.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-03. The system successfully imports fitness data from third-party providers.\\
+  \textbf{How test will be performed} & A Garmin will be connected to the Flexin' application, 1,000 steps will be walked throught the day and will sync the 1,000 or more recorded steps. After syncing, the system will import the data into the user's activity history verifying that activity details match the original source.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-04-T-01} & \textbf{Fitness Goal Creation - Create Goal}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is logged into their account.\\
+  \textbf{Inputs} & An fitness activity with 1,000 or more recorded steps is entered as a fitness goal.\\
+  \textbf{Output} & The fitness goal is successfully created and displayed in the user's goal list.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-04. The system successfully allows users to create fitness goals.\\
+  \textbf{How test will be performed} & The user will navigate to the fitness goal creation screen. They will enter a fitness activity with 1,000 or more recorded steps and submit the form to register this fitness goal. Then it will be verified that the system correctly displays the new fitness goal in the user's goal list.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-04-T-02} & \textbf{Fitness Goal Creation - Edit Goal}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is logged into their account and has at least one existing fitness goal.\\
+  \textbf{Inputs} & A fitness goal for 1,000 steps is modified to 2,000 steps.\\
+  \textbf{Output} & The fitness goal is successfully modified and the updated details are displayed in the user's goal list.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-04. The system successfully allows users to edit any of their fitness goals.\\
+  \textbf{How test will be performed} & The user will navigate to the fitness goal editing screen. They will modify a fitness goal for 1,000 steps to 2,000 steps and submit the form to update this fitness goal. Then it will be verified that the system correctly displays the updated fitness goal in the user's goal list.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-04-T-03} & \textbf{Fitness Goal Creation - Delete Goal}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is logged into their account and has at least one existing fitness goal.\\
+  \textbf{Inputs} & A fitness goal for 1,000 steps is deleted.\\
+  \textbf{Output} & The fitness goal is successfully deleted and removed from the user's goal list.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-04. The system successfully allows users to delete any of their fitness goals.\\
+  \textbf{How test will be performed} & The user will navigate to the fitness goal editing screen. They will delete an existing fitness goal and submit the form to remove this fitness goal. Then it will be verified that the system correctly removed the fitness goal from the user's goal list.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-05-T-01} & \textbf{Fitness Goal Tracking}\\
+  \midrule
+  \textbf{Control} & Automatic\\
+  \textbf{Initial State} & User is logged into their account and has at least one active fitness goal with 0\% progress recorded.\\
+  \textbf{Inputs} & Sync activity data that acheives 10\% of the goal's progress.\\
+  \textbf{Output} & The fitness goal successfully updates to 10\% completion upon the next sync.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-05. The system successfully syncs fitness data from third-party sources and tracks the progress of any active fitness goals.\\
+  \textbf{How test will be performed} & The user will navigate to the fitness goal tracking screen. The system will automatically update the progress of the fitness goal based on the synced activity data. Then it will be verified that the system correctly displays the updated progress in the user's goal list.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Rewards and Virtual Currency}
 
@@ -292,7 +454,33 @@ These tests cover awarding virtual currency for activity and keeping each user's
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-06-T-01} & \textbf{Reward Allocation}\\
+  \midrule
+  \textbf{Control} & Automatic\\
+  \textbf{Initial State} & User is logged into their account and has completed at least one existing fitness goal that has yet to be redeemed for virtual currency.\\
+  \textbf{Inputs} & An active fitness goal is completed, and the user calls the redeem rewards action.\\
+  \textbf{Output} & The system automatically allocates the specified virtual currency to the user's account as a reward for completing the fitness goal. The user's virtual currency balance is increased accordingly and displayed correctly.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-06. The system successfully allocates virtual currency as a reward for completing fitness goals.\\
+  \textbf{How test will be performed} & After syncing, the user will navigate to the fitness goal tracking screen, select "Redeem Reward", and the system will automatically update the user's virtual currency balance. Then it will be verified that the system correctly displays the updated balance increase in the user's account - ensuring that any virtual balance calculations are accurate and verified.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{FUNC-07-T-01} & \textbf{Virtual Currency Tracking}\\
+  \midrule
+  \textbf{Control} & Manual\\
+  \textbf{Initial State} & User is logged into their account and has a positive virtual currency balance.\\
+  \textbf{Inputs} & The user navigates to any screen that displays their current virtual currency balance.\\
+  \textbf{Output} & On all applicable screens, the system displays the user's current positive virtual currency balance that matches the value stored in the database for the logged in user.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-07. The system correctly displays the user's virtual currency balance on any screen where it is applicable, allowing the user to be able to view their accurate balance at any time.\\
+  \textbf{How test will be performed} & Navigate to all screens that display the virtual currency balance and verify that all displayed values match the value stored in the database for the current logged in user.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Simulated Investing}
 
@@ -307,6 +495,64 @@ These tests cover the portfolio and trading features of the simulated market.
   FUNC-10 & Asset Sale \\
   FUNC-11 & Transaction Recording \\
   FUNC-12 & Portfolio Performance Calculation \\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-09} & \textbf{Asset Purchase}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has enough virtual currency to purchase the asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the buy action.\\
+  \textbf{Output/Result} & The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
+  \textbf{Covers} & FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
+  \textbf{How test will be performed} & After the purchase of an asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-10} & \textbf{Asset Sale}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the sell action.\\
+  \textbf{Output/Result} & The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
+  \textbf{Covers} & FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the holding removed.\\
+  \textbf{How test will be performed} & After the sale of an asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-11} & \textbf{Transaction Recording}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and has a non-empty transaction history.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to view previous market transactions.\\
+  \textbf{Output/Result} & A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
+  \textbf{Covers} & FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
+  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and checked against the trades that were made.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-12} & \textbf{Portfolio Performance Calculation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a portfolio containing at least one asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to retrieve all assets in the portfolio and calculate performance.\\
+  \textbf{Output/Result} & The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
+  \textbf{Covers} & FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
+  \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
   \bottomrule
 \end{tabularx}
 
@@ -326,7 +572,48 @@ These tests cover friends lists and public and private leaderboard groups.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-13} & \textbf{Leaderboard Participation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in, and a leaderboard with open spaces is available to join.\\
+  \textbf{Input/Condition} & The \texttt{UserID} and the \texttt{LeaderboardID} of a leaderboard with open spaces.\\
+  \textbf{Output/Result} & The user joins the intended leaderboard and appears in its member list.\\
+  \textbf{Covers} & FUNC-13. A user can join a group, so after the join request the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+  \textbf{How test will be performed} & After the user attempts to join the leaderboard, check that the user's \texttt{UserID} is linked to that \texttt{LeaderboardID}.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-14} & \textbf{Friend Management}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and can search for other users by \texttt{UserID}.\\
+  \textbf{Input/Condition} & The \texttt{UserID} of another application user.\\
+  \textbf{Output/Result} & A friend request is sent to that user, and the invitee can respond to it.\\
+  \textbf{Covers} & FUNC-14. Users can add and remove friends, so a request must reach the invitee, and the result of their response (approved or denied) must be reflected in both users' friends lists. This gives users the social aspect of comparing progress with selected friends.\\
+  \textbf{How test will be performed} & After the user sends a friend request, check that both the requester and the invitee can see the request and, once the invitee responds, the result of the action (approved or denied).\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-15} & \textbf{Private Leaderboard Creation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to create a new leaderboard.\\
+  \textbf{Output/Result} & A new private leaderboard is created with a unique \texttt{LeaderboardID}.\\
+  \textbf{Covers} & FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+  \textbf{How test will be performed} & After the user completes the steps to create a leaderboard, check that a valid \texttt{LeaderboardID} exists and that the creator is a member of the new leaderboard.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Progress Reporting}
 
@@ -340,7 +627,18 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-16} & \textbf{Progress Reporting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to view the progress data connected to that ID.\\
+  \textbf{Output/Result} & Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
+  \textbf{Covers} & FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
+  \textbf{How test will be performed} & After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
+  \bottomrule
+\end{tabularx}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -353,21 +651,172 @@ Output/Result, and How test will be performed. Static tests, such as reviews,
 inspections, and walkthroughs, should instead say who is involved and how the
 review is run.}
 
-\subsubsection{Look and Feel}
+\subsubsection{Look and Feel}\label{sec:tests_nfr_lf}
 
-These tests cover the Look and Feel Requirements section of the SRS.
+These tests cover the Look and Feel Requirements section of the SRS \citep{SRS}, spanning appearance and style.
 
 \paragraph{Appearance}
 
-Covers LF-APP-01 to LF-APP-05.
+Covers LF-APP-01 to LF-APP-05. The appearance tests verify that \progname{} delivers an uncluttered visual hierarchy balancing physical activity with simulated financial portfolios, distinguishable compounding data visualizations, responsive layout scaling across diverse Android displays, WCAG-compliant color contrast across Light and Dark themes, and persistent core navigation.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X p{3.5cm}}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} & \textbf{Test Case ID} \\
+  \midrule
+  LF-APP-01 & Visual Hierarchy & test-lf-app-01 \\
+  LF-APP-02 & Compounding Chart & test-lf-app-02 \\
+  LF-APP-03 & Responsive Layout & test-lf-app-03 \\
+  LF-APP-04 & Theme and Contrast & test-lf-app-04 \\
+  LF-APP-05 & Navigation & test-lf-app-05 \\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-app-01}\label{test:lf-app-01} & \textbf{Visual Hierarchy (Dashboard Balance)}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual (Timed Usability Test)\\
+  \textbf{Initial State} & The application is running on a physical Android test device or emulator. The test user account is fully logged in and populated with active fitness metrics (e.g., current weekly workout and step goal progress) and simulated investment portfolio data (e.g., total portfolio valuation and daily gain/loss). The application is opened to the main Dashboard screen.\\
+  \textbf{Input/Condition} & Present a participant from the target user cohort with the populated Dashboard and deliver the standardized verbal prompt: ``Locate your current fitness progress and your overall portfolio value.''\\
+  \textbf{Output/Result} & At least 80\% of participants in the testing cohort locate and point out both their current fitness progress and their portfolio value within $T_{\text{locate\_max}} = 5\text{ seconds}$ without prompting or external assistance.\\
+  \textbf{How test will be performed} & Conduct individual usability evaluation sessions with a cohort of at least 10 participants matching the target demographic. A test administrator starts a digital stopwatch and video/screen capture upon completing the verbal task prompt and stops timing once the participant verbally points to or touches both target summary cards. The elapsed time and success status (pass if $\le 5\text{ s}$, fail otherwise) are recorded in the usability test log.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-app-02}\label{test:lf-app-02} & \textbf{Compounding Chart (Trace Distinction)}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual (Usability Visual Identification Test)\\
+  \textbf{Initial State} & The application is running and navigated to the Portfolio Compounding Chart view. The compounding chart displays dual historical/projected traces: one representing cumulative workout earnings (contributions) and the other representing simulated investment returns (capital gains and dividends). The chart includes a visible legend.\\
+  \textbf{Input/Condition} & Open the Portfolio compounding chart view and instruct the participant: ``Identify and distinguish which visual trace represents your workout earnings and which represents your investment gains/dividends.''\\
+  \textbf{Output/Result} & Participant correctly identifies and distinguishes between the two visual traces within $T_{\text{chart\_max}} = 5\text{ seconds}$. The visual traces must exhibit distinct color hues (tested for color-blind accessibility) and distinct visual line patterns (e.g., solid vs.\ dashed line), supported by an unambiguous legend.\\
+  \textbf{How test will be performed} & Administered during participant usability sessions. The evaluator records participant accuracy, time-to-identification via stopwatch, and qualitative remarks regarding chart readability and trace distinction. Both quantitative identification speed and qualitative feedback are documented in the test report.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-app-03}\label{test:lf-app-03} & \textbf{Responsive Layout (Screen Sizes and Font Scaling)}\\
+  \midrule
+  \textbf{Type} & Dynamic, Semi-Automated / Manual (Multi-Device Emulator and Device Matrix)\\
+  \textbf{Initial State} & Application build deployed across an emulator/device matrix encompassing Android 10+ (API level 29+) with physical screen sizes ranging from 5.5'' to 6.8'' (including Google Pixel 4a, Pixel 7, and Samsung Galaxy S21 Ultra profiles). System font scaling in Android Accessibility settings is configured to $S_{\text{font}} = 130\%$.\\
+  \textbf{Input/Condition} & Launch the application on each device configuration and systematically navigate through all primary views (Dashboard, Activity, Market, Learn, Community) and key secondary modal/form dialogs.\\
+  \textbf{Output/Result} & Zero text truncations, text clipping, or unreadable overlapping text across all screens. Zero overlapping interactive UI elements. All touch targets maintain a minimum interactive hit area of $48 \times 48\text{ dp}$ in accordance with UHR-ACC-04.\\
+  \textbf{How test will be performed} & Automated Jetpack Compose UI tests evaluate semantic node bounds to programmatically assert that touch targets meet the $\ge 48 \times 48\text{ dp}$ constraint and verify layout bounds do not collide. Additionally, a manual visual inspection across the multi-device emulator matrix is conducted by two QA team members using a responsive layout verification checklist, logging any visual clipping defects into GitHub Issues.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-app-04}\label{test:lf-app-04} & \textbf{Theme and Contrast (Light/Dark Mode and Indicators)}\\
+  \midrule
+  \textbf{Type} & Static / Automated Tool-Assisted Accessibility Audit\\
+  \textbf{Initial State} & Application installed with both Light and Dark theme palettes fully implemented. Mock data populated displaying positive/negative financial returns and active/completed fitness milestones.\\
+  \textbf{Input/Condition} & Toggle the device system theme between Light mode and Dark mode across all screens. Render all fitness status indicators (e.g., progress rings, streak badges) and financial status indicators (e.g., asset performance, gain/loss markers).\\
+  \textbf{Output/Result} & All text and interactive graphical components meet WCAG 2.1 AA contrast requirements: contrast ratio $\ge 4.5:1$ for normal body text and $\ge 3:1$ for large text ($\ge 18\text{ pt}$ or bold $\ge 14\text{ pt}$) and graphical icons, complying with COMP-STD-02. Fitness and financial status indicators remain readily distinguishable in both Light and Dark modes without semantic confusion.\\
+  \textbf{How test will be performed} & The accessibility audit is conducted by two QA team members using automated scanning tools (Google Accessibility Scanner for Android and the Colour Contrast Analyser tool) on captured UI screen frames. Automated tool reports are cross-checked against WCAG 2.1 Success Criteria 1.4.3 (Contrast Minimum) and 1.4.11 (Non-text Contrast). Any color contrast violations or indistinguishable state indicators are logged as critical UI bugs.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-app-05}\label{test:lf-app-05} & \textbf{Navigation (Persistent Bottom Bar)}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated UI Test\\
+  \textbf{Initial State} & Application launched in a clean state with an authenticated user session.\\
+  \textbf{Input/Condition} & Programmatically trigger navigation through each of the five top-level primary screens: Dashboard, Activity, Market/Portfolio, Learn, and Community.\\
+  \textbf{Output/Result} & The persistent bottom navigation bar is present and visible on every primary screen. The bar contains exactly five navigation destinations with correct iconography and labels (Dashboard, Activity, Market, Learn, Community). The active destination is distinctly highlighted corresponding to the active route.\\
+  \textbf{How test will be performed} & Automated Android UI test implemented using Kotlin and Compose UI Test Framework (\texttt{ComposeTestRule}). The test script simulates tap events on each navigation destination in sequence, asserting that the navigation bar component tag (\texttt{bottom\_}\allowbreak\texttt{navigation\_}\allowbreak\texttt{bar}) remains visible (\texttt{assertIsDisplayed()}) and that the \texttt{isSelected} semantic property evaluates to true for the active screen and false for the other four destinations.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Style}
 
-Covers LF-STY-01 to LF-STY-04.
+Covers LF-STY-01 to LF-STY-04. The style tests verify that \progname{} maintains an approachable and encouraging tone, ensures strict virtual currency branding to prevent confusion with real-world financial assets, provides non-intrusive gamification reward animations, and enforces component consistency across the shared design system.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X p{3.5cm}}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} & \textbf{Test Case ID} \\
+  \midrule
+  LF-STY-01 & Approachable Tone & test-lf-sty-01 \\
+  LF-STY-02 & Virtual Currency Symbol & test-lf-sty-02 \\
+  LF-STY-03 & Non-Intrusive Gamification & test-lf-sty-03 \\
+  LF-STY-04 & Component Consistency & test-lf-sty-04 \\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-sty-01}\label{test:lf-sty-01} & \textbf{Approachable Tone (Typography, Terminology, and Tooltips)}\\
+  \midrule
+  \textbf{Type} & Static / User Survey Evaluation\\
+  \textbf{Initial State} & A representative testing cohort ($N \ge 10$) matching the target user demographic (novice investors and general fitness users) is assembled. A staging build of \progname{} is loaded on test devices with simulated market and fitness data.\\
+  \textbf{Input/Condition} & Participants complete a self-directed walkthrough of the financial education, trading, and portfolio tracking screens, followed by completing the structured post-test usability survey defined in Appendix~\ref{sec:survey_questions}.\\
+  \textbf{Output/Result} & At least 80\% of target-demographic evaluators rate the application's interface tone as approachable, supportive, and non-intimidating (Likert score $\ge 4$ out of 5 on survey questions Q1--Q3). Contextual explanatory tooltips are confirmed present and functional for 100\% of complex financial terms (e.g., ``dividends'', ``unrealized return'', ``expense ratio'').\\
+  \textbf{How test will be performed} & Usability evaluators administer the survey questionnaire immediately after the participant walkthrough. Survey ratings are compiled to calculate the proportion of positive ratings ($\ge 4/5$). In addition, a static inspection of all financial UI screens is performed by two team members against a pre-approved glossary of financial terminology to verify that every designated financial term displays an interactive tooltip icon that renders plain-language definitions upon tap.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-sty-02}\label{test:lf-sty-02} & \textbf{Virtual Currency Symbol (FLX vs.\ Real-World Currency)}\\
+  \midrule
+  \textbf{Type} & Static Code/String Audit and Dynamic UI Inspection\\
+  \textbf{Initial State} & Clean repository workspace on the release candidate branch. Application installed on a test device with simulated user balances and market quotes displayed.\\
+  \textbf{Input/Condition} & Execute automated static regex and linter scripts across all application source code, string resources (\texttt{strings.xml}), and currency formatters. Perform manual inspection across all views displaying balances, prices, rewards, and portfolio values.\\
+  \textbf{Output/Result} & Zero occurrences of real-world fiat currency symbols (\$, \pounds, \euro, \yen) associated with virtual currency amounts. 100\% compliance with the application's virtual currency symbol (FLX). Prominent simulated market disclaimers remain visible in accordance with PR-SC-03.\\
+  \textbf{How test will be performed} & \begin{enumerate}
+    \item \emph{Static Analysis}: A continuous integration (CI) script executes a static regex search over the UI codebase and XML localization resources to verify that no hardcoded fiat currency symbols (\$, \pounds, \euro, \yen) exist in balance formatting paths.
+    \item \emph{Dynamic Inspection}: A QA engineer performs an end-to-end screen walkthrough verifying that every balance indicator on the Dashboard, Market, Activity, and History screens explicitly displays the ``FLX'' label.
+  \end{enumerate}\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-sty-03}\label{test:lf-sty-03} & \textbf{Non-Intrusive Gamification (Reward Animations)}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated / Manual Timing Test\\
+  \textbf{Initial State} & Application installed and running. Test account configured with a near-complete milestone (e.g., logging a completed workout that triggers an achievement celebration).\\
+  \textbf{Input/Condition} & Trigger a milestone reward celebration animation. Evaluate two test conditions:
+  \begin{itemize}
+    \item Condition A: Allow the animation to play to completion without user touch input.
+    \item Condition B: Tap the background area or perform a swipe gesture while the animation is actively rendering.
+  \end{itemize}\\
+  \textbf{Output/Result} & \begin{itemize}
+    \item Condition A: Total animation playback duration does not exceed $T_{\text{anim\_max}} = 1.5\text{ seconds}$, smoothly returning control to the standard view.
+    \item Condition B: Tapping the background or swiping immediately dismisses the animation within $T_{\text{dismiss\_max}} = 200\text{ ms}$, immediately restoring user interaction to the underlying interface.
+  \end{itemize}\\
+  \textbf{How test will be performed} & Automated Jetpack Compose UI benchmark tests use the Compose test clock (\texttt{mainClock}) to advance frames and assert exact animation start, dismiss, and end timestamps. In addition, manual verification using a high-frame-rate (60 fps) screen recording is conducted to measure the frame delay between user tap interrupt and visual dismissal.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-lf-sty-04}\label{test:lf-sty-04} & \textbf{Component Consistency (Style Guide Compliance)}\\
+  \midrule
+  \textbf{Type} & Static Inspection (Design Walkthrough)\\
+  \textbf{Initial State} & Complete design system specification (Figma component library and Compose theme tokens) approved by the UI/UX lead. Staging build of the application containing all user-facing screens.\\
+  \textbf{Input/Condition} & Compare all UI components (buttons, forms/input fields, modal dialogs, contextual tooltips, summary cards, and toggle switches) across every screen against the shared design system specifications.\\
+  \textbf{Output/Result} & Zero discrepancies, undocumented custom components, or unstandardized styling found. All UI elements adhere to defined typography, border radiuses, color tokens, and elevation levels.\\
+  \textbf{How test will be performed} & A formal peer-review inspection meeting is conducted by three team members: the UI/UX designer, the lead frontend developer, and a QA reviewer. The review team steps through each screen using a structured Component Consistency Checklist covering buttons, form controls, modals, tooltips, cards, and toggles. Any identified departures from the style guide are documented with screenshot evidence and logged as defects in GitHub Issues.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Usability and Humanity}
 
@@ -405,49 +854,432 @@ Covers UHR-ACC-01 to UHR-ACC-06.
 
 \subsubsection{Performance}
 
-These tests cover the Performance Requirements section of the SRS.
+These tests cover the Performance Requirements section of the SRS. Timing
+tests run on the reference phone, which is the Android phone the team uses
+for every timing measurement. Its model and Android version are recorded in
+the VnV Report so the results can be repeated. Names in \textsf{sans serif}
+are symbolic constants defined in the SRS, and tests use their values from
+there.
 
 \paragraph{Speed and Latency}
 
 Covers PR-SL-01 to PR-SL-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-01} & \textbf{App launch time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The release build is installed on the reference phone, the user is signed in, and the app is fully closed (removed from recent apps).\\
+  \textbf{Input/Condition} & The tester opens the app from the home screen icon 20 times, closing it fully between each launch.\\
+  \textbf{Output/Result} & The home screen appears within 3 seconds in at least 19 of the 20 launches.\\
+  \textbf{How test will be performed} & The tester records each launch as a screen recording and measures the time from the icon tap to the first frame where the home screen is fully drawn. All 20 times are recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-02} & \textbf{Response to input}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The release build is installed on the reference phone with a signed-in test account that has activity, goals, and a portfolio.\\
+  \textbf{Input/Condition} & A Detox script visits every main screen and presses the main buttons on each one, for at least 100 measured actions in total.\\
+  \textbf{Output/Result} & At least 95\% of the measured transitions and button responses finish within 1 second.\\
+  \textbf{How test will be performed} & The script logs the time between each action and the moment the expected element on the next screen becomes visible. A summary script reports the share of actions under 1 second.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-03} & \textbf{Trade confirmation time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A signed-in test account has enough currency to buy, and some holdings to sell, in several assets.\\
+  \textbf{Input/Condition} & A Detox script places 50 buy orders and 50 sell orders of different sizes and confirms each one.\\
+  \textbf{Output/Result} & In at least 95\% of the trades, the updated holdings and currency balance appear within 2 seconds of confirmation.\\
+  \textbf{How test will be performed} & The script records the time from the confirm tap until the new balance and holding quantity are shown, and checks that the shown values match the expected values after the trade.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-04} & \textbf{Activity sync time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account is signed in on the reference phone. Health Connect holds new step and workout records that the app has not synced yet. The app is closed.\\
+  \textbf{Input/Condition} & The tester opens the app.\\
+  \textbf{Output/Result} & Within 10 seconds of opening, the currency balance includes the currency for all of the new Health Connect activity.\\
+  \textbf{How test will be performed} & The tester calculates the expected balance from the conversion rules beforehand, opens the app with a timer running, and records when the balance reaches the expected value. This is repeated 10 times with different amounts of new activity.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Safety-Critical}
 
 Covers PR-SC-01 to PR-SC-08.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-01} & \textbf{Daily earning limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with no activity recorded for the test day.\\
+  \textbf{Input/Condition} & Activity records for one day at 0.5, 1, 1.5, 2, and 5 times \textsf{HealthyDailyActivity}, each sent to a fresh test account.\\
+  \textbf{Output/Result} & No account earns more than \textsf{DailyEarnCap} for the day. The currency earned per unit of activity above \textsf{HealthyDailyActivity} is lower than the rate below it.\\
+  \textbf{How test will be performed} & A JUnit test sends each set of records through the reward service and compares the earned amount against the cap and against the earned amount for the lower levels.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-02} & \textbf{No penalties for missed days}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A test account with a currency balance, holdings, and an active streak.\\
+  \textbf{Input/Condition} & (1) The account records no activity for several days. (2) The user freezes their streak before a missed day.\\
+  \textbf{Output/Result} & (1) The balance and holdings are unchanged after the inactive days. (2) The frozen streak is not reset by the missed day.\\
+  \textbf{How test will be performed} & A JUnit test advances the server clock over the inactive days and checks the balance, holdings, and streak. A code review of every place that writes to balances and holdings confirms that none of them lowers a value because of inactivity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-03} & \textbf{Simulated market notice}\\
+  \midrule
+  \textbf{Type} & Static, Manual inspection\\
+  \textbf{Initial State} & The release build with a test account that holds assets.\\
+  \textbf{Input/Condition} & The tester visits every screen that shows prices, holdings, or returns.\\
+  \textbf{Output/Result} & Each of these screens shows the notice that the market is simulated and that results do not predict real returns, and links to the explanation of what the simulation does not model.\\
+  \textbf{How test will be performed} & Two team members go through a checklist of all market and portfolio screens taken from the app's navigation. For each screen they record whether the notice is visible and whether the link opens the explanation.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-04} & \textbf{Not financial advice statement}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the statement, then acknowledges it and finishes sign-up, then opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until the statement is acknowledged, and the statement can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script checks the sign-up and settings behaviour. Separately, a team member reviews all lessons, tips, and portfolio insights against the list in the SRS and records any text that recommends a specific real-world investment. The test passes when none is found.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-05} & \textbf{Exercise injury warning}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the injury warning and the terms of use, then acknowledges both, finishes sign-up, and opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until both are acknowledged, and both can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script runs the sign-up flow with each acknowledgement left out in turn, then checks that settings links to both.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-06} & \textbf{Safe goal progression}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an automatically raised goal plan.\\
+  \textbf{Input/Condition} & (1) The goal service generates eight weeks of goals after the user meets every goal. (2) The user misses \textsf{MissedGoalLimit} goals in a row. (3) The user lowers a goal from the goal screen.\\
+  \textbf{Output/Result} & (1) No weekly goal is more than \textsf{MaxGoalIncrease} above the week before, and every week has at least one rest day. (2) The app suggests a lower goal. (3) The lower goal is saved and used.\\
+  \textbf{How test will be performed} & JUnit tests check the generated plan and the suggestion. A Detox script lowers a goal from the goal screen and checks the saved value.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-07} & \textbf{Notification limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with notifications on and quiet hours set.\\
+  \textbf{Input/Condition} & Events that would send goal-related notifications are created throughout a simulated day, including during quiet hours.\\
+  \textbf{Output/Result} & No notifications are sent during quiet hours, and no more than \textsf{MaxDailyNotifications} goal-related notifications are sent in the day. After the user raises the limit, the new limit is used.\\
+  \textbf{How test will be performed} & A JUnit test runs the notification scheduler with a fixed clock and counts the notifications it sends and the times it sends them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-08} & \textbf{Safe leaderboard rules}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A leaderboard group with several test users who have different goals and different amounts of activity.\\
+  \textbf{Input/Condition} & The leaderboard is computed, one user leaves the group, and the leaderboard is computed again. A new account is also created.\\
+  \textbf{Output/Result} & Rankings are ordered by each user's percentage of their goal, not by raw activity. The user who left no longer appears. No user's balance changes because of their ranking. The new account is not on any leaderboard until the user opts in.\\
+  \textbf{How test will be performed} & A JUnit test sets up users where ranking by raw activity and ranking by goal percentage give different orders, then checks the order, the membership, and every balance before and after.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Precision or Accuracy}
 
 Covers PR-PA-01 to PR-PA-06.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-01} & \textbf{Exact money values}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known starting balance.\\
+  \textbf{Input/Condition} & A scripted sequence of 1,000 buy and sell trades at prices that do not divide evenly, such as 33.33 and 0.07.\\
+  \textbf{Output/Result} & The stored balance after the sequence matches the expected balance exactly, and every amount shown in the app has two decimal places.\\
+  \textbf{How test will be performed} & A JUnit test runs the trades through the trading service and compares the final balance with a value computed separately using exact decimal arithmetic. A Detox check reads the displayed balance and trade amounts and checks their format.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-02} & \textbf{Consistent currency awards}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & An empty test account for each activity record set.\\
+  \textbf{Input/Condition} & A fixed set of test activity records covering steps, workouts of each type, and edge values such as zero activity. Each set is processed twice.\\
+  \textbf{Output/Result} & The awarded currency matches the hand-calculated amount from the published conversion rules, and both runs award the same amount.\\
+  \textbf{How test will be performed} & The team calculates the expected amounts by hand and stores them as test fixtures. A JUnit test compares the reward service's output against them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-03} & \textbf{No double counting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & The same walk is reported by both sources with overlapping times. A second case has two separate walks, one from each source, that do not overlap.\\
+  \textbf{Output/Result} & The overlapping walk earns the amount for one recording. The two separate walks each earn currency.\\
+  \textbf{How test will be performed} & A JUnit test sends both cases through the import and reward services and compares the awards with the expected amounts.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-04} & \textbf{Portfolio value}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & Several test portfolios with different holdings, fixed simulated prices, and some uninvested currency.\\
+  \textbf{Input/Condition} & The portfolio screen is opened for each test portfolio.\\
+  \textbf{Output/Result} & The displayed value equals the sum of quantity times price for each holding, plus uninvested currency, to the cent.\\
+  \textbf{How test will be performed} & The expected values are calculated by hand. A JUnit test checks the value returned by the API, and a Detox script checks the value shown on screen.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-05} & \textbf{Workout dates and late syncs}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an active streak.\\
+  \textbf{Input/Condition} & (1) A workout done at 11:30 pm is synced after midnight. (2) A workout recorded in a different time zone is synced. (3) A workout from two days ago arrives after the streak was already marked as broken.\\
+  \textbf{Output/Result} & Each workout is recorded on the day it happened on the source device. In case (3) the streak and the rewards for that day are recalculated to include the late workout.\\
+  \textbf{How test will be performed} & A JUnit test sends records with set source timestamps and time zones, using a fixed server clock, then checks the stored dates, the streak, and the rewards.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-06} & \textbf{Realistic market simulation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The market simulation with its calibrated settings and a fixed random seed.\\
+  \textbf{Input/Condition} & The simulation is run over at least 30 simulated years for a broad market asset, with several different seeds.\\
+  \textbf{Output/Result} & The average annual return and the annual volatility are consistent with historical data for a broad market index, and each run includes downturns.\\
+  \textbf{How test will be performed} & A script computes the average annual return, annual volatility, and largest drop for each run and compares them with the same measures from the historical data used for calibration. The acceptable ranges are agreed with the supervisor before the test and recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Robustness or Fault-Tolerance}
 
 Covers PR-RFT-01 to PR-RFT-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-01} & \textbf{Offline activity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account signed in on the reference phone, synced, then put in airplane mode with the app closed.\\
+  \textbf{Input/Condition} & Activity is recorded in Health Connect over a gap of \textsf{OfflineSyncWindow} (set by moving the activity timestamps back, or by waiting out the period). The phone is then reconnected and the app is opened.\\
+  \textbf{Output/Result} & All of the activity from the gap is credited at the next sync.\\
+  \textbf{How test will be performed} & The tester compares the credited currency with the amount calculated by hand for the recorded activity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-02} & \textbf{Atomic writes}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known balance and holdings.\\
+  \textbf{Input/Condition} & (1) A failure is injected at each step of every multi-step write: trades, reward credits, and progress updates. (2) The connection or server is cut in the middle of a test trade. (3) 100 trade requests are sent at the same time against one account.\\
+  \textbf{Output/Result} & (1) Each failed write leaves the data as it was. (2) After the cut, the balance and holdings match either the state before the trade or the state after it, and a completed trade used the confirmed price. (3) Every request is either fully completed or fully rolled back, and the balance is never negative.\\
+  \textbf{How test will be performed} & JUnit tests use fault injection in the service layer to fail each step in turn. The concurrent test sends the 100 requests from parallel threads, then checks that the final balance and holdings equal the starting state plus the completed trades.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-03} & \textbf{Failing data sources}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & One source is made unavailable. In a second run, it returns malformed data.\\
+  \textbf{Output/Result} & The app stays usable with the other source, retries the failed sync, then shows a message naming the failing source and the cause. No currency is awarded for the malformed data.\\
+  \textbf{How test will be performed} & The failing source is replaced with a mock that times out or returns malformed records. Backend tests check the retries and the awards, and a Detox script checks the app and the message.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-04} & \textbf{Backend unavailable}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account that has synced at least once on the reference phone.\\
+  \textbf{Input/Condition} & The backend is stopped, then the app is opened.\\
+  \textbf{Output/Result} & The app opens without crashing, shows the last known balance and portfolio, and shows a notice that the data may be out of date.\\
+  \textbf{How test will be performed} & The tester stops the backend, opens the app, visits each main screen, and records whether any screen crashes or is empty.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Capacity}
 
 Covers PR-C-01, PR-C-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-01} & \textbf{Concurrent users}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed to the test server with 500 registered test accounts.\\
+  \textbf{Input/Condition} & A load test runs 100 simulated users at the same time. Each one browses screens and places trades.\\
+  \textbf{Output/Result} & Response times during the load test meet PR-SL-02 and PR-SL-03.\\
+  \textbf{How test will be performed} & The load testing tool sends the API calls that the app makes for each action and records the response times. While the load runs, test-PR-SL-02 and test-PR-SL-03 are also run on the reference phone.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-02} & \textbf{Two years of history}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account loaded with two years of daily activity and weekly trades.\\
+  \textbf{Input/Condition} & The user opens the activity history, trade history, and progress screens and scrolls to the oldest records.\\
+  \textbf{Output/Result} & The full two years of history is shown, and the screens meet PR-SL-02.\\
+  \textbf{How test will be performed} & A seeding script creates the test data. A Detox script opens each history screen, checks that the oldest records are shown, and times each transition.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Scalability or Extensibility}
 
 Covers PR-SE-01 to PR-SE-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-01} & \textbf{Adding a fitness source}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with the fitness sources available at release.\\
+  \textbf{Input/Condition} & The team adds a mock fitness source.\\
+  \textbf{Output/Result} & All of the changes needed are inside the integration module, and the currency conversion code is unchanged.\\
+  \textbf{How test will be performed} & A team member adds the mock source on a branch. The reviewers check the diff to confirm that every changed file is inside the integration module.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-02} & \textbf{Adding an asset type}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with stocks, bonds, and ETFs.\\
+  \textbf{Input/Condition} & The team adds a new test asset type.\\
+  \textbf{Output/Result} & The change only adds asset definitions and market engine configuration. The buy and sell code is unchanged, and the existing trading tests pass with the new asset type.\\
+  \textbf{How test will be performed} & A team member adds the asset type on a branch. The reviewers check the diff, and the trading tests are run with the new asset type.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-03} & \textbf{Adding server capacity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed with extra server capacity, and the app version is the same one used in test-PR-C-01.\\
+  \textbf{Input/Condition} & The load test from test-PR-C-01 is run with 200 simulated users.\\
+  \textbf{Output/Result} & Response times meet PR-SL-02 and PR-SL-03, with no change to the mobile app.\\
+  \textbf{How test will be performed} & The team adds server capacity, reruns the load test at double the load, and confirms that the app's version number is the same as in test-PR-C-01.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Longevity}
 
 Covers PR-L-01, PR-L-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-01} & \textbf{Supported Android versions}\\
+  \midrule
+  \textbf{Type} & Static and Dynamic, Automatic\\
+  \textbf{Initial State} & The release build.\\
+  \textbf{Input/Condition} & (1) The target Android version in the build settings is compared with Google Play's requirement for new apps at release time. (2) The test suite is run on an emulator with the newest Android version available in April 2027.\\
+  \textbf{Output/Result} & The build meets Google Play's target version requirement, and the test suite passes on the newest Android version.\\
+  \textbf{How test will be performed} & A team member checks the build settings against Google Play's published requirement before release. The Detox suite is run on the newest Android emulator image before the final demo.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-02} & \textbf{Keeping user history}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The backend code, database schema, and server configuration.\\
+  \textbf{Input/Condition} & The team searches for every scheduled job, database event, and retention setting that deletes data.\\
+  \textbf{Output/Result} & None of them deletes activity or portfolio history for an active account. History is deleted only when the user deletes it or deletes their account.\\
+  \textbf{How test will be performed} & A team member lists every delete path in the code and database configuration. A second team member reviews the list and confirms that each one is started by the user.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Operational and Environmental}
 
@@ -455,9 +1287,40 @@ These tests cover the Operational and Environmental Requirements section of the 
 
 \paragraph{Productization}
 
-Covers PROD-01, PROD-02.
+\noindent\begin{tabularx}{\textwidth}{p{3cm}X}
+  \toprule
+  \textbf{SRS ID} & \textbf{Requirement} \\
+  \midrule
+  PROD-01 & Build and Quality Assurance \\
+  PROD-02 & Installability \\
+  \bottomrule
+\end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PROD-01} & \textbf{Build and Quality Assurance}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The final version of the app is in a pre-final revision and has been tested.\\
+  \textbf{Input/Condition} & The internally developed test suite and the Android pre-release test package.\\
+  \textbf{Output/Result} & All tests pass with no warnings caused by technical issues.\\
+  \textbf{Covers} & PROD-01. By passing these tests, the development team receives confirmation that the application is ready for release.\\
+  \textbf{How test will be performed} & The test is completed through the automated test suites and the process of publishing the app to the Android app store.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-02} & \textbf{Public Store Installation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The app is published on a publicly accessible Google Play Store listing.\\
+  \textbf{Input/Condition} & The user attempts to find and install the application.\\
+  \textbf{Output/Result} & The app is installed and ready for the user to use.\\
+  \textbf{Covers} & PROD-01, and verifies the effects of PROD-02. Users must be able to access, download, install and update the app from a public source.\\
+  \textbf{How test will be performed} & Users are asked to install the app on a phone before launch. This shows how familiar users are with finding applications in the app store and confirms that the app is accessible.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Maintainability and Support}
 
@@ -483,37 +1346,245 @@ Covers MAS-ADPT-01 to MAS-ADPT-03.
 
 \subsubsection{Security}
 
-These tests cover the Security Requirements section of the SRS.
+These tests cover the Security Requirements section of the SRS \citep{SRS}, spanning access control, data and logic integrity, privacy, economic and security audit logging, and immunity against attacks.
 
 \paragraph{Access}
 
 Covers SEC-ACC-01 to SEC-ACC-05.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-ACC-01} & \textbf{Authenticated Access Token Validation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Backend server running in test profile with test database; user account registered; valid access token issued with a 60-minute expiry window.\\
+  \textbf{Input/Condition} & Send requests to a protected system resource (such as fitness activities or portfolio summaries) under four conditions: (1) missing authentication credentials, (2) tampered token signature, (3) expired token (timestamp beyond the 60-minute lifetime), and (4) authentic, unexpired token.\\
+  \textbf{Output/Result} & Requests lacking credentials, with a tampered token, or with an expired token are rejected with HTTP 401 Unauthorized. The request with a valid token returns HTTP 200 OK with the requested user data.\\
+  \textbf{How test will be performed} & Automated integration tests dispatching requests across token states against protected system services.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-ACC-02} & \textbf{Role-Based Authorization and Cross-User Isolation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Two standard test users (User A and User B) with distinct portfolios and data records, and one administrator user.\\
+  \textbf{Input/Condition} & (1) User A attempts to read User B's private portfolio. (2) User A attempts to execute a trade or modify records on User B's behalf. (3) User A attempts to access system-wide administrative audit logs. (4) Administrator requests access to system-wide administrative audit logs.\\
+  \textbf{Output/Result} & Cross-user reads, cross-user modifications, and standard-user administrative requests are rejected with HTTP 403 Forbidden with zero data modifications. The administrative request is accepted (HTTP 200 OK) returning the requested audit records.\\
+  \textbf{How test will be performed} & Automated security integration tests verifying role-based access control rules and tenant isolation across system boundaries.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-ACC-03} & \textbf{Secure Credential Storage and Secret Exclusion}\\
+  \midrule
+  \textbf{Type} & Static and Dynamic, Automated\\
+  \textbf{Initial State} & Repository source commit under evaluation; mobile test environment.\\
+  \textbf{Input/Condition} & (1) Execute secret scanning on the complete version control repository history for API keys, private keys, and client secrets. (2) Store third-party fitness integration credentials via the client application and inspect local persistent device storage.\\
+  \textbf{Output/Result} & (1) Repository secret scan detects zero exposed credentials or keys. (2) Integration credentials are encrypted at rest using platform-managed secure key storage (e.g., AES-256 GCM); zero cleartext tokens exist on local disk.\\
+  \textbf{How test will be performed} & Automated repository secret scanning in CI and mobile client instrumentation tests inspecting device storage.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-ACC-04} & \textbf{Password Strength, Lockout, and Multi-Factor Authentication}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & User authentication service active with test database; common password dictionary loaded in memory.\\
+  \textbf{Input/Condition} & (1) Submit account registration requests using short passwords ($< 8$ characters), common dictionary passwords, and a strong password ($> 8$ characters). (2) Submit 5 consecutive incorrect password attempts for a user account, followed immediately by a 6th attempt with the correct password within 15 minutes. (3) Advance system time past 15 minutes (or submit a password reset) and retry with valid credentials. (4) For an account with multi-factor authentication (MFA) enabled, submit valid credentials, followed by an invalid one-time password (OTP), and then a valid OTP.\\
+  \textbf{Output/Result} & Short and dictionary passwords return HTTP 400 Bad Request; strong passwords return HTTP 201 Created. The 6th consecutive failed attempt triggers account lockout, rejecting subsequent login attempts with HTTP 423 Locked (or HTTP 403 Forbidden). Login succeeds once the lockout duration elapses. MFA challenge rejects invalid OTPs (HTTP 401 Unauthorized) and grants session access only upon valid OTP submission.\\
+  \textbf{How test will be performed} & Automated integration tests verifying authentication policies, lockout timers, and MFA verification flows.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-ACC-05} & \textbf{Session Termination and Device Unlinking}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Active user session with valid access and refresh tokens; client device linked to user account.\\
+  \textbf{Input/Condition} & (1) Client issues a sign-out request with its registered device identifier. (2) Attempt subsequent resource requests using the revoked access token. (3) Attempt to submit activity data from the unlinked device. (4) Present a session token that has been inactive for greater than 30 days.\\
+  \textbf{Output/Result} & Sign-out completes successfully (HTTP 200 OK) and unlinks the device. Requests presenting revoked tokens, data submissions from unlinked devices, and expired inactive sessions are rejected (HTTP 401 Unauthorized or HTTP 403 Forbidden).\\
+  \textbf{How test will be performed} & Automated integration tests verifying session invalidation, token revocation repositories, and device link states.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Integrity}
 
 Covers SEC-INT-01 to SEC-INT-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-INT-01} & \textbf{Activity Telemetry Plausibility and Deduplication}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Authenticated user account with 0 virtual currency.\\
+  \textbf{Input/Condition} & Ingest four workout telemetry payloads: (1) sustained cadence of 280 steps/min (exceeding plausibility threshold of 250 steps/min), (2) overlapping workout intervals from two integrations, (3) duplicate submission of an identical workout external sync ID, and (4) normal plausible workout (120 steps/min, no overlap).\\
+  \textbf{Output/Result} & (1) Implausible cadence payload marked \texttt{UNVERIFIED} with zero virtual currency awarded. (2) Overlapping interval flagged \texttt{UNVERIFIED}; only unique segments credited. (3) Duplicate payload rejected by idempotency key with zero duplicate currency minted. (4) Plausible workout verified and virtual currency awarded.\\
+  \textbf{How test will be performed} & Automated unit and integration tests executing domain validation rules on activity telemetry payloads.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-INT-02} & \textbf{Server-Side Authority on Valuations and Trades}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Authenticated user with virtual currency balance; server-authoritative asset price set (e.g., 50.00 FLX for \texttt{FLEX\_CORP}).\\
+  \textbf{Input/Condition} & (1) Client submits a trade request specifying a client-dictated execution price (e.g., 0.01 FLX) and total cost. (2) Client submits a currency reward claim specifying an arbitrary client-dictated reward amount.\\
+  \textbf{Output/Result} & (1) The system rejects the trade request with HTTP 400 Bad Request, or ignores the client-supplied price and executes strictly at the server-authoritative valuation (50.00 FLX). (2) The system rejects client-dictated reward amounts and calculates currency rewards strictly from verified workout metrics.\\
+  \textbf{How test will be performed} & Automated integration tests verifying server-side pricing enforcement and reward calculation authority.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-INT-03} & \textbf{Database Backup Integrity and Restoration Drill}\\
+  \midrule
+  \textbf{Type} & Dynamic Operational Verification and Static Configuration Review\\
+  \textbf{Initial State} & Staging database populated with seed dataset of users, portfolios, and audit records; automated backup cron job configured.\\
+  \textbf{Input/Condition} & (1) Inspect cloud backup policy scripts for 24-hour backup interval and 30-day retention lifecycle. (2) Trigger an automated backup snapshot, record SHA-256 data checksums, restore onto a clean containerized database instance, and measure restoration time.\\
+  \textbf{Output/Result} & Configuration confirms daily backups and 30-day automated retention. Database restores completely within target limit ($< 15$ minutes in test environment), with record counts and checksums matching 100\%.\\
+  \textbf{How test will be performed} & Automated staging script executing backup creation, containerized restoration, and data integrity verification.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Privacy}
 
 Covers SEC-PRV-01 to SEC-PRV-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-PRV-01} & \textbf{Encryption in Transit and at Rest}\\
+  \midrule
+  \textbf{Type} & Dynamic Security Verification and Database Inspection\\
+  \textbf{Initial State} & Staging backend deployed behind reverse proxy; database running with encrypted tablespace.\\
+  \textbf{Input/Condition} & (1) Execute network handshake scan against API endpoints testing plain HTTP and TLS protocols 1.0, 1.1, 1.2, and 1.3. (2) Insert sensitive biometric fields (heart rate, body weight) into database and inspect raw storage files on disk.\\
+  \textbf{Output/Result} & (1) Plain HTTP requests and TLS connections below version 1.3 are rejected; only TLS 1.3 handshakes succeed. (2) Direct inspection of database disk blocks reveals AES-256 ciphertext; sensitive biometric data is unreadable in raw form.\\
+  \textbf{How test will be performed} & Automated script combining TLS protocol scanning and raw disk inspection on test database volumes.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-PRV-02} & \textbf{Private by Default and Leaderboard Opt-In Isolation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Newly registered user with logged workouts and simulated portfolio; default settings unchanged.\\
+  \textbf{Input/Condition} & (1) Query public user profile and public leaderboard for the new user. (2) User explicitly opts in to leaderboard sharing with a public alias. (3) User toggles leaderboard sharing off.\\
+  \textbf{Output/Result} & (1) By default, public profile returns 404 or minimal stub; user is omitted from public leaderboards. (2) Opted-in leaderboard displays only chosen alias and aggregate score; real name, email, and biometric metrics remain private. (3) Opting out removes the user from public leaderboards immediately.\\
+  \textbf{How test will be performed} & Automated API integration tests verifying endpoint responses across default, opt-in, and opt-out states.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-PRV-03} & \textbf{User Account Deletion and PII Eradication}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & User account populated with profile, health logs, active session, and transactions in the financial audit ledger.\\
+  \textbf{Input/Condition} & User submits an account deletion request with credential confirmation. Inspect active application databases, attempt login with deleted credentials, and inspect the financial audit ledger.\\
+  \textbf{Output/Result} & All personal identifying information (name, email, device identifiers) and health logs are purged from the active system within 24 hours. Subsequent login attempts are rejected (HTTP 401 Unauthorized). The financial audit ledger preserves transactional continuity but replaces user identifiers with an irreversible pseudonym.\\
+  \textbf{How test will be performed} & Automated end-to-end integration test asserting database purge, login denial, and ledger anonymization.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Audit}
 
 Covers SEC-AUD-01, SEC-AUD-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-AUD-01} & \textbf{Economic Event Ledger Immutability}\\
+  \midrule
+  \textbf{Type} & Dynamic Database Privilege Verification\\
+  \textbf{Initial State} & Backend connected to database using standard application credentials; sample rows present in \texttt{economic\_audit\_ledger}.\\
+  \textbf{Input/Condition} & (1) Record simulated trade or reward via standard service API. (2) Attempt direct SQL \texttt{UPDATE} on an existing ledger record. (3) Attempt direct SQL \texttt{DELETE} on an existing ledger record.\\
+  \textbf{Output/Result} & Service API inserts new audit record with immutable timestamp. Direct SQL \texttt{UPDATE} and \texttt{DELETE} commands are denied by database role permissions with error 1142 (command denied); ledger records remain unmodified.\\
+  \textbf{How test will be performed} & Automated database integration test executing restricted SQL commands using application service credentials.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-AUD-02} & \textbf{Structured Security Event Logging}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Log appender active and configured for structured JSON output.\\
+  \textbf{Input/Condition} & Trigger security events: 3 failed login attempts, activity payload with tampered signature, rate limit exceeded ($> 60$ req/min), and unhandled server exception.\\
+  \textbf{Output/Result} & Logs capture structured JSON entries containing severity level (WARN/ERROR), ISO 8601 UTC timestamp, client IP, event type, and user ID (or anonymous). Zero sensitive credentials or plaintext passwords appear in log records.\\
+  \textbf{How test will be performed} & Automated integration test with in-memory log appender asserting on serialized JSON log structure and contents.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Immunity}
 
 Covers SEC-IMM-01 to SEC-IMM-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-IMM-01} & \textbf{Injection Defense (SQLi, XSS, Command Injection)}\\
+  \midrule
+  \textbf{Type} & Static SAST and Dynamic DAST Penetration Testing\\
+  \textbf{Initial State} & Backend service deployed in containerized test environment with database connectivity.\\
+  \textbf{Input/Condition} & (1) Run static analysis on system source code for unparameterized queries, unescaped reflection, and command execution. (2) Execute automated penetration scanning dispatching SQL injection, cross-site scripting (XSS), and command injection attack vectors across all external system interfaces.\\
+  \textbf{Output/Result} & Static analysis reports zero high-severity injection vulnerabilities. Penetration scanning reports zero exploitable injection vulnerabilities; malicious payloads are sanitized or rejected (HTTP 400/422).\\
+  \textbf{How test will be performed} & Automated security test pipeline combining static code analysis (SAST) and dynamic penetration scanning (DAST).\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-IMM-02} & \textbf{API Rate Limiting Enforcement}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Rate limiting filter configured with threshold of 60 requests/minute per client IP.\\
+  \textbf{Input/Condition} & Client sends 60 consecutive requests within 30 seconds, sends 10 additional requests within the remainder of the 60-second window, waits 65 seconds, and sends a subsequent request.\\
+  \textbf{Output/Result} & Requests 1 to 60 process normally. Requests 61 to 70 return HTTP 429 Too Many Requests with a \texttt{Retry-After} header. The request following the cooldown period processes normally.\\
+  \textbf{How test will be performed} & Automated integration test using a multi-threaded HTTP client dispatching timed request bursts.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-SEC-IMM-03} & \textbf{Client Environment Tampering and Root Detection}\\
+  \midrule
+  \textbf{Type} & Dynamic Verification\\
+  \textbf{Initial State} & Android test device or emulator with root privileges enabled (\texttt{su} binary present, test keys installed).\\
+  \textbf{Input/Condition} & (1) Deploy production release build onto rooted device and attempt app launch, fitness sync, and leaderboard access. (2) Deploy debug build onto rooted device and attempt same actions.\\
+  \textbf{Output/Result} & Production build detects untrusted environment, displays warning modal, and disables virtual currency minting and leaderboard features. Debug build runs without restrictions for testing.\\
+  \textbf{How test will be performed} & Automated Android UI test and manual release checklist verifying root detection library signals.\\
+  \bottomrule
+\end{tabularx}
+
+\paragraph{Security Review Walkthrough}
+
+Static reviews are conducted once per milestone release cycle (Rev 0, Final Demo) by the Backend Lead (Daniel Franze-Da Silva), Security and Documentation Lead (Arjun Karthik), and an independent peer reviewer. The team reviews: (1) ISO/IEC 27001 Annex A mapping against system controls (COMP-STD-07), (2) least privilege scopes for third-party fitness APIs (SEC-ACC-03), (3) repository secret scan results, and (4) dependency vulnerability reports ensuring zero unresolved High/Critical CVEs.
 
 \subsubsection{Cultural}
 
@@ -543,24 +1614,161 @@ Covers COMP-STD-01 to COMP-STD-07.
 
 \subsubsection{User Documentation and Training}
 
-These tests cover the User Documentation and Training Requirements section of the SRS.
+These tests cover the User Documentation and Training Requirements section of the SRS \citep{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
 
 \paragraph{User Documentation}
 
 Covers DOC-01 to DOC-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-DOC-01} & \textbf{Financial and Fitness Glossary Presence}\\
+  \midrule
+  \textbf{Type} & Static Inspection\\
+  \textbf{Initial State} & Application build running on a test device; glossary view accessible in-app.\\
+  \textbf{Input/Condition} & Open the in-app glossary and search for required educational terms (compound interest, inflation, ETFs, bond yields, and portfolio diversification).\\
+  \textbf{Output/Result} & Binary: Pass if the searchable glossary is present and contains entries for all required terms; Fail otherwise.\\
+  \textbf{How test will be performed} & Manual walkthrough inspection of the glossary view verifying term presence and search functionality.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-DOC-02} & \textbf{Fitness Integration Guide Presence}\\
+  \midrule
+  \textbf{Type} & Static Inspection\\
+  \textbf{Initial State} & Application build running on a test device; integration settings or help section open.\\
+  \textbf{Input/Condition} & Navigate to the fitness integration configuration section and open the setup guide.\\
+  \textbf{Output/Result} & Binary: Pass if illustrated setup instructions with screenshots are present for all supported fitness providers (e.g., Garmin, Android Health Connect) and include troubleshooting guidance; Fail otherwise.\\
+  \textbf{How test will be performed} & Visual inspection confirming presence and completeness of illustrated setup and troubleshooting instructions.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-DOC-03} & \textbf{Searchable Help Center Presence}\\
+  \midrule
+  \textbf{Type} & Dynamic, Semi-Automated\\
+  \textbf{Initial State} & Application open to the settings menu.\\
+  \textbf{Input/Condition} & Open the in-app help center from settings and enter search queries covering core topics (account management, activity sync, rewards, portfolio, simulated market, virtual currency, privacy).\\
+  \textbf{Output/Result} & Binary: Pass if the in-app help center opens without an external browser, contains articles covering all required topics, and returns keyword search results in under 200 ms; Fail otherwise.\\
+  \textbf{How test will be performed} & Manual walkthrough and automated UI test timing keyword search queries and asserting topic article presence.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-DOC-04} & \textbf{Digital Manual and Release Notes Presence}\\
+  \midrule
+  \textbf{Type} & Static Inspection\\
+  \textbf{Initial State} & Project repository on GitHub checked out at latest milestone commit.\\
+  \textbf{Input/Condition} & Inspect the documentation repository directory for the digital user manual and milestone release notes.\\
+  \textbf{Output/Result} & Binary: Pass if a self-contained user manual (PDF and Markdown formats) documenting architecture, navigation, data flows, and troubleshooting, along with milestone release notes, is present in the repository; Fail otherwise.\\
+  \textbf{How test will be performed} & Peer-review file audit by team members verifying presence and completeness of documentation artifacts in the repository.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Training}
 
 Covers TRN-01 to TRN-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-TRN-01} & \textbf{Interactive Onboarding Walkthrough Presence}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & Clean application state immediately after creating a new user account.\\
+  \textbf{Input/Condition} & Complete new account registration to trigger onboarding; inspect the four-step walkthrough (goals, rewards, simulated investing, compounding chart), test the ``Skip Tour'' option, and re-launch the walkthrough from settings.\\
+  \textbf{Output/Result} & Binary: Pass if the four-step walkthrough is present, takes under 90 seconds to complete, provides a visible ``Skip Tour'' button on every step, and is re-accessible from settings; Fail otherwise.\\
+  \textbf{How test will be performed} & Manual timed walkthrough verifying the presence of all four tour steps, skip buttons, and settings re-entry.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-TRN-02} & \textbf{Progressive Feature Discovery Presence}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automated\\
+  \textbf{Initial State} & Newly registered user account with zero trades and zero logged physical activity days.\\
+  \textbf{Input/Condition} & Navigate to trading and portfolio analytics screens as a novice user; then simulate logging three days of physical activity or executing an initial trade, and re-examine the screens.\\
+  \textbf{Output/Result} & Binary: Pass if advanced trading indicators and portfolio analytics remain hidden or collapsed initially and are revealed once the activity or trade threshold is met; Fail otherwise.\\
+  \textbf{How test will be performed} & Automated Compose UI test asserting view hierarchy presence and visibility states of advanced features before and after threshold completion.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{T-TRN-03} & \textbf{Demonstrator Quick-Start Kit Presence}\\
+  \midrule
+  \textbf{Type} & Dynamic Operational Verification\\
+  \textbf{Initial State} & Application development/staging build running; demo seeding script available.\\
+  \textbf{Input/Condition} & Execute the automated demo seeding script or trigger the demonstrator debug toggle.\\
+  \textbf{Output/Result} & Binary: Pass if the demonstrator guide is present and the seeding script loads 30 days of simulated activity and portfolio history within 10 seconds; Fail otherwise.\\
+  \textbf{How test will be performed} & Execution of the demonstrator script or debug toggle timing dataset initialization and verifying data display on trading and compounding charts.\\
+  \bottomrule
+\end{tabularx}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+
+The table below maps each system test to the SRS requirement whose fit
+criterion it checks. The last column lists other requirements that the test
+also measures, such as load tests that rerun the speed checks. Rows for the
+remaining requirement sections are added as their test cases are written.
+
+\begin{xltabular}{\textwidth}{p{3cm}p{2.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.4cm}}
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  test-PR-SL-01 & PR-SL-01 & App launch time & ---\\
+  test-PR-SL-02 & PR-SL-02 & Response to input & ---\\
+  test-PR-SL-03 & PR-SL-03 & Trade confirmation time & ---\\
+  test-PR-SL-04 & PR-SL-04 & Activity sync time & ---\\
+  test-PR-SC-01 & PR-SC-01 & Daily earning limits & ---\\
+  test-PR-SC-02 & PR-SC-02 & No penalties for missed days & ---\\
+  test-PR-SC-03 & PR-SC-03 & Simulated market notice & ---\\
+  test-PR-SC-04 & PR-SC-04 & Not financial advice statement & ---\\
+  test-PR-SC-05 & PR-SC-05 & Exercise injury warning & ---\\
+  test-PR-SC-06 & PR-SC-06 & Safe goal progression & ---\\
+  test-PR-SC-07 & PR-SC-07 & Notification limits & ---\\
+  test-PR-SC-08 & PR-SC-08 & Safe leaderboard rules & ---\\
+  test-PR-PA-01 & PR-PA-01 & Exact money values & ---\\
+  test-PR-PA-02 & PR-PA-02 & Consistent currency awards & ---\\
+  test-PR-PA-03 & PR-PA-03 & No double counting & ---\\
+  test-PR-PA-04 & PR-PA-04 & Portfolio value & ---\\
+  test-PR-PA-05 & PR-PA-05 & Workout dates and late syncs & ---\\
+  test-PR-PA-06 & PR-PA-06 & Realistic market simulation & ---\\
+  test-PR-RFT-01 & PR-RFT-01 & Offline activity & ---\\
+  test-PR-RFT-02 & PR-RFT-02 & Atomic writes & ---\\
+  test-PR-RFT-03 & PR-RFT-03 & Failing data sources & ---\\
+  test-PR-RFT-04 & PR-RFT-04 & Backend unavailable & ---\\
+  test-PR-C-01 & PR-C-01 & Concurrent users & PR-SL-02, PR-SL-03\\
+  test-PR-C-02 & PR-C-02 & Two years of history & PR-SL-02\\
+  test-PR-SE-01 & PR-SE-01 & Adding a fitness source & ---\\
+  test-PR-SE-02 & PR-SE-02 & Adding an asset type & ---\\
+  test-PR-SE-03 & PR-SE-03 & Adding server capacity & PR-SL-02, PR-SL-03\\
+  test-PR-L-01 & PR-L-01 & Supported Android versions & ---\\
+  test-PR-L-02 & PR-L-02 & Keeping user history & ---\\
+\end{xltabular}
 
 \section{Unit Test Description}
 
@@ -702,9 +1910,34 @@ This is where you can place additional information.
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions}\label{sec:survey_questions}
 
-\wss{This is a section that would be appropriate for some projects.}
+\paragraph{First Impressions \& Onboarding}
+\begin{itemize}
+  \item How did you feel about the initial four-step walkthrough? Did you find it helpful, or did you just want to tap ``Skip Tour''?
+  \item Did the app feel overwhelming when you first opened it, or did the advanced trading features unlock at a comfortable pace after you logged some activity?
+  \item How would you describe the tone of the app? Does the financial terminology feel intimidating, or supportive and approachable?
+\end{itemize}
+
+\paragraph{Navigation \& Dashboard}
+\begin{itemize}
+  \item Without searching, can you immediately point to your current fitness progress and your overall portfolio value on the home screen?
+  \item If you wanted to browse the market or read an educational article, which tabs at the bottom would you naturally tap?
+\end{itemize}
+
+\paragraph{Charts \& Simulated Investing}
+\begin{itemize}
+  \item Looking at the Portfolio Compounding Chart, can you easily tell which line represents your workout earnings and which represents your simulated investment gains?
+  \item When you come across financial terms like ``expense ratio'' or ``dividend,'' did you notice the interactive tooltips? Were the definitions easy to grasp?
+  \item Is it completely clear from the interface that FLX is a virtual currency and you aren't risking real money?
+\end{itemize}
+
+\paragraph{Gamification, Privacy \& Support}
+\begin{itemize}
+  \item When you hit a milestone, does the reward animation feel fun, or does it block you from using the app? Did you know you could swipe to dismiss it?
+  \item Do you understand exactly what parts of your profile are public on the leaderboard versus kept entirely private?
+  \item If you needed help connecting your Garmin or Android Health Connect, where would you go in the app to find the setup guide?
+\end{itemize}
 
 \newpage{}
 
