@@ -87,10 +87,11 @@ in.}
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+This document describes the Verification and Validation (VnV) plan for Flexin', a fitness and finance application that allows users to learn about the power of compounding through working out and investing. This plan describes the verification and validation activities that will be performed to ensure that the software meets its requirements and is fit for its intended purpose. The plan includes a description of the VnV team, the testing approach, the test cases, and the tools and techniques that will be used to perform the tests.
 
 \section{General Information}
+
+This section provides an overview of the software being tested, the objectives of the VnV plan, and the relevant documentation that will be used to support the VnV activities.
 
 \subsection{Summary}
 
@@ -239,8 +240,7 @@ This validation will be done from the perspective of the users and the stakehold
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section describes the system tests that will be performed to verify and validate the functional and non-functional requirements of Flexin'.
 
 \subsection{Tests for Functional Requirements}
 
@@ -248,9 +248,6 @@ The subsections below group the functional requirements in the Functional Requir
 SRS \citep{SRS} by feature area. Together they cover FUNC-01 to FUNC-16.
 FUNC-17 (Sponsored Reward Redemption) is a stretch goal in the SRS Waiting
 Room, so it is not tested.
-
-\wss{Each test uses the fields Control, Initial State, Input, Output, Test
-Case Derivation, and How test will be performed.}
 
 \subsubsection{Account Management}
 
@@ -427,6 +424,19 @@ These tests cover the portfolio and trading features of the simulated market.
 
 \noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
   \toprule
+  \textbf{FUNC-08-T-01} & \textbf{Portfolio Creation}\\
+  \midrule
+  \textbf{Control} & Automatic\\
+  \textbf{Initial State} & No user account exists.\\
+  \textbf{Input/Condition} & A new user account is successfully registered.\\
+  \textbf{Output/Result} & A portfolio is automatically created and associated with the new user account. The \texttt{PortfolioID} is generated and stored under this new user account. The newly created portfolio is initialized with no assets.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-08. The system will automatically create a new portfolio when a new user account is establihed.\\
+  \textbf{How test will be performed} & A new user wll be registered, the system checks if a portfolio has already been created for them. If not, the system will create one. It will then be verified that the portfolio exists in the database and correctly linked to the newly registered user.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
   \textbf{test-FR-09} & \textbf{Asset Purchase}\\
   \midrule
   \textbf{Type} & Dynamic, Automatic\\
@@ -482,8 +492,6 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
   \bottomrule
 \end{tabularx}
-
-\wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
 
@@ -573,10 +581,10 @@ The subsections below follow the nonfunctional requirement sections of the
 SRS \citep{SRS}. Each one lists the SRS subsections and requirement IDs that
 its tests cover.
 
-\wss{Each test uses the fields Type, Initial State, Input/Condition,
-Output/Result, and How test will be performed. Static tests, such as reviews,
-inspections, and walkthroughs, should instead say who is involved and how the
-review is run.}
+% \wss{Each test uses the fields Type, Initial State, Input/Condition,
+% Output/Result, and How test will be performed. Static tests, such as reviews,
+% inspections, and walkthroughs, should instead say who is involved and how the
+% review is run.}
 
 \subsubsection{Look and Feel}\label{sec:tests_nfr_lf}
 
