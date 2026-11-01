@@ -421,6 +421,64 @@ These tests cover the portfolio and trading features of the simulated market.
   \bottomrule
 \end{tabularx}
 
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-09} & \textbf{Asset Purchase}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has enough virtual currency to purchase the asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the buy action.\\
+  \textbf{Output/Result} & The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
+  \textbf{Covers} & FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
+  \textbf{How test will be performed} & After the purchase of an asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-10} & \textbf{Asset Sale}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the sell action.\\
+  \textbf{Output/Result} & The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
+  \textbf{Covers} & FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the holding removed.\\
+  \textbf{How test will be performed} & After the sale of an asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-11} & \textbf{Transaction Recording}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and has a non-empty transaction history.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to view previous market transactions.\\
+  \textbf{Output/Result} & A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
+  \textbf{Covers} & FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
+  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and checked against the trades that were made.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-12} & \textbf{Portfolio Performance Calculation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a portfolio containing at least one asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to retrieve all assets in the portfolio and calculate performance.\\
+  \textbf{Output/Result} & The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
+  \textbf{Covers} & FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
+  \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
+  \bottomrule
+\end{tabularx}
+
 \wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
@@ -437,7 +495,48 @@ These tests cover friends lists and public and private leaderboard groups.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-13} & \textbf{Leaderboard Participation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in, and a leaderboard with open spaces is available to join.\\
+  \textbf{Input/Condition} & The \texttt{UserID} and the \texttt{LeaderboardID} of a leaderboard with open spaces.\\
+  \textbf{Output/Result} & The user joins the intended leaderboard and appears in its member list.\\
+  \textbf{Covers} & FUNC-13. A user can join a group, so after the join request the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+  \textbf{How test will be performed} & After the user attempts to join the leaderboard, check that the user's \texttt{UserID} is linked to that \texttt{LeaderboardID}.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-14} & \textbf{Friend Management}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and can search for other users by \texttt{UserID}.\\
+  \textbf{Input/Condition} & The \texttt{UserID} of another application user.\\
+  \textbf{Output/Result} & A friend request is sent to that user, and the invitee can respond to it.\\
+  \textbf{Covers} & FUNC-14. Users can add and remove friends, so a request must reach the invitee, and the result of their response (approved or denied) must be reflected in both users' friends lists. This gives users the social aspect of comparing progress with selected friends.\\
+  \textbf{How test will be performed} & After the user sends a friend request, check that both the requester and the invitee can see the request and, once the invitee responds, the result of the action (approved or denied).\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-15} & \textbf{Private Leaderboard Creation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to create a new leaderboard.\\
+  \textbf{Output/Result} & A new private leaderboard is created with a unique \texttt{LeaderboardID}.\\
+  \textbf{Covers} & FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+  \textbf{How test will be performed} & After the user completes the steps to create a leaderboard, check that a valid \texttt{LeaderboardID} exists and that the creator is a member of the new leaderboard.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Progress Reporting}
 
@@ -451,7 +550,18 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-16} & \textbf{Progress Reporting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to view the progress data connected to that ID.\\
+  \textbf{Output/Result} & Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
+  \textbf{Covers} & FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
+  \textbf{How test will be performed} & After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
+  \bottomrule
+\end{tabularx}
 
 \subsection{Tests for Nonfunctional Requirements}
 
