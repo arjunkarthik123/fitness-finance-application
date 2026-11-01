@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular}
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
@@ -310,6 +311,64 @@ These tests cover the portfolio and trading features of the simulated market.
   \bottomrule
 \end{tabularx}
 
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-09} & \textbf{Asset Purchase}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has enough virtual currency to purchase the asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the buy action.\\
+  \textbf{Output/Result} & The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
+  \textbf{Covers} & FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
+  \textbf{How test will be performed} & After the purchase of an asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-10} & \textbf{Asset Sale}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, the \texttt{AssetID}, and a call to the sell action.\\
+  \textbf{Output/Result} & The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
+  \textbf{Covers} & FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the holding removed.\\
+  \textbf{How test will be performed} & After the sale of an asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-11} & \textbf{Transaction Recording}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and has a non-empty transaction history.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to view previous market transactions.\\
+  \textbf{Output/Result} & A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
+  \textbf{Covers} & FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
+  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and checked against the trades that were made.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-12} & \textbf{Portfolio Performance Calculation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a portfolio containing at least one asset.\\
+  \textbf{Input/Condition} & The \texttt{UserID}, and a request to retrieve all assets in the portfolio and calculate performance.\\
+  \textbf{Output/Result} & The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
+  \textbf{Covers} & FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
+  \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
+  \bottomrule
+\end{tabularx}
+
 \wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
@@ -326,7 +385,48 @@ These tests cover friends lists and public and private leaderboard groups.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-13} & \textbf{Leaderboard Participation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in, and a leaderboard with open spaces is available to join.\\
+  \textbf{Input/Condition} & The \texttt{UserID} and the \texttt{LeaderboardID} of a leaderboard with open spaces.\\
+  \textbf{Output/Result} & The user joins the intended leaderboard and appears in its member list.\\
+  \textbf{Covers} & FUNC-13. A user can join a group, so after the join request the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+  \textbf{How test will be performed} & After the user attempts to join the leaderboard, check that the user's \texttt{UserID} is linked to that \texttt{LeaderboardID}.\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-14} & \textbf{Friend Management}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and can search for other users by \texttt{UserID}.\\
+  \textbf{Input/Condition} & The \texttt{UserID} of another application user.\\
+  \textbf{Output/Result} & A friend request is sent to that user, and the invitee can respond to it.\\
+  \textbf{Covers} & FUNC-14. Users can add and remove friends, so a request must reach the invitee, and the result of their response (approved or denied) must be reflected in both users' friends lists. This gives users the social aspect of comparing progress with selected friends.\\
+  \textbf{How test will be performed} & After the user sends a friend request, check that both the requester and the invitee can see the request and, once the invitee responds, the result of the action (approved or denied).\\
+  \bottomrule
+\end{tabularx}
+
+\vspace{1em}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-15} & \textbf{Private Leaderboard Creation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to create a new leaderboard.\\
+  \textbf{Output/Result} & A new private leaderboard is created with a unique \texttt{LeaderboardID}.\\
+  \textbf{Covers} & FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+  \textbf{How test will be performed} & After the user completes the steps to create a leaderboard, check that a valid \texttt{LeaderboardID} exists and that the creator is a member of the new leaderboard.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Progress Reporting}
 
@@ -340,7 +440,18 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-FR-16} & \textbf{Progress Reporting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
+  \textbf{Input/Condition} & A valid \texttt{UserID} and a request to view the progress data connected to that ID.\\
+  \textbf{Output/Result} & Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
+  \textbf{Covers} & FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
+  \textbf{How test will be performed} & After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
+  \bottomrule
+\end{tabularx}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -405,49 +516,432 @@ Covers UHR-ACC-01 to UHR-ACC-06.
 
 \subsubsection{Performance}
 
-These tests cover the Performance Requirements section of the SRS.
+These tests cover the Performance Requirements section of the SRS. Timing
+tests run on the reference phone, which is the Android phone the team uses
+for every timing measurement. Its model and Android version are recorded in
+the VnV Report so the results can be repeated. Names in \textsf{sans serif}
+are symbolic constants defined in the SRS, and tests use their values from
+there.
 
 \paragraph{Speed and Latency}
 
 Covers PR-SL-01 to PR-SL-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-01} & \textbf{App launch time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & The release build is installed on the reference phone, the user is signed in, and the app is fully closed (removed from recent apps).\\
+  \textbf{Input/Condition} & The tester opens the app from the home screen icon 20 times, closing it fully between each launch.\\
+  \textbf{Output/Result} & The home screen appears within 3 seconds in at least 19 of the 20 launches.\\
+  \textbf{How test will be performed} & The tester records each launch as a screen recording and measures the time from the icon tap to the first frame where the home screen is fully drawn. All 20 times are recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-02} & \textbf{Response to input}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The release build is installed on the reference phone with a signed-in test account that has activity, goals, and a portfolio.\\
+  \textbf{Input/Condition} & A Detox script visits every main screen and presses the main buttons on each one, for at least 100 measured actions in total.\\
+  \textbf{Output/Result} & At least 95\% of the measured transitions and button responses finish within 1 second.\\
+  \textbf{How test will be performed} & The script logs the time between each action and the moment the expected element on the next screen becomes visible. A summary script reports the share of actions under 1 second.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-03} & \textbf{Trade confirmation time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A signed-in test account has enough currency to buy, and some holdings to sell, in several assets.\\
+  \textbf{Input/Condition} & A Detox script places 50 buy orders and 50 sell orders of different sizes and confirms each one.\\
+  \textbf{Output/Result} & In at least 95\% of the trades, the updated holdings and currency balance appear within 2 seconds of confirmation.\\
+  \textbf{How test will be performed} & The script records the time from the confirm tap until the new balance and holding quantity are shown, and checks that the shown values match the expected values after the trade.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SL-04} & \textbf{Activity sync time}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account is signed in on the reference phone. Health Connect holds new step and workout records that the app has not synced yet. The app is closed.\\
+  \textbf{Input/Condition} & The tester opens the app.\\
+  \textbf{Output/Result} & Within 10 seconds of opening, the currency balance includes the currency for all of the new Health Connect activity.\\
+  \textbf{How test will be performed} & The tester calculates the expected balance from the conversion rules beforehand, opens the app with a timer running, and records when the balance reaches the expected value. This is repeated 10 times with different amounts of new activity.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Safety-Critical}
 
 Covers PR-SC-01 to PR-SC-08.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-01} & \textbf{Daily earning limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with no activity recorded for the test day.\\
+  \textbf{Input/Condition} & Activity records for one day at 0.5, 1, 1.5, 2, and 5 times \textsf{HealthyDailyActivity}, each sent to a fresh test account.\\
+  \textbf{Output/Result} & No account earns more than \textsf{DailyEarnCap} for the day. The currency earned per unit of activity above \textsf{HealthyDailyActivity} is lower than the rate below it.\\
+  \textbf{How test will be performed} & A JUnit test sends each set of records through the reward service and compares the earned amount against the cap and against the earned amount for the lower levels.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-02} & \textbf{No penalties for missed days}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A test account with a currency balance, holdings, and an active streak.\\
+  \textbf{Input/Condition} & (1) The account records no activity for several days. (2) The user freezes their streak before a missed day.\\
+  \textbf{Output/Result} & (1) The balance and holdings are unchanged after the inactive days. (2) The frozen streak is not reset by the missed day.\\
+  \textbf{How test will be performed} & A JUnit test advances the server clock over the inactive days and checks the balance, holdings, and streak. A code review of every place that writes to balances and holdings confirms that none of them lowers a value because of inactivity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-03} & \textbf{Simulated market notice}\\
+  \midrule
+  \textbf{Type} & Static, Manual inspection\\
+  \textbf{Initial State} & The release build with a test account that holds assets.\\
+  \textbf{Input/Condition} & The tester visits every screen that shows prices, holdings, or returns.\\
+  \textbf{Output/Result} & Each of these screens shows the notice that the market is simulated and that results do not predict real returns, and links to the explanation of what the simulation does not model.\\
+  \textbf{How test will be performed} & Two team members go through a checklist of all market and portfolio screens taken from the app's navigation. For each screen they record whether the notice is visible and whether the link opens the explanation.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-04} & \textbf{Not financial advice statement}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic and Static\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the statement, then acknowledges it and finishes sign-up, then opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until the statement is acknowledged, and the statement can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script checks the sign-up and settings behaviour. Separately, a team member reviews all lessons, tips, and portfolio insights against the list in the SRS and records any text that recommends a specific real-world investment. The test passes when none is found.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-05} & \textbf{Exercise injury warning}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A fresh install of the app with no account.\\
+  \textbf{Input/Condition} & The tester tries to finish sign-up without acknowledging the injury warning and the terms of use, then acknowledges both, finishes sign-up, and opens settings.\\
+  \textbf{Output/Result} & Sign-up cannot continue until both are acknowledged, and both can be opened from settings.\\
+  \textbf{How test will be performed} & A Detox script runs the sign-up flow with each acknowledgement left out in turn, then checks that settings links to both.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-06} & \textbf{Safe goal progression}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an automatically raised goal plan.\\
+  \textbf{Input/Condition} & (1) The goal service generates eight weeks of goals after the user meets every goal. (2) The user misses \textsf{MissedGoalLimit} goals in a row. (3) The user lowers a goal from the goal screen.\\
+  \textbf{Output/Result} & (1) No weekly goal is more than \textsf{MaxGoalIncrease} above the week before, and every week has at least one rest day. (2) The app suggests a lower goal. (3) The lower goal is saved and used.\\
+  \textbf{How test will be performed} & JUnit tests check the generated plan and the suggestion. A Detox script lowers a goal from the goal screen and checks the saved value.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-07} & \textbf{Notification limits}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with notifications on and quiet hours set.\\
+  \textbf{Input/Condition} & Events that would send goal-related notifications are created throughout a simulated day, including during quiet hours.\\
+  \textbf{Output/Result} & No notifications are sent during quiet hours, and no more than \textsf{MaxDailyNotifications} goal-related notifications are sent in the day. After the user raises the limit, the new limit is used.\\
+  \textbf{How test will be performed} & A JUnit test runs the notification scheduler with a fixed clock and counts the notifications it sends and the times it sends them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SC-08} & \textbf{Safe leaderboard rules}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A leaderboard group with several test users who have different goals and different amounts of activity.\\
+  \textbf{Input/Condition} & The leaderboard is computed, one user leaves the group, and the leaderboard is computed again. A new account is also created.\\
+  \textbf{Output/Result} & Rankings are ordered by each user's percentage of their goal, not by raw activity. The user who left no longer appears. No user's balance changes because of their ranking. The new account is not on any leaderboard until the user opts in.\\
+  \textbf{How test will be performed} & A JUnit test sets up users where ranking by raw activity and ranking by goal percentage give different orders, then checks the order, the membership, and every balance before and after.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Precision or Accuracy}
 
 Covers PR-PA-01 to PR-PA-06.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-01} & \textbf{Exact money values}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known starting balance.\\
+  \textbf{Input/Condition} & A scripted sequence of 1,000 buy and sell trades at prices that do not divide evenly, such as 33.33 and 0.07.\\
+  \textbf{Output/Result} & The stored balance after the sequence matches the expected balance exactly, and every amount shown in the app has two decimal places.\\
+  \textbf{How test will be performed} & A JUnit test runs the trades through the trading service and compares the final balance with a value computed separately using exact decimal arithmetic. A Detox check reads the displayed balance and trade amounts and checks their format.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-02} & \textbf{Consistent currency awards}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & An empty test account for each activity record set.\\
+  \textbf{Input/Condition} & A fixed set of test activity records covering steps, workouts of each type, and edge values such as zero activity. Each set is processed twice.\\
+  \textbf{Output/Result} & The awarded currency matches the hand-calculated amount from the published conversion rules, and both runs award the same amount.\\
+  \textbf{How test will be performed} & The team calculates the expected amounts by hand and stores them as test fixtures. A JUnit test compares the reward service's output against them.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-03} & \textbf{No double counting}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & The same walk is reported by both sources with overlapping times. A second case has two separate walks, one from each source, that do not overlap.\\
+  \textbf{Output/Result} & The overlapping walk earns the amount for one recording. The two separate walks each earn currency.\\
+  \textbf{How test will be performed} & A JUnit test sends both cases through the import and reward services and compares the awards with the expected amounts.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-04} & \textbf{Portfolio value}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & Several test portfolios with different holdings, fixed simulated prices, and some uninvested currency.\\
+  \textbf{Input/Condition} & The portfolio screen is opened for each test portfolio.\\
+  \textbf{Output/Result} & The displayed value equals the sum of quantity times price for each holding, plus uninvested currency, to the cent.\\
+  \textbf{How test will be performed} & The expected values are calculated by hand. A JUnit test checks the value returned by the API, and a Detox script checks the value shown on screen.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-05} & \textbf{Workout dates and late syncs}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with an active streak.\\
+  \textbf{Input/Condition} & (1) A workout done at 11:30 pm is synced after midnight. (2) A workout recorded in a different time zone is synced. (3) A workout from two days ago arrives after the streak was already marked as broken.\\
+  \textbf{Output/Result} & Each workout is recorded on the day it happened on the source device. In case (3) the streak and the rewards for that day are recalculated to include the late workout.\\
+  \textbf{How test will be performed} & A JUnit test sends records with set source timestamps and time zones, using a fixed server clock, then checks the stored dates, the streak, and the rewards.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-PA-06} & \textbf{Realistic market simulation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The market simulation with its calibrated settings and a fixed random seed.\\
+  \textbf{Input/Condition} & The simulation is run over at least 30 simulated years for a broad market asset, with several different seeds.\\
+  \textbf{Output/Result} & The average annual return and the annual volatility are consistent with historical data for a broad market index, and each run includes downturns.\\
+  \textbf{How test will be performed} & A script computes the average annual return, annual volatility, and largest drop for each run and compares them with the same measures from the historical data used for calibration. The acceptable ranges are agreed with the supervisor before the test and recorded in the VnV Report.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Robustness or Fault-Tolerance}
 
 Covers PR-RFT-01 to PR-RFT-04.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-01} & \textbf{Offline activity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account signed in on the reference phone, synced, then put in airplane mode with the app closed.\\
+  \textbf{Input/Condition} & Activity is recorded in Health Connect over a gap of \textsf{OfflineSyncWindow} (set by moving the activity timestamps back, or by waiting out the period). The phone is then reconnected and the app is opened.\\
+  \textbf{Output/Result} & All of the activity from the gap is credited at the next sync.\\
+  \textbf{How test will be performed} & The tester compares the credited currency with the amount calculated by hand for the recorded activity.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-02} & \textbf{Atomic writes}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with a known balance and holdings.\\
+  \textbf{Input/Condition} & (1) A failure is injected at each step of every multi-step write: trades, reward credits, and progress updates. (2) The connection or server is cut in the middle of a test trade. (3) 100 trade requests are sent at the same time against one account.\\
+  \textbf{Output/Result} & (1) Each failed write leaves the data as it was. (2) After the cut, the balance and holdings match either the state before the trade or the state after it, and a completed trade used the confirmed price. (3) Every request is either fully completed or fully rolled back, and the balance is never negative.\\
+  \textbf{How test will be performed} & JUnit tests use fault injection in the service layer to fail each step in turn. The concurrent test sends the 100 requests from parallel threads, then checks that the final balance and holdings equal the starting state plus the completed trades.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-03} & \textbf{Failing data sources}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account with two connected sources.\\
+  \textbf{Input/Condition} & One source is made unavailable. In a second run, it returns malformed data.\\
+  \textbf{Output/Result} & The app stays usable with the other source, retries the failed sync, then shows a message naming the failing source and the cause. No currency is awarded for the malformed data.\\
+  \textbf{How test will be performed} & The failing source is replaced with a mock that times out or returns malformed records. Backend tests check the retries and the awards, and a Detox script checks the app and the message.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-RFT-04} & \textbf{Backend unavailable}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A test account that has synced at least once on the reference phone.\\
+  \textbf{Input/Condition} & The backend is stopped, then the app is opened.\\
+  \textbf{Output/Result} & The app opens without crashing, shows the last known balance and portfolio, and shows a notice that the data may be out of date.\\
+  \textbf{How test will be performed} & The tester stops the backend, opens the app, visits each main screen, and records whether any screen crashes or is empty.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Capacity}
 
 Covers PR-C-01, PR-C-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-01} & \textbf{Concurrent users}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed to the test server with 500 registered test accounts.\\
+  \textbf{Input/Condition} & A load test runs 100 simulated users at the same time. Each one browses screens and places trades.\\
+  \textbf{Output/Result} & Response times during the load test meet PR-SL-02 and PR-SL-03.\\
+  \textbf{How test will be performed} & The load testing tool sends the API calls that the app makes for each action and records the response times. While the load runs, test-PR-SL-02 and test-PR-SL-03 are also run on the reference phone.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-C-02} & \textbf{Two years of history}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & A test account loaded with two years of daily activity and weekly trades.\\
+  \textbf{Input/Condition} & The user opens the activity history, trade history, and progress screens and scrolls to the oldest records.\\
+  \textbf{Output/Result} & The full two years of history is shown, and the screens meet PR-SL-02.\\
+  \textbf{How test will be performed} & A seeding script creates the test data. A Detox script opens each history screen, checks that the oldest records are shown, and times each transition.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Scalability or Extensibility}
 
 Covers PR-SE-01 to PR-SE-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-01} & \textbf{Adding a fitness source}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with the fitness sources available at release.\\
+  \textbf{Input/Condition} & The team adds a mock fitness source.\\
+  \textbf{Output/Result} & All of the changes needed are inside the integration module, and the currency conversion code is unchanged.\\
+  \textbf{How test will be performed} & A team member adds the mock source on a branch. The reviewers check the diff to confirm that every changed file is inside the integration module.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-02} & \textbf{Adding an asset type}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The code with stocks, bonds, and ETFs.\\
+  \textbf{Input/Condition} & The team adds a new test asset type.\\
+  \textbf{Output/Result} & The change only adds asset definitions and market engine configuration. The buy and sell code is unchanged, and the existing trading tests pass with the new asset type.\\
+  \textbf{How test will be performed} & A team member adds the asset type on a branch. The reviewers check the diff, and the trading tests are run with the new asset type.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-SE-03} & \textbf{Adding server capacity}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & The backend is deployed with extra server capacity, and the app version is the same one used in test-PR-C-01.\\
+  \textbf{Input/Condition} & The load test from test-PR-C-01 is run with 200 simulated users.\\
+  \textbf{Output/Result} & Response times meet PR-SL-02 and PR-SL-03, with no change to the mobile app.\\
+  \textbf{How test will be performed} & The team adds server capacity, reruns the load test at double the load, and confirms that the app's version number is the same as in test-PR-C-01.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Longevity}
 
 Covers PR-L-01, PR-L-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-01} & \textbf{Supported Android versions}\\
+  \midrule
+  \textbf{Type} & Static and Dynamic, Automatic\\
+  \textbf{Initial State} & The release build.\\
+  \textbf{Input/Condition} & (1) The target Android version in the build settings is compared with Google Play's requirement for new apps at release time. (2) The test suite is run on an emulator with the newest Android version available in April 2027.\\
+  \textbf{Output/Result} & The build meets Google Play's target version requirement, and the test suite passes on the newest Android version.\\
+  \textbf{How test will be performed} & A team member checks the build settings against Google Play's published requirement before release. The Detox suite is run on the newest Android emulator image before the final demo.\\
+  \bottomrule
+\end{tabularx}
+
+\bigskip
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{test-PR-L-02} & \textbf{Keeping user history}\\
+  \midrule
+  \textbf{Type} & Static, Code inspection\\
+  \textbf{Initial State} & The backend code, database schema, and server configuration.\\
+  \textbf{Input/Condition} & The team searches for every scheduled job, database event, and retention setting that deletes data.\\
+  \textbf{Output/Result} & None of them deletes activity or portfolio history for an active account. History is deleted only when the user deletes it or deletes their account.\\
+  \textbf{How test will be performed} & A team member lists every delete path in the code and database configuration. A second team member reviews the list and confirms that each one is started by the user.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Operational and Environmental}
 
@@ -649,6 +1143,53 @@ How test will be performed: Execution of the demonstrator script or debug toggle
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+
+The table below maps each system test to the SRS requirement whose fit
+criterion it checks. The last column lists other requirements that the test
+also measures, such as load tests that rerun the speed checks. Rows for the
+remaining requirement sections are added as their test cases are written.
+
+\begin{xltabular}{\textwidth}{p{3cm}p{2.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.4cm}}
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{Test Case} & \textbf{SRS ID} & \textbf{Requirement} & \textbf{Also Supports}\\
+  \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  test-PR-SL-01 & PR-SL-01 & App launch time & ---\\
+  test-PR-SL-02 & PR-SL-02 & Response to input & ---\\
+  test-PR-SL-03 & PR-SL-03 & Trade confirmation time & ---\\
+  test-PR-SL-04 & PR-SL-04 & Activity sync time & ---\\
+  test-PR-SC-01 & PR-SC-01 & Daily earning limits & ---\\
+  test-PR-SC-02 & PR-SC-02 & No penalties for missed days & ---\\
+  test-PR-SC-03 & PR-SC-03 & Simulated market notice & ---\\
+  test-PR-SC-04 & PR-SC-04 & Not financial advice statement & ---\\
+  test-PR-SC-05 & PR-SC-05 & Exercise injury warning & ---\\
+  test-PR-SC-06 & PR-SC-06 & Safe goal progression & ---\\
+  test-PR-SC-07 & PR-SC-07 & Notification limits & ---\\
+  test-PR-SC-08 & PR-SC-08 & Safe leaderboard rules & ---\\
+  test-PR-PA-01 & PR-PA-01 & Exact money values & ---\\
+  test-PR-PA-02 & PR-PA-02 & Consistent currency awards & ---\\
+  test-PR-PA-03 & PR-PA-03 & No double counting & ---\\
+  test-PR-PA-04 & PR-PA-04 & Portfolio value & ---\\
+  test-PR-PA-05 & PR-PA-05 & Workout dates and late syncs & ---\\
+  test-PR-PA-06 & PR-PA-06 & Realistic market simulation & ---\\
+  test-PR-RFT-01 & PR-RFT-01 & Offline activity & ---\\
+  test-PR-RFT-02 & PR-RFT-02 & Atomic writes & ---\\
+  test-PR-RFT-03 & PR-RFT-03 & Failing data sources & ---\\
+  test-PR-RFT-04 & PR-RFT-04 & Backend unavailable & ---\\
+  test-PR-C-01 & PR-C-01 & Concurrent users & PR-SL-02, PR-SL-03\\
+  test-PR-C-02 & PR-C-02 & Two years of history & PR-SL-02\\
+  test-PR-SE-01 & PR-SE-01 & Adding a fitness source & ---\\
+  test-PR-SE-02 & PR-SE-02 & Adding an asset type & ---\\
+  test-PR-SE-03 & PR-SE-03 & Adding server capacity & PR-SL-02, PR-SL-03\\
+  test-PR-L-01 & PR-L-01 & Supported Android versions & ---\\
+  test-PR-L-02 & PR-L-02 & Keeping user history & ---\\
+\end{xltabular}
 
 \section{Unit Test Description}
 
