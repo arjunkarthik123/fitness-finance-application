@@ -1309,7 +1309,31 @@ Covers MAS-MNT-01 to MAS-MNT-05.
 
 Covers MAS-SUP-01.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-01} & \textbf{In-App Support Request Submission}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is logged into the application and has a support request they would like to raise.\\
+  \textbf{Input/Condition} & User opens the support feature and submits a support request.\\
+  \textbf{Output/Result} & Support request is successfully submitted and recorded by the system.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies the ability for users to request assistance from within the application.\\
+  \textbf{How test will be performed} & The tester will navigate to the support section, submit a support request, and verify the request is recorded successfully and visible to support personnel.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-02} & \textbf{Support Response Time Verification}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & At least one submitted unresolved support request exists.\\
+  \textbf{Input/Condition} & Review support logs and response records.\\
+  \textbf{Output/Result} & A response regarding resolution plans and timelines is provided within two business days.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies compliance with required support response times.\\
+  \textbf{How test will be performed} & A submitted unresolved support request will be sampled and reviewed. The tester will submit the response to the user verifying that it is sent immediately and veryifying that the response details can be found by the user. Timestamps will be compared to response records to verify compliance within 2 business days.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Adaptability}
 
