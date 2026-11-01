@@ -1515,7 +1515,44 @@ These tests cover the Cultural Requirements section of the SRS.
 
 Covers CUL-01, CUL-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-01-T-01} & \textbf{Supports Canadian Languages}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is logged into the application and the language setting is set to English.\\
+  \textbf{Input/Condition} & User navigates to Settings and changes the application language from English to French.\\
+  \textbf{Output/Result} & All user-facing screens, menus, labels, buttons, notifications, and educational content are correctly translated and displayed in French (Canada) with no untranslated text.\\
+  \textbf{Covers} & CUL-01. By passing this test, the application demonstrates support for Canadian French language localization.\\
+  \textbf{How test will be performed} & The tester will navigate through all major application screens after selecting French. The tester will inspect registration, login, dashboard, fitness goals, virtual currency, portfolio, educational content, settings, and notifications. The tester will verify that all visible text is translated into French and that no English text remains.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-01-T-02} & \textbf{Language Switching Persistence}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User1 has previously selected French as their preferred language. User2 has previously selected English as their preferred language.\\
+  \textbf{Input/Condition} & User1 closes and reopens the application. User1 logs out and logs into User2.\\
+  \textbf{Output/Result} & After User1 closes and reopens the application, all user-facing functionality remains displayed in French. After User1 logs out and logs into User2, all user-facing functionality is displayed in English to match the language settings set by User2.\\
+  \textbf{Covers} & CUL-01 by verifying that the individual user selected Canadian language remains active during future application use, regardless of account switching or application relaunching.\\
+  \textbf{How test will be performed} & User1 selects French, exits the application, relaunches Flexin', and verifies that all screens continue to appear in French without requiring the language to be selected again. User1 is logged out and logs into User2 verifying that all screens now appear in English to reflect User2's language settings.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-02-T-01} & \textbf{Culturally Neutral Educational Content}\\
+  \midrule
+  \textbf{Type} & Static, Manual\\
+  \textbf{Initial State} & Educational content, tutorials, glossary entries, and sample investment scenarios have been implemented.\\
+  \textbf{Input/Condition} & Review all educational screens and learning material included in the application.\\
+  \textbf{Output/Result} & Educational content uses culturally neutral language and examples that can be understood regardless of cultural background, religion, ethnicity, or geographic region.\\
+  \textbf{Covers} & CUL-02 and verifies the requirement that educational content be inclusive and broadly applicable.\\
+  \textbf{How test will be performed} & Reviewers will inspect all educational lessons, glossary entries, onboarding examples, and sample market content. Reviewers will verify that no content assumes familiarity with a specific culture, religion, ethnicity, or geographic region and that explanations remain understandable to a general Canadian audience.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Compliance}
 
