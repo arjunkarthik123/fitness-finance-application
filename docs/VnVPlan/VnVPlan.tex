@@ -543,19 +543,107 @@ Covers COMP-STD-01 to COMP-STD-07.
 
 \subsubsection{User Documentation and Training}
 
-These tests cover the User Documentation and Training Requirements section of the SRS.
+These tests cover the User Documentation and Training Requirements section of the SRS \citep{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
 
 \paragraph{User Documentation}
 
 Covers DOC-01 to DOC-04.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-DOC-01: Financial and Fitness Glossary Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; glossary view accessible in-app.
+
+Input/Condition: Open the in-app glossary and search for required educational terms (compound interest, inflation, ETFs, bond yields, and portfolio diversification).
+
+Output/Result: Binary: Pass if the searchable glossary is present and contains entries for all required terms; Fail otherwise.
+
+How test will be performed: Manual walkthrough inspection of the glossary view verifying term presence and search functionality.
+
+\item{\textbf{T-DOC-02: Fitness Integration Guide Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; integration settings or help section open.
+
+Input/Condition: Navigate to the fitness integration configuration section and open the setup guide.
+
+Output/Result: Binary: Pass if illustrated setup instructions with screenshots are present for all supported fitness providers (e.g., Garmin, Android Health Connect) and include troubleshooting guidance; Fail otherwise.
+
+How test will be performed: Visual inspection confirming presence and completeness of illustrated setup and troubleshooting instructions.
+
+\item{\textbf{T-DOC-03: Searchable Help Center Presence}\\}
+
+Type: Dynamic, Semi-Automated
+
+Initial State: Application open to the settings menu.
+
+Input/Condition: Open the in-app help center from settings and enter search queries covering core topics (account management, activity sync, rewards, portfolio, simulated market, virtual currency, privacy).
+
+Output/Result: Binary: Pass if the in-app help center opens without an external browser, contains articles covering all required topics, and returns keyword search results in under 200 ms; Fail otherwise.
+
+How test will be performed: Manual walkthrough and automated UI test timing keyword search queries and asserting topic article presence.
+
+\item{\textbf{T-DOC-04: Digital Manual and Release Notes Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Project repository on GitHub checked out at latest milestone commit.
+
+Input/Condition: Inspect the documentation repository directory for the digital user manual and milestone release notes.
+
+Output/Result: Binary: Pass if a self-contained user manual (PDF and Markdown formats) documenting architecture, navigation, data flows, and troubleshooting, along with milestone release notes, is present in the repository; Fail otherwise.
+
+How test will be performed: Peer-review file audit by team members verifying presence and completeness of documentation artifacts in the repository.
+
+\end{enumerate}
 
 \paragraph{Training}
 
 Covers TRN-01 to TRN-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-TRN-01: Interactive Onboarding Walkthrough Presence}\\}
+
+Type: Dynamic, Manual
+
+Initial State: Clean application state immediately after creating a new user account.
+
+Input/Condition: Complete new account registration to trigger onboarding; inspect the four-step walkthrough (goals, rewards, simulated investing, compounding chart), test the ``Skip Tour'' option, and re-launch the walkthrough from settings.
+
+Output/Result: Binary: Pass if the four-step walkthrough is present, takes under 90 seconds to complete, provides a visible ``Skip Tour'' button on every step, and is re-accessible from settings; Fail otherwise.
+
+How test will be performed: Manual timed walkthrough verifying the presence of all four tour steps, skip buttons, and settings re-entry.
+
+\item{\textbf{T-TRN-02: Progressive Feature Discovery Presence}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Newly registered user account with zero trades and zero logged physical activity days.
+
+Input/Condition: Navigate to trading and portfolio analytics screens as a novice user; then simulate logging three days of physical activity or executing an initial trade, and re-examine the screens.
+
+Output/Result: Binary: Pass if advanced trading indicators and portfolio analytics remain hidden or collapsed initially and are revealed once the activity or trade threshold is met; Fail otherwise.
+
+How test will be performed: Automated Compose UI test asserting view hierarchy presence and visibility states of advanced features before and after threshold completion.
+
+\item{\textbf{T-TRN-03: Demonstrator Quick-Start Kit Presence}\\}
+
+Type: Dynamic Operational Verification
+
+Initial State: Application development/staging build running; demo seeding script available.
+
+Input/Condition: Execute the automated demo seeding script or trigger the demonstrator debug toggle.
+
+Output/Result: Binary: Pass if the demonstrator guide is present and the seeding script loads 30 days of simulated activity and portfolio history within 10 seconds; Fail otherwise.
+
+How test will be performed: Execution of the demonstrator script or debug toggle timing dataset initialization and verifying data display on trading and compounding charts.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
