@@ -749,7 +749,57 @@ These tests cover the Usability and Humanity Requirements section of the SRS.
 
 Covers UHR-EOU-01 to UHR-EOU-09.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{UHR-EOU-01-02-03-08-T-01} & \textbf{First-Time User Workflow Evaluation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual, User Testing\\
+  \textbf{Initial State} & New participant has no prior experience with Flexin'.\\
+  \textbf{Input/Condition} & Participant creates an account and attempts to access key application functionality (complete onboarding, access their account dashbaord and details, and navigate between fitness and financial focused screens).\\
+  \textbf{Output/Result} & Participant completes onboarding within 5 minutes, can access dashboard information immediately after login, and can reach detailed portfolio and fitness management features within two taps from the dashboard.\\
+  \textbf{Covers} & UHR-EOU-01, UHR-EOU-02, UHR-EOU-03, and UHR-EOU-08.\\
+  \textbf{How test will be performed} & Participants will be observed while creating an account, completing onboarding, locating dashboard information, and navigating to portfolio management, activity tracking, and currency transaction screens. Completion times and navigation paths will be recorded by the observer.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{UHR-EOU-04-05-T-01} & \textbf{User Feedback and Error Recovery Evaluation}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual, User Testing\\
+  \textbf{Initial State} & User is logged into the application.\\
+  \textbf{Input/Condition} & User performs both successful and unsuccessful actions such as invalid login attempts, failed transactions, goal updates, portfolio transactions, and profile modifications.\\
+  \textbf{Output/Result} & Appropriate error messages appear immediately with corrective guidance with invalid or unsuccessful actions. Successful actions display confirmation feedback within two seconds.\\
+  \textbf{Covers} & UHR-EOU-04 and UHR-EOU-05.\\
+  \textbf{How test will be performed} & Testers will intentionally trigger errors and complete successful actions throughout the application. All displayed messaging and feedback timing will be verified against the requirement specifications.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{UHR-EOU-07-T-01} & \textbf{Consistency Review}\\
+  \midrule
+  \textbf{Type} & Static Code and UI Review, Manual\\
+  \textbf{Initial State} & All UI screens are developed.\\
+  \textbf{Input/Condition} & User navigates through the application screens to check for consistency in design and functionality.\\
+  \textbf{Output/Result} & The interface remains visually and behaviorally consistent across screens.\\
+  \textbf{Covers} & UHR-EOU-07.\\
+  \textbf{How test will be performed} & Testers will perform a design consistency review examining terminology, navigation, icons, colors, and interaction patterns across the application - listing any inconsistencies found.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{UHR-EOU-09-T-01} & \textbf{Re-Learnability Study}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual, User Testing\\
+  \textbf{Initial State} & A user exists that has previously used the application consistently, but has been an inactive user for at least 6 months.\\
+  \textbf{Input/Condition} & Participants attempt to perform representative fitness and investing actions.\\
+  \textbf{Output/Result} & Returning users regain proficiency within 5 minutes.\\
+  \textbf{Covers} & UHR-EOU-09.\\
+  \textbf{How test will be performed} & Returning users will be observed as they attempt a predefined set of core application tasks (i.e. manage a fitness goal, manage their financial portfolio by buying/selling an asset). Task completion times and success rates will be measured and compared by the observer.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Personalization and Internationalization}
 
