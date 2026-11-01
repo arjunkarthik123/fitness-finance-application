@@ -261,7 +261,58 @@ These tests cover creating an account and signing in.
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item \textbf{FUNC-01-T-01: User Registration - Account Does Not Already Exist}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in and does not possess an existing Flexin' account.\\
+\textbf{Inputs:} A valid email address, a valid password, and a call to the create account action.\\
+\textbf{Output:} A new user account is created successfully and the user is granted access to the application using the newly created credentials.\\
+\textbf{Test Case Derivation:} This test covers FUNC-01. Users can create an account using a valid email address and password.\\
+\textbf{How test will be performed:} On the registration screen a valid email (that is not already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was successful. Then, on the login screen, an attempt to log in with the new credentials will be made verifying access to the application under this newly created account.
+
+\item \textbf{FUNC-01-T-02: User Registration - Account Already Exists}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in and already possesses a Flexin' account.\\
+\textbf{Inputs:} A valid email address (already associated with an existing account), a valid password, and a call to the create account action.\\
+\textbf{Output:} The system rejects the request to create a new account and prompts the user to sign in instead.\\
+\textbf{Test Case Derivation:} This test covers FUNC-01. Users cannot create multiple accounts with the same email address.\\
+\textbf{How test will be performed:} On the registration screen a valid email (that is already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was unsuccessful. Then, the system will prompt the user to sign in.
+
+\item \textbf{FUNC-02-T-01: User Authentication - Correct Credentials}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in and already possesses a Flexin' account.\\
+\textbf{Inputs:} A valid email address (already associated with an existing account), a password that matches the one associated with the account, and a call to the login action.\\
+\textbf{Output:} The user is successfully authenticated and the system grants access to the application using the provided credentials.\\
+\textbf{Test Case Derivation:} This test covers FUNC-02. Users are authenticated before accessing personalized application functionality.\\
+\textbf{How test will be performed:} On the login screen, a valid email (already associated with an existing account) and the corresponding password will be entered, and the form will be submitted verifying that access to the application was granted. Any account information associated to the authenticated user will be available for viewing and editing.
+
+\item \textbf{FUNC-02-T-02: User Authentication - Incorrect Password}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in and already possesses a Flexin' account.\\
+\textbf{Inputs:} A valid email address (already associated with an existing account), an incorrect password (one that does not match the one associated with the account), and a call to the login action.\\
+\textbf{Output:} The user is denied access and the system displays an error message indicating invalid credentials were entered.\\
+\textbf{Test Case Derivation:} This test covers FUNC-02. Users are denied access to the application and to account-specific information with incorrect credentials.\\
+\textbf{How test will be performed:} On the login screen, a valid email (already associated with an existing account) and a password that does not match the one associated with the email will be entered, and the form will be submitted verifying that access to the application was denied.
+
+\item \textbf{FUNC-02-T-03: User Authentication - Incorrect Email}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in and already possesses a Flexin' account.\\
+\textbf{Inputs:} An invalid email address (not associated with any existing account).\\
+\textbf{Output:} The user is denied access and the system displays an error message indicating that an account with the entered email address does not exist.\\
+\textbf{Test Case Derivation:} This test covers FUNC-02. Users are denied access to the application without existing and valid credentials.\\
+\textbf{How test will be performed:} On the login screen, an invalid email (not associated with any existing account) will be entered, and the form will be submitted verifying that access to the application was denied. Then, the system will prompt the user to create a new account with the entered email address.
+
+\item \textbf{FUNC-02-T-04: User Authentication - Reset Password}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is not logged in, already possesses a Flexin' account, and has forgotten their password.\\
+\textbf{Inputs:} A valid email address (already associated with an existing account) and a call to the reset password action.\\
+\textbf{Output:} The system sends a password reset link to the user's email address. The user can then use this link to succesfully set a new password and login.\\
+\textbf{Test Case Derivation:} This test covers FUNC-02. Users can reset their password and gain access to their account once the reset process is completed.\\
+\textbf{How test will be performed:} On the login screen, a valid email (already associated with an existing account) will be entered and the reset password action will be triggered, and then instructions will be followed to complete the password reset process. Upon completion, an attempt to log in with the new password will be made verifying that access to the application was granted.
+
+\end{enumerate}
+
 
 \subsubsection{Fitness Tracking and Goals}
 
@@ -277,7 +328,49 @@ These tests cover importing activity data from third-party providers and creatin
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item \textbf{FUNC-03-T-01: Third-Party Fitness Data Import}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} User already possesses a Flexin' account, and has granted permission for their data to be imported to the Flexin' application from their desired and approved third-party provider.\\
+\textbf{Inputs:} Sync a fitness activity that consists of 1,000 or more recorded steps.\\
+\textbf{Output:} The imported fitness activity appears in the user's activity history after synchronization.\\
+\textbf{Test Case Derivation:} This test covers FUNC-03. The system successfully imports fitness data from third-party providers.\\
+\textbf{How test will be performed:} A Garmin will be connected to the Flexin' application, 1,000 steps will be walked throught the day and will sync the 1,000 or more recorded steps. After syncing, the system will import the data into the user's activity history verifying that activity details match the original source.
+
+\item \textbf{FUNC-04-T-01: Fitness Goal Creation - Create Goal}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is logged into their account.\\
+\textbf{Inputs:} An fitness activity with 1,000 or more recorded steps is entered as a fitness goal.\\
+\textbf{Output:} The fitness goal is successfully created and displayed in the user's goal list.\\
+\textbf{Test Case Derivation:} This test covers FUNC-04. The system successfully allows users to create fitness goals.\\
+\textbf{How test will be performed:} The user will navigate to the fitness goal creation screen. They will enter a fitness activity with 1,000 or more recorded steps and submit the form to register this fitness goal. Then it will be verified that the system correctly displays the new fitness goal in the user's goal list.
+
+\item \textbf{FUNC-04-T-02: Fitness Goal Creation - Edit Goal}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is logged into their account and has at least one existing fitness goal.\\
+\textbf{Inputs:} A fitness goal for 1,000 steps is modified to 2,000 steps.\\
+\textbf{Output:} The fitness goal is successfully modified and the updated details are displayed in the user's goal list.\\
+\textbf{Test Case Derivation:} This test covers FUNC-04. The system successfully allows users to edit any of their fitness goals.\\
+\textbf{How test will be performed:} The user will navigate to the fitness goal editing screen. They will modify a fitness goal for 1,000 steps to 2,000 steps and submit the form to update this fitness goal. Then it will be verified that the system correctly displays the updated fitness goal in the user's goal list.
+
+\item \textbf{FUNC-04-T-03: Fitness Goal Creation - Delete Goal}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is logged into their account and has at least one existing fitness goal.\\
+\textbf{Inputs:} A fitness goal for 1,000 steps is deleted.\\
+\textbf{Output:} The fitness goal is successfully deleted and removed from the user's goal list.\\
+\textbf{Test Case Derivation:} This test covers FUNC-04. The system successfully allows users to delete any of their fitness goals.\\
+\textbf{How test will be performed:} The user will navigate to the fitness goal editing screen. They will delete an existing fitness goal and submit the form to remove this fitness goal. Then it will be verified that the system correctly removed the fitness goal from the user's goal list.
+
+\item \textbf{FUNC-05-T-01: Fitness Goal Tracking}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} User is logged into their account and has at least one active fitness goal with 0\% progress recorded.\\
+\textbf{Inputs:} Sync activity data that acheives 10\% of the goal's progress.\\
+\textbf{Output:} The fitness goal successfully updates to 10\% completion upon the next sync.\\
+\textbf{Test Case Derivation:} This test covers FUNC-05. The system successfully syncs fitness data from third-party sources and tracks the progress of any active fitness goals.\\
+\textbf{How test will be performed:} The user will navigate to the fitness goal tracking screen. The system will automatically update the progress of the fitness goal based on the synced activity data. Then it will be verified that the system correctly displays the updated progress in the user's goal list.
+
+\end{enumerate}
 
 \subsubsection{Rewards and Virtual Currency}
 
@@ -292,7 +385,25 @@ These tests cover awarding virtual currency for activity and keeping each user's
   \bottomrule
 \end{tabularx}
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+  
+\item \textbf{FUNC-06-T-01: Reward Allocation}\\
+\textbf{Control:} Automatic\\
+\textbf{Initial State:} User is logged into their account and has completed at least one existing fitness goal that has yet to be redeemed for virtual currency.\\
+\textbf{Inputs:} An active fitness goal is completed, and the user calls the redeem rewards action.\\
+\textbf{Output:} The system automatically allocates the specified virtual currency to the user's account as a reward for completing the fitness goal. The user's virtual currency balance is increased accordingly and displayed correctly.\\
+\textbf{Test Case Derivation:} This test covers FUNC-06. The system successfully allocates virtual currency as a reward for completing fitness goals.\\
+\textbf{How test will be performed:} After syncing, the user will navigate to the fitness goal tracking screen, select "Redeem Reward", and the system will automatically update the user's virtual currency balance. Then it will be verified that the system correctly displays the updated balance increase in the user's account - ensuring that any virtual balance calculations are accurate and verified. 
+
+\item \textbf{FUNC-07-T-01: Virtual Currency Tracking}\\
+\textbf{Control:} Manual\\
+\textbf{Initial State:} User is logged into their account and has a positive virtual currency balance.\\
+\textbf{Inputs:} The user navigates to any screen that displays their current virtual currency balance.\\
+\textbf{Output:} On all applicable screens, the system displays the user's current positive virtual currency balance that matches the value stored in the database for the logged in user.\\
+\textbf{Test Case Derivation:} This test covers FUNC-07. The system correctly displays the user's virtual currency balance on any screen where it is applicable, allowing the user to be able to view their accurate balance at any time.\\
+\textbf{How test will be performed:} Navigate to all screens that display the virtual currency balance and verify that all displayed values match the value stored in the database for the current logged in user.
+
+\end{enumerate}
 
 \subsubsection{Simulated Investing}
 
