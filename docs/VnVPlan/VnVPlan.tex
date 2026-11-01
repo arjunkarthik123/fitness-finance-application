@@ -805,7 +805,18 @@ Covers UHR-EOU-01 to UHR-EOU-09.
 
 Covers UHR-PER-01 to UHR-PER-04, UHR-INT-01.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{UHR-PER-01-02-03-04-INT-01-T-01} & \textbf{Personalization and Internationalization Verification}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User account exists and user is logged in.\\
+  \textbf{Input/Condition} & User customizes goals, notifications, privacy settings, competition groups, or uses the application in different Canadian time zones.\\
+  \textbf{Output/Result} & All personalization options take effect immediately and correctly, and daily calculations reflect the user's local Canadian time zone.\\
+  \textbf{Covers} & UHR-PER-01, UHR-PER-02, UHR-PER-03, UHR-PER-04, and UHR-INT-01.\\
+  \textbf{How test will be performed} & Testers will modify each available customization setting and verify corresponding system behavior. Device time zones will be changed to confirm proper local calculation of goals, rewards, and streaks.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Learning}
 
