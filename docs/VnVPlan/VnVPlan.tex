@@ -1127,37 +1127,243 @@ Covers MAS-ADPT-01 to MAS-ADPT-03.
 
 \subsubsection{Security}
 
-These tests cover the Security Requirements section of the SRS.
+These tests cover the Security Requirements section of the SRS \citep{SRS}, spanning access control, data and logic integrity, privacy, economic and security audit logging, and immunity against attacks.
 
 \paragraph{Access}
 
 Covers SEC-ACC-01 to SEC-ACC-05.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-SEC-ACC-01: Authenticated Access Token Validation}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Backend server running in test profile with test database; user account registered; valid access token issued with a 60-minute expiry window.
+
+Input/Condition: Send requests to a protected system resource (such as fitness activities or portfolio summaries) under four conditions: (1) missing authentication credentials, (2) tampered token signature, (3) expired token (timestamp beyond the 60-minute lifetime), and (4) authentic, unexpired token.
+
+Output/Result: Requests lacking credentials, with a tampered token, or with an expired token are rejected with HTTP 401 Unauthorized. The request with a valid token returns HTTP 200 OK with the requested user data.
+
+How test will be performed: Automated integration tests dispatching requests across token states against protected system services.
+
+\item{\textbf{T-SEC-ACC-02: Role-Based Authorization and Cross-User Isolation}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Two standard test users (User A and User B) with distinct portfolios and data records, and one administrator user.
+
+Input/Condition: (1) User A attempts to read User B's private portfolio. (2) User A attempts to execute a trade or modify records on User B's behalf. (3) User A attempts to access system-wide administrative audit logs. (4) Administrator requests access to system-wide administrative audit logs.
+
+Output/Result: Cross-user reads, cross-user modifications, and standard-user administrative requests are rejected with HTTP 403 Forbidden with zero data modifications. The administrative request is accepted (HTTP 200 OK) returning the requested audit records.
+
+How test will be performed: Automated security integration tests verifying role-based access control rules and tenant isolation across system boundaries.
+
+\item{\textbf{T-SEC-ACC-03: Secure Credential Storage and Secret Exclusion}\\}
+
+Type: Static and Dynamic, Automated
+
+Initial State: Repository source commit under evaluation; mobile test environment.
+
+Input/Condition: (1) Execute secret scanning on the complete version control repository history for API keys, private keys, and client secrets. (2) Store third-party fitness integration credentials via the client application and inspect local persistent device storage.
+
+Output/Result: (1) Repository secret scan detects zero exposed credentials or keys. (2) Integration credentials are encrypted at rest using platform-managed secure key storage (e.g., AES-256 GCM); zero cleartext tokens exist on local disk.
+
+How test will be performed: Automated repository secret scanning in CI and mobile client instrumentation tests inspecting device storage.
+
+\item{\textbf{T-SEC-ACC-04: Password Strength, Lockout, and Multi-Factor Authentication}\\}
+
+Type: Dynamic, Automated
+
+Initial State: User authentication service active with test database; common password dictionary loaded in memory.
+
+Input/Condition: (1) Submit account registration requests using short passwords ($< 8$ characters), common dictionary passwords, and a strong password ($> 8$ characters). (2) Submit 5 consecutive incorrect password attempts for a user account, followed immediately by a 6th attempt with the correct password within 15 minutes. (3) Advance system time past 15 minutes (or submit a password reset) and retry with valid credentials. (4) For an account with multi-factor authentication (MFA) enabled, submit valid credentials, followed by an invalid one-time password (OTP), and then a valid OTP.
+
+Output/Result: Short and dictionary passwords return HTTP 400 Bad Request; strong passwords return HTTP 201 Created. The 6th consecutive failed attempt triggers account lockout, rejecting subsequent login attempts with HTTP 423 Locked (or HTTP 403 Forbidden). Login succeeds once the lockout duration elapses. MFA challenge rejects invalid OTPs (HTTP 401 Unauthorized) and grants session access only upon valid OTP submission.
+
+How test will be performed: Automated integration tests verifying authentication policies, lockout timers, and MFA verification flows.
+
+\item{\textbf{T-SEC-ACC-05: Session Termination and Device Unlinking}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Active user session with valid access and refresh tokens; client device linked to user account.
+
+Input/Condition: (1) Client issues a sign-out request with its registered device identifier. (2) Attempt subsequent resource requests using the revoked access token. (3) Attempt to submit activity data from the unlinked device. (4) Present a session token that has been inactive for greater than 30 days.
+
+Output/Result: Sign-out completes successfully (HTTP 200 OK) and unlinks the device. Requests presenting revoked tokens, data submissions from unlinked devices, and expired inactive sessions are rejected (HTTP 401 Unauthorized or HTTP 403 Forbidden).
+
+How test will be performed: Automated integration tests verifying session invalidation, token revocation repositories, and device link states.
+
+\end{enumerate}
 
 \paragraph{Integrity}
 
 Covers SEC-INT-01 to SEC-INT-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-SEC-INT-01: Activity Telemetry Plausibility and Deduplication}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Authenticated user account with 0 virtual currency.
+
+Input/Condition: Ingest four workout telemetry payloads: (1) sustained cadence of 280 steps/min (exceeding plausibility threshold of 250 steps/min), (2) overlapping workout intervals from two integrations, (3) duplicate submission of an identical workout external sync ID, and (4) normal plausible workout (120 steps/min, no overlap).
+
+Output/Result: (1) Implausible cadence payload marked \texttt{UNVERIFIED} with zero virtual currency awarded. (2) Overlapping interval flagged \texttt{UNVERIFIED}; only unique segments credited. (3) Duplicate payload rejected by idempotency key with zero duplicate currency minted. (4) Plausible workout verified and virtual currency awarded.
+
+How test will be performed: Automated unit and integration tests executing domain validation rules on activity telemetry payloads.
+
+\item{\textbf{T-SEC-INT-02: Server-Side Authority on Valuations and Trades}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Authenticated user with virtual currency balance; server-authoritative asset price set (e.g., 50.00 FLX for \texttt{FLEX\_CORP}).
+
+Input/Condition: (1) Client submits a trade request specifying a client-dictated execution price (e.g., 0.01 FLX) and total cost. (2) Client submits a currency reward claim specifying an arbitrary client-dictated reward amount.
+
+Output/Result: (1) The system rejects the trade request with HTTP 400 Bad Request, or ignores the client-supplied price and executes strictly at the server-authoritative valuation (50.00 FLX). (2) The system rejects client-dictated reward amounts and calculates currency rewards strictly from verified workout metrics.
+
+How test will be performed: Automated integration tests verifying server-side pricing enforcement and reward calculation authority.
+
+\item{\textbf{T-SEC-INT-03: Database Backup Integrity and Restoration Drill}\\}
+
+Type: Dynamic Operational Verification and Static Configuration Review
+
+Initial State: Staging database populated with seed dataset of users, portfolios, and audit records; automated backup cron job configured.
+
+Input/Condition: (1) Inspect cloud backup policy scripts for 24-hour backup interval and 30-day retention lifecycle. (2) Trigger an automated backup snapshot, record SHA-256 data checksums, restore onto a clean containerized database instance, and measure restoration time.
+
+Output/Result: Configuration confirms daily backups and 30-day automated retention. Database restores completely within target limit ($< 15$ minutes in test environment), with record counts and checksums matching 100\%.
+
+How test will be performed: Automated staging script executing backup creation, containerized restoration, and data integrity verification.
+
+\end{enumerate}
 
 \paragraph{Privacy}
 
 Covers SEC-PRV-01 to SEC-PRV-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-SEC-PRV-01: Encryption in Transit and at Rest}\\}
+
+Type: Dynamic Security Verification and Database Inspection
+
+Initial State: Staging backend deployed behind reverse proxy; database running with encrypted tablespace.
+
+Input/Condition: (1) Execute network handshake scan against API endpoints testing plain HTTP and TLS protocols 1.0, 1.1, 1.2, and 1.3. (2) Insert sensitive biometric fields (heart rate, body weight) into database and inspect raw storage files on disk.
+
+Output/Result: (1) Plain HTTP requests and TLS connections below version 1.3 are rejected; only TLS 1.3 handshakes succeed. (2) Direct inspection of database disk blocks reveals AES-256 ciphertext; sensitive biometric data is unreadable in raw form.
+
+How test will be performed: Automated script combining TLS protocol scanning and raw disk inspection on test database volumes.
+
+\item{\textbf{T-SEC-PRV-02: Private by Default and Leaderboard Opt-In Isolation}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Newly registered user with logged workouts and simulated portfolio; default settings unchanged.
+
+Input/Condition: (1) Query public user profile and public leaderboard for the new user. (2) User explicitly opts in to leaderboard sharing with a public alias. (3) User toggles leaderboard sharing off.
+
+Output/Result: (1) By default, public profile returns 404 or minimal stub; user is omitted from public leaderboards. (2) Opted-in leaderboard displays only chosen alias and aggregate score; real name, email, and biometric metrics remain private. (3) Opting out removes the user from public leaderboards immediately.
+
+How test will be performed: Automated API integration tests verifying endpoint responses across default, opt-in, and opt-out states.
+
+\item{\textbf{T-SEC-PRV-03: User Account Deletion and PII Eradication}\\}
+
+Type: Dynamic, Automated
+
+Initial State: User account populated with profile, health logs, active session, and transactions in the financial audit ledger.
+
+Input/Condition: User submits an account deletion request with credential confirmation. Inspect active application databases, attempt login with deleted credentials, and inspect the financial audit ledger.
+
+Output/Result: All personal identifying information (name, email, device identifiers) and health logs are purged from the active system within 24 hours. Subsequent login attempts are rejected (HTTP 401 Unauthorized). The financial audit ledger preserves transactional continuity but replaces user identifiers with an irreversible pseudonym.
+
+How test will be performed: Automated end-to-end integration test asserting database purge, login denial, and ledger anonymization.
+
+\end{enumerate}
 
 \paragraph{Audit}
 
 Covers SEC-AUD-01, SEC-AUD-02.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-SEC-AUD-01: Economic Event Ledger Immutability}\\}
+
+Type: Dynamic Database Privilege Verification
+
+Initial State: Backend connected to database using standard application credentials; sample rows present in \texttt{economic\_audit\_ledger}.
+
+Input/Condition: (1) Record simulated trade or reward via standard service API. (2) Attempt direct SQL \texttt{UPDATE} on an existing ledger record. (3) Attempt direct SQL \texttt{DELETE} on an existing ledger record.
+
+Output/Result: Service API inserts new audit record with immutable timestamp. Direct SQL \texttt{UPDATE} and \texttt{DELETE} commands are denied by database role permissions with error 1142 (command denied); ledger records remain unmodified.
+
+How test will be performed: Automated database integration test executing restricted SQL commands using application service credentials.
+
+\item{\textbf{T-SEC-AUD-02: Structured Security Event Logging}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Log appender active and configured for structured JSON output.
+
+Input/Condition: Trigger security events: 3 failed login attempts, activity payload with tampered signature, rate limit exceeded ($> 60$ req/min), and unhandled server exception.
+
+Output/Result: Logs capture structured JSON entries containing severity level (WARN/ERROR), ISO 8601 UTC timestamp, client IP, event type, and user ID (or anonymous). Zero sensitive credentials or plaintext passwords appear in log records.
+
+How test will be performed: Automated integration test with in-memory log appender asserting on serialized JSON log structure and contents.
+
+\end{enumerate}
 
 \paragraph{Immunity}
 
 Covers SEC-IMM-01 to SEC-IMM-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-SEC-IMM-01: Injection Defense (SQLi, XSS, Command Injection)}\\}
+
+Type: Static SAST and Dynamic DAST Penetration Testing
+
+Initial State: Backend service deployed in containerized test environment with database connectivity.
+
+Input/Condition: (1) Run static analysis on system source code for unparameterized queries, unescaped reflection, and command execution. (2) Execute automated penetration scanning dispatching SQL injection, cross-site scripting (XSS), and command injection attack vectors across all external system interfaces.
+
+Output/Result: Static analysis reports zero high-severity injection vulnerabilities. Penetration scanning reports zero exploitable injection vulnerabilities; malicious payloads are sanitized or rejected (HTTP 400/422).
+
+How test will be performed: Automated security test pipeline combining static code analysis (SAST) and dynamic penetration scanning (DAST).
+
+\item{\textbf{T-SEC-IMM-02: API Rate Limiting Enforcement}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Rate limiting filter configured with threshold of 60 requests/minute per client IP.
+
+Input/Condition: Client sends 60 consecutive requests within 30 seconds, sends 10 additional requests within the remainder of the 60-second window, waits 65 seconds, and sends a subsequent request.
+
+Output/Result: Requests 1 to 60 process normally. Requests 61 to 70 return HTTP 429 Too Many Requests with a \texttt{Retry-After} header. The request following the cooldown period processes normally.
+
+How test will be performed: Automated integration test using a multi-threaded HTTP client dispatching timed request bursts.
+
+\item{\textbf{T-SEC-IMM-03: Client Environment Tampering and Root Detection}\\}
+
+Type: Dynamic Verification
+
+Initial State: Android test device or emulator with root privileges enabled (\texttt{su} binary present, test keys installed).
+
+Input/Condition: (1) Deploy production release build onto rooted device and attempt app launch, fitness sync, and leaderboard access. (2) Deploy debug build onto rooted device and attempt same actions.
+
+Output/Result: Production build detects untrusted environment, displays warning modal, and disables virtual currency minting and leaderboard features. Debug build runs without restrictions for testing.
+
+How test will be performed: Automated Android UI test and manual release checklist verifying root detection library signals.
+
+\end{enumerate}
+
+\paragraph{Security Review Walkthrough}
+
+Static reviews are conducted once per milestone release cycle (Rev 0, Final Demo) by the Backend Lead (Daniel Franze-Da Silva), Security and Documentation Lead (Arjun Karthik), and an independent peer reviewer. The team reviews: (1) ISO/IEC 27001 Annex A mapping against system controls (COMP-STD-07), (2) least privilege scopes for third-party fitness APIs (SEC-ACC-03), (3) repository secret scan results, and (4) dependency vulnerability reports ensuring zero unresolved High/Critical CVEs.
 
 \subsubsection{Cultural}
 
@@ -1187,19 +1393,107 @@ Covers COMP-STD-01 to COMP-STD-07.
 
 \subsubsection{User Documentation and Training}
 
-These tests cover the User Documentation and Training Requirements section of the SRS.
+These tests cover the User Documentation and Training Requirements section of the SRS \citep{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
 
 \paragraph{User Documentation}
 
 Covers DOC-01 to DOC-04.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-DOC-01: Financial and Fitness Glossary Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; glossary view accessible in-app.
+
+Input/Condition: Open the in-app glossary and search for required educational terms (compound interest, inflation, ETFs, bond yields, and portfolio diversification).
+
+Output/Result: Binary: Pass if the searchable glossary is present and contains entries for all required terms; Fail otherwise.
+
+How test will be performed: Manual walkthrough inspection of the glossary view verifying term presence and search functionality.
+
+\item{\textbf{T-DOC-02: Fitness Integration Guide Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Application build running on a test device; integration settings or help section open.
+
+Input/Condition: Navigate to the fitness integration configuration section and open the setup guide.
+
+Output/Result: Binary: Pass if illustrated setup instructions with screenshots are present for all supported fitness providers (e.g., Garmin, Android Health Connect) and include troubleshooting guidance; Fail otherwise.
+
+How test will be performed: Visual inspection confirming presence and completeness of illustrated setup and troubleshooting instructions.
+
+\item{\textbf{T-DOC-03: Searchable Help Center Presence}\\}
+
+Type: Dynamic, Semi-Automated
+
+Initial State: Application open to the settings menu.
+
+Input/Condition: Open the in-app help center from settings and enter search queries covering core topics (account management, activity sync, rewards, portfolio, simulated market, virtual currency, privacy).
+
+Output/Result: Binary: Pass if the in-app help center opens without an external browser, contains articles covering all required topics, and returns keyword search results in under 200 ms; Fail otherwise.
+
+How test will be performed: Manual walkthrough and automated UI test timing keyword search queries and asserting topic article presence.
+
+\item{\textbf{T-DOC-04: Digital Manual and Release Notes Presence}\\}
+
+Type: Static Inspection
+
+Initial State: Project repository on GitHub checked out at latest milestone commit.
+
+Input/Condition: Inspect the documentation repository directory for the digital user manual and milestone release notes.
+
+Output/Result: Binary: Pass if a self-contained user manual (PDF and Markdown formats) documenting architecture, navigation, data flows, and troubleshooting, along with milestone release notes, is present in the repository; Fail otherwise.
+
+How test will be performed: Peer-review file audit by team members verifying presence and completeness of documentation artifacts in the repository.
+
+\end{enumerate}
 
 \paragraph{Training}
 
 Covers TRN-01 to TRN-03.
 
-\wss{Add the test cases for these requirements.}
+\begin{enumerate}
+
+\item{\textbf{T-TRN-01: Interactive Onboarding Walkthrough Presence}\\}
+
+Type: Dynamic, Manual
+
+Initial State: Clean application state immediately after creating a new user account.
+
+Input/Condition: Complete new account registration to trigger onboarding; inspect the four-step walkthrough (goals, rewards, simulated investing, compounding chart), test the ``Skip Tour'' option, and re-launch the walkthrough from settings.
+
+Output/Result: Binary: Pass if the four-step walkthrough is present, takes under 90 seconds to complete, provides a visible ``Skip Tour'' button on every step, and is re-accessible from settings; Fail otherwise.
+
+How test will be performed: Manual timed walkthrough verifying the presence of all four tour steps, skip buttons, and settings re-entry.
+
+\item{\textbf{T-TRN-02: Progressive Feature Discovery Presence}\\}
+
+Type: Dynamic, Automated
+
+Initial State: Newly registered user account with zero trades and zero logged physical activity days.
+
+Input/Condition: Navigate to trading and portfolio analytics screens as a novice user; then simulate logging three days of physical activity or executing an initial trade, and re-examine the screens.
+
+Output/Result: Binary: Pass if advanced trading indicators and portfolio analytics remain hidden or collapsed initially and are revealed once the activity or trade threshold is met; Fail otherwise.
+
+How test will be performed: Automated Compose UI test asserting view hierarchy presence and visibility states of advanced features before and after threshold completion.
+
+\item{\textbf{T-TRN-03: Demonstrator Quick-Start Kit Presence}\\}
+
+Type: Dynamic Operational Verification
+
+Initial State: Application development/staging build running; demo seeding script available.
+
+Input/Condition: Execute the automated demo seeding script or trigger the demonstrator debug toggle.
+
+Output/Result: Binary: Pass if the demonstrator guide is present and the seeding script loads 30 days of simulated activity and portfolio history within 10 seconds; Fail otherwise.
+
+How test will be performed: Execution of the demonstrator script or debug toggle timing dataset initialization and verifying data display on trading and compounding charts.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
