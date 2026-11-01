@@ -1,0 +1,7 @@
+# Check out text files with LF everywhere, including Windows (core.autocrlf would
+# otherwise give CRLF), so Prettier/Checkstyle see the same files locally as in CI.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf

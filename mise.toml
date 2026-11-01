@@ -1,0 +1,36 @@
+# Pins the toolchain for everyone (and CI). Run `mise install` once after cloning.
+# Maven is pinned separately by the wrapper in src/api (mvnw).
+[tools]
+node = "22"
+java = "temurin-21"
+
+[tasks.mobile]
+description = "Start the Expo dev server"
+dir = "src/mobile"
+run = "npm start"
+
+[tasks.api]
+description = "Run the Spring API against local MySQL (dev profile)"
+dir = "src/api"
+run = "./mvnw spring-boot:run"
+run_windows = '.\mvnw.cmd spring-boot:run'
+
+[tasks.db]
+description = "Start MySQL in Docker"
+dir = "src"
+run = "docker compose up -d"
+
+[tasks."test:mobile"]
+description = "Format-check, lint, typecheck and unit test the mobile app"
+dir = "src/mobile"
+run = ["npm run format:check", "npm run lint", "npm run typecheck", "npm test"]
+
+[tasks."test:api"]
+description = "Run API tests (H2 locally, MySQL in CI) and Checkstyle"
+dir = "src/api"
+run = "./mvnw -B verify"
+run_windows = '.\mvnw.cmd -B verify'
+
+[tasks.test]
+description = "Run all checks"
+depends = ["test:mobile", "test:api"]

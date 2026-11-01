@@ -1,0 +1,69 @@
+name: App CI
+
+on:
+  push:
+    branches: main
+    paths: [src/**, mise.toml, .github/workflows/app-ci.yml]
+  pull_request:
+    branches: main
+    paths: [src/**, mise.toml, .github/workflows/app-ci.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/mobile
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v5
+      - uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('src/mobile/package-lock.json') }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+      - run: npm test -- --ci
+
+  api:
+    runs-on: ubuntu-latest
+    # Real MySQL so the Liquibase schema and Hibernate validation are checked against
+    # the database we ship on, not just H2. Same image as src/docker-compose.yml.
+    services:
+      mysql:
+        image: mysql:9
+        env:
+          MYSQL_DATABASE: flexin_test
+          MYSQL_USER: flexin
+          MYSQL_PASSWORD: flexin
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/flexin_test
+      SPRING_DATASOURCE_USERNAME: flexin
+      SPRING_DATASOURCE_PASSWORD: flexin
+    defaults:
+      run:
+        working-directory: src/api
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v5
+      # The runner image presets JAVA_HOME to its own JDK, which mvnw prefers over PATH.
+      - run: echo "JAVA_HOME=$(mise where java)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('src/api/pom.xml') }}
+      - run: ./mvnw -B verify
