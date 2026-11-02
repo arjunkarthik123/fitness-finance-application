@@ -225,7 +225,7 @@ The bullet list below describes the different avenues in which the SRS may be re
   \item \textbf{Presentation to Supervisor:} The team may meet with the project supervisor to ensure that the requirements described in the SRS are high quality and in line with what they expect to be delivered.
 \end{itemize}
 
-If any problem are found with the SRS, the team will utilize our issue board to keep track and fix them.
+If any problems are found with the SRS, the team will utilize our issue board to keep track and fix them.
 Once development begins, these issues may also coincide with a bugfix.
 
 \subsection{Design Verification}
@@ -239,7 +239,7 @@ The bullet list below describes how the Design Document may be reviewed.
   \item \textbf{Presentation to Supervisor:} The team may meet with the project supervisor to ensure that the design is feasible from an implementation point of view.
 \end{itemize}
 
-Any problems with the Design Document will be handled through the teams issue board.
+Any problems with the Design Document will be handled through the team's issue board.
 
 
 \subsection{Verification and Validation Plan Verification}
@@ -252,23 +252,56 @@ VnV plan verification will take place before the document is submitted by the te
   \item \textbf{Submission to TA:} The VnV Plan will be submitted to the TA for grading and feedback.
 \end{itemize}
 
-\subsection{Implementation Verification}
+\subsection{Implementation Verification}\label{sec:impl_verification}
 
 Implementation verification ensures that the system, as built, correctly implements the SRS and design document.
 This will be done through a combination of the following:
 \begin{itemize}
   \item \textbf{Unit Testing and System Testing:} All functional and non-functional requirements will be verified through the tests described in the below sections of this document.
-  \item \textbf{Static Analysis and Linting:} The team will enforce a coding standard using linters and static analyzers.
+  \item \sloppy\textbf{Static Analysis and Linting:} The backend follows the Sun/Oracle Java code conventions, checked by Checkstyle using the project's \texttt{checkstyle.xml}, which is adapted from Checkstyle's \texttt{sun\_checks.xml}. Checkstyle runs in the Maven \texttt{verify} phase and fails the build on any warning. The mobile app follows the Expo ESLint configuration (\texttt{eslint-\allowbreak config-\allowbreak expo}) with Prettier formatting, and is type-checked with the TypeScript compiler (\texttt{tsc --noEmit}).
   \item \textbf{Code Review:} All code changes will require a pull request and approval from at least one team member.
   The team members will be looking for code correctness, standards, and proper error handling.
 \end{itemize}
 
 \subsection{Automated Testing and Verification Tools}\label{sec:auto_tools}
 
-The team plans on creating standard unit tests that will run during the CI stage of the code development lifecycle.
-The framework used for the backend will most likely be JUnit, and for the frontend, Detox.
-The team may also create integration tests and end-to-end tests to ensure that application functionality doesn't degrade in the grand scheme.
-Code coverage will be top of mind while developing this test plan, and a tool to ensure that a minimum agreed threshold of \const{CoverageTarget} coverage will be implemented.
+\progname{} has two codebases, and each has its own tools:
+\begin{itemize}
+  \item \textbf{Backend (\texttt{src/api}):} Written in Java 21 with Spring
+  Boot and built with Maven. Unit and integration tests use JUnit 5 with
+  Mockito, through the Spring Boot test starters. In CI they run against a
+  MySQL 9 test database, the same database engine used in production. Static analysis uses Checkstyle, as described in
+  Section~\ref{sec:impl_verification}.
+  \item \textbf{Mobile app (\texttt{src/mobile}):} Written in TypeScript with
+  React Native and Expo. Unit and component tests use Jest (with the
+  \texttt{jest-expo} preset) and React Native Testing Library. End-to-end tests
+  use Detox on an Android emulator. Linting uses ESLint and formatting uses
+  Prettier.
+\end{itemize}
+
+\textbf{Continuous integration:} GitHub Actions runs the App CI workflow on
+every pull request and push to \texttt{main} that changes the source code. For the mobile app it runs \texttt{npm run lint},
+\texttt{npm run typecheck}, \texttt{npm run format:check}, and
+\texttt{npm test}. For the backend it runs \texttt{./mvnw verify}, which
+compiles the code, runs the JUnit tests, and runs Checkstyle. GitHub requires
+another team member to approve a pull request before it is merged, and the
+team will not merge a pull request whose App CI checks fail.
+Detox end-to-end tests take longer, so they are run before each milestone
+demo instead of on every pull request.
+
+\textbf{Code coverage:} The team will measure coverage with JaCoCo for the
+backend, added as a Maven plugin, and with Jest's built-in coverage report
+(\texttt{jest --coverage}) for the mobile app. Both tools can fail the build
+when coverage falls below a threshold, which the team will set to
+\const{CoverageTarget} once the core features are implemented. Coverage
+reports will be uploaded as CI artifacts so reviewers can see which code a
+pull request leaves untested.
+
+\textbf{Performance measurement:} Timing tests (Section~\ref{sec:tests_nfr_perf})
+use screen recordings on the reference phone and timestamps logged by the
+Detox scripts. The team does not plan to use a memory profiler such as
+Valgrind, since the backend runs on the JVM and the app on React Native, where
+memory is managed automatically.
 
 \subsection{Software Validation}\label{sec:validation}
 
@@ -286,6 +319,16 @@ This section describes the system tests that will be performed to verify and val
 requirements come first, followed by the tests for nonfunctional requirements,
 both grouped in the same order as the SRS \citep{SRS}. The section ends with a
 table that traces each test to the requirement it verifies.
+
+The mandated constraints in the SRS (SC-01 to SC-06) limit how \progname{} is
+built rather than how it behaves, so they do not have system tests of their
+own. SC-02 and SC-03, which require a TypeScript and React Native client and a
+Java backend, are checked by code review and by the CI build described in
+Section~\ref{sec:auto_tools}. The other constraints are checked as part of
+existing tests: SC-01 (Android) by test-PR-L-01, SC-04 (automatic activity data)
+by test-FUNC-03, SC-05 (simulated market only) by test-PR-SC-03 and
+test-LF-STY-02, and SC-06 (app store distribution) by test-PROD-02. The
+traceability table lists these under ``Also Supports''.
 
 \subsection{Tests for Functional Requirements}
 
@@ -326,7 +369,7 @@ These tests cover creating an account and signing in.
   \textbf{Inputs} & A valid email address, a valid password, and a call to the create account action.\\
   \textbf{Output} & A new user account is created successfully and the user is granted access to the application using the newly created credentials.\\
   \textbf{Test Case Derivation} & This test covers FUNC-01. Users can create an account using a valid email address and password.\\
-  \textbf{How test will be performed} & On the registration screen a valid email (that is not already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was successful. Then, on the login screen, an attempt to log in with the new credentials will be made verifying access to the application under this newly created account.\\
+  \textbf{How test will be performed} & On the registration screen a valid email (that is not already associated with an existing account) and custom password will be entered, the form will be submitted verifying that the account creation was successful. Then, on the login screen, an attempt to log in with the new credentials will be made verifying access to the application under this newly created account.\\
   \bottomrule
 \end{tabularx}
 
@@ -341,7 +384,7 @@ These tests cover creating an account and signing in.
   \textbf{Inputs} & A valid email address (already associated with an existing account), a valid password, and a call to the create account action.\\
   \textbf{Output} & The system rejects the request to create a new account and prompts the user to sign in instead.\\
   \textbf{Test Case Derivation} & This test covers FUNC-01. Users cannot create multiple accounts with the same email address.\\
-  \textbf{How test will be performed} & On the registration screen a valid email (that is already associated with an existing account) and custom password will be entered, the form will be sumbitted verifying that the account creation was unsuccessful. Then, the system will prompt the user to sign in.\\
+  \textbf{How test will be performed} & On the registration screen a valid email (that is already associated with an existing account) and custom password will be entered, the form will be submitted verifying that the account creation was unsuccessful. Then, the system will prompt the user to sign in.\\
   \bottomrule
 \end{tabularx}
 
@@ -399,7 +442,7 @@ These tests cover creating an account and signing in.
   \textbf{Control} & Manual\\
   \textbf{Initial State} & User is not logged in, already possesses a Flexin' account, and has forgotten their password.\\
   \textbf{Inputs} & A valid email address (already associated with an existing account) and a call to the reset password action.\\
-  \textbf{Output} & The system sends a password reset link to the user's email address. The user can then use this link to succesfully set a new password and login.\\
+  \textbf{Output} & The system sends a password reset link to the user's email address. The user can then use this link to successfully set a new password and login.\\
   \textbf{Test Case Derivation} & This test covers FUNC-02. Users can reset their password and gain access to their account once the reset process is completed.\\
   \textbf{How test will be performed} & On the login screen, a valid email (already associated with an existing account) will be entered and the reset password action will be triggered, and then instructions will be followed to complete the password reset process. Upon completion, an attempt to log in with the new password will be made verifying that access to the application was granted.\\
   \bottomrule
@@ -434,7 +477,7 @@ These tests cover importing activity data from third-party providers and creatin
   \textbf{Inputs} & Sync a fitness activity that consists of 1,000 or more recorded steps.\\
   \textbf{Output} & The imported fitness activity appears in the user's activity history after synchronization.\\
   \textbf{Test Case Derivation} & This test covers FUNC-03. The system successfully imports fitness data from third-party providers.\\
-  \textbf{How test will be performed} & A Garmin will be connected to the Flexin' application, 1,000 steps will be walked throught the day and will sync the 1,000 or more recorded steps. After syncing, the system will import the data into the user's activity history verifying that activity details match the original source.\\
+  \textbf{How test will be performed} & A Garmin will be connected to the Flexin' application, 1,000 steps will be walked through the day and will sync the 1,000 or more recorded steps. After syncing, the system will import the data into the user's activity history verifying that activity details match the original source.\\
   \bottomrule
 \end{tabularx}
 
@@ -491,7 +534,7 @@ These tests cover importing activity data from third-party providers and creatin
   \midrule
   \textbf{Control} & Automatic\\
   \textbf{Initial State} & User is logged into their account and has at least one active fitness goal with 0\% progress recorded.\\
-  \textbf{Inputs} & Sync activity data that acheives 10\% of the goal's progress.\\
+  \textbf{Inputs} & Sync activity data that achieves 10\% of the goal's progress.\\
   \textbf{Output} & The fitness goal successfully updates to 10\% completion upon the next sync.\\
   \textbf{Test Case Derivation} & This test covers FUNC-05. The system successfully syncs fitness data from third-party sources and tracks the progress of any active fitness goals.\\
   \textbf{How test will be performed} & The user will navigate to the fitness goal tracking screen. The system will automatically update the progress of the fitness goal based on the synced activity data. Then it will be verified that the system correctly displays the updated progress in the user's goal list.\\
@@ -573,8 +616,8 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{Initial State} & No user account exists.\\
   \textbf{Inputs} & A new user account is successfully registered.\\
   \textbf{Output} & A portfolio is automatically created and associated with the new user account. The \texttt{PortfolioID} is generated and stored under this new user account. The newly created portfolio is initialized with no assets.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-08. The system will automatically create a new portfolio when a new user account is establihed.\\
-  \textbf{How test will be performed} & A new user wll be registered, the system checks if a portfolio has already been created for them. If not, the system will create one. It will then be verified that the portfolio exists in the database and correctly linked to the newly registered user.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-08. The system will automatically create a new portfolio when a new user account is established.\\
+  \textbf{How test will be performed} & A new user will be registered, the system checks if a portfolio has already been created for them. If not, the system will create one. It will then be verified that the portfolio exists in the database and correctly linked to the newly registered user.\\
   \bottomrule
 \end{tabularx}
 
@@ -802,7 +845,7 @@ Covers LF-APP-01 to LF-APP-05. The appearance tests verify that \progname{} deli
   \textbf{Initial State} & Application build deployed across an emulator/device matrix encompassing Android 10+ (API level 29+) with physical screen sizes ranging from 5.5'' to 6.8'' (including Google Pixel 4a, Pixel 7, and Samsung Galaxy S21 Ultra profiles). System font scaling in Android Accessibility settings is configured to \const{TestFontScale}.\\
   \textbf{Input/Condition} & Launch the application on each device configuration and systematically navigate through all primary views (Dashboard, Activity, Market, Learn, Community) and key secondary modal/form dialogs.\\
   \textbf{Output/Result} & Zero text truncations, text clipping, or unreadable overlapping text across all screens. Zero overlapping interactive UI elements. All touch targets maintain a minimum interactive hit area of $48 \times 48\text{ dp}$ in accordance with UHR-ACC-04.\\
-  \textbf{How test will be performed} & Automated Jetpack Compose UI tests evaluate semantic node bounds to programmatically assert that touch targets meet the $\ge 48 \times 48\text{ dp}$ constraint and verify layout bounds do not collide. Additionally, a manual visual inspection across the multi-device emulator matrix is conducted by two QA team members using a responsive layout verification checklist, logging any visual clipping defects into GitHub Issues.\\
+  \textbf{How test will be performed} & Automated Detox tests on each emulator profile read the on-screen bounds of every interactive element to assert that touch targets meet the $\ge 48 \times 48\text{ dp}$ constraint and verify layout bounds do not collide. Additionally, a manual visual inspection across the multi-device emulator matrix is conducted by two QA team members using a responsive layout verification checklist, logging any visual clipping defects into GitHub Issues.\\
   \bottomrule
 \end{tabularx}
 
@@ -830,7 +873,7 @@ Covers LF-APP-01 to LF-APP-05. The appearance tests verify that \progname{} deli
   \textbf{Initial State} & Application launched in a clean state with an authenticated user session.\\
   \textbf{Input/Condition} & Programmatically trigger navigation through each of the five top-level primary screens: Dashboard, Activity, Market/Portfolio, Learn, and Community.\\
   \textbf{Output/Result} & The persistent bottom navigation bar is present and visible on every primary screen. The bar contains exactly five navigation destinations with correct iconography and labels (Dashboard, Activity, Market, Learn, Community). The active destination is distinctly highlighted corresponding to the active route.\\
-  \textbf{How test will be performed} & Automated Android UI test implemented using Kotlin and Compose UI Test Framework (\texttt{ComposeTestRule}). The test script simulates tap events on each navigation destination in sequence, asserting that the navigation bar component tag (\texttt{bottom\_}\allowbreak\texttt{navigation\_}\allowbreak\texttt{bar}) remains visible (\texttt{assertIsDisplayed()}) and that the \texttt{isSelected} semantic property evaluates to true for the active screen and false for the other four destinations.\\
+  \textbf{How test will be performed} & Automated Detox end-to-end test written in TypeScript. The test script taps each navigation destination in sequence, asserting that the element with test ID \texttt{bottom\_}\allowbreak\texttt{navigation\_}\allowbreak\texttt{bar} remains visible (\texttt{toBeVisible()}) and that the tab for the active screen is marked selected in its accessibility state while the other four are not.\\
   \bottomrule
 \end{tabularx}
 
@@ -900,7 +943,7 @@ Covers LF-STY-01 to LF-STY-04. The style tests verify that \progname{} maintains
     \item Condition A: Total animation playback duration does not exceed \const{MaxAnimationTime}, smoothly returning control to the standard view.
     \item Condition B: Tapping the background or swiping immediately dismisses the animation within \const{DismissTime}, immediately restoring user interaction to the underlying interface.
   \end{itemize}\\
-  \textbf{How test will be performed} & Automated Jetpack Compose UI benchmark tests use the Compose test clock (\texttt{mainClock}) to advance frames and assert exact animation start, dismiss, and end timestamps. In addition, manual verification using a high-frame-rate (60 fps) screen recording is conducted to measure the frame delay between user tap interrupt and visual dismissal.\\
+  \textbf{How test will be performed} & Automated Jest tests with React Native Testing Library use Jest's fake timers to advance the animation clock and assert the animation start, dismiss, and end times. In addition, manual verification using a high-frame-rate (60 fps) screen recording is conducted to measure the frame delay between user tap interrupt and visual dismissal.\\
   \bottomrule
 \end{tabularx}
 
@@ -911,7 +954,7 @@ Covers LF-STY-01 to LF-STY-04. The style tests verify that \progname{} maintains
   \textbf{test-LF-STY-04}\label{test:LF-STY-04} & \textbf{Component Consistency (Style Guide Compliance)}\\
   \midrule
   \textbf{Type} & Static Inspection (Design Walkthrough)\\
-  \textbf{Initial State} & Complete design system specification (Figma component library and Compose theme tokens) approved by the UI/UX lead. Staging build of the application containing all user-facing screens.\\
+  \textbf{Initial State} & Complete design system specification (Figma component library and the app's shared theme tokens in \texttt{src/mobile/src/theme}) approved by the UI/UX lead. Staging build of the application containing all user-facing screens.\\
   \textbf{Input/Condition} & Compare all UI components (buttons, forms/input fields, modal dialogs, contextual tooltips, summary cards, and toggle switches) across every screen against the shared design system specifications.\\
   \textbf{Output/Result} & Zero discrepancies, undocumented custom components, or unstandardized styling found. All UI elements adhere to defined typography, border radiuses, color tokens, and elevation levels.\\
   \textbf{How test will be performed} & A formal peer-review inspection meeting is conducted by three team members: the UI/UX designer, the lead frontend developer, and a QA reviewer. The review team steps through each screen using a structured Component Consistency Checklist covering buttons, form controls, modals, tooltips, cards, and toggles. Any identified departures from the style guide are documented with screenshot evidence and logged as defects in GitHub Issues.\\
@@ -932,8 +975,8 @@ Covers UHR-EOU-01 to UHR-EOU-09.
   \midrule
   \textbf{Type} & Dynamic, Manual, User Testing\\
   \textbf{Initial State} & New participant has no prior experience with Flexin'.\\
-  \textbf{Input/Condition} & Participant creates an account and attempts to access key application functionality (complete onboarding, access their account dashbaord and details, and navigate between fitness and financial focused screens).\\
-  \textbf{Output/Result} & Participant completes onboarding within 5 minutes, can access dashboard information immediately after login, and can reach detailed portfolio and fitness management features within two taps from the dashboard.\\
+  \textbf{Input/Condition} & Participant creates an account and attempts to access key application functionality (complete onboarding, access their account dashboard and details, and navigate between fitness and financial focused screens).\\
+  \textbf{Output/Result} & Participant completes onboarding within \const{OnboardingTime}, can access dashboard information immediately after login, and can reach detailed portfolio and fitness management features within two taps from the dashboard.\\
   \textbf{Covers} & UHR-EOU-01, UHR-EOU-02, UHR-EOU-03, and UHR-EOU-08.\\
   \textbf{How test will be performed} & Participants will be observed while creating an account, completing onboarding, locating dashboard information, and navigating to portfolio management, activity tracking, and currency transaction screens. Completion times and navigation paths will be recorded by the observer.\\
   \bottomrule
@@ -976,9 +1019,9 @@ Covers UHR-EOU-01 to UHR-EOU-09.
   \textbf{test-UHR-EOU-09} & \textbf{Re-Learnability Study}\\
   \midrule
   \textbf{Type} & Dynamic, Manual, User Testing\\
-  \textbf{Initial State} & A user exists that has previously used the application consistently, but has been an inactive user for at least 6 months.\\
+  \textbf{Initial State} & A user exists that has previously used the application consistently, but has been an inactive user for at least \const{InactivityPeriod}.\\
   \textbf{Input/Condition} & Participants attempt to perform representative fitness and investing actions.\\
-  \textbf{Output/Result} & Returning users regain proficiency within 5 minutes.\\
+  \textbf{Output/Result} & Returning users regain proficiency within \const{RelearnTime}.\\
   \textbf{Covers} & UHR-EOU-09.\\
   \textbf{How test will be performed} & Returning users will be observed as they attempt a predefined set of core application tasks (i.e. manage a fitness goal, manage their financial portfolio by buying/selling an asset). Task completion times and success rates will be measured and compared by the observer.\\
   \bottomrule
@@ -1012,7 +1055,7 @@ Covers UHR-LRN-01 to UHR-LRN-04.
   \textbf{Type} & Dynamic, Manual, User Testing\\
   \textbf{Initial State} & First-time users have no formal training.\\
   \textbf{Input/Condition} & Participants use Flexin' to synchronize fitness data, earn currency, make investments, complete fitness goals, and interact with educational material.\\
-  \textbf{Output/Result} & At least 80\% of participants successfully complete core fitness and financial tasks without external assistance and rate financial and fitness term explanations as clear (4 or 5 on a 5-point scale).\\
+  \textbf{Output/Result} & At least \const{UsabilityPassRate} of participants successfully complete core fitness and financial tasks without external assistance and rate financial and fitness term explanations as clear (4 or 5 on a 5-point scale).\\
   \textbf{Covers} & UHR-LRN-01, UHR-LRN-02, UHR-LRN-03, and UHR-LRN-04.\\
   \textbf{How test will be performed} & Participants will complete structured fitness and investing activities. Observers will record completion success rates, assistance requirements, and participant survey responses regarding educational content clarity.\\
   \bottomrule
@@ -1029,7 +1072,7 @@ Covers UHR-UND-01 to UHR-UND-03, UHR-POL-01 to UHR-POL-05.
   \textbf{Type} & Static Review and Dynamic Testing\\
   \textbf{Initial State} & User-facing content has been implemented.\\
   \textbf{Input/Condition} & Review all terminology, educational content, portfolio views, and transaction feedback screens.\\
-  \textbf{Output/Result} & Information is presented in plain language, portfolio contributions from completing fitness goals and investment gains are clearly distinguished, and outcomes affecting fitness progress, virtual currency balances, and portfolio holdingsare immediately communicated to the user.\\
+  \textbf{Output/Result} & Information is presented in plain language, portfolio contributions from completing fitness goals and investment gains are clearly distinguished, and outcomes affecting fitness progress, virtual currency balances, and portfolio holdings are immediately communicated to the user.\\
   \textbf{Covers} & UHR-UND-01, UHR-UND-02, and UHR-UND-03.\\
   \textbf{How test will be performed} & Reviewers will inspect all user-facing content thoroughly.\\
   \bottomrule
@@ -1067,7 +1110,7 @@ Covers UHR-ACC-01 to UHR-ACC-06.
   \bottomrule
 \end{tabularx}
 
-\subsubsection{Performance}
+\subsubsection{Performance}\label{sec:tests_nfr_perf}
 
 These tests cover the Performance Requirements section of the SRS. Timing
 tests run on the reference phone, which is the Android phone the team uses
@@ -1560,9 +1603,9 @@ Covers MAS-MNT-01 to MAS-MNT-05.
   \textbf{Type} & Static Code Review, Manual\\
   \textbf{Initial State} & System supports existing reward-eligible fitness activities.\\
   \textbf{Input/Condition} & Development team adds a new fitness activity type (e.g., swimming) to the application.\\
-  \textbf{Output/Result} & The new activity type is implemented, deployed, and fully tested within two months.\\
+  \textbf{Output/Result} & The new activity type is implemented, deployed, and fully tested within \const{FeatureAddTime}.\\
   \textbf{Covers} & MAS-MNT-01 and verifies that new reward-eligible fitness activities can be added with minimal maintenance effort.\\
-  \textbf{How test will be performed} & The development team will implement a new fitness activity type using the existing system architecture. Project records, pull requests, testing evidence, and deployment dates will be reviewed to verify completion within the 2 months.\\
+  \textbf{How test will be performed} & The development team will implement a new fitness activity type using the existing system architecture. Project records, pull requests, testing evidence, and deployment dates will be reviewed to verify completion within \const{FeatureAddTime}.\\
   \bottomrule
 \end{tabularx}
 
@@ -1575,9 +1618,9 @@ Covers MAS-MNT-01 to MAS-MNT-05.
   \textbf{Type} & Static Code Review, Manual\\
   \textbf{Initial State} & System contains an existing set of fictional investment assets.\\
   \textbf{Input/Condition} & Development team adds a new investment asset or asset type to the simulated market.\\
-  \textbf{Output/Result} & The new investment asset is implemented, deployed, and fully tested within two months.\\
+  \textbf{Output/Result} & The new investment asset is implemented, deployed, and fully tested within \const{FeatureAddTime}.\\
   \textbf{Covers} & MAS-MNT-02 and verifies that additional asset types can be introduced without major redevelopment effort.\\
-  \textbf{How test will be performed} & A new fictional investment asset will be implemented and integrated into the market engine. Development records and deployment history will be reviewed to verify completion within the 2 months.\\
+  \textbf{How test will be performed} & A new fictional investment asset will be implemented and integrated into the market engine. Development records and deployment history will be reviewed to verify completion within \const{FeatureAddTime}.\\
   \bottomrule
 \end{tabularx}
 
@@ -1590,7 +1633,7 @@ Covers MAS-MNT-01 to MAS-MNT-05.
   \textbf{Type} & Static Review, Manual\\
   \textbf{Initial State} & Critical production defect has been identified by a user.\\
   \textbf{Input/Condition} & Development team receives a critical bug report.\\
-  \textbf{Output/Result} & Defect is fixed and deployed within five business days.\\
+  \textbf{Output/Result} & Defect is fixed and deployed within \const{FixTime}.\\
   \textbf{Covers} & MAS-MNT-03 and verifies timely corrective maintenance of critical defects.\\
   \textbf{How test will be performed} & Historical defect reports, GitHub issues, pull requests, testing records, and deployment timestamps will be reviewed. The elapsed time between defect reporting and deployment will be measured.\\
   \bottomrule
@@ -1605,7 +1648,7 @@ Covers MAS-MNT-01 to MAS-MNT-05.
   \textbf{Type} & Static Review, Manual\\
   \textbf{Initial State} & A supported third-party fitness provider changes its API.\\
   \textbf{Input/Condition} & Existing integration becomes incompatible due to external API changes.\\
-  \textbf{Output/Result} & A compatibility update is deployed within five business days of identifying the issue.\\
+  \textbf{Output/Result} & A compatibility update is deployed within \const{FixTime} of identifying the issue.\\
   \textbf{Covers} & MAS-MNT-04 and verifies maintainability of third-party integrations and updates.\\
   \textbf{How test will be performed} & An integration-breaking change will be simulated or identified from a real provider update. Development records and deployment dates will be reviewed to confirm compliance with the five-day requirement.\\
   \bottomrule
@@ -1637,9 +1680,9 @@ Covers MAS-SUP-01.
   \textbf{Type} & Static Review, Manual\\
   \textbf{Initial State} & At least one submitted unresolved support request exists.\\
   \textbf{Input/Condition} & Review support logs and response records.\\
-  \textbf{Output/Result} & A response regarding resolution plans and timelines is provided within two business days.\\
+  \textbf{Output/Result} & A response regarding resolution plans and timelines is provided within \const{SupportResponseTime}.\\
   \textbf{Covers} & MAS-SUP-01 and verifies compliance with required support response times.\\
-  \textbf{How test will be performed} & A submitted unresolved support request will be sampled and reviewed. The tester will submit the response to the user verifying that it is sent immediately and veryifying that the response details can be found by the user. Timestamps will be compared to response records to verify compliance within 2 business days.\\
+  \textbf{How test will be performed} & A submitted unresolved support request will be sampled and reviewed. The tester will submit the response to the user verifying that it is sent immediately and verifying that the response details can be found by the user. Timestamps will be compared to response records to verify compliance within \const{SupportResponseTime}.\\
   \bottomrule
 \end{tabularx}
 
@@ -1653,7 +1696,7 @@ Covers MAS-ADPT-01 to MAS-ADPT-03.
   \midrule
   \textbf{Type} & Dynamic, Manual\\
   \textbf{Initial State} & A new third party fitness provider has been approved to integrate with the Flexin' application.\\
-  \textbf{Input/Condition} & User attempts to connect the new provider to their account to track activivty data.\\
+  \textbf{Input/Condition} & User attempts to connect the new provider to their account to track activity data.\\
   \textbf{Output/Result} & The provider can be connected using the same workflow as existing providers.\\
   \textbf{Covers} & MAS-ADPT-01 and verifies adaptability to future potential fitness providers.\\
   \textbf{How test will be performed} & The tester will connect both an existing provider and the newly added provider. The setup process will be compared to verify workflow consistency.\\
@@ -1915,7 +1958,7 @@ Covers SEC-IMM-01 to SEC-IMM-03.
 
 \paragraph{Security Review Walkthrough}
 
-Static reviews are conducted once per milestone release cycle (Rev 0, Final Demo) by the Backend Lead (Daniel Franze-Da Silva), Security and Documentation Lead (Arjun Karthik), and an independent peer reviewer. The team reviews: (1) ISO/IEC 27001 Annex A mapping against system controls (COMP-STD-07), (2) least privilege scopes for third-party fitness APIs (SEC-ACC-03), (3) repository secret scan results, and (4) dependency vulnerability reports ensuring zero unresolved High/Critical CVEs.
+Static reviews are conducted once per milestone release cycle (Rev 0, Final Demo) by Daniel Franze-Da Silva (Scribe, UI/UX Design Lead), Arjun Karthik (GitHub Manager, CI/CD Lead), and an independent peer reviewer. The team reviews: (1) ISO/IEC 27001 Annex A mapping against system controls (COMP-STD-07), (2) least privilege scopes for third-party fitness APIs (SEC-ACC-03), (3) repository secret scan results, and (4) dependency vulnerability reports ensuring zero unresolved High/Critical CVEs.
 
 \subsubsection{Cultural}
 
@@ -2061,7 +2104,7 @@ Covers COMP-STD-01 to COMP-STD-07.
   \textbf{Initial State} & Source code, database schema definitions, and CI/CD configuration are available for review.\\
   \textbf{Input/Condition} & Execute the project's automated validation pipeline with linters and review generated reports.\\
   \textbf{Output/Result} & TypeScript code passes configured linting and formatting checks, Java code passes configured linting and formatting checks, and all database schema definitions and queries execute successfully against the supported MySQL version without warnings or errors.\\
-  \textbf{Covers} & CCOMP-STD-03, COMP-STD-04, and COMP-STD-05. Verifies compliance with TypeScript coding standards, Java coding standards, and database compatibility requirements.\\
+  \textbf{Covers} & COMP-STD-03, COMP-STD-04, and COMP-STD-05. Verifies compliance with TypeScript coding standards, Java coding standards, and database compatibility requirements.\\
   \textbf{How test will be performed} & A pull request containing representative frontend, backend, and database changes will be submitted. The CI/CD pipeline will automatically execute ESLint/TypeScript validation, Java linting and formatting validation, and database schema/query verification scripts against the supported MySQL environment. The test passes only if all checks complete successfully with no errors or warnings preventing merge approval.\\
   \bottomrule
 \end{tabularx}
@@ -2154,7 +2197,7 @@ Covers TRN-01 to TRN-03.
   \textbf{Initial State} & Newly registered user account with zero trades and zero logged physical activity days.\\
   \textbf{Input/Condition} & Navigate to trading and portfolio analytics screens as a novice user; then simulate logging three days of physical activity or executing an initial trade, and re-examine the screens.\\
   \textbf{Output/Result} & Binary: Pass if advanced trading indicators and portfolio analytics remain hidden or collapsed initially and are revealed once the activity or trade threshold is met; Fail otherwise.\\
-  \textbf{How test will be performed} & Automated Compose UI test asserting view hierarchy presence and visibility states of advanced features before and after threshold completion.\\
+  \textbf{How test will be performed} & Automated Jest test with React Native Testing Library asserting the presence and visibility of advanced features before and after threshold completion.\\
   \bottomrule
 \end{tabularx}
 
@@ -2198,7 +2241,7 @@ are written.
   test-FUNC-02-02 & FUNC-02 & User Authentication & ---\\
   test-FUNC-02-03 & FUNC-02 & User Authentication & ---\\
   test-FUNC-02-04 & FUNC-02 & User Authentication & ---\\
-  test-FUNC-03 & FUNC-03 & Third-Party Fitness Data Import & ---\\
+  test-FUNC-03 & FUNC-03 & Third-Party Fitness Data Import & SC-04\\
   test-FUNC-04-01 & FUNC-04 & Fitness Goal Creation & ---\\
   test-FUNC-04-02 & FUNC-04 & Fitness Goal Creation & ---\\
   test-FUNC-04-03 & FUNC-04 & Fitness Goal Creation & ---\\
@@ -2220,7 +2263,7 @@ are written.
   test-LF-APP-04 & LF-APP-04 & Theme and Contrast & COMP-STD-02\\
   test-LF-APP-05 & LF-APP-05 & Navigation & ---\\
   test-LF-STY-01 & LF-STY-01 & Approachable Tone & ---\\
-  test-LF-STY-02 & LF-STY-02 & Virtual Currency Symbol & PR-SC-03\\
+  test-LF-STY-02 & LF-STY-02 & Virtual Currency Symbol & PR-SC-03, SC-05\\
   test-LF-STY-03 & LF-STY-03 & Non-Intrusive Gamification & ---\\
   test-LF-STY-04 & LF-STY-04 & Component Consistency & ---\\
   test-UHR-EOU-01 & UHR-EOU-01 & First-Time User Workflow Evaluation & UHR-EOU-02, UHR-EOU-03, UHR-EOU-08\\
@@ -2238,7 +2281,7 @@ are written.
   test-PR-SL-04 & PR-SL-04 & Activity sync time & ---\\
   test-PR-SC-01 & PR-SC-01 & Daily earning limits & ---\\
   test-PR-SC-02 & PR-SC-02 & No penalties for missed days & ---\\
-  test-PR-SC-03 & PR-SC-03 & Simulated market notice & ---\\
+  test-PR-SC-03 & PR-SC-03 & Simulated market notice & SC-05\\
   test-PR-SC-04 & PR-SC-04 & Not financial advice statement & ---\\
   test-PR-SC-05 & PR-SC-05 & Exercise injury warning & ---\\
   test-PR-SC-06 & PR-SC-06 & Safe goal progression & ---\\
@@ -2259,10 +2302,10 @@ are written.
   test-PR-SE-01 & PR-SE-01 & Adding a fitness source & ---\\
   test-PR-SE-02 & PR-SE-02 & Adding an asset type & ---\\
   test-PR-SE-03 & PR-SE-03 & Adding server capacity & PR-SL-02, PR-SL-03\\
-  test-PR-L-01 & PR-L-01 & Supported Android versions & ---\\
+  test-PR-L-01 & PR-L-01 & Supported Android versions & SC-01\\
   test-PR-L-02 & PR-L-02 & Keeping user history & ---\\
   test-PROD-01 & PROD-01 & Build and Quality Assurance & ---\\
-  test-PROD-02 & PROD-02 & Public Store Installation & PROD-01\\
+  test-PROD-02 & PROD-02 & Public Store Installation & PROD-01, SC-06\\
   test-MAS-MNT-01 & MAS-MNT-01 & Fitness Activity Addition Effort & ---\\
   test-MAS-MNT-02 & MAS-MNT-02 & Investment Asset Addition Effort & ---\\
   test-MAS-MNT-03 & MAS-MNT-03 & Corrective Maintenance Effort & ---\\
@@ -2307,129 +2350,41 @@ are written.
 
 \section{Unit Test Description}\label{sec:unit_tests}
 
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
-
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
-
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
+The unit tests depend on the module decomposition in the Module Interface
+Specification (MIS), which is not finished yet, so this section will be
+completed in the next revision of the plan. The subsections below give the
+approach the team will follow.
 
 \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+Every module the team writes will be unit tested. Third-party libraries and
+platforms, such as Spring Boot, React Native, Health Connect, and the Garmin
+Connect IQ SDK, are out of scope, as explained in the objectives in
+Section~\ref{sec:general}. Modules that handle virtual currency, trades, and
+portfolio values will be tested first, since errors there affect the
+correctness objectives of this plan the most.
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
-
-\subsubsection{Module 1}
-
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\item{...\\}
-    
-\end{enumerate}
-
-\subsubsection{Module 2}
-
-...
+For each module in the MIS, each access program will get at least one test of
+normal behaviour, plus tests for its edge cases and exceptions. Backend modules
+will be tested with JUnit 5 and mobile app modules with Jest, as described in
+Section~\ref{sec:auto_tools}. Instead of listing every input and output here,
+this section will point to the test code, so each test will have a name that
+says what it checks.
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
-
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
-		
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Module ?}
-
-...
+Where a single module has to meet a nonfunctional requirement on its own, such
+as the precision of currency calculations (PR-PA-01), its unit tests will check
+that requirement directly. Most nonfunctional requirements are already covered
+by the system tests in Section~\ref{sec:system_tests}.
 
 \subsection{Traceability Between Test Cases and Modules}
 
-\wss{Provide evidence that all modules have been considered.}
-				
+Once the MIS is complete, a table here will map each unit test to the module it
+covers, so the team can show that every module has been tested.
+
 \bibliographystyle{plainnat}
 
 \bibliography{../../refs/References}
@@ -2464,7 +2419,7 @@ is updated to match.
 \hline
 \endhead
 \multicolumn{4}{|l|}{\textit{Constants defined in this plan}} \\ \hline
-\textsf{UsabilityPassRate}\hypertarget{const:UsabilityPassRate}{} & 80\% of participants & LF-APP-01, LF-STY-01 & test-LF-APP-01, test-LF-STY-01 \\ \hline
+\textsf{UsabilityPassRate}\hypertarget{const:UsabilityPassRate}{} & 80\% of participants & LF-APP-01, LF-STY-01, UHR-LRN-01 & test-LF-APP-01, test-LF-STY-01, test-UHR-LRN-01 \\ \hline
 \textsf{MinCohortSize}\hypertarget{const:MinCohortSize}{} & 10 participants & Team decision & test-LF-APP-01 \\ \hline
 \textsf{LocateTime}\hypertarget{const:LocateTime}{} & 5 seconds & LF-APP-01 & test-LF-APP-01 \\ \hline
 \textsf{ChartReadTime}\hypertarget{const:ChartReadTime}{} & 5 seconds & LF-APP-02 & test-LF-APP-02 \\ \hline
@@ -2482,6 +2437,12 @@ is updated to match.
 \textsf{WalkthroughTime}\hypertarget{const:WalkthroughTime}{} & 90 seconds & TRN-01 & test-TRN-01 \\ \hline
 \textsf{SeedHistory}\hypertarget{const:SeedHistory}{} & 30 days & TRN-03 & test-TRN-03 \\ \hline
 \textsf{SeedLoadTime}\hypertarget{const:SeedLoadTime}{} & 10 seconds & TRN-03 & test-TRN-03 \\ \hline
+\textsf{OnboardingTime}\hypertarget{const:OnboardingTime}{} & 5 minutes & UHR-EOU-01 & test-UHR-EOU-01 \\ \hline
+\textsf{InactivityPeriod}\hypertarget{const:InactivityPeriod}{} & 6 months & UHR-EOU-09 & test-UHR-EOU-09 \\ \hline
+\textsf{RelearnTime}\hypertarget{const:RelearnTime}{} & 5 minutes & UHR-EOU-09 & test-UHR-EOU-09 \\ \hline
+\textsf{FeatureAddTime}\hypertarget{const:FeatureAddTime}{} & 2 months & MAS-MNT-01, MAS-MNT-02 & test-MAS-MNT-01, test-MAS-MNT-02 \\ \hline
+\textsf{FixTime}\hypertarget{const:FixTime}{} & 5 business days & MAS-MNT-03, MAS-MNT-04 & test-MAS-MNT-03, test-MAS-MNT-04 \\ \hline
+\textsf{SupportResponseTime}\hypertarget{const:SupportResponseTime}{} & 2 business days & MAS-SUP-01 & test-MAS-SUP-01-02 \\ \hline
 \textsf{CoverageTarget}\hypertarget{const:CoverageTarget}{} & 80\% code coverage & Team decision & Section~\ref{sec:auto_tools} \\ \hline
 \textsf{UsabilityTestPeriod}\hypertarget{const:UsabilityTestPeriod}{} & 2 weeks & Team decision & Section~\ref{sec:validation} \\ \hline
 \multicolumn{4}{|l|}{\textit{Constants from the SRS}} \\ \hline
