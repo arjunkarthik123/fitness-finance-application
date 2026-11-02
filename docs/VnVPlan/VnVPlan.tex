@@ -1338,19 +1338,117 @@ These tests cover the Maintainability and Support Requirements section of the SR
 
 Covers MAS-MNT-01 to MAS-MNT-05.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-01-T-01} & \textbf{Fitness Activity Addition Effort}\\
+  \midrule
+  \textbf{Type} & Static Code Review, Manual\\
+  \textbf{Initial State} & System supports existing reward-eligible fitness activities.\\
+  \textbf{Input/Condition} & Development team adds a new fitness activity type (e.g., swimming) to the application.\\
+  \textbf{Output/Result} & The new activity type is implemented, deployed, and fully tested within two months.\\
+  \textbf{Covers} & MAS-MNT-01 and verifies that new reward-eligible fitness activities can be added with minimal maintenance effort.\\
+  \textbf{How test will be performed} & The development team will implement a new fitness activity type using the existing system architecture. Project records, pull requests, testing evidence, and deployment dates will be reviewed to verify completion within the 2 months.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-02-T-01} & \textbf{Investment Asset Addition Effort}\\
+  \midrule
+  \textbf{Type} & Static Code Review, Manual\\
+  \textbf{Initial State} & System contains an existing set of fictional investment assets.\\
+  \textbf{Input/Condition} & Development team adds a new investment asset or asset type to the simulated market.\\
+  \textbf{Output/Result} & The new investment asset is implemented, deployed, and fully tested within two months.\\
+  \textbf{Covers} & MAS-MNT-02 and verifies that additional asset types can be introduced without major redevelopment effort.\\
+  \textbf{How test will be performed} & A new fictional investment asset will be implemented and integrated into the market engine. Development records and deployment history will be reviewed to verify completion within the 2 months.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-03-T-01} & \textbf{Corrective Maintenance Effort}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & Critical production defect has been identified by a user.\\
+  \textbf{Input/Condition} & Development team receives a critical bug report.\\
+  \textbf{Output/Result} & Defect is fixed and deployed within five business days.\\
+  \textbf{Covers} & MAS-MNT-03 and verifies timely corrective maintenance of critical defects.\\
+  \textbf{How test will be performed} & Historical defect reports, GitHub issues, pull requests, testing records, and deployment timestamps will be reviewed. The elapsed time between defect reporting and deployment will be measured.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-04-T-01} & \textbf{Third-Party Integration Maintenance}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & A supported third-party fitness provider changes its API.\\
+  \textbf{Input/Condition} & Existing integration becomes incompatible due to external API changes.\\
+  \textbf{Output/Result} & A compatibility update is deployed within five business days of identifying the issue.\\
+  \textbf{Covers} & MAS-MNT-04 and verifies maintainability of third-party integrations and updates.\\
+  \textbf{How test will be performed} & An integration-breaking change will be simulated or identified from a real provider update. Development records and deployment dates will be reviewed to confirm compliance with the five-day requirement.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Supportability}
 
 Covers MAS-SUP-01.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-01} & \textbf{In-App Support Request Submission}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is logged into the application and has a support request they would like to raise.\\
+  \textbf{Input/Condition} & User opens the support feature and submits a support request.\\
+  \textbf{Output/Result} & Support request is successfully submitted and recorded by the system.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies the ability for users to request assistance from within the application.\\
+  \textbf{How test will be performed} & The tester will navigate to the support section, submit a support request, and verify the request is recorded successfully and visible to support personnel.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-02} & \textbf{Support Response Time Verification}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & At least one submitted unresolved support request exists.\\
+  \textbf{Input/Condition} & Review support logs and response records.\\
+  \textbf{Output/Result} & A response regarding resolution plans and timelines is provided within two business days.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies compliance with required support response times.\\
+  \textbf{How test will be performed} & A submitted unresolved support request will be sampled and reviewed. The tester will submit the response to the user verifying that it is sent immediately and veryifying that the response details can be found by the user. Timestamps will be compared to response records to verify compliance within 2 business days.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Adaptability}
 
 Covers MAS-ADPT-01 to MAS-ADPT-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-01-T-01} & \textbf{New Fitness Provider Integration}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A new third party fitness provider has been approved to integrate with the Flexin' application.\\
+  \textbf{Input/Condition} & User attempts to connect the new provider to their account to track activivty data.\\
+  \textbf{Output/Result} & The provider can be connected using the same workflow as existing providers.\\
+  \textbf{Covers} & MAS-ADPT-01 and verifies adaptability to future potential fitness providers.\\
+  \textbf{How test will be performed} & The tester will connect both an existing provider and the newly added provider. The setup process will be compared to verify workflow consistency.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-02-T-01} & \textbf{Mobile Platform Portability}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User has an existing account and they wish to access the application on an iOS mobile device.\\
+  \textbf{Input/Condition} & User signs in using an existing account from the iOS device.\\
+  \textbf{Output/Result} & Account information, activity history, and portfolio data are successfully retrieved without migration steps.\\
+  \textbf{Covers} & MAS-ADPT-02 and verifies future cross-platform portability.\\
+  \textbf{How test will be performed} & A compatible iOS client will authenticate using an existing account. The tester will verify successful data retrieval and consistency with Android data.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Security}
 
