@@ -1,0 +1,12 @@
+# In-memory H2 in MySQL compatibility mode, so tests need no database install.
+# A random name gives each Spring test context its own database, so Liquibase runs cleanly in each.
+# To test against real MySQL (as CI does), set SPRING_DATASOURCE_URL, _USERNAME and _PASSWORD.
+spring:
+  test:
+    database:
+      # Use the datasource above (or the env override) in @DataJpaTest too, not a fresh embedded one.
+      replace: none
+  datasource:
+    url: jdbc:h2:mem:${random.uuid};MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
