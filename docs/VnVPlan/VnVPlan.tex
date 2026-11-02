@@ -86,10 +86,11 @@ November 2, 2026 & 1.0 & Revision 0, unit testing section omitted from this vers
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+This document describes the Verification and Validation (VnV) plan for Flexin', a fitness and finance application that allows users to learn about the power of compounding through working out and investing. This plan describes the verification and validation activities that will be performed to ensure that the software meets its requirements and is fit for its intended purpose. The plan includes a description of the VnV team, the testing approach, the test cases, and the tools and techniques that will be used to perform the tests.
 
 \section{General Information}
+
+This section provides an overview of the software being tested, the objectives of the VnV plan, and the relevant documentation that will be used to support the VnV activities.
 
 \subsection{Summary}
 
@@ -238,8 +239,7 @@ This validation will be done from the perspective of the users and the stakehold
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section describes the system tests that will be performed to verify and validate the functional and non-functional requirements of Flexin'.
 
 \subsection{Tests for Functional Requirements}
 
@@ -247,9 +247,6 @@ The subsections below group the functional requirements in the Functional Requir
 SRS \citep{SRS} by feature area. Together they cover FUNC-01 to FUNC-16.
 FUNC-17 (Sponsored Reward Redemption) is a stretch goal in the SRS Waiting
 Room, so it is not tested.
-
-\wss{Each test uses the fields Control, Initial State, Input, Output, Test
-Case Derivation, and How test will be performed.}
 
 \subsubsection{Account Management}
 
@@ -499,6 +496,19 @@ These tests cover the portfolio and trading features of the simulated market.
 
 \noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
   \toprule
+  \textbf{FUNC-08-T-01} & \textbf{Portfolio Creation}\\
+  \midrule
+  \textbf{Control} & Automatic\\
+  \textbf{Initial State} & No user account exists.\\
+  \textbf{Input/Condition} & A new user account is successfully registered.\\
+  \textbf{Output/Result} & A portfolio is automatically created and associated with the new user account. The \texttt{PortfolioID} is generated and stored under this new user account. The newly created portfolio is initialized with no assets.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-08. The system will automatically create a new portfolio when a new user account is establihed.\\
+  \textbf{How test will be performed} & A new user wll be registered, the system checks if a portfolio has already been created for them. If not, the system will create one. It will then be verified that the portfolio exists in the database and correctly linked to the newly registered user.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
   \textbf{test-FR-09} & \textbf{Asset Purchase}\\
   \midrule
   \textbf{Type} & Dynamic, Automatic\\
@@ -554,8 +564,6 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{How test will be performed} & Through manual inspection and the use of financial calculators, the displayed portfolio value, percentage gain or loss, and growth graph are measured and verified.\\
   \bottomrule
 \end{tabularx}
-
-\wss{Add the test cases for these requirements.}
 
 \subsubsection{Community and Leaderboards}
 
@@ -645,10 +653,10 @@ The subsections below follow the nonfunctional requirement sections of the
 SRS \citep{SRS}. Each one lists the SRS subsections and requirement IDs that
 its tests cover.
 
-\wss{Each test uses the fields Type, Initial State, Input/Condition,
-Output/Result, and How test will be performed. Static tests, such as reviews,
-inspections, and walkthroughs, should instead say who is involved and how the
-review is run.}
+% \wss{Each test uses the fields Type, Initial State, Input/Condition,
+% Output/Result, and How test will be performed. Static tests, such as reviews,
+% inspections, and walkthroughs, should instead say who is involved and how the
+% review is run.}
 
 \subsubsection{Look and Feel}\label{sec:tests_nfr_lf}
 
@@ -1436,19 +1444,117 @@ These tests cover the Maintainability and Support Requirements section of the SR
 
 Covers MAS-MNT-01 to MAS-MNT-05.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-01-T-01} & \textbf{Fitness Activity Addition Effort}\\
+  \midrule
+  \textbf{Type} & Static Code Review, Manual\\
+  \textbf{Initial State} & System supports existing reward-eligible fitness activities.\\
+  \textbf{Input/Condition} & Development team adds a new fitness activity type (e.g., swimming) to the application.\\
+  \textbf{Output/Result} & The new activity type is implemented, deployed, and fully tested within two months.\\
+  \textbf{Covers} & MAS-MNT-01 and verifies that new reward-eligible fitness activities can be added with minimal maintenance effort.\\
+  \textbf{How test will be performed} & The development team will implement a new fitness activity type using the existing system architecture. Project records, pull requests, testing evidence, and deployment dates will be reviewed to verify completion within the 2 months.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-02-T-01} & \textbf{Investment Asset Addition Effort}\\
+  \midrule
+  \textbf{Type} & Static Code Review, Manual\\
+  \textbf{Initial State} & System contains an existing set of fictional investment assets.\\
+  \textbf{Input/Condition} & Development team adds a new investment asset or asset type to the simulated market.\\
+  \textbf{Output/Result} & The new investment asset is implemented, deployed, and fully tested within two months.\\
+  \textbf{Covers} & MAS-MNT-02 and verifies that additional asset types can be introduced without major redevelopment effort.\\
+  \textbf{How test will be performed} & A new fictional investment asset will be implemented and integrated into the market engine. Development records and deployment history will be reviewed to verify completion within the 2 months.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-03-T-01} & \textbf{Corrective Maintenance Effort}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & Critical production defect has been identified by a user.\\
+  \textbf{Input/Condition} & Development team receives a critical bug report.\\
+  \textbf{Output/Result} & Defect is fixed and deployed within five business days.\\
+  \textbf{Covers} & MAS-MNT-03 and verifies timely corrective maintenance of critical defects.\\
+  \textbf{How test will be performed} & Historical defect reports, GitHub issues, pull requests, testing records, and deployment timestamps will be reviewed. The elapsed time between defect reporting and deployment will be measured.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-MNT-04-T-01} & \textbf{Third-Party Integration Maintenance}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & A supported third-party fitness provider changes its API.\\
+  \textbf{Input/Condition} & Existing integration becomes incompatible due to external API changes.\\
+  \textbf{Output/Result} & A compatibility update is deployed within five business days of identifying the issue.\\
+  \textbf{Covers} & MAS-MNT-04 and verifies maintainability of third-party integrations and updates.\\
+  \textbf{How test will be performed} & An integration-breaking change will be simulated or identified from a real provider update. Development records and deployment dates will be reviewed to confirm compliance with the five-day requirement.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Supportability}
 
 Covers MAS-SUP-01.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-01} & \textbf{In-App Support Request Submission}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is logged into the application and has a support request they would like to raise.\\
+  \textbf{Input/Condition} & User opens the support feature and submits a support request.\\
+  \textbf{Output/Result} & Support request is successfully submitted and recorded by the system.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies the ability for users to request assistance from within the application.\\
+  \textbf{How test will be performed} & The tester will navigate to the support section, submit a support request, and verify the request is recorded successfully and visible to support personnel.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-SUP-01-T-02} & \textbf{Support Response Time Verification}\\
+  \midrule
+  \textbf{Type} & Static Review, Manual\\
+  \textbf{Initial State} & At least one submitted unresolved support request exists.\\
+  \textbf{Input/Condition} & Review support logs and response records.\\
+  \textbf{Output/Result} & A response regarding resolution plans and timelines is provided within two business days.\\
+  \textbf{Covers} & MAS-SUP-01 and verifies compliance with required support response times.\\
+  \textbf{How test will be performed} & A submitted unresolved support request will be sampled and reviewed. The tester will submit the response to the user verifying that it is sent immediately and veryifying that the response details can be found by the user. Timestamps will be compared to response records to verify compliance within 2 business days.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Adaptability}
 
 Covers MAS-ADPT-01 to MAS-ADPT-03.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-01-T-01} & \textbf{New Fitness Provider Integration}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & A new third party fitness provider has been approved to integrate with the Flexin' application.\\
+  \textbf{Input/Condition} & User attempts to connect the new provider to their account to track activivty data.\\
+  \textbf{Output/Result} & The provider can be connected using the same workflow as existing providers.\\
+  \textbf{Covers} & MAS-ADPT-01 and verifies adaptability to future potential fitness providers.\\
+  \textbf{How test will be performed} & The tester will connect both an existing provider and the newly added provider. The setup process will be compared to verify workflow consistency.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{MAS-ADPT-02-T-01} & \textbf{Mobile Platform Portability}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User has an existing account and they wish to access the application on an iOS mobile device.\\
+  \textbf{Input/Condition} & User signs in using an existing account from the iOS device.\\
+  \textbf{Output/Result} & Account information, activity history, and portfolio data are successfully retrieved without migration steps.\\
+  \textbf{Covers} & MAS-ADPT-02 and verifies future cross-platform portability.\\
+  \textbf{How test will be performed} & A compatible iOS client will authenticate using an existing account. The tester will verify successful data retrieval and consistency with Android data.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Security}
 
@@ -1700,7 +1806,44 @@ These tests cover the Cultural Requirements section of the SRS.
 
 Covers CUL-01, CUL-02.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-01-T-01} & \textbf{Supports Canadian Languages}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is logged into the application and the language setting is set to English.\\
+  \textbf{Input/Condition} & User navigates to Settings and changes the application language from English to French.\\
+  \textbf{Output/Result} & All user-facing screens, menus, labels, buttons, notifications, and educational content are correctly translated and displayed in French (Canada) with no untranslated text.\\
+  \textbf{Covers} & CUL-01. By passing this test, the application demonstrates support for Canadian French language localization.\\
+  \textbf{How test will be performed} & The tester will navigate through all major application screens after selecting French. The tester will inspect registration, login, dashboard, fitness goals, virtual currency, portfolio, educational content, settings, and notifications. The tester will verify that all visible text is translated into French and that no English text remains.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-01-T-02} & \textbf{Language Switching Persistence}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User1 has previously selected French as their preferred language. User2 has previously selected English as their preferred language.\\
+  \textbf{Input/Condition} & User1 closes and reopens the application. User1 logs out and logs into User2.\\
+  \textbf{Output/Result} & After User1 closes and reopens the application, all user-facing functionality remains displayed in French. After User1 logs out and logs into User2, all user-facing functionality is displayed in English to match the language settings set by User2.\\
+  \textbf{Covers} & CUL-01 by verifying that the individual user selected Canadian language remains active during future application use, regardless of account switching or application relaunching.\\
+  \textbf{How test will be performed} & User1 selects French, exits the application, relaunches Flexin', and verifies that all screens continue to appear in French without requiring the language to be selected again. User1 is logged out and logs into User2 verifying that all screens now appear in English to reflect User2's language settings.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{CUL-02-T-01} & \textbf{Culturally Neutral Educational Content}\\
+  \midrule
+  \textbf{Type} & Static, Manual\\
+  \textbf{Initial State} & Educational content, tutorials, glossary entries, and sample investment scenarios have been implemented.\\
+  \textbf{Input/Condition} & Review all educational screens and learning material included in the application.\\
+  \textbf{Output/Result} & Educational content uses culturally neutral language and examples that can be understood regardless of cultural background, religion, ethnicity, or geographic region.\\
+  \textbf{Covers} & CUL-02 and verifies the requirement that educational content be inclusive and broadly applicable.\\
+  \textbf{How test will be performed} & Reviewers will inspect all educational lessons, glossary entries, onboarding examples, and sample market content. Reviewers will verify that no content assumes familiarity with a specific culture, religion, ethnicity, or geographic region and that explanations remain understandable to a general Canadian audience.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{Compliance}
 
@@ -1710,13 +1853,87 @@ These tests cover the Compliance Requirements section of the SRS.
 
 Covers COMP-LEG-01 to COMP-LEG-07.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-LEG-01-T-01} & \textbf{User Consent for Health Data Collection}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User account exists. Health data permissions have yet to be granted.\\
+  \textbf{Input/Condition} & User attempts to connect a supported fitness provider.\\
+  \textbf{Output/Result} & No fitness data is retrieved until the user explicitly completes the permission and consent process.\\
+  \textbf{Covers} & COMP-LEG-01 and verifies that explicit user consent is obtained before fitness data collection begins.\\
+  \textbf{How test will be performed} & The tester will attempt to connect a supported fitness provider while declining permission requests. The tester will verify that no activity information is synchronized. The tester will then grant permission and verify that activity synchronization succeeds.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-LEG-04-T-01} & \textbf{User Data Deletion Rights}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User account exists and contains fitness history and personal information.\\
+  \textbf{Input/Condition} & User selects the account deletion option from the application settings menu.\\
+  \textbf{Output/Result} & User account is successfully deleted and personal information is completely removed from any system components (i.e. databases, caches). The user is then forced to log out of the application.\\
+  \textbf{Covers} & COMP-LEG-04 and verifies compliance with user rights regarding disposal of personal information according to PIPEDA.\\
+  \textbf{How test will be performed} & The tester will call the account deletion action, confirm their intention to delete the account, verify that account access is removed, and verify that stored information is deleted from the database. The tester will then verify that they were logged out and attempt to login to the account that was just removed with corresponding credentials and be denied access.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-LEG-05-T-01} & \textbf{AI-Generated Educational Content Disclosure}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & Educational content generated or assisted by an AI system is available.\\
+  \textbf{Input/Condition} & User views AI-assisted educational content.\\
+  \textbf{Output/Result} & A visible disclosure indicates that the content was generated or assisted by AI.\\
+  \textbf{Covers} & COMP-LEG-05 and verifies transparency requirements regarding AI-generated content.\\
+  \textbf{How test will be performed} & The tester will open educational content known to be AI-assisted and verify that the disclosure message is visible. The tester will also verify that application settings contain information regarding AI-assisted functionality.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-LEG-06-T-01} & \textbf{Age Verification During Registration}\\
+  \midrule
+  \textbf{Type} & Dynamic, Manual\\
+  \textbf{Initial State} & User is on the account registration screen - register an new account.\\
+  \textbf{Input/Condition} & User enters a date of birth indicating an age below MinAge (18 years).\\
+  \textbf{Output/Result} & Account activation is denied and registration cannot continue until an age at or above MinAge is entered and verified by the system.\\
+  \textbf{Covers} & COMP-LEG-06 and verifies enforcement of legal age requirements.\\
+  \textbf{How test will be performed} & The tester will attempt to create an account using a birth date corresponding to an age below MinAge. The tester will verify that account creation fails. The test will be repeated using an age of MinAge and registration should succeed. The process will be repeated one more time using an age above MinAge and registration should succeed.\\
+  \bottomrule
+\end{tabularx}
 
 \paragraph{Standards Compliance}
 
 Covers COMP-STD-01 to COMP-STD-07.
 
-\wss{Add the test cases for these requirements.}
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-STD-01-T-01} & \textbf{Google Play Store Compliance}\\
+  \midrule
+  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Initial State} & Release build is ready for deployment.\\
+  \textbf{Input/Condition} & Submit release build through Google Play validation process.\\
+  \textbf{Output/Result} & Application successfully passes all mandatory Google Play checks.\\
+  \textbf{Covers} & COMP-STD-01 and verifies Android platform compliance.\\
+  \textbf{How test will be performed} & The release build will be uploaded to the Google Play Store testing environment and validation results will be reviewed for errors or policy violations.\\
+  \bottomrule
+\end{tabularx}
+
+\noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
+  \toprule
+  \textbf{COMP-STD-03-04-05-T-01} & \textbf{Development Standards Compliance Review}\\
+  \midrule
+  \textbf{Type} & Static Code Review, Automatic\\
+  \textbf{Initial State} & Source code, database schema definitions, and CI/CD configuration are available for review.\\
+  \textbf{Input/Condition} & Execute the project's automated validation pipeline with linters and review generated reports.\\
+  \textbf{Output/Result} & TypeScript code passes configured linting and formatting checks, Java code passes configured linting and formatting checks, and all database schema definitions and queries execute successfully against the supported MySQL version without warnings or errors.\\
+  \textbf{Covers} & CCOMP-STD-03, COMP-STD-04, and COMP-STD-05. Verifies compliance with TypeScript coding standards, Java coding standards, and database compatibility requirements.\\
+  \textbf{How test will be performed} & A pull request containing representative frontend, backend, and database changes will be submitted. The CI/CD pipeline will automatically execute ESLint/TypeScript validation, Java linting and formatting validation, and database schema/query verification scripts against the supported MySQL environment. The test passes only if all checks complete successfully with no errors or warnings preventing merge approval.\\
+  \bottomrule
+\end{tabularx}
 
 \subsubsection{User Documentation and Training}
 
