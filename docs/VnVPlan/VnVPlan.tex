@@ -2309,18 +2309,92 @@ graduate attribute of Lifelong Learning.
 \input{../Reflection.text}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable? 
+  \item What went well while writing this deliverable? \newline
+  Our meetings worked well for the sections everyone had to contribute to,
+  especially Section 2 (General Information). We talked through that section as
+  a group and kept notes as we went. Noah couldn't make that meeting, but between
+  the notes and a quick catch-up he understood what we had decided and wrote the
+  section up without needing a second meeting. \newline
+  We also stuck to the internal deadlines we set, so everything was ready for
+  review on Sunday morning instead of being finished at the last minute. \newline
+  Splitting up the work was easy because the test plan follows the SRS. Each
+  person took the requirements they had worked on in the SRS and wrote the
+  matching tests, which meant people were writing about parts of the system they
+  already knew well.
+
   \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
+    did you resolve them? \newline
+  Fewer people made it to meetings this time because of things outside our
+  control, mostly illness. We handled this the same way that worked for Section
+  2: whoever attended took notes, and anyone who missed a meeting caught up from
+  those notes and checked in with the group if anything was unclear. \newline
+  We also weren't consistent at first about how to write test cases. Some of us
+  used tables and some didn't, and test IDs weren't formatted the same way. We
+  agreed on one format: every test gets an ID tied to the requirement it covers
+  (for example, FUNC-01-T-01), written in a table with the same fields (control,
+  initial state, inputs, output, derivation, and how the test will be performed).
+  Then we went back and updated the tests that didn't match.
+
   \item What knowledge and skills will the team collectively need to acquire to
   successfully complete the verification and validation of your project?
   Examples of possible knowledge and skills include dynamic testing knowledge,
   static testing knowledge, specific tool usage, Valgrind etc.  You should look to
-  identify at least one item for each team member.
+  identify at least one item for each team member. \newline
+  \begin{itemize}
+    \item \textbf{Peter:} Unit testing with JUnit.
+    \item \textbf{Daniel F.:} Integration testing.
+    \item \textbf{Daniel H.:} System testing.
+    \item \textbf{Arjun:} Static testing, and tracking the issues it finds.
+    \item \textbf{Noah:} Documenting test results properly and reporting on them.
+  \end{itemize}
+
   \item For each of the knowledge areas and skills identified in the previous
   question, what are at least two approaches to acquiring the knowledge or
   mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
+  member pursue, and why did they make this choice? \newline
+  \begin{itemize}
+    \item \textbf{Peter (JUnit):} Peter could learn JUnit from the official JUnit
+    5 documentation and tutorials, or from a video course or guided online
+    tutorial that builds a test suite from scratch. He will use the official
+    documentation, along with writing small practice tests against our own
+    project's classes. The documentation is the most accurate and up-to-date
+    source, and practicing on our own code means what he learns carries straight
+    over to our verification work.
+
+    \item \textbf{Daniel F. (Integration testing):} Daniel F. could learn
+    integration testing by studying the standard strategies (top-down,
+    bottom-up, and big-bang integration) in a textbook or course material, or by
+    reading through the integration tests in open-source projects similar to
+    ours. He will start with the reading on strategies and then apply it by
+    mapping out how our modules interact. He picked this because choosing the
+    right integration approach for our architecture has to happen before writing
+    the tests, and it will show him where the riskiest module interfaces are.
+
+    \item \textbf{Daniel H. (System testing):} Daniel H. could learn system
+    testing by reading about requirements-based and black-box testing
+    techniques, or by working through a hands-on tutorial that tests a complete
+    application end to end. He will take the requirements-based approach and use
+    our SRS to derive system-level test cases. Since the SRS is already written,
+    tying the system tests to its requirements builds the skill and also checks
+    that we cover everything we said we would deliver.
+
+    \item \textbf{Arjun (Static testing and tracking):} Arjun could learn static
+    testing by running static analysis tools such as linters on our codebase, or
+    by learning formal review techniques like code inspections and walkthroughs.
+    For tracking, he could use a defect tracker such as GitHub Issues or Jira. He
+    will do both the static analysis tools and the tracking tool, starting with
+    the tools. Running the tools gives him concrete experience right away, and
+    logging what they find in an issue tracker as he goes lets him learn both
+    skills together.
+
+    \item \textbf{Noah (Documentation of results and reporting):} Noah could
+    learn to document results by studying standard test report templates and
+    examples, such as the IEEE 829 structure, or by asking the team and the
+    course instructors for feedback on early drafts of his reports. He will do
+    both, starting with the templates and then revising his drafts based on
+    feedback. The templates give him a professional structure to follow, and the
+    feedback makes sure the reports are clear and useful to the rest of the team.
+  \end{itemize}
 \end{enumerate}
 
 \end{document}
