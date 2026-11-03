@@ -632,7 +632,7 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{Inputs} & The user calls to purchase an available asset from the available virtual assets in the application.\\
   \textbf{Output} & The cost of the asset is deducted from the user's currency balance, and the asset is added to the user's portfolio.\\
   \textbf{Test Case Derivation} & This test covers FUNC-09. Users can purchase available assets if they have sufficient virtual currency, so the balance must decrease by the asset's cost and the asset must appear in the portfolio.\\
-  \textbf{How test will be performed} & A user will purchase an asset in the application, after the purchase of this asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
+  \textbf{How test will be performed} & A user will call a purchase action of an asset in the application, after the purchase of this asset, the balance is checked to confirm the currency was removed and the portfolio is checked to confirm the asset was added.\\
   \bottomrule
 \end{tabularx}
 
@@ -643,11 +643,11 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{test-FUNC-10} & \textbf{Asset Sale}\\
   \midrule
   \textbf{Control} & Automatic\\
-  \textbf{Initial State} & The user is logged in and holds at least one previously purchased asset in their portfolio.\\
+  \textbf{Initial State} & The user is logged in and owns at least one previously purchased asset in their portfolio.\\
   \textbf{Inputs} & The user calls to sell an owned asset from their personal portfolio.\\
-  \textbf{Output} & The sale value is added to the user's currency balance, and the asset is removed from the portfolio.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the asset is removed from the portfolio.\\
-  \textbf{How test will be performed} &  A user will sell an asset in the application, after the sale of the asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
+  \textbf{Output} & The sale value is added to the user's currency balance, and the asset is removed from their portfolio.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-10. Users can sell assets currently held in their portfolio, so the proceeds must be credited and the asset is removed from their portfolio.\\
+  \textbf{How test will be performed} &  A user will call a sell action of an asset in the application, after the sale of the asset, the balance is checked to confirm the currency was added and the portfolio is checked to confirm the asset was removed.\\
   \bottomrule
 \end{tabularx}
 
@@ -660,9 +660,9 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{Control} & Manual\\
   \textbf{Initial State} & The user is logged in and has a non-empty transaction history.\\
   \textbf{Inputs} & A user requests to view their previous market transactions.\\
-  \textbf{Output} & A list of all transactions the user has made, including the type (buy or sell), asset, quantity, price and time.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-11, and also confirms the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the trades that were made.\\
-  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and checked against the trades that were made.\\
+  \textbf{Output} & A list of all transactions the user has made is shown, including the type (buy or sell), asset, quantity, price and time.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-11, and verifies the effects of FUNC-09 and FUNC-10. Every purchase and sale generates a transaction record the user can view at any time, so the list must match the actions that were made.\\
+  \textbf{How test will be performed} & After completing one or more transactions on an account, the user's transaction list is viewed and verified against the trades that were made.\\
   \bottomrule
 \end{tabularx}
 
@@ -676,8 +676,8 @@ These tests cover the portfolio and trading features of the simulated market.
   \textbf{Initial State} & The user is logged in and has a portfolio containing at least one asset.\\
   \textbf{Inputs} & The user calls to view portfolio performance over a set amount of time.\\
   \textbf{Output} & The portfolio's current value and its percentage gain or loss. A graph of growth or loss over time is shown to the user.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-12. Users can view their current portfolio value and unrealized gains or losses, which helps them judge how well their investment strategies have performed.\\
-  \textbf{How test will be performed} & Through manual inspection of the graphs and curated scenarios in the automated tests, the displayed information, and graphs will be measured and verified.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-12. Users can view their current portfolio value, which helps them judge how well their investment strategies have performed.\\
+  \textbf{How test will be performed} & Through manual inspection of the graphs and curated scenarios in the automated testing suite, the displayed information, and graphs will be measured and verified.\\
   \bottomrule
 \end{tabularx}
 
@@ -704,11 +704,11 @@ These tests cover friends lists and public and private leaderboard groups.
   \toprule
   \textbf{test-FUNC-13} & \textbf{Leaderboard Participation}\\
   \midrule
-  \textbf{Control} & Manual\\
+  \textbf{Control} & Dynamic, Manual\\
   \textbf{Initial State} & The user is logged in, and a leaderboard with open spaces is available to join.\\
-  \textbf{Inputs} & A logged in user and a valid leaderboard identifier of a leaderboard with open spaces.\\
-  \textbf{Output} & The user joins the intended leaderboard and appears in its member list.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-13. A user can join a leaderboard. After joining, the user must be a member of the chosen leaderboard and able to compete with its other members.\\
+  \textbf{Inputs} & A user calls the action to join a leaderboard with open spaces.\\
+  \textbf{Output} & The user joins the intended leaderboard and appears in the members list.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-13. A user can join a leaderboard. After joining, the user must be a member of the chosen leaderboard and be able to compete with its other members.\\
   \textbf{How test will be performed} & After the user attempts to join the leaderboard, check that the user has joined that specific leaderboard and is visible to other members in that leaderboard.\\
   \bottomrule
 \end{tabularx}
@@ -717,13 +717,13 @@ These tests cover friends lists and public and private leaderboard groups.
 
 \noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
   \toprule
-  \textbf{test-FUNC-14} & \textbf{Friend Management - Send Friend Request}\\
+  \textbf{test-FUNC-14-01} & \textbf{Friend Management - Send Friend Request}\\
   \midrule
-  \textbf{Control} & Manual\\
+  \textbf{Control} & Dynamic, Manual\\
   \textbf{Initial State} & The user is logged in and can search for other users by their specific user identifier.\\
-  \textbf{Inputs} & The identifier of another user.\\
-  \textbf{Output} & A friend request is sent to that user, and the requestee can respond.\\
-  \textbf{Test Case Derivation} & This test covers FUNC-14. Users can send friend requests to other users to be able to see and track each other progress.\\
+  \textbf{Inputs} & The identifier of another user and an action that will prompt the sending of a friend request.\\
+  \textbf{Output} & A friend request is sent to that user.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-14. Users can send friend requests to other users to be able to see and track each others progress.\\
   \textbf{How test will be performed} & A user will call the action to send a friend request to another user, the requestee will be able to see the request in their application and through manual inspection will be verified.\\
   \bottomrule
 \end{tabularx}
@@ -732,12 +732,12 @@ These tests cover friends lists and public and private leaderboard groups.
 
 \noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
   \toprule
-  \textbf{test-FUNC-14} & \textbf{Friend Management - Accept/Decline Friend Request}\\
+  \textbf{test-FUNC-14-02} & \textbf{Friend Management - Accept/Decline Friend Request}\\
   \midrule
-  \textbf{Control} & Manual\\
-  \textbf{Initial State} & The user is logged in and can view all friend requests received.\\
-  \textbf{Inputs} & A currently open friend request with the ability to be responded too.\\
-  \textbf{Output} & Based on the user response the request will be accepted or denied.\\
+  \textbf{Control} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and can view all friend requests they have received.\\
+  \textbf{Inputs} & A currently open friend request with the an action for response to the request.\\
+  \textbf{Output} & Based on the user's response the request will be accepted or denied.\\
   \textbf{Test Case Derivation} & This test covers FUNC-14. Users receive friend requests and have the ability to respond to these requests.\\
   \textbf{How test will be performed} & After the user receives a friend request, the requestee will call the action to respond (accept or decline) and through manual inspection will be verified.\\
   \bottomrule
@@ -747,12 +747,12 @@ These tests cover friends lists and public and private leaderboard groups.
 
 \noindent\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.5cm}X}
   \toprule
-  \textbf{test-FUNC-14} & \textbf{Friend Management - Remove Friend}\\
+  \textbf{test-FUNC-14-03} & \textbf{Friend Management - Remove Friend}\\
   \midrule
-  \textbf{Control} & Manual\\
-  \textbf{Initial State} & The user is logged in and can view all friend requests received.\\
-  \textbf{Inputs} & The identifier of another user that is currently the user's friend.\\
-  \textbf{Output} & The user will be able to remove the unwanted users from their friend list.\\
+  \textbf{Control} & Dynamic, Manual\\
+  \textbf{Initial State} & The user is logged in and can view all current friends.\\
+  \textbf{Inputs} & The identifier of another user that is currently the user's friend list and a action to remove the friend.\\
+  \textbf{Output} & The user will be able to remove the unwanted user from their friend list.\\
   \textbf{Test Case Derivation} & This test covers FUNC-14. Users can remove friends. A previously added friend must be able to also be removed\\
   \textbf{How test will be performed} & After the user has added a friend, the user will call the action to remove the friend from their friend list and through inspection will be verified..\\
   \bottomrule
@@ -768,7 +768,7 @@ These tests cover friends lists and public and private leaderboard groups.
   \textbf{Initial State} & The user is logged in.\\
   \textbf{Input/Condition} & A logged in user and a request to create a new leaderboard.\\
   \textbf{Output/Result} & A new private leaderboard is created with a unique leaderboard identifier.\\
-  \textbf{Test Case Derivation} & FUNC-15. Users can create private competition groups, so a successful request must produce a new group with its own ID. The created group is also needed by the FR-13 tests, which require a leaderboard to join.\\
+  \textbf{Test Case Derivation} & This test covers FUNC-15. Users can create private competition groups called leaderboards, so a successful request must produce a new leaderboard with its own identifier.\\
   \textbf{How test will be performed} & After the user completes the steps to create a leaderboard, check that a valid leaderboard identifier exists and that the creator is a member of the new leaderboard.\\
   \bottomrule
 \end{tabularx}
@@ -794,12 +794,12 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
   \toprule
   \textbf{test-FR-16} & \textbf{Progress Reporting}\\
   \midrule
-  \textbf{Type} & Dynamic, Automatic\\
+  \textbf{Type} & Dynamic, Manual\\
   \textbf{Initial State} & The user is logged in and has a trackable history of activity, goals, currency earnings and portfolio activity.\\
-  \textbf{Input/Condition} & A logged in user and a request to view the progress data connected to that user's records.\\
+  \textbf{Input/Condition} & The user requests to view the progress data connected to that their records.\\
   \textbf{Output/Result} & Current and historical summaries of the user's fitness activity, goal completion, virtual currency earnings, portfolio performance and leaderboard standings, each matching the data recorded for that user.\\
-  \textbf{Test Case Derivation} & FUNC-16. Users can access current and historical progress information at any time, so each summary must match the stored data. It also verifies the combined effects of FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12, whose data feed the report.\\
-  \textbf{How test will be performed} & After the \texttt{UserID} is submitted to retrieve account progress, check that the returned summaries include the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
+  \textbf{Test Case Derivation} & This test covers FUNC-16 and verifies the effects of  FUNC-03, FUNC-04, FUNC-05, FUNC-06, FUNC-07 and FUNC-12. Users can access current and historical progress information at any time, so each summary will match the stored data.\\
+  \textbf{How test will be performed} & After the request is submitted to retrieve account progress, check that the returned summaries include and clearly displays the user's activity, goal tracking, currency earnings, portfolio performance and leaderboard standings if applicable\\
   \bottomrule
 \end{tabularx}
 
@@ -1610,7 +1610,7 @@ Covers PROD-01, PROD-02.
   \textbf{test-PR-02} & \textbf{Public Store Installation}\\
   \midrule
   \textbf{Type} & Manual\\
-  \textbf{Initial State} & The app is published on a publicly accessible through an Android app store listing.\\
+  \textbf{Initial State} & The app is published and publicly accessible through an Android app store listing.\\
   \textbf{Input/Condition} & The user attempts to find and install the application.\\
   \textbf{Output/Result} & The app is installed and ready for the user to use.\\
   \textbf{Test Case Derivation} & PROD-02, and verifies the effects of PROD-01. Users must be able to access, download, install and update the app from a public source.\\
@@ -2539,8 +2539,8 @@ is updated to match.
 \begin{itemize}
     \item \textbf{Defining Test Cases:} AI was used to help 
     for designing the test cases for each of the needed requirements. AI was used for 
-    idea generation and compilation, checking general coverage and finding proper use 
-    cases for test case derivation. AI was used to ensure consistency, formatting and 
+    idea generation and compilation, grammar and conveying messages, checking to ensure there are no gaps,
+    and finding proper use cases for test case derivation. AI was used to ensure consistency, formatting and 
     style of the test cases and to review the test cases for any additional needs.
     \item \textbf{Reflection Drafting (Appendix --- Reflection):} The team met
     and agreed on the answers to the reflection questions, and recorded them as
