@@ -59,7 +59,7 @@ November 2, 2026 & 1.0 & Revision 0, unit testing section omitted from this vers
 
 Table~\ref{tab:acronyms} lists the abbreviations and acronyms used in this
 document. Requirement IDs (for example FUNC-01, PR-SL-01, and SEC-ACC-01) use
-the prefixes defined in the ID prefixes table of the SRS \citep{SRS}. Each
+the prefixes defined in the ID prefixes table of the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}. Each
 system test is named \texttt{test-} followed by the ID of the requirement it
 verifies (for example test-PR-SL-01). When one requirement has more than one
 test, a two-digit number is added to the end (for example test-FUNC-01-01 and
@@ -161,7 +161,7 @@ For the VnV plan to achieve this objective, the team will prioritize the followi
 
 The following objectives are out of scope for this VnV plan:
 \begin{itemize}
-  \item \textbf{Assumptions in the SRS and Hazard Analysis:} The assumptions listed in the SRS \citep{SRS} and the Critical Assumptions section of the Hazard Analysis are taken as given and will not be verified.
+  \item \textbf{Assumptions in the SRS and Hazard Analysis:} The assumptions listed in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} and the Critical Assumptions section of the Hazard Analysis are taken as given and will not be verified.
   \item \textbf{Third-party packages and libraries:} External dependencies, such as Android Health Connect and the Garmin Connect IQ SDK, are assumed to be correct and already verified by their implementation teams (e.g.\ Garmin). The team does not have the time or resources to verify these libraries within the scope of this capstone. This matches the Hazard Analysis assumption that third-party health platforms keep their documented behaviour. \progname{}'s own handling of outages and malformed data from these sources is still in scope (PR-RFT-03).
   \item \textbf{Internet connectivity:} The SRS lists a mobile data or Wi-Fi connection as part of the environment needed to reach the \progname{} backend. The strength and reliability of the user's connection will not be tested. The app's required offline behaviour (PR-RFT-01 and PR-RFT-04) is still in scope.
   \item \textbf{Full verification of user-reported fitness activity:} The team will not attempt to fully verify that users are not lying about completing fitness goals, as this would require too much time and resources. The SRS already assumes that fitness devices report correct data and that artificial changes are dishonest use, and SC-04 limits this risk by not allowing manual entry of activity. Small checks may be used to gauge validity in some cases (e.g.\ checking that a Garmin watch's heart rate reading stays above a threshold for a period of time), but validity cannot be guaranteed, especially for users without a Garmin device who track activity solely through their phone.
@@ -179,8 +179,8 @@ The team is completing two custom documents (CDs), one per term:
 
 The following documents are relevant to the VnV efforts:
 \begin{itemize}
-  \item \textbf{Software Requirements Specification (SRS)} \citep{SRS}: Defines the functional and non-functional requirements of \progname{}, each with a fit criterion. These fit criteria are what the tests in this plan check against. The SRS also lists the assumptions that bound what is in scope for verification, and names the testing tools the team will use (JUnit for backend unit and system tests, and Detox for end-to-end tests of the mobile client).
-  \item \textbf{Hazard Analysis:} Identifies the hazards of using \progname{} and defines twelve safety and security requirements (SR1--SR12) to mitigate them, each with a fit criterion. Its roadmap commits to implementing SR1, SR2, SR3, SR6, SR8, SR9, SR11, and SR12 within the capstone, so these are the safety and security requirements this plan verifies. Its Critical Assumptions are excluded from verification.
+  \item \textbf{Software Requirements Specification (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS})}: Defines the functional and non-functional requirements of \progname{}, each with a fit criterion. These fit criteria are what the tests in this plan check against. The SRS also lists the assumptions that bound what is in scope for verification, and names the testing tools the team will use (JUnit for backend unit and system tests, and Detox for end-to-end tests of the mobile client).
+  \item \textbf{\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{HazardAnalysis}}: Identifies the hazards of using \progname{} and defines twelve safety and security requirements (SR1--SR12) to mitigate them, each with a fit criterion. Its roadmap commits to implementing SR1, SR2, SR3, SR6, SR8, SR9, SR11, and SR12 within the capstone, so these are the safety and security requirements this plan verifies. Its Critical Assumptions are excluded from verification.
   \item \textbf{Health Connect and Garmin Connect IQ SDK documentation:} Describes how activity data is provided to \progname{}. Since these platforms are assumed to keep their documented behaviour, their documentation defines the data the integration is expected to receive.
   \item \textbf{Custom Documents:} The interview report (CD-Fall) records the user and client needs that the requirements were derived from, which is what validation testing checks the app against. The business plan (CD-Winter) has little direct bearing on VnV, but one SRS scalability requirement refers to it for how the product might grow after the capstone.
   \item \textbf{User interviews and user testing:} The interviews in the SRS appendix ground the requirements in real user needs. The SRS also plans user testing on demo builds in Term 2 (Weeks 17 and 21), which will be used to assess learnability and user confidence in the financial lessons.
@@ -317,7 +317,7 @@ This validation will be done from the perspective of the users and the stakehold
 
 This section describes the system tests that will be performed to verify and validate the functional and non-functional requirements of Flexin'. The tests for functional
 requirements come first, followed by the tests for nonfunctional requirements,
-both grouped in the same order as the SRS \citep{SRS}. The section ends with a
+both grouped in the same order as the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}. The section ends with a
 table that traces each test to the requirement it verifies.
 
 The mandated constraints in the SRS (SC-01 to SC-06) limit how \progname{} is
@@ -333,7 +333,7 @@ traceability table lists these under ``Also Supports''.
 \subsection{Tests for Functional Requirements}
 
 The subsections below group the functional requirements in the Functional Requirements section of the
-SRS \citep{SRS} by feature area. Together they cover FUNC-01 to FUNC-16.
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} by feature area. Together they cover FUNC-01 to FUNC-16.
 FUNC-17 (Sponsored Reward Redemption) is a stretch goal in the SRS Waiting
 Room, so it is not tested.
 
@@ -806,7 +806,7 @@ These tests cover the summaries of activity, goals, earnings, portfolio performa
 \subsection{Tests for Nonfunctional Requirements}
 
 The subsections below follow the nonfunctional requirement sections of the
-SRS \citep{SRS}. Each one lists the SRS subsections and requirement IDs that
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}. Each one lists the SRS subsections and requirement IDs that
 its tests cover.
 
 Each test case gives its type, initial state, input or condition, expected
@@ -816,7 +816,7 @@ review is run.
 
 \subsubsection{Look and Feel}\label{sec:tests_nfr_lf}
 
-These tests cover the Look and Feel Requirements section of the SRS \citep{SRS}, spanning appearance and style.
+These tests cover the Look and Feel Requirements section of the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, spanning appearance and style.
 
 \paragraph{Appearance}
 
@@ -1750,7 +1750,7 @@ Covers MAS-ADPT-01 to MAS-ADPT-03.
 
 \subsubsection{Security}
 
-These tests cover the Security Requirements section of the SRS \citep{SRS}, spanning access control, data and logic integrity, privacy, economic and security audit logging, and immunity against attacks.
+These tests cover the Security Requirements section of the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, spanning access control, data and logic integrity, privacy, economic and security audit logging, and immunity against attacks.
 
 \paragraph{Access}
 
@@ -2100,10 +2100,10 @@ Covers COMP-LEG-01 to COMP-LEG-07.
   \midrule
   \textbf{Type} & Dynamic, Manual\\
   \textbf{Initial State} & User is on the account registration screen - register an new account.\\
-  \textbf{Input/Condition} & User enters a date of birth indicating an age below MinAge (18 years).\\
-  \textbf{Output/Result} & Account activation is denied and registration cannot continue until an age at or above MinAge is entered and verified by the system.\\
+  \textbf{Input/Condition} & User enters a date of birth indicating an age below \const{MinAge}.\\
+  \textbf{Output/Result} & Account activation is denied and registration cannot continue until an age at or above \const{MinAge} is entered and verified by the system.\\
   \textbf{Covers} & COMP-LEG-06 and verifies enforcement of legal age requirements.\\
-  \textbf{How test will be performed} & The tester will attempt to create an account using a birth date corresponding to an age below MinAge. The tester will verify that account creation fails. The test will be repeated using an age of MinAge and registration should succeed. The process will be repeated one more time using an age above MinAge and registration should succeed.\\
+  \textbf{How test will be performed} & The tester will attempt to create an account using a birth date corresponding to an age below \const{MinAge}. The tester will verify that account creation fails. The test will be repeated using an age of \const{MinAge} and registration should succeed. The process will be repeated one more time using an age above \const{MinAge} and registration should succeed.\\
   \bottomrule
 \end{tabularx}
 
@@ -2141,7 +2141,7 @@ Covers COMP-STD-01 to COMP-STD-07.
 
 \subsubsection{User Documentation and Training}
 
-These tests cover the User Documentation and Training Requirements section of the SRS \citep{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
+These tests cover the User Documentation and Training Requirements section of the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, spanning in-app educational documentation, setup guides, help systems, and user training onboarding mechanisms.
 
 \paragraph{User Documentation}
 
@@ -2431,7 +2431,7 @@ the questions for the usability survey.
 The test cases use symbolic constants instead of literal values, so a value
 only has to change in one place. Table~\ref{tab:constants} gives the value of
 each constant, where the value comes from, and the tests that use it. Most
-values come from the fit criteria of the SRS requirements \citep{SRS}. The
+values come from the fit criteria of the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS requirements}. The
 second group of constants is defined in the SRS symbolic constants table, and
 this plan uses the same names and values. Values marked ``initial'' may change
 after user testing; if they do, the SRS table is updated first and this table
@@ -2478,6 +2478,7 @@ is updated to match.
 \multicolumn{4}{|l|}{\textit{Constants from the SRS}} \\ \hline
 \textsf{HealthyDailyActivity}\hypertarget{const:HealthyDailyActivity}{} & 10{,}000 steps or 60 minutes of recorded workouts (initial) & SRS & test-PR-SC-01 \\ \hline
 \textsf{DailyEarnCap}\hypertarget{const:DailyEarnCap}{} & The currency earned for 1.5 $\times$ \const{HealthyDailyActivity} (initial) & SRS & test-PR-SC-01 \\ \hline
+\textsf{MinAge}\hypertarget{const:MinAge}{} & 18 years old & SRS & test-COMP-LEG-06 \\ \hline
 \textsf{MaxGoalIncrease}\hypertarget{const:MaxGoalIncrease}{} & 10\% per week (initial) & SRS & test-PR-SC-06 \\ \hline
 \textsf{MissedGoalLimit}\hypertarget{const:MissedGoalLimit}{} & 3 consecutive goal periods (initial) & SRS & test-PR-SC-06 \\ \hline
 \textsf{MaxDailyNotifications}\hypertarget{const:MaxDailyNotifications}{} & 3 per day (initial) & SRS & test-PR-SC-07 \\ \hline
@@ -2499,12 +2500,15 @@ is updated to match.
   \item How did you feel about the initial four-step walkthrough? Did you find it helpful, or did you just want to tap ``Skip Tour''?
   \item Did the app feel overwhelming when you first opened it, or did the advanced trading features unlock at a comfortable pace after you logged some activity?
   \item How would you describe the tone of the app? Does the financial terminology feel intimidating, or supportive and approachable?
+  \item On a scale of 1-5 how much would you say you felt you could relate to the educational financial content? Would you say there was anything that you could not understand?
+  \item How long would you say it took you to become completely comfortable with the application? Completely comfortable with managing or viewing fitness goals? Completely comfortable with managing or viewing your financial portfolio? Completely comfortable with managing or viewing your account details?
 \end{itemize}
 
 \paragraph{Navigation \& Dashboard}
 \begin{itemize}
   \item Without searching, can you immediately point to your current fitness progress and your overall portfolio value on the home screen?
   \item If you wanted to browse the market or read an educational article, which tabs at the bottom would you naturally tap?
+  \item Did you ever encounter a situation when using the application where you felt it was unclear if the action was successful or not? If yes, please describe this experience - what action were you trying to perform? When did this occur? What would have helped in providing clarity?
 \end{itemize}
 
 \paragraph{Charts \& Simulated Investing}
@@ -2519,7 +2523,15 @@ is updated to match.
   \item When you hit a milestone, does the reward animation feel fun, or does it block you from using the app? Did you know you could swipe to dismiss it?
   \item Do you understand exactly what parts of your profile are public on the leaderboard versus kept entirely private?
   \item If you needed help connecting your Garmin or Android Health Connect, where would you go in the app to find the setup guide?
+  \item On a scale of 1-5, how easy was it for you to raise a support request or provide feedback to the development team from within the app? Did you have any trouble locating the support request or provide feedback functions?
+  \item Did you ever feel as though you were offended by any messaging towards you? - whether from any system notifications/messaging or from other user-generated names or messages?
 \end{itemize}
+
+\paragraph{Personalization}
+\begin{itemize}
+  \item On a scale of 1-5, how much would you say you felt regarding the ability to personalize your experience (fitness goals, privacy settings, competition groups, notification settings, etc.)? Anything that was not present that you wish you would like to be able to customize in the future?
+\end{itemize}
+
 
 \newpage{}
 
@@ -2554,7 +2566,7 @@ is updated to match.
     symbols, abbreviations, and acronyms table from the terms used in this
     document, to add captions to the document's tables for the list of tables,
     and to collect the values used in the system tests into the symbolic
-    constants table. Constants that already exist in the SRS \citep{SRS} reuse
+    constants table. Constants that already exist in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} reuse
     the SRS names and values.
     \item \textbf{Formatting Consistency (Document-wide):} AI was used to
     find and fix formatting that differed between sections written by
@@ -2568,7 +2580,7 @@ All AI-assisted material was reviewed by the team before it was merged.
 Reflection answers were checked against the meeting notes, and each member
 checked that their own skill and learning approach was described correctly.
 Every constant value was checked against the test that uses it and, where the
-constant comes from the SRS, against the SRS symbolic constants table. Every
+constant comes from the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, against the SRS symbolic constants table. Every
 renamed test ID was checked against the traceability table and the
 requirement it covers. Changes were made through pull requests and reviewed by
 at least one other team member, and the team is responsible for the accuracy of
