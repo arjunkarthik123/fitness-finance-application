@@ -2100,10 +2100,10 @@ Covers COMP-LEG-01 to COMP-LEG-07.
   \midrule
   \textbf{Type} & Dynamic, Manual\\
   \textbf{Initial State} & User is on the account registration screen - register an new account.\\
-  \textbf{Input/Condition} & User enters a date of birth indicating an age below MinAge (18 years).\\
-  \textbf{Output/Result} & Account activation is denied and registration cannot continue until an age at or above MinAge is entered and verified by the system.\\
+  \textbf{Input/Condition} & User enters a date of birth indicating an age below \const{MinAge}.\\
+  \textbf{Output/Result} & Account activation is denied and registration cannot continue until an age at or above \const{MinAge} is entered and verified by the system.\\
   \textbf{Covers} & COMP-LEG-06 and verifies enforcement of legal age requirements.\\
-  \textbf{How test will be performed} & The tester will attempt to create an account using a birth date corresponding to an age below MinAge. The tester will verify that account creation fails. The test will be repeated using an age of MinAge and registration should succeed. The process will be repeated one more time using an age above MinAge and registration should succeed.\\
+  \textbf{How test will be performed} & The tester will attempt to create an account using a birth date corresponding to an age below \const{MinAge}. The tester will verify that account creation fails. The test will be repeated using an age of \const{MinAge} and registration should succeed. The process will be repeated one more time using an age above \const{MinAge} and registration should succeed.\\
   \bottomrule
 \end{tabularx}
 
@@ -2478,6 +2478,7 @@ is updated to match.
 \multicolumn{4}{|l|}{\textit{Constants from the SRS}} \\ \hline
 \textsf{HealthyDailyActivity}\hypertarget{const:HealthyDailyActivity}{} & 10{,}000 steps or 60 minutes of recorded workouts (initial) & SRS & test-PR-SC-01 \\ \hline
 \textsf{DailyEarnCap}\hypertarget{const:DailyEarnCap}{} & The currency earned for 1.5 $\times$ \const{HealthyDailyActivity} (initial) & SRS & test-PR-SC-01 \\ \hline
+\textsf{MinAge}\hypertarget{const:MinAge}{} & 18 years old & SRS & test-COMP-LEG-06 \\ \hline
 \textsf{MaxGoalIncrease}\hypertarget{const:MaxGoalIncrease}{} & 10\% per week (initial) & SRS & test-PR-SC-06 \\ \hline
 \textsf{MissedGoalLimit}\hypertarget{const:MissedGoalLimit}{} & 3 consecutive goal periods (initial) & SRS & test-PR-SC-06 \\ \hline
 \textsf{MaxDailyNotifications}\hypertarget{const:MaxDailyNotifications}{} & 3 per day (initial) & SRS & test-PR-SC-07 \\ \hline
@@ -2567,7 +2568,7 @@ All AI-assisted material was reviewed by the team before it was merged.
 Reflection answers were checked against the meeting notes, and each member
 checked that their own skill and learning approach was described correctly.
 Every constant value was checked against the test that uses it and, where the
-constant comes from the SRS, against the SRS symbolic constants table. Every
+constant comes from the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, against the SRS symbolic constants table. Every
 renamed test ID was checked against the traceability table and the
 requirement it covers. Changes were made through pull requests and reviewed by
 at least one other team member, and the team is responsible for the accuracy of
