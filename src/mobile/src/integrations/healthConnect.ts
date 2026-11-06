@@ -8,7 +8,7 @@ import {
 } from 'react-native-health-connect';
 import { Platform } from 'react-native';
 
-import type { ActivitySample, FitnessIntegration } from './types';
+import type { ActivitySample, DailySteps, FitnessIntegration } from './types';
 
 /**
  * Read-only permissions Flexin asks Health Connect for (least privilege).
@@ -65,6 +65,9 @@ export const healthConnect: FitnessIntegration = {
     return hasAllPermissions(granted as Permission[]);
   },
   async fetchActivities(_since: Date): Promise<ActivitySample[]> {
+    return [];
+  },
+  async fetchDailySteps(_since: Date): Promise<DailySteps[]> {
     return [];
   },
 };
