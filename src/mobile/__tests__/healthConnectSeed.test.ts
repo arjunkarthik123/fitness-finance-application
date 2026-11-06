@@ -1,3 +1,5 @@
+import { RecordingMethod } from 'react-native-health-connect';
+
 import {
   buildSeedRecords,
   groupByRecordType,
@@ -6,18 +8,8 @@ import {
   seedWindowStart,
 } from '@/integrations/healthConnectSeed';
 
-// Only the constants the builder uses; the native module itself can't load in Jest.
-jest.mock('react-native-health-connect', () => ({
-  ExerciseType: { RUNNING: 56 },
-  RecordingMethod: {
-    RECORDING_METHOD_ACTIVELY_RECORDED: 1,
-    RECORDING_METHOD_AUTOMATICALLY_RECORDED: 2,
-    RECORDING_METHOD_MANUAL_ENTRY: 3,
-  },
-  SdkAvailabilityStatus: { SDK_AVAILABLE: 3 },
-}));
-
-const MANUAL_ENTRY = 3;
+// react-native-health-connect is mocked automatically by __mocks__/.
+const MANUAL_ENTRY = RecordingMethod.RECORDING_METHOD_MANUAL_ENTRY;
 const now = new Date(2026, 10, 6, 14, 0); // Nov 6, 2:00 pm local
 
 describe('buildSeedRecords', () => {
