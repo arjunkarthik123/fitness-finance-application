@@ -1,16 +1,14 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 
-import { AppText, Button, Card } from '@/components/ui';
-import { WireframeScreen } from '@/components/WireframeScreen';
+import { HealthConnectSyncPreview } from '@/components/HealthConnectSyncPreview';
+import { AppText, Button, Card, Screen } from '@/components/ui';
 import {
   getHealthConnectStatus,
   hasHealthConnectPermissions,
   healthConnect,
   type HealthConnectStatus,
 } from '@/integrations/healthConnect';
-import { colors, spacing } from '@/theme';
 
 // Dev-only seed tool. The __DEV__ guard around require() lets the release bundler
 // drop the module entirely, so no seed code ships in production.
@@ -64,8 +62,8 @@ export default function ActivityScreen() {
   const canConnect = state === 'not-connected' || state === 'available';
 
   return (
-    <View style={styles.screen}>
-      <Card style={styles.card}>
+    <Screen>
+      <Card>
         <AppText testID="health-connect-status">{MESSAGES[state]}</AppText>
         {canConnect && <Button label="Connect Health Connect" onPress={connect} />}
         <Link href="/health-privacy">
@@ -74,29 +72,8 @@ export default function ActivityScreen() {
           </AppText>
         </Link>
       </Card>
-      {HealthConnectSeedTool && state === 'connected' && (
-        <HealthConnectSeedTool style={styles.card} />
-      )}
-      <WireframeScreen
-        title="Activity"
-        purpose="Track workouts and see the virtual currency they earned."
-        todos={[
-          'Recent workouts from device, Health Connect, Strava, Garmin',
-          'Currency earned per workout',
-          'Connected devices',
-        ]}
-      />
-    </View>
+      {state === 'connected' && <HealthConnectSyncPreview />}
+      {HealthConnectSeedTool && state === 'connected' && <HealthConnectSeedTool />}
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  card: {
-    margin: spacing.lg,
-    marginBottom: 0,
-  },
-});
