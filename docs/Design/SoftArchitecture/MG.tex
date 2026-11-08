@@ -190,35 +190,51 @@ in a hierarchy decomposed by secrets in Table \ref{TblMH}. The modules listed
 below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
+The mobile application and the backend service are treated as a single module
+hierarchy rather than two separate subsystems. The boundary between them is the
+API Client Module (\mref{mAPI}): mobile modules reach backend behaviour only
+through it, so the transport between the two can change without affecting
+either side.
+
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mFI}:] Fitness Integration Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPer}:] Persistence Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUser}:] User and Onboarding Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAct}:] Activity and Goals Module
+\item [\refstepcounter{mnum} \mthemnum \label{mCur}:] Currency Ledger Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPort}:] Portfolio and Orders Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLead}:] Leaderboard and Friends Module
+\item [\refstepcounter{mnum} \mthemnum \label{mProg}:] Progress Reporting Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUI}:] UI Screens Module
+\item [\refstepcounter{mnum} \mthemnum \label{mMkt}:] Market Data Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAuth}:] Authentication and Security Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAPI}:] API Client Module
 \end{description}
 
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Fitness Integration Module\\
+& Persistence Module\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
+& Activity and Goals Module\\
+& Currency Ledger Module\\
+& Portfolio and Orders Module\\
+& Leaderboard and Friends Module\\
+& Progress Reporting Module\\
+& UI Screens Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Data Module\\
+& Authentication and Security Module\\
+& API Client Module\\
 \bottomrule
 
 \end{tabular}
@@ -242,22 +258,52 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware-Hiding Modules}
 
 \begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
+\item[Secrets:] The external devices, platform services and storage
+  technology the system depends on.
+\item[Services:] Serves as a virtual layer over the fitness data sources on the
+  phone and the database on the server, so the rest of the system can read
+  activity data and store records without knowing how either is accessed.
+\item[Implemented By:] --
+\end{description}
+
+\subsubsection{Fitness Integration Module (\mref{mFI})}
+
+\begin{description}
+\item[Secrets:] How each fitness data provider (Health Connect, Strava, Garmin)
+  is accessed: its SDK or web API, its permission model, its record formats,
+  how manually entered records are recognised and excluded, and how step counts
+  recorded by several sources are combined without double counting.
+\item[Services:] Reports whether a provider is available on the device,
+  requests read permission for the data the system needs, and returns workouts
+  and daily step totals since a given date in a common, provider-independent
+  format. Each record carries a stable key so that the same activity is never
+  reported as new twice.
+\item[Implemented By:] \progname{} (mobile), using the provider SDKs and APIs
+\item[Type of Module:] Abstract Data Type (one instance per provider, all
+  sharing a single interface)
+\end{description}
+
+\subsubsection{Persistence Module (\mref{mPer})}
+
+\begin{description}
+\item[Secrets:] The database management system, the database schema, and how
+  entities are mapped to tables, queried and migrated between versions.
+\item[Services:] Stores and retrieves the system's persistent entities (users,
+  activities, goals, ledger entries, assets, prices, holdings, transactions and
+  leaderboard groups) on behalf of the backend modules.
+\item[Implemented By:] \progname{} (backend), using Spring Data JPA, Liquibase
+  and MySQL
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
+\item[Secrets:] The contents of the required behaviours.
+\item[Services:] Includes programs that provide externally visible behaviour of
   the system as specified in the software requirements specification (SRS)
   documents. This module serves as a communication layer between the
   hardware-hiding module and the software decision module. The programs in this
@@ -265,19 +311,99 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{User and Onboarding Module (\mref{mUser})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] How user accounts and onboarding questionnaire responses are
+  represented and validated.
+\item[Services:] Registers new users with a unique email address, looks up and
+  updates user profiles, and records the user's onboarding answers about their
+  fitness level and financial background.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Activity and Goals Module (\mref{mAct})}
 
+\begin{description}
+\item[Secrets:] How synced activity is stored and deduplicated, and how
+  progress towards a fitness goal is measured.
+\item[Services:] Accepts workouts and daily step totals synced from the mobile
+  app, ignores records that have already been received, lets users create and
+  manage fitness goals, tracks progress towards active goals, and tells the
+  Currency Ledger Module when new eligible activity or a completed goal should
+  be rewarded.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Currency Ledger Module (\mref{mCur})}
+
+\begin{description}
+\item[Secrets:] The reward rule that converts activity into virtual currency
+  (rates, bonuses and caps), and how the ledger of credits and debits is
+  represented.
+\item[Services:] Credits currency for newly rewarded activity and goals, debits
+  currency for purchases, credits the proceeds of sales, and reports each
+  user's current balance and history of entries. A balance can never become
+  negative, and currency can only be created by fitness activity or investment
+  returns.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Portfolio and Orders Module (\mref{mPort})}
+
+\begin{description}
+\item[Secrets:] How holdings, orders and transactions are represented, and how
+  portfolio value and gains or losses are calculated.
+\item[Services:] Maintains one portfolio per user, executes buy and sell orders
+  at the current simulated price using the user's currency balance, rejects
+  orders the user cannot afford or holdings they do not own, ensures a repeated
+  order request is executed only once, records a transaction for every trade,
+  and reports holdings, total value and gains or losses.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Leaderboard and Friends Module (\mref{mLead})}
+
+\begin{description}
+\item[Secrets:] How friend lists and leaderboard groups are stored, and how
+  members of a group are ranked.
+\item[Services:] Lets users manage a list of friends, create private
+  leaderboard groups and invite friends to them, join and leave public or
+  private groups, and view each group's members ranked by progress towards
+  their goals. Leaderboard standings never award currency.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Progress Reporting Module (\mref{mProg})}
+
+\begin{description}
+\item[Secrets:] Which figures are combined into a progress summary and how they
+  are aggregated over a reporting period.
+\item[Services:] Produces summaries of a user's fitness activity, goal
+  completion, currency earned, portfolio performance and leaderboard standings
+  by querying the modules that own that data.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{UI Screens Module (\mref{mUI})}
+
+\begin{description}
+\item[Secrets:] The layout and visual style of each screen (colours,
+  typography and spacing), the navigation between screens, and
+  how loading, empty and error states are presented to the user.
+\item[Services:] Presents the sign-in and onboarding flows, the dashboard, the
+  activity screen, the exchange and asset screens, the order screen and the
+  profile screen, and turns user input into calls on the Fitness Integration
+  and API Client modules.
+\item[Implemented By:] \progname{} (mobile), using React Native and Expo Router
+\item[Type of Module:] Library
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -286,13 +412,49 @@ to be implemented.
   facts, or programming considerations. The secrets of this module are
   \emph{not} described in the SRS.
 \item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
+  do not provide direct interaction with the user.
   % Changes in these modules are more likely to be motivated by a desire to
   % improve performance than by externally imposed changes.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Market Data Module (\mref{mMkt})}
+
+\begin{description}
+\item[Secrets:] The source of asset prices and the algorithm used to simulate
+  price movement over time.
+\item[Services:] Provides the list of tradable simulated assets, the current
+  price of each asset and its price history, and updates prices on a schedule.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Authentication and Security Module (\mref{mAuth})}
+
+\begin{description}
+\item[Secrets:] The authentication mechanism, how credentials are hashed and
+  verified, how sessions or tokens are issued, and which requests require an
+  authenticated user.
+\item[Services:] Verifies a user's credentials, identifies the user making each
+  request to the backend, and rejects requests that are unauthenticated or that
+  try to access another user's data.
+\item[Implemented By:] \progname{} (backend), using Spring Security
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{API Client Module (\mref{mAPI})}
+
+\begin{description}
+\item[Secrets:] The backend's address, the transport protocol and message
+  format, how credentials are attached to requests, and how network failures
+  are retried or reported.
+\item[Services:] Gives the mobile modules one typed function per backend
+  operation (for example syncing activity, reading the balance, listing assets
+  and placing an order), so they never build requests or parse responses
+  themselves.
+\item[Implemented By:] \progname{} (mobile)
+\item[Type of Module:] Library
+\end{description}
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
