@@ -58,19 +58,13 @@ Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
-~\newpage
-
 \section{Symbols, Abbreviations and Acronyms}
 
 See SRS Documentation at \wss{give url}
 
 \wss{Also add any additional symbols, abbreviations or acronyms}
 
-\newpage
-
 \tableofcontents
-
-\newpage
 
 \pagenumbering{arabic}
 
@@ -124,28 +118,32 @@ described by giving their type signature followed by their specification.
 
 The following table is taken directly from the Module Guide document for this project.
 
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Fitness Integration Module\\
+& Persistence Module\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{10}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
+& Activity and Goals Module\\
+& Currency Ledger Module\\
+& Asset Module\\
+& Transaction Order Module\\
+& Portfolio Module\\
+& Leaderboard and Friends Module\\
+& Progress Reporting Module\\
+& UI Screens Module\\
+& Notification Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Simulation Module\\
+& Authentication and Security Module\\
+& API Client Module\\
 \bottomrule
 
 \end{tabular}
@@ -153,26 +151,23 @@ The following table is taken directly from the Module Guide document for this pr
 \label{TblMH}
 \end{table}
 
-\newpage
-~\newpage
+\section{MIS of Fitness Integration Module} \label{misFI}
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+This module is M1 in the Module Guide.
 
 \subsection{Module}
 
-\wss{Short name for the module}
+FitnessIntegration
 
 \subsection{Uses}
 
+\wss{Modules this module uses}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
 
 \subsubsection{Exported Access Programs}
 
@@ -190,51 +185,829 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\wss{State variables, or None}
 
 \subsubsection{Environment Variables}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+\wss{Environment variables, or None}
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\wss{Assumptions, or None}
 
 \subsubsection{Access Routine Semantics}
 
 \noindent \wss{accessProg}():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
 \end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\wss{Local functions, or None}
 
-\newpage
+\section{MIS of Persistence Module} \label{misPer}
+
+This module is M2 in the Module Guide.
+
+\subsection{Module}
+
+Persistence
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of User and Onboarding Module} \label{misUser}
+
+This module is M3 in the Module Guide.
+
+\subsection{Module}
+
+User
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Activity and Goals Module} \label{misAct}
+
+This module is M4 in the Module Guide.
+
+\subsection{Module}
+
+Activity
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Currency Ledger Module} \label{misCur}
+
+This module is M5 in the Module Guide.
+
+\subsection{Module}
+
+CurrencyLedger
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Asset Module} \label{misAsset}
+
+This module is M6 in the Module Guide.
+
+\subsection{Module}
+
+Asset
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Transaction Order Module} \label{misPurch}
+
+This module is M7 in the Module Guide.
+
+\subsection{Module}
+
+TransactionOrder
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Portfolio Module} \label{misPort}
+
+This module is M8 in the Module Guide.
+
+\subsection{Module}
+
+Portfolio
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Leaderboard and Friends Module} \label{misLead}
+
+This module is M9 in the Module Guide.
+
+\subsection{Module}
+
+Leaderboard
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Progress Reporting Module} \label{misProg}
+
+This module is M10 in the Module Guide.
+
+\subsection{Module}
+
+ProgressReport
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of UI Screens Module} \label{misUI}
+
+This module is M11 in the Module Guide.
+
+\subsection{Module}
+
+UIScreens
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Notification Module} \label{misNoti}
+
+This module is M12 in the Module Guide.
+
+\subsection{Module}
+
+Notification
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Market Simulation Module} \label{misMkt}
+
+This module is M13 in the Module Guide.
+
+\subsection{Module}
+
+MarketSimulation
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Authentication and Security Module} \label{misAuth}
+
+This module is M14 in the Module Guide.
+
+\subsection{Module}
+
+Auth
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of API Client Module} \label{misAPI}
+
+This module is M15 in the Module Guide.
+
+\subsection{Module}
+
+ApiClient
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
-
-\newpage
-
-\newpage{}
 
 \section{Appendix --- Generative AI Use Disclosure}
 
@@ -268,8 +1041,6 @@ uses that materially contributed to your work}
 consistency, and appropriateness of the submitted document, regardless of
 whether material was generated by a human or an AI system.}
 \end{itemize}}
-
-\newpage{}
 
 \section{Appendix --- Reflection}
 
