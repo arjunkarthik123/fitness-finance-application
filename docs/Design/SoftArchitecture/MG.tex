@@ -202,11 +202,14 @@ either side.
 \item [\refstepcounter{mnum} \mthemnum \label{mUser}:] User and Onboarding Module
 \item [\refstepcounter{mnum} \mthemnum \label{mAct}:] Activity and Goals Module
 \item [\refstepcounter{mnum} \mthemnum \label{mCur}:] Currency Ledger Module
-\item [\refstepcounter{mnum} \mthemnum \label{mPort}:] Portfolio and Orders Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAsset}:] Asset Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPurch}:] Transaction Order Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPort}:] Portfolio Module
 \item [\refstepcounter{mnum} \mthemnum \label{mLead}:] Leaderboard and Friends Module
 \item [\refstepcounter{mnum} \mthemnum \label{mProg}:] Progress Reporting Module
 \item [\refstepcounter{mnum} \mthemnum \label{mUI}:] UI Screens Module
-\item [\refstepcounter{mnum} \mthemnum \label{mMkt}:] Market Data Module
+\item [\refstepcounter{mnum} \mthemnum \label{mNoti}:] Notification Module
+\item [\refstepcounter{mnum} \mthemnum \label{mMkt}:] Market Simulation Module
 \item [\refstepcounter{mnum} \mthemnum \label{mAuth}:] Authentication and Security Module
 \item [\refstepcounter{mnum} \mthemnum \label{mAPI}:] API Client Module
 \end{description}
@@ -223,16 +226,19 @@ either side.
 & Persistence Module\\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
+\multirow{10}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
 & Activity and Goals Module\\
 & Currency Ledger Module\\
-& Portfolio and Orders Module\\
+& Asset Module\\
+& Transaction Order Module\\
+& Portfolio Module\\
 & Leaderboard and Friends Module\\
 & Progress Reporting Module\\
 & UI Screens Module\\
+& Notification Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Data Module\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Simulation Module\\
 & Authentication and Security Module\\
 & API Client Module\\
 \bottomrule
@@ -292,8 +298,9 @@ to be implemented.
 \item[Secrets:] The database management system, the database schema, and how
   entities are mapped to tables, queried and migrated between versions.
 \item[Services:] Stores and retrieves the system's persistent entities (users,
-  activities, goals, ledger entries, assets, prices, holdings, transactions and
-  leaderboard groups) on behalf of the backend modules.
+  activities, goals, ledger entries, assets, prices, holdings, transactions,
+  leaderboard groups and notification preferences) on behalf of the backend
+  modules.
 \item[Implemented By:] \progname{} (backend), using Spring Data JPA, Liquibase
   and MySQL
 \item[Type of Module:] Abstract Object
@@ -352,16 +359,44 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Portfolio and Orders Module (\mref{mPort})}
+\subsubsection{Asset Module (\mref{mAsset})}
 
 \begin{description}
-\item[Secrets:] How holdings, orders and transactions are represented, and how
+\item[Secrets:] How the simulated assets and asset types (stocks, bonds, ETFs
+  and funds) are defined and represented, and how many units of each asset are
+  available in the simulated market.
+\item[Services:] Lists the assets that can be traded, describes each asset
+  (symbol, name and asset type), and reports and updates the quantity of each
+  asset available. A new asset type can be added through new asset definitions
+  alone, without changes to the trading logic.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Transaction Order Module (\mref{mPurch})}
+
+\begin{description}
+\item[Secrets:] How buy and sell orders are validated and executed, and how the
+  record of executed transactions is represented.
+\item[Services:] Executes buy and sell orders at the asset's current simulated
+  price, rejects orders the user cannot afford or holdings they do not own,
+  ensures a repeated order request is executed only once, debits or credits the
+  user's balance through the Currency Ledger Module, updates the user's
+  holdings through the Portfolio Module, and records a transaction for every
+  executed trade. An order either completes in full or has no effect.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Portfolio Module (\mref{mPort})}
+
+\begin{description}
+\item[Secrets:] How a user's holdings and their cost are represented, and how
   portfolio value and gains or losses are calculated.
-\item[Services:] Maintains one portfolio per user, executes buy and sell orders
-  at the current simulated price using the user's currency balance, rejects
-  orders the user cannot afford or holdings they do not own, ensures a repeated
-  order request is executed only once, records a transaction for every trade,
-  and reports holdings, total value and gains or losses.
+\item[Services:] Maintains one portfolio per user, reports the quantity of each
+  asset the user holds, and reports the portfolio's total value and its gains
+  or losses at current simulated prices. Holdings change only when the
+  Transaction Order Module executes a trade.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -405,6 +440,24 @@ to be implemented.
 \item[Type of Module:] Library
 \end{description}
 
+\subsubsection{Notification Module (\mref{mNoti})}
+
+\begin{description}
+\item[Secrets:] Which events produce a notification, how each message is
+  worded, how the user's notification preferences, quiet hours and daily limit
+  are enforced, and how notifications are delivered to the device.
+\item[Services:] Sends workout reminders, reward and achievement notices and
+  simulated market notices to the user. It lets users turn each kind of
+  notification on or off and set quiet hours. It sends nothing during quiet
+  hours or for a kind the user has turned off, and by default sends no more
+  than \textsf{MaxDailyNotifications} goal-related notifications per day. If
+  notifications are disabled or delivery fails, the failure is handled without
+  affecting the rest of the system.
+\item[Implemented By:] \progname{} (backend and mobile), using the Android
+  notification service
+\item[Type of Module:] Abstract Object
+\end{description}
+
 \subsection{Software Decision Module}
 
 \begin{description}
@@ -418,13 +471,13 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Market Data Module (\mref{mMkt})}
+\subsubsection{Market Simulation Module (\mref{mMkt})}
 
 \begin{description}
-\item[Secrets:] The source of asset prices and the algorithm used to simulate
-  price movement over time.
-\item[Services:] Provides the list of tradable simulated assets, the current
-  price of each asset and its price history, and updates prices on a schedule.
+\item[Secrets:] The algorithm used to simulate price movement over time and how
+  it is calibrated for each asset type.
+\item[Services:] Provides the current price of each asset defined by the Asset
+  Module and its price history, and updates prices on a schedule.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
