@@ -1,12 +1,70 @@
-\title{User Interviews for \progname{}} 
+\title{Custom Document - User Interviews for \progname{}} 
 \author{\authname}
 \date{\today}
 
-\input{../Comments.text}
 \input{../Common.text}
 	
 \begin{document}
 
 \maketitle
+\section{Introduction}
+This document presents the information gathered through the user interview process. It is used to elicit and inform the functional and non-functional requirements, user interests and needs, and technical decisions for the project. The document contains the list of interview questions, the rationale for each question, the standard follow-up questions, and a summary of the responses received. These summaries inform the \href{URL}{Software Requirements Specification (SRS)}, the \href{URL}{Verification and Validation Plan (VnV Plan)}, and the design documents: the \href{URL}{Module Guide (MG)} and the \href{URL}{Module Interface Specification (MIS)}. 
+
+\section{Interview Questions}
+\begin{enumerate}
+
+\item \textbf{If you found \$1000 on the street, what would you do with it?}
+  \begin{itemize}
+    \item \textbf{Rationale:} See our interviewees' first thoughts on how they would spend money. Asking this first allows us to avoid introducing bias towards the answer of investing throughout the interview.
+    \item \textbf{Goal of question:} See trends in the thought process, such as saving money, paying bills, casino trips, etc.
+  \end{itemize}
+
+\item \textbf{On a scale of 1--5, how do you perceive your level of financial literacy?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Quick insight into the interviewee's financial literacy, needed to classify our users.
+    \item \textbf{Follow-up questions, depending on the answer:}
+      \begin{itemize}
+        \item \textbf{Answer 3--5:} What is your level of understanding of investment/saving strategies? Why?
+        \item \textbf{Answer 1--2:} Do you want to learn more about investment/savings?
+      \end{itemize}
+    \item \textbf{Goal of question:} Gauge a potential user's current level of understanding of basic personal financial measurement.
+  \end{itemize}
+
+\item \textbf{On a scale of 1--5, how do you perceive your level of personal fitness?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Same as above.
+    \item \textbf{Follow-up questions, depending on the answer:}
+      \begin{itemize}
+        \item \textbf{Answer 3--5:} What do you do for your personal fitness? How do you manage your supplements? How often do you work out? How do you work out? How do you set your goals?
+        \item \textbf{Answer 1--2:} Why do you feel this is your correct rating? Where do you think your gaps are?
+      \end{itemize}
+    \item \textbf{Goal of question:} Gauge a potential user's current level of understanding of basic personal fitness principles.
+  \end{itemize}
+
+\item \textbf{What fitness devices do you use? What tools do you use for investing/savings?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Examining current user habits also determines how involved they are with maintaining their lifestyle with respect to both domains.
+    \item \textbf{Goal of question:} See what technology people use and what can be incorporated into our application.
+  \end{itemize}
+
+\item \textbf{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+  \begin{itemize}
+    \item \textbf{Rationale:} We would like to examine what potential users may see as a roadblock to building habits around personal fitness and finance.
+    \item \textbf{Follow-up questions:} What would give you more confidence/motivation to start investing or to invest more effectively? What would give you more confidence/motivation to begin taking your personal fitness more seriously?
+    \item \textbf{Conditional follow-up:} If a user has a combined score above 7 (based on questions 2 and 3), ask what they do to uphold their habits.
+    \item \textbf{Goal of question:} See what holds users back from building habits around personal fitness and finance.
+  \end{itemize}
+\end{enumerate}
+
+\section{Summary of Responses}
+
+\section{Key Learning Points}
+
+\section{Appendix -- Generative AI Use Disclosure}
+\subsection{AI Tools Used}
+\subsection{How and Where Used}
+\subsection{Verification of AI-Generated Content}
+
+\section{Appendix -- Reflection}
 
 \end{document}
