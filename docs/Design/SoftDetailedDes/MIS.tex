@@ -893,6 +893,7 @@ Notification
 
 \wss{Local functions, or None}
 
+\newpage
 \section{MIS of Market Simulation Module} \label{misMkt}
 
 This module is M14 in the Module Guide.
@@ -911,6 +912,8 @@ MarketSimulation
 \item Persistence Module (Section~\ref{misPer}): stores prices, price
   history, market events and dividend payouts, and reads the holdings of an
   asset when a dividend is announced.
+\item Authentication and Security Module (Section~\ref{misAuth}): the Time
+  and UserID types.
 \end{itemize}
 
 \noindent Holdings are read through the Persistence Module rather than the
@@ -931,13 +934,17 @@ None. The module uses the following local constants, which are not exported.
 \midrule
 \textsf{TickInterval} & 15 minutes & Time between scheduled price updates\\
 \textsf{MinPrice} & 0.01 FLX & Lowest price an asset can have\\
-\textsf{DividendInterval} & 3 months & Time between an asset's dividend
-  payments\\
+\textsf{DividendInterval} & \textsf{YearLength} / 4 & Time between an
+  asset's dividend payments (91.3125 days)\\
 \textsf{YearLength} & 365.25 days & Length of a year, used to express
   elapsed time in years\\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\noindent Durations are converted to seconds, the unit of Time, wherever they
+are combined with a Time. The $\mathit{step}$ inputs of getHistory and
+getTypeTrend are also durations in seconds.
 
 \subsubsection{Exported Types}
 
@@ -973,6 +980,7 @@ None. The module uses the following local constants, which are not exported.
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+init & - & - & - \\
 getPrice & $a$: AssetID & PricePoint & UnknownAsset, NoPrice \\
 getPrices & - & sequence of PricePoint & - \\
 getPriceAt & $a$: AssetID, $t$: Time & PricePoint & UnknownAsset, NoPrice \\
@@ -1002,7 +1010,7 @@ backfill & $a$: AssetID, $\mathit{from}$: Time & - & UnknownAsset,
 \item $\mathit{history}$: sequence of PricePoint, every published price in
   time order. Entries are only ever appended.
 \item $\mathit{typeIndex}$: AssetType $\rightarrow \mathbb{R}$, an index of
-  each asset type's overall price movement (initially 100)
+  each asset type's overall price movement
 \item $\mathit{trends}$: sequence of tuples of ($\mathit{type}$: AssetType,
   $\mathit{point}$: TrendPoint), every value of $\mathit{typeIndex}$ in time
   order. Entries are only ever appended.
@@ -1013,10 +1021,18 @@ backfill & $a$: AssetID, $\mathit{from}$: Time & - & UnknownAsset,
   $\mathbb{B}$), the dividend owed to each holder for each DIVIDEND event
 \item $\mathit{lastDividend}$: AssetID $\rightarrow$ Time, when each asset
   last paid a dividend
-\item $\mathit{lastTick}$: Time, when prices were last updated
+\item $\mathit{lastTick}$: Time $\cup \{\bot\}$, when prices were last
+  updated
 \end{itemize}
 
-\noindent All state variables are stored through the Persistence Module.
+\noindent When the system is first deployed, $\mathit{level}$,
+$\mathit{price}$ and $\mathit{lastDividend}$ have no entries,
+$\mathit{history}$, $\mathit{trends}$ and $\mathit{events}$ are empty,
+$\mathit{payouts} = \emptyset$, $\mathit{typeIndex}(y) = 100$ for every
+AssetType $y$, and $\mathit{lastTick} = \bot$.
+
+\noindent All state variables are stored through the Persistence Module, so
+they keep their values when the backend restarts.
 $\mathit{history}$ and $\mathit{events}$ together form the audit record of
 market price updates and dividends required by SEC-AUD-01.
 
@@ -1048,6 +1064,8 @@ $\mathit{ShockRate} = 0$ keeps prices fixed for tests that need known prices.
 \subsubsection{Assumptions}
 
 \begin{itemize}
+\item init is called once when the backend starts, before any other access
+  program and before the scheduler first calls tick.
 \item Every asset defined by the Asset Module has a type, a starting price of
   at least \textsf{MinPrice}, and an annual dividend yield of at least 0.
 \item The number of units of an asset that a user holds is a natural number.
@@ -1063,6 +1081,19 @@ $\mathit{ShockRate} = 0$ keeps prices fixed for tests that need known prices.
 \noindent Simulated time runs at the same rate as real time: one simulated
 year of price movement takes one real year. Every access program that reads
 state sees the state left by the most recent completed tick.
+
+\medskip
+
+\noindent init():
+\begin{itemize}
+\item transition: $(\mathit{lastTick} = \bot \Rightarrow \mathit{lastTick}
+  := \mathit{now}() \mid \mathit{lastTick} \neq \bot \Rightarrow$ no
+  change$)$
+\end{itemize}
+
+\noindent On first deployment, init starts simulated time. After a restart,
+the stored state is used unchanged, and the next tick covers the whole time
+since $\mathit{lastTick}$.
 
 \medskip
 
@@ -1150,9 +1181,9 @@ state sees the state left by the most recent completed tick.
     by $\mathit{level}(a)$ before it. $(y, (n, \mathit{typeIndex}(y)))$ is
     appended to $\mathit{trends}$.
   \item Dividend announcements: for each asset $a$ with $\mathit{yield}(a) >
-    0$ whose last dividend was at least \textsf{DividendInterval} before $n$,
-    that is $n - \mathit{lastDividend}(a) \geq \textsf{DividendInterval}$, let
-    $f = \textsf{DividendInterval} / \textsf{YearLength}$ and $d =
+    0$ whose last dividend, at $\mathit{lastDividend}(a)$, was at least
+    \textsf{DividendInterval} before $n$, let $f$ be
+    \textsf{DividendInterval} in years (here $\frac{1}{4}$) and $d =
     \mathit{round}_2(\mathit{price}(a) \cdot \mathit{yield}(a) \cdot f)$, the
     amount paid per unit. If $d \geq 0.01$, a
     DIVIDEND event $e$ with scope $a$ and magnitude $d$ is appended to
@@ -1179,9 +1210,10 @@ state sees the state left by the most recent completed tick.
   each time $t = \mathit{from} + k \cdot \textsf{TickInterval}$ with $k = 1,
   2, \ldots$ and $t \leq \mathit{now}()$, $\mathit{level}(a)$ is updated as in
   step 2 of tick with $\Delta t = \textsf{TickInterval} /
-  \textsf{YearLength}$ and $J = 0$, and $(a, t, \mathit{price}(a))$ is
-  appended to $\mathit{history}$. Finally $\mathit{lastDividend}(a) :=
-  \mathit{now}()$. No events or payouts are created.
+  \textsf{YearLength}$ and $J$ drawn as in step 1 of tick, and $(a, t,
+  \mathit{price}(a))$ is appended to $\mathit{history}$. Finally
+  $\mathit{lastDividend}(a) := \mathit{now}()$. No events or payouts are
+  created.
 \item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
   \mid{}$ $a$ has an entry in $\mathit{history} \Rightarrow
   \mathrm{AlreadyPriced} \mid{}$ $\mathit{from} \geq \mathit{now}()
@@ -1214,10 +1246,12 @@ the demonstration data script (TRN-03).
   For an asset $a$ of type $y$ with $q = \mathit{yield}(a)$:
   \[
   \mathit{logReturn}(a, \Delta t, Z_m, Z_y, Z_a) \equiv
-  \left(\mu_y - q - \frac{\sigma_y^2}{2}\right)\Delta t
+  \left(\mu_y - q - \lambda\kappa_y - \frac{\sigma_y^2}{2}\right)\Delta t
   + \sigma_y \sqrt{\Delta t}\, W
   \]
-  where $W$ combines the market, type and asset draws:
+  where $\lambda = \mathit{ShockRate}$, $\kappa_y = \beta_y \cdot E[J]$ with
+  $E[J]$ the mean of $\mathit{ShockSize}$, and $W$ combines the market, type
+  and asset draws:
   \[
   W = \rho^m_y Z_m + \rho^t_y Z_y
   + \sqrt{1 - (\rho^m_y)^2 - (\rho^t_y)^2}\, Z_a
@@ -1231,9 +1265,14 @@ the demonstration data script (TRN-03).
   shared by its asset type and a part of its own, extending the single-index
   model of \citet{Sharpe1963}. The square root keeps the variance of $W$ at 1,
   so $\sigma_y$ remains the asset's volatility. Market-wide downturns are added
-  as jumps in tick \citep{Merton1976}.
+  as jumps in tick. They occur $\lambda$ times a year on average and change a
+  type-$y$ asset's price by $\kappa_y$ each time on average ($\kappa_y < 0$),
+  so the term $\lambda\kappa_y$ raises the drift by the same amount and keeps
+  the expected total return at $\mu_y$, as in the jump model of
+  \citet{Merton1976}.
 \end{itemize}
 
+\newpage
 \section{MIS of API Client Module} \label{misAPI}
 
 This module is M15 in the Module Guide.
@@ -1244,53 +1283,312 @@ ApiClient
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\noindent This module runs on the phone, and mobile modules reach the backend
+only through it. It uses every backend module whose access programs a user of
+the app can request, together with those programs' types and exceptions:
+
+\begin{itemize}
+\item User and Onboarding Module (Section~\ref{misUser})
+\item Activity and Goals Module (Section~\ref{misAct})
+\item Currency Ledger Module (Section~\ref{misCur})
+\item Asset Module (Section~\ref{misAsset})
+\item Transaction Order Module (Section~\ref{misPurch})
+\item Portfolio Module (Section~\ref{misPort})
+\item Leaderboard and Friends Module (Section~\ref{misLead})
+\item Progress Reporting Module (Section~\ref{misProg})
+\item Notification Module (Section~\ref{misNoti})
+\item Market Simulation Module (Section~\ref{misMkt})
+\item Authentication and Security Module (Section~\ref{misAuth}), which also
+  provides the session renewal this module performs on its own
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7.5cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{RequestTimeout} & 10 seconds & Time after which a request with no
+  response counts as failed\\
+\textsf{MaxRetries} & 2 & Number of times a failed request is sent
+  again\\
+\textsf{RetryBaseDelay} & 0.5 seconds & Wait before the first retry; the
+  wait doubles for each further retry\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\noindent The inputs and outputs of the exported programs use the types
+defined in the sections of the backend modules listed under Uses. In
+addition:
+
+\begin{itemize}
+\item Time, DeviceID, Token and MfaChallenge: as defined in
+  Section~\ref{misAuth}
+\item SignInOutcome = $\{\mathrm{SIGNED\_IN}\} \cup$ MfaChallenge
+\item For any type $T$, Fresh($T$) = tuple of ($\mathit{data}$: $T$,
+  $\mathit{receivedAt}$: Time, $\mathit{stale}$: $\mathbb{B}$). A result of
+  this type is returned by every program that only reads data.
+  $\mathit{stale}$ is true when $\mathit{data}$ is a stored copy rather than
+  a response just received from the backend, so it may be out of date.
+\item ReadOp: the set of exported programs that only read data
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
+\noindent For each access program of a backend module listed under Uses,
+this module exports an access program with the same name, unless it is one
+of the backend-only programs listed below or is specified individually in
+the table. Its inputs are the backend program's inputs without the
+Principal, the client IP address and the DeviceID, which this module
+supplies itself. Its output is the backend program's output, wrapped in
+Fresh if the program only reads data. Its exceptions are the backend
+program's exceptions plus the transport exceptions listed below.
+
+\medskip
+
+\noindent The following backend programs are not exported by this module.
+All but refresh are used only within the backend; refresh is requested by
+this module itself to renew the session (rule 2 below). When the section of
+another backend module defines a program of this kind, it is added here.
+
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.2cm}
+  >{\raggedright\arraybackslash}p{8.8cm}}
+\toprule
+\textbf{Backend Module} & \textbf{Programs Not Exported}\\
+\midrule
+Market Simulation & init, tick, backfill\\
+Authentication and Security & init, hashPassword, authenticate, authorize,
+  requireRole, confirmPassword, refresh, endAllSessions\\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent The following programs are specified individually, because they
+keep the session and stored data on the phone or differ from the backend
+program of the same name.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}
+  >{\raggedright\arraybackslash}p{4.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\midrule
+init & - & - & - \\
+signIn & $\mathit{email}$: String, $\mathit{pw}$: String & SignInOutcome &
+  UnknownAccount, AccountLocked, InvalidCredentials \\
+verifyMfa & $\mathit{cid}$: Token, $\mathit{code}$: String & - &
+  InvalidCode \\
+signOut & - & - & - \\
+isSignedIn & - & $\mathbb{B}$ & - \\
+peek & $\mathit{op}$: ReadOp, $\mathit{args}$: the inputs of $\mathit{op}$
+  & Fresh($T$) $\cup \{\bot\}$, where $T$ is the data type of
+  $\mathit{op}$'s output & - \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent In addition to their other exceptions, signIn, verifyMfa and every
+program exported by the rule above may raise the following transport
+exceptions:
+\begin{itemize}
+\item NetworkError: the backend could not be reached, and no stored copy of
+  the requested data is available.
+\item ServerError: the backend failed because of a fault of its own.
+\item RateLimited: the backend refused the request because too many requests
+  were made; it carries the time to wait before trying again.
+\item SessionExpired: the program needs a signed-in user and the session
+  could not be renewed, so the user must sign in again. Raised only by
+  programs whose backend program needs an authenticated user; the
+  assumptions of Section~\ref{misAuth} list the requests that do not.
+\end{itemize}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{deviceId}$: DeviceID, created once for this installation
+\item $\mathit{accessToken}$: Token $\cup \{\bot\}$, the current access
+  token, held in memory only
+\item $\mathit{refreshToken}$: Token $\cup \{\bot\}$, the current refresh
+  token, held in $\mathit{secureStore}$
+\item $\mathit{cache}$: (ReadOp $\times$ inputs) $\rightarrow$ (data, Time),
+  the last data received for each read and when it was received, held in
+  $\mathit{localStore}$
+\item $\mathit{renewing}$: $\mathbb{B}$, true while a session renewal is in
+  progress
+\end{itemize}
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{backend}$: the backend service, reached over the network at
+  the address given in the app's build configuration.
+\item $\mathit{secureStore}$: encrypted storage on the device that other
+  apps cannot read.
+\item $\mathit{localStore}$: storage on the device that is private to the
+  app.
+\item $\mathit{clock}$: the device clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item init is called once, when the app starts, before any other access
+  program.
+\item In release builds the backend is reached only over TLS 1.3
+  (SEC-PRV-01), and a backend address that does not use it is refused.
+\item The backend treats requests that carry the same request key as one
+  request: it performs the action once and returns the same result for each.
+\item Only one user is signed in on an installation at a time.
+\item Amounts and prices are received as exact decimal values, and this
+  module never converts them to floating-point numbers (PR-PA-01). The
+  backend calculates all amounts and prices (SEC-INT-02).
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent Every request to the backend follows these rules.
+
+\begin{enumerate}
+\item Credentials: a request for a program that needs a signed-in user
+  carries $\mathit{accessToken}$. Every request carries $\mathit{deviceId}$.
+\item Renewal: if the backend rejects a request with Unauthenticated, the
+  session is renewed by requesting the backend's refresh with
+  $\mathit{refreshToken}$. Requests rejected while $\mathit{renewing}$ is
+  true wait for that renewal instead of starting another, because each
+  renewal replaces the refresh token. The renewal ends in one of three ways:
+  \begin{itemize}
+  \item refresh returns a TokenPair $r$ $\Rightarrow$ $\mathit{accessToken}
+    := r.\mathit{access}$ and $\mathit{refreshToken} := r.\mathit{refresh}$,
+    the new refresh token is stored in $\mathit{secureStore}$, and the
+    request is sent again once.
+  \item refresh raises Unauthenticated, or there is no refresh token
+    $\Rightarrow$ both tokens are set to $\bot$, $\mathit{cache} :=
+    \emptyset$, and SessionExpired is raised.
+  \item refresh gets no response or the backend reports a fault of its own
+    $\Rightarrow$ the tokens and $\mathit{cache}$ are unchanged, and the
+    request counts as failed: a read falls back as in rule 3, and a write
+    raises NetworkError or ServerError.
+  \end{itemize}
+\item Reads: if the backend gives no response within
+  \textsf{RequestTimeout} or reports a fault of its own, the request is sent
+  again up to \textsf{MaxRetries} times, waiting $\mathit{backoff}(k)$ before
+  retry $k$. When data $d$ is received, $\mathit{cache}(\mathit{op},
+  \mathit{args}) := (d, \mathit{now}())$ if $\mathit{cacheable}(\mathit{op})$,
+  and the output is $(d, \mathit{now}(), \mathrm{false})$. If every attempt
+  fails: $(\mathit{cache}(\mathit{op}, \mathit{args})$ exists $\Rightarrow$
+  its data and time with $\mathit{stale} = \mathrm{true} \mid$ otherwise
+  $\Rightarrow$ NetworkError or ServerError$)$. This keeps the app usable
+  with the last data received when the backend cannot be reached (PR-RFT-04).
+\item Writes: each call creates a new request key with
+  $\mathit{newRequestKey}$, and every retry of that call reuses it. Retries
+  follow rule 3, so a write whose response was lost takes effect only once
+  (PR-RFT-02). A write that fails is never stored to be sent later.
+\item RateLimited is raised as soon as it is received, with the wait time
+  given by the backend, and the request is not retried.
+\item Any other exception from the backend is raised under the same name.
+\end{enumerate}
+
+\noindent init():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition:
+  \begin{itemize}
+  \item $\mathit{deviceId} :=$ the DeviceID held in $\mathit{secureStore}$.
+    If there is none, a new one is created with $\mathit{newDeviceId}()$ and
+    stored in $\mathit{secureStore}$.
+  \item $\mathit{refreshToken} :=$ the token held in $\mathit{secureStore}$,
+    or $\bot$ if there is none.
+  \item $\mathit{accessToken} := \bot$.
+  \end{itemize}
 \end{itemize}
+
+\noindent signIn($\mathit{email}, \mathit{pw}$):
+\begin{itemize}
+\item transition: if the backend returns a TokenPair $r$, then
+  $\mathit{accessToken} := r.\mathit{access}$, and $\mathit{refreshToken}
+  := r.\mathit{refresh}$ is stored in $\mathit{secureStore}$.
+\item output: $\mathit{out} :=$ (the backend returns a TokenPair
+  $\Rightarrow \mathrm{SIGNED\_IN} \mid$ the backend returns an MfaChallenge
+  $c \Rightarrow c$)
+\item exception: the backend's exceptions, as in Section~\ref{misAuth}
+\end{itemize}
+
+\noindent verifyMfa($\mathit{cid}, \mathit{code}$):
+\begin{itemize}
+\item transition: $\mathit{accessToken}$ and $\mathit{refreshToken}$ are
+  set from the returned TokenPair, as in signIn
+\item exception: the backend's exceptions, as in Section~\ref{misAuth}
+\end{itemize}
+
+\noindent signOut():
+\begin{itemize}
+\item transition: the backend's signOut is requested once and its result is
+  ignored. Then $\mathit{accessToken}, \mathit{refreshToken} := \bot, \bot$,
+  the refresh token is removed from $\mathit{secureStore}$, and
+  $\mathit{cache} := \emptyset$. The device is signed out even when the
+  backend cannot be reached.
+\end{itemize}
+
+\noindent isSignedIn():
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{refreshToken} \neq \bot$
+\end{itemize}
+
+\noindent Every program $X$($\mathit{args}$) exported by the rule:
+\begin{itemize}
+\item transition and output: the backend program $X$ is requested with
+  $\mathit{args}$. If $X$ only reads data, the request is a read and
+  $\mathit{out}$ is given by rule 3. Otherwise the request is a write
+  (rule 4), and $\mathit{out}$ is the backend program's output.
+\item exception: the exceptions of the backend program $X$, as given in its
+  module's section, and the transport exceptions
+\end{itemize}
+
+\noindent peek($\mathit{op}, \mathit{args}$):
+\begin{itemize}
+\item output: $\mathit{out} := (\mathit{cache}(\mathit{op},
+  \mathit{args})$ exists $\Rightarrow$ its data and time with $\mathit{stale}
+  = \mathrm{true} \mid$ otherwise $\Rightarrow \bot)$
+\end{itemize}
+
+\noindent peek sends no request. It lets a screen show the last data
+received as soon as the app opens, while it requests current data with
+$\mathit{op}$ (PR-SL-01).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{backoff}$: $\mathbb{N} \rightarrow \mathbb{R}$\\
+  $\mathit{backoff}(k) \equiv \textsf{RetryBaseDelay} \cdot 2^{k-1}$
+  seconds
+\item $\mathit{cacheable}$: ReadOp $\rightarrow \mathbb{B}$\\
+  $\mathit{cacheable}(\mathit{op}) \equiv$ the output of $\mathit{op}$
+  contains no profile details and no health or fitness data, which must be
+  encrypted when stored (SEC-PRV-01). Other data, such as balances, holdings
+  and prices, is cached.
+\item $\mathit{newRequestKey}$: $\rightarrow$ String\\
+  A random value that has not been used before.
+\item $\mathit{newDeviceId}$: $\rightarrow$ DeviceID\\
+  A random value that identifies this installation.
+\end{itemize}
 
+\newpage
 \section{MIS of Authentication and Security Module} \label{misAuth}
 
 This module is M16 in the Module Guide.
@@ -1352,7 +1650,7 @@ password reset link remains valid.
   $\mathit{session}$: SessionID, $\mathit{device}$: DeviceID)
 \item TokenPair = tuple of ($\mathit{access}$: Token, $\mathit{refresh}$:
   Token, $\mathit{accessExpires}$: Time)
-\item MfaChallenge = tuple of ($\mathit{challengeId}$: String)
+\item MfaChallenge = tuple of ($\mathit{challengeId}$: Token)
 \item SignInResult = TokenPair $\cup$ MfaChallenge
 \end{itemize}
 
@@ -1367,11 +1665,12 @@ password reset link remains valid.
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+init & - & - & - \\
 hashPassword & $\mathit{pw}$: String & String & WeakPassword \\
 signIn & $\mathit{email}$: String, $\mathit{pw}$: String, $\mathit{dev}$:
   DeviceID, $\mathit{ip}$: String & SignInResult & RateLimited,
   UnknownAccount, AccountLocked, InvalidCredentials \\
-verifyMfa & $\mathit{cid}$: String, $\mathit{code}$: String, $\mathit{ip}$:
+verifyMfa & $\mathit{cid}$: Token, $\mathit{code}$: String, $\mathit{ip}$:
   String & TokenPair & RateLimited, InvalidCode \\
 refresh & $\mathit{rt}$: Token & TokenPair & Unauthenticated \\
 authenticate & $\mathit{tok}$: Token, $\mathit{ip}$: String & Principal &
@@ -1391,10 +1690,8 @@ resetPassword & $t$: Token, $\mathit{pw}$: String & - & InvalidResetToken,
 \end{tabular}
 \end{center}
 
-\noindent The backend reports each exception to the client with the following
-HTTP status: Unauthenticated, UnknownAccount, InvalidCredentials and
-InvalidCode with 401; Forbidden with 403; AccountLocked with 423; WeakPassword
-and InvalidResetToken with 400; and RateLimited with 429.
+\noindent RateLimited carries the time the client must wait before its next
+request will be accepted.
 
 \subsection{Semantics}
 
@@ -1404,23 +1701,28 @@ and InvalidResetToken with 400; and RateLimited with 429.
 \item $\mathit{sessions}$: set of Session, where Session = tuple of
   ($\mathit{id}$: SessionID, $\mathit{user}$: UserID, $\mathit{device}$:
   DeviceID, $\mathit{refreshHash}$: String, $\mathit{lastUsed}$: Time,
-  $\mathit{revoked}$: $\mathbb{B}$)
+  $\mathit{revoked}$: $\mathbb{B}$) (initially $\emptyset$)
 \item $\mathit{failedAttempts}$: UserID $\rightarrow \mathbb{Z}$, the number
   of consecutive failed sign-in attempts (initially 0)
 \item $\mathit{lockedUntil}$: UserID $\rightarrow$ Time, the time until which
   sign-in is locked (initially 0)
 \item $\mathit{mfaEnabled}$: UserID $\rightarrow \mathbb{B}$ (initially false)
-\item $\mathit{challenges}$: set of tuples of ($\mathit{id}$: String,
+\item $\mathit{challenges}$: set of tuples of ($\mathit{id}$: Token,
   $\mathit{user}$: UserID, $\mathit{device}$: DeviceID, $\mathit{codeHash}$:
-  String, $\mathit{expires}$: Time)
+  String, $\mathit{expires}$: Time) (initially $\emptyset$)
 \item $\mathit{resetTokens}$: set of tuples of ($\mathit{tokenHash}$: String,
-  $\mathit{user}$: UserID, $\mathit{expires}$: Time)
+  $\mathit{user}$: UserID, $\mathit{expires}$: Time) (initially $\emptyset$)
 \item $\mathit{requestLog}$: String $\rightarrow$ sequence of Time, the times
   of recent requests, keyed by client IP address or by user ID
+\item $\mathit{commonPasswords}$: set of String, the common passwords that are
+  rejected (SEC-ACC-04)
 \end{itemize}
 
-\noindent All state variables except $\mathit{requestLog}$ are stored through
-the Persistence Module. $\mathit{requestLog}$ is held in memory.
+\noindent The initial values above apply when the system is first deployed.
+All state variables except $\mathit{requestLog}$ and
+$\mathit{commonPasswords}$ are stored through the Persistence Module, so they
+keep their values when the backend restarts. $\mathit{requestLog}$ and
+$\mathit{commonPasswords}$ are held in memory and are set by init.
 
 \subsubsection{Environment Variables}
 
@@ -1432,15 +1734,19 @@ the Persistence Module. $\mathit{requestLog}$ is held in memory.
   repository (SEC-ACC-03).
 \item $\mathit{mailServer}$: the outgoing email server used to send
   multi-factor authentication codes and password reset links.
-\item $\mathit{securityLog}$: the structured log to which security events are
-  written (SEC-AUD-02).
-\item $\mathit{CommonPasswords}$: set of String, a list of common passwords
-  read from a file when the backend starts (SEC-ACC-04).
+\item $\mathit{securityLog}$: sequence of tuples of ($\mathit{time}$: Time,
+  $\mathit{ip}$: String $\cup \{\bot\}$, $\mathit{event}$: String,
+  $\mathit{user}$: UserID $\cup \{\bot\}$), the log to which security events
+  are written (SEC-AUD-02). Entries are only ever appended.
+\item $\mathit{passwordFile}$: the file listing common passwords, read by
+  init.
 \end{itemize}
 
 \subsubsection{Assumptions}
 
 \begin{itemize}
+\item init is called once when the backend starts, before any other access
+  program.
 \item Client--server communication uses TLS 1.3, configured when the backend
   is deployed (SEC-PRV-01). This module does not enforce it.
 \item The User and Onboarding Module ensures that email addresses are unique.
@@ -1457,15 +1763,37 @@ the Persistence Module. $\mathit{requestLog}$ is held in memory.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent Each call to signIn, verifyMfa or requestPasswordReset first appends
-$\mathit{now}()$ to $\mathit{requestLog}(\mathit{ip})$. When a token passes
-verification in authenticate, $\mathit{now}()$ is first appended to
-$\mathit{requestLog}(p.\mathit{user})$. Every exception raised by this module is
-written to $\mathit{securityLog}$ with $\mathit{log}$, together with every
-account lockout. In the routines below, an exception leaves the state
-unchanged unless a transition for that exception is given.
+\noindent The following apply to every access routine below.
+\begin{itemize}
+\item Request counting: each call to signIn, verifyMfa or
+  requestPasswordReset first appends $\mathit{now}()$ to
+  $\mathit{requestLog}(\mathit{ip})$. In authenticate, once the token is
+  verified, $\mathit{now}()$ is appended to
+  $\mathit{requestLog}(p.\mathit{user})$.
+\item Rate limits: when RateLimited is raised for key $k$, it carries
+  $\mathit{waitTime}(k)$.
+\item Security log: every exception raised by this module, and every account
+  lockout, appends the entry $(\mathit{now}(), \mathit{ip}, e, u)$ to
+  $\mathit{securityLog}$. Here $\mathit{ip}$ is the routine's $\mathit{ip}$
+  input, or $\bot$ if it has none; $e$ is the name of the exception, or
+  LOCKOUT; and $u$ is the user concerned, or $\bot$ if none is known.
+  Passwords, codes and tokens are never written.
+\item An exception leaves the state unchanged apart from these entries,
+  unless a transition for that exception is given.
+\end{itemize}
 
 \medskip
+
+\noindent init():
+\begin{itemize}
+\item transition:
+  \begin{itemize}
+  \item $\mathit{requestLog} :=$ the mapping of every key to the empty
+    sequence
+  \item $\mathit{commonPasswords} :=$ the passwords listed in
+    $\mathit{passwordFile}$
+  \end{itemize}
+\end{itemize}
 
 \noindent hashPassword($\mathit{pw}$):
 \begin{itemize}
@@ -1485,10 +1813,10 @@ unchanged unless a transition for that exception is given.
   \begin{itemize}
   \item $\mathit{ok} \wedge \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
     \mathit{failedAttempts}(a.\mathit{id}) := 0$. A new challenge with id
-    $\mathit{newId}()$, user $a.\mathit{id}$, device $\mathit{dev}$, code hash
+    $\mathit{newSecret}()$, user $a.\mathit{id}$, device $\mathit{dev}$, code hash
     $\mathit{hash}(c)$ and expiry $\mathit{now}() + \textsf{MfaCodeExpiry}$ is
-    added to $\mathit{challenges}$, and $c$ is emailed to $a.\mathit{email}$
-    through $\mathit{mailServer}$.
+    added to $\mathit{challenges}$. The code $c$ is emailed to the user's
+    address $a.\mathit{email}$ through the $\mathit{mailServer}$.
   \item $\mathit{ok} \wedge \neg \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
     \mathit{failedAttempts}(a.\mathit{id}) := 0$, $\mathit{sessions} :=
     \mathit{sessions} \cup \{s\}$
@@ -1503,11 +1831,14 @@ unchanged unless a transition for that exception is given.
   \Rightarrow (\mathit{id}$ of the new challenge$) \mid \neg
   \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow (\mathit{issueAccess}(s),
   \mathit{rt}, \mathit{now}() + \textsf{AccessExpiry}))$
-\item exception, checked in order: $\mathit{overLimit}(\mathit{ip})
-  \Rightarrow \mathrm{RateLimited} \mid a = \bot \Rightarrow
-  \mathrm{UnknownAccount} \mid \mathit{now}() <
-  \mathit{lockedUntil}(a.\mathit{id}) \Rightarrow \mathrm{AccountLocked} \mid
-  \neg \mathit{ok} \Rightarrow \mathrm{InvalidCredentials}$
+\item exception, with the cases checked in order:
+  \begin{itemize}
+  \item $\mathit{overLimit}(\mathit{ip}) \Rightarrow \mathrm{RateLimited}$
+  \item $a = \bot \Rightarrow \mathrm{UnknownAccount}$
+  \item $\mathit{now}() < \mathit{lockedUntil}(a.\mathit{id}) \Rightarrow
+    \mathrm{AccountLocked}$
+  \item $\neg \mathit{ok} \Rightarrow \mathrm{InvalidCredentials}$
+  \end{itemize}
 \end{itemize}
 
 \noindent verifyMfa($\mathit{cid}, \mathit{code}, \mathit{ip}$):
@@ -1546,9 +1877,12 @@ unchanged unless a transition for that exception is given.
 \item Let $p = \mathit{verifyAccess}(\mathit{tok})$ and $s$ be the session in
   $\mathit{sessions}$ with $s.\mathit{id} = p.\mathit{session}$.
 \item output: $\mathit{out} := p$
-\item exception: $p = \bot \Rightarrow \mathrm{Unauthenticated} \mid
-  s.\mathit{revoked} \Rightarrow \mathrm{Unauthenticated} \mid
-  \mathit{overLimit}(p.\mathit{user}) \Rightarrow \mathrm{RateLimited}$
+\item exception, with the cases checked in order:
+  \begin{itemize}
+  \item $p = \bot \vee s.\mathit{revoked} \Rightarrow
+    \mathrm{Unauthenticated}$
+  \item $\mathit{overLimit}(p.\mathit{user}) \Rightarrow \mathrm{RateLimited}$
+  \end{itemize}
 \end{itemize}
 
 \noindent authorize($p, \mathit{owner}$):
@@ -1638,16 +1972,15 @@ unchanged unless a transition for that exception is given.
   and written through the Persistence Module.
 \item $\mathit{isWeak}$: String $\rightarrow \mathbb{B}$\\
   $\mathit{isWeak}(\mathit{pw}) \equiv |\mathit{pw}| <
-  \textsf{MinPasswordLength} \vee \mathit{pw} \in \mathit{CommonPasswords}$
+  \textsf{MinPasswordLength} \vee \mathit{pw} \in \mathit{commonPasswords}$
 \item $\mathit{hash}$: String $\rightarrow$ String\\
-  A salted one-way hash using a new random salt on each call. It is used for
-  passwords and multi-factor authentication codes. (Implemented with BCrypt
-  through Spring Security's \texttt{PasswordEncoder}.)
+  A deliberately slow, salted one-way hash using a new random salt on each
+  call. It is used for passwords and multi-factor authentication codes.
 \item $\mathit{matches}$: String $\times$ String $\rightarrow \mathbb{B}$\\
   $\mathit{matches}(x, h) \equiv h$ is the result of $\mathit{hash}(x)$ under
   the salt stored in $h$.
 \item $\mathit{digest}$: String $\rightarrow$ String\\
-  An unsalted one-way hash (SHA-256). It is used only for long random values
+  A fast, unsalted one-way hash. It is used only for long random values
   produced by $\mathit{newSecret}$, so that a stored value can be looked up
   from the token the client presents.
 \item $\mathit{newSecret}$: $\rightarrow$ Token\\
@@ -1657,13 +1990,12 @@ unchanged unless a transition for that exception is given.
   A random six-digit code from a cryptographically secure random number
   generator.
 \item $\mathit{newId}$: $\rightarrow \mathbb{N}$\\
-  An identifier not used by any existing session or challenge.
+  An identifier not used by any existing session.
 \item $\mathit{issueAccess}$: Session $\rightarrow$ Token\\
   $\mathit{issueAccess}(s) \equiv$ a token containing $s.\mathit{user}$,
   $\mathit{account}(s.\mathit{user}).\mathit{role}$, $s.\mathit{id}$,
   $s.\mathit{device}$ and the expiry time $\mathit{now}() +
-  \textsf{AccessExpiry}$, signed with $\mathit{signingKey}$. (Implemented as a
-  JSON Web Token.)
+  \textsf{AccessExpiry}$, signed with $\mathit{signingKey}$.
 \item $\mathit{verifyAccess}$: Token $\rightarrow$ Principal $\cup \{\bot\}$\\
   $\mathit{verifyAccess}(t) \equiv \bot$ if $t$ is missing, its signature does
   not match $\mathit{signingKey}$, or its expiry time is not after
@@ -1671,12 +2003,11 @@ unchanged unless a transition for that exception is given.
 \item $\mathit{overLimit}$: String $\rightarrow \mathbb{B}$\\
   $\mathit{overLimit}(k) \equiv |\langle x \in \mathit{requestLog}(k) \mid x >
   \mathit{now}() - 60 \rangle| > \textsf{RateLimit}$
-\item $\mathit{log}$: event $\times$ severity $\times$ String $\times$ (UserID
-  $\cup \{\bot\}$) $\rightarrow$ none\\
-  Writes one structured JSON entry to $\mathit{securityLog}$ containing the
-  severity, a UTC timestamp in ISO 8601 format, the client IP address, the
-  event type, and the user ID or ``anonymous''. Passwords, codes and tokens
-  are never written.
+\item $\mathit{waitTime}$: String $\rightarrow \mathbb{R}$\\
+  $\mathit{waitTime}(k) \equiv$ the smallest number of seconds $w \geq 0$ for
+  which $\mathit{requestLog}(k)$ has fewer than \textsf{RateLimit} entries
+  later than $\mathit{now}() + w - 60$. A request for $k$ made $w$ seconds
+  from now is accepted.
 \end{itemize}
 
 \bibliographystyle {plainnat}

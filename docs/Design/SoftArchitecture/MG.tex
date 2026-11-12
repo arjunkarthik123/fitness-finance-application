@@ -507,14 +507,19 @@ to be implemented.
 
 \begin{description}
 \item[Secrets:] The backend's address, the transport protocol and message
-  format, how credentials are attached to requests, and how network failures
-  are retried or reported.
+  format, how credentials and the device identifier are stored and attached
+  to requests, how network failures are retried or reported, how received
+  data is kept for use when the backend cannot be reached, and how a repeated
+  request is prevented from taking effect twice.
 \item[Services:] Gives the mobile modules one typed function per backend
   operation (for example syncing activity, reading the balance, listing assets
   and placing an order), so they never build requests or parse responses
-  themselves.
+  themselves. Keeps the user signed in by renewing access when it expires,
+  returns the last data received, marked as possibly out of date, when the
+  backend cannot be reached, and reports failures as typed errors that the
+  screens can explain to the user.
 \item[Implemented By:] \progname{} (mobile)
-\item[Type of Module:] Library
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsection{Software Decision Module}
