@@ -125,12 +125,13 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Fitness Integration Module\\
-& Persistence Module\\
+Hardware-Hiding Module & Fitness Integration Module\\
 \midrule
 
-\multirow{10}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
-& Activity and Goals Module\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module} & Persistence Module\\
+& User and Onboarding Module\\
+& Activity Module\\
+& Goals Module\\
 & Currency Ledger Module\\
 & Asset Module\\
 & Transaction Order Module\\
@@ -139,11 +140,11 @@ The following table is taken directly from the Module Guide document for this pr
 & Progress Reporting Module\\
 & UI Screens Module\\
 & Notification Module\\
+& Market Simulation Module\\
+& API Client Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Simulation Module\\
-& Authentication and Security Module\\
-& API Client Module\\
+Software Decision Module & Authentication and Security Module\\
 \bottomrule
 
 \end{tabular}
@@ -322,7 +323,7 @@ User
 
 \wss{Local functions, or None}
 
-\section{MIS of Activity and Goals Module} \label{misAct}
+\section{MIS of Activity Module} \label{misAct}
 
 This module is M4 in the Module Guide.
 
@@ -379,9 +380,66 @@ Activity
 
 \wss{Local functions, or None}
 
-\section{MIS of Currency Ledger Module} \label{misCur}
+\section{MIS of Goals Module} \label{misGoal}
 
 This module is M5 in the Module Guide.
+
+\subsection{Module}
+
+Goals
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Currency Ledger Module} \label{misCur}
+
+This module is M6 in the Module Guide.
 
 \subsection{Module}
 
@@ -438,7 +496,7 @@ CurrencyLedger
 
 \section{MIS of Asset Module} \label{misAsset}
 
-This module is M6 in the Module Guide.
+This module is M7 in the Module Guide.
 
 \subsection{Module}
 
@@ -495,7 +553,7 @@ Asset
 
 \section{MIS of Transaction Order Module} \label{misPurch}
 
-This module is M7 in the Module Guide.
+This module is M8 in the Module Guide.
 
 \subsection{Module}
 
@@ -552,7 +610,7 @@ TransactionOrder
 
 \section{MIS of Portfolio Module} \label{misPort}
 
-This module is M8 in the Module Guide.
+This module is M9 in the Module Guide.
 
 \subsection{Module}
 
@@ -609,7 +667,7 @@ Portfolio
 
 \section{MIS of Leaderboard and Friends Module} \label{misLead}
 
-This module is M9 in the Module Guide.
+This module is M10 in the Module Guide.
 
 \subsection{Module}
 
@@ -666,7 +724,7 @@ Leaderboard
 
 \section{MIS of Progress Reporting Module} \label{misProg}
 
-This module is M10 in the Module Guide.
+This module is M11 in the Module Guide.
 
 \subsection{Module}
 
@@ -723,7 +781,7 @@ ProgressReport
 
 \section{MIS of UI Screens Module} \label{misUI}
 
-This module is M11 in the Module Guide.
+This module is M12 in the Module Guide.
 
 \subsection{Module}
 
@@ -780,7 +838,7 @@ UIScreens
 
 \section{MIS of Notification Module} \label{misNoti}
 
-This module is M12 in the Module Guide.
+This module is M13 in the Module Guide.
 
 \subsection{Module}
 
@@ -837,68 +895,11 @@ Notification
 
 \section{MIS of Market Simulation Module} \label{misMkt}
 
-This module is M13 in the Module Guide.
-
-\subsection{Module}
-
-MarketSimulation
-
-\subsection{Uses}
-
-\wss{Modules this module uses}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{State variables, or None}
-
-\subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
-
-\subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
-
-\subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
-\end{itemize}
-
-\subsubsection{Local Functions}
-
-\wss{Local functions, or None}
-
-\section{MIS of Authentication and Security Module} \label{misAuth}
-
 This module is M14 in the Module Guide.
 
 \subsection{Module}
 
-Auth
+MarketSimulation
 
 \subsection{Uses}
 
@@ -956,6 +957,63 @@ This module is M15 in the Module Guide.
 \subsection{Module}
 
 ApiClient
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Authentication and Security Module} \label{misAuth}
+
+This module is M16 in the Module Guide.
+
+\subsection{Module}
+
+Auth
 
 \subsection{Uses}
 
