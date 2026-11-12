@@ -164,6 +164,9 @@ change.
 \item[\refstepcounter{acnum} \actheacnum \label{acSignIn}:] The sign-in methods
   supported, such as adding sign-in through a third-party identity provider
   (for example, Google).
+\item[\refstepcounter{acnum} \actheacnum \label{acFundPricing}:] How ETF and
+  fund prices are determined, for example deriving them from the simulated
+  assets each fund holds instead of simulating them independently.
 \item ...
 \end{description}
 
@@ -487,10 +490,15 @@ to be implemented.
 \subsubsection{Market Simulation Module (\mref{mMkt})}
 
 \begin{description}
-\item[Secrets:] The algorithm used to simulate price movement over time and how
-  it is calibrated for each asset type.
+\item[Secrets:] The algorithm used to simulate price movement over time, how
+  it is calibrated for each asset type, how market-wide downturns are
+  generated, and how dividends are scheduled, sized and paid.
 \item[Services:] Provides the current price of each asset defined by the Asset
-  Module and its price history, and updates prices on a schedule.
+  Module and its price history, and updates prices on a schedule. Reports a
+  trend for each asset type and the market events that have occurred, such as
+  downturns and dividends. Announces each asset's dividends and pays them to
+  the users holding that asset through the Currency Ledger Module. Generates a
+  past price history for a newly listed asset.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}

@@ -903,23 +903,90 @@ MarketSimulation
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Asset Module (Section~\ref{misAsset}): the list of assets, and each
+  asset's type, starting price and annual dividend yield.
+\item Currency Ledger Module (Section~\ref{misCur}): credits dividend payouts
+  to users' balances.
+\item Persistence Module (Section~\ref{misPer}): stores prices, price
+  history, market events and dividend payouts, and reads the holdings of an
+  asset when a dividend is announced.
+\end{itemize}
+
+\noindent Holdings are read through the Persistence Module rather than the
+Portfolio Module, because the Portfolio Module uses this module to value
+holdings and using it here would create a cycle in the uses hierarchy.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{TickInterval} & 15 minutes & Time between scheduled price updates\\
+\textsf{MinPrice} & 0.01 FLX & Lowest price an asset can have\\
+\textsf{DividendInterval} & 3 months & Time between an asset's dividend
+  payments\\
+\textsf{YearLength} & 365.25 days & Length of a year, used to express
+  elapsed time in years\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item AssetID and AssetType: as defined by the Asset Module (Section~\ref{misAsset}),
+  with AssetType = $\{\mathrm{STOCK}, \mathrm{BOND}, \mathrm{ETF},
+  \mathrm{FUND}\}$
+\item UserID and Time: as defined in Section~\ref{misAuth}
+\item Amount: a decimal number with exactly two decimal places, in FLX
+\item Price: an Amount that is at least \textsf{MinPrice}
+\item PricePoint = tuple of ($\mathit{asset}$: AssetID, $\mathit{time}$:
+  Time, $\mathit{price}$: Price)
+\item TrendPoint = tuple of ($\mathit{time}$: Time, $\mathit{value}$:
+  $\mathbb{R}$)
+\item EventKind = $\{\mathrm{SHOCK}, \mathrm{DIVIDEND}\}$
+\item MarketEvent = tuple of ($\mathit{id}$: $\mathbb{N}$, $\mathit{time}$:
+  Time, $\mathit{kind}$: EventKind, $\mathit{scope}$: AssetID $\cup
+  \{\mathrm{MARKET}\}$, $\mathit{magnitude}$: $\mathbb{R}$,
+  $\mathit{description}$: String). For a SHOCK, $\mathit{scope}$ is MARKET
+  and $\mathit{magnitude}$ is the fractional price change of the whole
+  market (negative for a downturn). For a DIVIDEND, $\mathit{scope}$ is the
+  asset paying it and $\mathit{magnitude}$ is the Amount paid per unit held.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{4.8cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+getPrice & $a$: AssetID & PricePoint & UnknownAsset, NoPrice \\
+getPrices & - & sequence of PricePoint & - \\
+getPriceAt & $a$: AssetID, $t$: Time & PricePoint & UnknownAsset, NoPrice \\
+getHistory & $a$: AssetID, $\mathit{from}$: Time, $\mathit{to}$: Time,
+  $\mathit{step}$: $\mathbb{R}$ & sequence of PricePoint & UnknownAsset,
+  InvalidRange \\
+getTypeTrend & $y$: AssetType, $\mathit{from}$: Time, $\mathit{to}$: Time,
+  $\mathit{step}$: $\mathbb{R}$ & sequence of TrendPoint & InvalidRange \\
+getEvents & $\mathit{from}$: Time, $\mathit{to}$: Time & sequence of
+  MarketEvent & InvalidRange \\
+tick & - & - & - \\
+backfill & $a$: AssetID, $\mathit{from}$: Time & - & UnknownAsset,
+  AlreadyPriced, InvalidRange \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -927,28 +994,235 @@ MarketSimulation
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{level}$: AssetID $\rightarrow \mathbb{R}$, the unrounded price
+  of each asset used by the price model
+\item $\mathit{price}$: AssetID $\rightarrow$ Price, the published price of
+  each asset
+\item $\mathit{history}$: sequence of PricePoint, every published price in
+  time order. Entries are only ever appended.
+\item $\mathit{typeIndex}$: AssetType $\rightarrow \mathbb{R}$, an index of
+  each asset type's overall price movement (initially 100)
+\item $\mathit{trends}$: sequence of tuples of ($\mathit{type}$: AssetType,
+  $\mathit{point}$: TrendPoint), every value of $\mathit{typeIndex}$ in time
+  order. Entries are only ever appended.
+\item $\mathit{events}$: sequence of MarketEvent, in time order. Entries are
+  only ever appended.
+\item $\mathit{payouts}$: set of tuples of ($\mathit{event}$: $\mathbb{N}$,
+  $\mathit{user}$: UserID, $\mathit{amount}$: Amount, $\mathit{paid}$:
+  $\mathbb{B}$), the dividend owed to each holder for each DIVIDEND event
+\item $\mathit{lastDividend}$: AssetID $\rightarrow$ Time, when each asset
+  last paid a dividend
+\item $\mathit{lastTick}$: Time, when prices were last updated
+\end{itemize}
+
+\noindent All state variables are stored through the Persistence Module.
+$\mathit{history}$ and $\mathit{events}$ together form the audit record of
+market price updates and dividends required by SEC-AUD-01.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{rng}$: a source of random numbers, seeded from the backend
+  configuration.
+\item $\mathit{scheduler}$: calls tick once every \textsf{TickInterval}.
+\item $\mathit{calibration}$: the price model's parameters, read from a
+  configuration file. For each AssetType $y$ it gives the annual total return
+  $\mu_y$, the annual volatility $\sigma_y$, the correlation $\rho^m_y$ with
+  the whole market, the correlation $\rho^t_y$ with other assets of type $y$,
+  and the sensitivity $\beta_y$ to market-wide downturns. It also gives
+  $\mathit{ShockRate}$, the expected number of downturns per year, and
+  $\mathit{ShockSize}$, the distribution of their size. The parameters are
+  derived from historical market data that is free to use in an educational
+  application (PR-PA-06).
+\item $\mathit{log}$: the backend log, to which failed updates are written.
+\end{itemize}
+
+\noindent Tests may supply their own $\mathit{clock}$ and a fixed seed for
+$\mathit{rng}$, so that many simulated years can be run in seconds and
+repeated exactly (test-PR-PA-06). Setting $\sigma_y = 0$, $\mu_y = 0$ and
+$\mathit{ShockRate} = 0$ keeps prices fixed for tests that need known prices.
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item Every asset defined by the Asset Module has a type, a starting price of
+  at least \textsf{MinPrice}, and an annual dividend yield of at least 0.
+\item The number of units of an asset that a user holds is a natural number.
+\item For every AssetType $y$, $(\rho^m_y)^2 + (\rho^t_y)^2 \leq 1$.
+\item A single backend instance runs the scheduler, so tick is never run
+  twice at the same time.
+\item ETFs and funds are priced independently, with their own calibration
+  parameters, rather than from the assets they hold.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent Simulated time runs at the same rate as real time: one simulated
+year of price movement takes one real year. Every access program that reads
+state sees the state left by the most recent completed tick.
+
+\medskip
+
+\noindent getPrice($a$):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: $\mathit{out} :=$ the last entry in $\mathit{history}$ whose
+  $\mathit{asset}$ is $a$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid
+  a$ has no entry in $\mathit{history} \Rightarrow \mathrm{NoPrice}$
 \end{itemize}
+
+\noindent getPrices():
+\begin{itemize}
+\item output: $\mathit{out} :=$ getPrice($a$) for every asset $a$ that has
+  an entry in $\mathit{history}$
+\end{itemize}
+
+\noindent getPriceAt($a, t$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the last entry in $\mathit{history}$ whose
+  $\mathit{asset}$ is $a$ and whose $\mathit{time}$ is at most $t$, that is,
+  the price in effect at time $t$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid$
+  no such entry exists $\Rightarrow \mathrm{NoPrice}$
+\end{itemize}
+
+\noindent getHistory($a, \mathit{from}, \mathit{to}, \mathit{step}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ getPriceAt($a, \mathit{from} + k \cdot
+  \mathit{step}$) for $k = 0, 1, 2, \ldots$ while $\mathit{from} + k \cdot
+  \mathit{step} \leq \mathit{to}$, leaving out any time before $a$'s first
+  price
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid
+  \mathit{from} > \mathit{to} \vee \mathit{step} \leq 0 \Rightarrow
+  \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent getTypeTrend($y, \mathit{from}, \mathit{to}, \mathit{step}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ for $k = 0, 1, 2, \ldots$ while
+  $\mathit{from} + k \cdot \mathit{step} \leq \mathit{to}$, the last
+  TrendPoint in $\mathit{trends}$ for type $y$ whose $\mathit{time}$ is at
+  most $\mathit{from} + k \cdot \mathit{step}$, leaving out any time before
+  the first one
+\item exception: $\mathit{from} > \mathit{to} \vee \mathit{step} \leq 0
+  \Rightarrow \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent getEvents($\mathit{from}, \mathit{to}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the entries $e$ of $\mathit{events}$ with
+  $\mathit{from} \leq e.\mathit{time} \leq \mathit{to}$, in time order
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent tick():
+\begin{itemize}
+\item Let $n = \mathit{now}()$ and $\Delta t = (n -
+  \mathit{lastTick}) / \textsf{YearLength}$, the time since the last update
+  in years.
+\item transition, part 1 (prices, events and dividend announcements). Steps
+  1 to 5 take effect together or not at all.
+  \begin{enumerate}
+  \item Downturn: with probability $1 - e^{-\mathit{ShockRate} \cdot \Delta
+    t}$, a SHOCK event with scope MARKET and magnitude $J$ drawn from
+    $\mathit{ShockSize}$ is appended to $\mathit{events}$. Otherwise $J = 0$.
+  \item Prices: one market draw $Z_m$, one draw $Z_y$ for each AssetType $y$
+    and one draw $Z_a$ for each asset $a$ are taken with
+    $\mathit{drawNormal}$. For each asset $a$ of type $y$ that already has a
+    price, $\mathit{level}(a) := \mathit{level}(a) \cdot
+    e^{\mathit{logReturn}(a, \Delta t, Z_m, Z_y, Z_a)} \cdot (1 + \beta_y
+    J)$. An asset with no price yet starts with $\mathit{level}(a) :=
+    \mathit{startPrice}(a)$ and $\mathit{lastDividend}(a) := n$. Then
+    $\mathit{price}(a) := \max(\textsf{MinPrice},
+    \mathit{round}_2(\mathit{level}(a)))$ and $(a, n, \mathit{price}(a))$
+    is appended to $\mathit{history}$.
+  \item Type trends: for each AssetType $y$ with at least one priced asset,
+    $\mathit{typeIndex}(y)$ is multiplied by the average, over the assets of
+    type $y$ priced in step 2, of $\mathit{level}(a)$ after the step divided
+    by $\mathit{level}(a)$ before it. $(y, (n, \mathit{typeIndex}(y)))$ is
+    appended to $\mathit{trends}$.
+  \item Dividend announcements: for each asset $a$ with $\mathit{yield}(a) >
+    0$ whose last dividend was at least \textsf{DividendInterval} before $n$,
+    that is $n - \mathit{lastDividend}(a) \geq \textsf{DividendInterval}$, let
+    $f = \textsf{DividendInterval} / \textsf{YearLength}$ and $d =
+    \mathit{round}_2(\mathit{price}(a) \cdot \mathit{yield}(a) \cdot f)$, the
+    amount paid per unit. If $d \geq 0.01$, a
+    DIVIDEND event $e$ with scope $a$ and magnitude $d$ is appended to
+    $\mathit{events}$, and for every $(u, q) \in \mathit{holdings}(a)$ with
+    $q > 0$, $(e.\mathit{id}, u, q \cdot d, \mathrm{false})$ is added to
+    $\mathit{payouts}$. In either case $\mathit{lastDividend}(a) := n$.
+  \item $\mathit{lastTick} := n$.
+  \end{enumerate}
+  If any of steps 1 to 5 fails, the state is unchanged and the failure is
+  written to $\mathit{log}$. The last valid prices stay in effect, and the
+  next tick covers the whole time since $\mathit{lastTick}$ (BUC 6).
+\item transition, part 2 (dividend payouts): for each $p \in
+  \mathit{payouts}$ with $\neg p.\mathit{paid}$, $p.\mathit{amount}$ is
+  credited to $p.\mathit{user}$ through the Currency Ledger Module, citing
+  event $p.\mathit{event}$ as its source, and $p.\mathit{paid} :=
+  \mathrm{true}$. Each payout's credit and its change to $\mathit{paid}$
+  take effect together or not at all. A payout that fails stays unpaid and
+  is retried at the next tick, so each payout is credited exactly once.
+\end{itemize}
+
+\noindent backfill($a, \mathit{from}$):
+\begin{itemize}
+\item transition: $\mathit{level}(a) := \mathit{startPrice}(a)$. Then, for
+  each time $t = \mathit{from} + k \cdot \textsf{TickInterval}$ with $k = 1,
+  2, \ldots$ and $t \leq \mathit{now}()$, $\mathit{level}(a)$ is updated as in
+  step 2 of tick with $\Delta t = \textsf{TickInterval} /
+  \textsf{YearLength}$ and $J = 0$, and $(a, t, \mathit{price}(a))$ is
+  appended to $\mathit{history}$. Finally $\mathit{lastDividend}(a) :=
+  \mathit{now}()$. No events or payouts are created.
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $a$ has an entry in $\mathit{history} \Rightarrow
+  \mathrm{AlreadyPriced} \mid{}$ $\mathit{from} \geq \mathit{now}()
+  \Rightarrow \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent backfill gives a newly listed asset a price history, and is used by
+the demonstration data script (TRN-03).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{type}$: AssetID $\rightarrow$ AssetType,
+  $\mathit{startPrice}$: AssetID $\rightarrow$ Price, and $\mathit{yield}$:
+  AssetID $\rightarrow \mathbb{R}$\\
+  The asset's type, starting price and annual dividend yield, read from the
+  Asset Module.
+\item $\mathit{holdings}$: AssetID $\rightarrow$ set of (UserID $\times
+  \mathbb{N}$)\\
+  $\mathit{holdings}(a) \equiv$ each user holding asset $a$ and the number of
+  units they hold, read through the Persistence Module.
+\item $\mathit{round}_2$: $\mathbb{R} \rightarrow$ Amount\\
+  $\mathit{round}_2(x) \equiv x$ rounded to two decimal places, with ties
+  rounded to the even digit.
+\item $\mathit{drawNormal}$: $\rightarrow \mathbb{R}$\\
+  A random number from the standard normal distribution, taken from
+  $\mathit{rng}$.
+\item $\mathit{logReturn}$: AssetID $\times \mathbb{R} \times \mathbb{R}
+  \times \mathbb{R} \times \mathbb{R} \rightarrow \mathbb{R}$\\
+  For an asset $a$ of type $y$ with $q = \mathit{yield}(a)$:
+  \[
+  \mathit{logReturn}(a, \Delta t, Z_m, Z_y, Z_a) \equiv
+  \left(\mu_y - q - \frac{\sigma_y^2}{2}\right)\Delta t
+  + \sigma_y \sqrt{\Delta t}\, W
+  \]
+  where $W$ combines the market, type and asset draws:
+  \[
+  W = \rho^m_y Z_m + \rho^t_y Z_y
+  + \sqrt{1 - (\rho^m_y)^2 - (\rho^t_y)^2}\, Z_a
+  \]
+  The yield is subtracted from the drift so that an asset's price growth plus
+  its dividends matches the calibrated total return $\mu_y$. (This is
+  geometric Brownian motion with correlated market, type and asset factors,
+  with downturns added as jumps in tick.)
+\end{itemize}
 
 \section{MIS of API Client Module} \label{misAPI}
 
