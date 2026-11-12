@@ -161,6 +161,9 @@ change.
   hardware on which the software is running.
 \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
   initial input data.
+\item[\refstepcounter{acnum} \actheacnum \label{acSignIn}:] The sign-in methods
+  supported, such as adding sign-in through a third-party identity provider
+  (for example, Google).
 \item ...
 \end{description}
 
@@ -525,13 +528,20 @@ to be implemented.
 
 \begin{description}
 \item[Secrets:] The authentication mechanism, how credentials are hashed and
-  verified, how sessions or tokens are issued, and which requests require an
-  authenticated user.
-\item[Services:] Verifies a user's credentials, identifies the user making each
-  request to the backend, and rejects requests that are unauthenticated or that
-  try to access another user's data.
+  verified, how sessions or tokens are issued, which requests require an
+  authenticated user, how multi-factor authentication codes and password reset
+  links are generated and sent by email, how request rates are limited, and how
+  security events are logged.
+\item[Services:] Verifies a user's credentials, enforces the password policy
+  and the sign-in lockout, offers optional multi-factor authentication and
+  password reset through the user's email, identifies the user making each
+  request to the backend, and rejects requests that are unauthenticated, that
+  exceed the request rate limit, or that try to access another user's data.
+  Ends sessions when the user signs out, after a period without use, and when
+  the account is deleted. Records failed sign-ins, rejected tokens, refused
+  access and rate limit violations in the security log.
 \item[Implemented By:] \progname{} (backend), using Spring Security
-\item[Type of Module:] Library
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \section{Connection Between Requirements and Design} \label{SecConnection}

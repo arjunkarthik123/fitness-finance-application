@@ -1017,52 +1017,383 @@ Auth
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Persistence Module (Section~\ref{misPer}): stores user records, sessions,
+  sign-in lockout state, multi-factor authentication challenges and password
+  reset tokens.
+\end{itemize}
+
+\noindent Auth runs on the backend only. Storing tokens on the phone and
+attaching them to requests is the responsibility of the API Client Module
+(Section~\ref{misAPI}).
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+The following constants are defined in the SRS.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{SRS Requirement}\\
+\midrule
+\textsf{AccessExpiry} & 60 minutes & SEC-ACC-01\\
+\textsf{SessionTimeout} & 30 days without use & SEC-ACC-05\\
+\textsf{MinPasswordLength} & 8 characters & SEC-ACC-04\\
+\textsf{LockoutAttempts} & 5 consecutive failures & SEC-ACC-04\\
+\textsf{LockoutDuration} & 15 minutes & SEC-ACC-04\\
+\textsf{RateLimit} & 60 requests per minute & SEC-IMM-02\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Two further constants are local to this module and are not exported:
+\textsf{MfaCodeExpiry} = 10 minutes, the time a multi-factor authentication
+code remains valid, and \textsf{ResetTokenExpiry} = 30 minutes, the time a
+password reset link remains valid.
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item UserID = $\mathbb{N}$
+\item SessionID = $\mathbb{N}$
+\item DeviceID = String, an identifier the client generates when the app is
+  installed
+\item Token = String
+\item Time = $\mathbb{R}$, seconds since the Unix epoch
+\item Role = $\{\mathrm{STANDARD}, \mathrm{ADMIN}\}$
+\item Principal = tuple of ($\mathit{user}$: UserID, $\mathit{role}$: Role,
+  $\mathit{session}$: SessionID, $\mathit{device}$: DeviceID)
+\item TokenPair = tuple of ($\mathit{access}$: Token, $\mathit{refresh}$:
+  Token, $\mathit{accessExpires}$: Time)
+\item MfaChallenge = tuple of ($\mathit{challengeId}$: String)
+\item SignInResult = TokenPair $\cup$ MfaChallenge
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+hashPassword & $\mathit{pw}$: String & String & WeakPassword \\
+signIn & $\mathit{email}$: String, $\mathit{pw}$: String, $\mathit{dev}$:
+  DeviceID, $\mathit{ip}$: String & SignInResult & RateLimited,
+  UnknownAccount, AccountLocked, InvalidCredentials \\
+verifyMfa & $\mathit{cid}$: String, $\mathit{code}$: String, $\mathit{ip}$:
+  String & TokenPair & RateLimited, InvalidCode \\
+refresh & $\mathit{rt}$: Token & TokenPair & Unauthenticated \\
+authenticate & $\mathit{tok}$: Token, $\mathit{ip}$: String & Principal &
+  Unauthenticated, RateLimited \\
+authorize & $p$: Principal, $\mathit{owner}$: UserID & - & Forbidden \\
+requireRole & $p$: Principal, $r$: Role & - & Forbidden \\
+confirmPassword & $p$: Principal, $\mathit{pw}$: String & - &
+  InvalidCredentials \\
+signOut & $p$: Principal & - & - \\
+endAllSessions & $u$: UserID & - & - \\
+setMfaEnabled & $p$: Principal, $\mathit{on}$: $\mathbb{B}$ & - & - \\
+requestPassword\-Reset & $\mathit{email}$: String, $\mathit{ip}$: String & - &
+  RateLimited \\
+resetPassword & $t$: Token, $\mathit{pw}$: String & - & InvalidResetToken,
+  WeakPassword \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent The backend reports each exception to the client with the following
+HTTP status: Unauthenticated, UnknownAccount, InvalidCredentials and
+InvalidCode with 401; Forbidden with 403; AccountLocked with 423; WeakPassword
+and InvalidResetToken with 400; and RateLimited with 429.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{sessions}$: set of Session, where Session = tuple of
+  ($\mathit{id}$: SessionID, $\mathit{user}$: UserID, $\mathit{device}$:
+  DeviceID, $\mathit{refreshHash}$: String, $\mathit{lastUsed}$: Time,
+  $\mathit{revoked}$: $\mathbb{B}$)
+\item $\mathit{failedAttempts}$: UserID $\rightarrow \mathbb{Z}$, the number
+  of consecutive failed sign-in attempts (initially 0)
+\item $\mathit{lockedUntil}$: UserID $\rightarrow$ Time, the time until which
+  sign-in is locked (initially 0)
+\item $\mathit{mfaEnabled}$: UserID $\rightarrow \mathbb{B}$ (initially false)
+\item $\mathit{challenges}$: set of tuples of ($\mathit{id}$: String,
+  $\mathit{user}$: UserID, $\mathit{device}$: DeviceID, $\mathit{codeHash}$:
+  String, $\mathit{expires}$: Time)
+\item $\mathit{resetTokens}$: set of tuples of ($\mathit{tokenHash}$: String,
+  $\mathit{user}$: UserID, $\mathit{expires}$: Time)
+\item $\mathit{requestLog}$: String $\rightarrow$ sequence of Time, the times
+  of recent requests, keyed by client IP address or by user ID
+\end{itemize}
+
+\noindent All state variables except $\mathit{requestLog}$ are stored through
+the Persistence Module. $\mathit{requestLog}$ is held in memory.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{signingKey}$: the secret key used to sign access tokens. It is
+  read from the deployment environment and is never stored in the project
+  repository (SEC-ACC-03).
+\item $\mathit{mailServer}$: the outgoing email server used to send
+  multi-factor authentication codes and password reset links.
+\item $\mathit{securityLog}$: the structured log to which security events are
+  written (SEC-AUD-02).
+\item $\mathit{CommonPasswords}$: set of String, a list of common passwords
+  read from a file when the backend starts (SEC-ACC-04).
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item Client--server communication uses TLS 1.3, configured when the backend
+  is deployed (SEC-PRV-01). This module does not enforce it.
+\item The User and Onboarding Module ensures that email addresses are unique.
+\item Each client sends the same DeviceID on every request from a given
+  installation.
+\item A single backend instance is running, so the in-memory
+  $\mathit{requestLog}$ counts every request. Running several instances would
+  require a shared store.
+\item authenticate is called before any other backend access program on every
+  protected request. Registration, signIn, verifyMfa, refresh,
+  requestPasswordReset, resetPassword and the health check are the only
+  unprotected requests.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent Each call to signIn, verifyMfa or requestPasswordReset first appends
+$\mathit{now}()$ to $\mathit{requestLog}(\mathit{ip})$. When a token passes
+verification in authenticate, $\mathit{now}()$ is first appended to
+$\mathit{requestLog}(p.\mathit{user})$. Every exception raised by this module is
+written to $\mathit{securityLog}$ with $\mathit{log}$, together with every
+account lockout. In the routines below, an exception leaves the state
+unchanged unless a transition for that exception is given.
+
+\medskip
+
+\noindent hashPassword($\mathit{pw}$):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: $\mathit{out} := \mathit{hash}(\mathit{pw})$
+\item exception: $\mathit{isWeak}(\mathit{pw}) \Rightarrow
+  \mathrm{WeakPassword}$
+\end{itemize}
+
+\noindent signIn($\mathit{email}, \mathit{pw}, \mathit{dev}, \mathit{ip}$):
+\begin{itemize}
+\item Let $a = \mathit{findUser}(\mathit{email})$, $\mathit{ok} =
+  \mathit{matches}(\mathit{pw}, a.\mathit{passwordHash})$, $\mathit{rt} =
+  \mathit{newSecret}()$, $c = \mathit{newCode}()$, and $s =
+  (\mathit{newId}(), a.\mathit{id}, \mathit{dev}, \mathit{digest}(\mathit{rt}),
+  \mathit{now}(), \mathrm{false})$.
+\item transition:
+  \begin{itemize}
+  \item $\mathit{ok} \wedge \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
+    \mathit{failedAttempts}(a.\mathit{id}) := 0$. A new challenge with id
+    $\mathit{newId}()$, user $a.\mathit{id}$, device $\mathit{dev}$, code hash
+    $\mathit{hash}(c)$ and expiry $\mathit{now}() + \textsf{MfaCodeExpiry}$ is
+    added to $\mathit{challenges}$, and $c$ is emailed to $a.\mathit{email}$
+    through $\mathit{mailServer}$.
+  \item $\mathit{ok} \wedge \neg \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
+    \mathit{failedAttempts}(a.\mathit{id}) := 0$, $\mathit{sessions} :=
+    \mathit{sessions} \cup \{s\}$
+  \item When InvalidCredentials is raised,
+    $\mathit{failedAttempts}(a.\mathit{id})$ increases by 1. If it then equals
+    \textsf{LockoutAttempts}, the account is locked:
+    $\mathit{lockedUntil}(a.\mathit{id}) := \mathit{now}() +
+    \textsf{LockoutDuration}$ and $\mathit{failedAttempts}(a.\mathit{id}) :=
+    0$.
+  \end{itemize}
+\item output: $\mathit{out} := (\mathit{mfaEnabled}(a.\mathit{id})
+  \Rightarrow (\mathit{id}$ of the new challenge$) \mid \neg
+  \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow (\mathit{issueAccess}(s),
+  \mathit{rt}, \mathit{now}() + \textsf{AccessExpiry}))$
+\item exception, checked in order: $\mathit{overLimit}(\mathit{ip})
+  \Rightarrow \mathrm{RateLimited} \mid a = \bot \Rightarrow
+  \mathrm{UnknownAccount} \mid \mathit{now}() <
+  \mathit{lockedUntil}(a.\mathit{id}) \Rightarrow \mathrm{AccountLocked} \mid
+  \neg \mathit{ok} \Rightarrow \mathrm{InvalidCredentials}$
+\end{itemize}
+
+\noindent verifyMfa($\mathit{cid}, \mathit{code}, \mathit{ip}$):
+\begin{itemize}
+\item Let $h$ be the challenge in $\mathit{challenges}$ with $h.\mathit{id} =
+  \mathit{cid}$, $\mathit{rt} = \mathit{newSecret}()$, and $s =
+  (\mathit{newId}(), h.\mathit{user}, h.\mathit{device},
+  \mathit{digest}(\mathit{rt}), \mathit{now}(), \mathrm{false})$.
+\item transition: $\mathit{challenges} := \mathit{challenges} - \{h\}$,
+  $\mathit{sessions} := \mathit{sessions} \cup \{s\}$
+\item output: $\mathit{out} := (\mathit{issueAccess}(s), \mathit{rt},
+  \mathit{now}() + \textsf{AccessExpiry})$
+\item exception: $\mathit{overLimit}(\mathit{ip}) \Rightarrow
+  \mathrm{RateLimited} \mid h$ does not exist $\vee\ \mathit{now}() >
+  h.\mathit{expires} \vee \neg \mathit{matches}(\mathit{code},
+  h.\mathit{codeHash}) \Rightarrow \mathrm{InvalidCode}$
+\end{itemize}
+
+\noindent refresh($\mathit{rt}$):
+\begin{itemize}
+\item Let $s$ be the session in $\mathit{sessions}$ with $\neg
+  s.\mathit{revoked} \wedge s.\mathit{refreshHash} =
+  \mathit{digest}(\mathit{rt})$, and $\mathit{rt}' = \mathit{newSecret}()$.
+\item transition: $s.\mathit{refreshHash}, s.\mathit{lastUsed} :=
+  \mathit{digest}(\mathit{rt}'), \mathit{now}()$. The old refresh token can
+  no longer be used.
+\item output: $\mathit{out} := (\mathit{issueAccess}(s), \mathit{rt}',
+  \mathit{now}() + \textsf{AccessExpiry})$
+\item exception: $s$ does not exist $\vee\ \mathit{now}() -
+  s.\mathit{lastUsed} > \textsf{SessionTimeout} \Rightarrow
+  \mathrm{Unauthenticated}$
+\end{itemize}
+
+\noindent authenticate($\mathit{tok}, \mathit{ip}$):
+\begin{itemize}
+\item Let $p = \mathit{verifyAccess}(\mathit{tok})$ and $s$ be the session in
+  $\mathit{sessions}$ with $s.\mathit{id} = p.\mathit{session}$.
+\item output: $\mathit{out} := p$
+\item exception: $p = \bot \Rightarrow \mathrm{Unauthenticated} \mid
+  s.\mathit{revoked} \Rightarrow \mathrm{Unauthenticated} \mid
+  \mathit{overLimit}(p.\mathit{user}) \Rightarrow \mathrm{RateLimited}$
+\end{itemize}
+
+\noindent authorize($p, \mathit{owner}$):
+\begin{itemize}
+\item exception: $p.\mathit{user} \neq \mathit{owner} \Rightarrow
+  \mathrm{Forbidden}$
+\end{itemize}
+
+\noindent requireRole($p, r$):
+\begin{itemize}
+\item exception: $p.\mathit{role} \neq r \Rightarrow \mathrm{Forbidden}$
+\end{itemize}
+
+\noindent confirmPassword($p, \mathit{pw}$):
+\begin{itemize}
+\item exception: $\neg \mathit{matches}(\mathit{pw},
+  \mathit{account}(p.\mathit{user}).\mathit{passwordHash}) \Rightarrow
+  \mathrm{InvalidCredentials}$
+\end{itemize}
+
+\noindent signOut($p$):
+\begin{itemize}
+\item transition: $s.\mathit{revoked} := \mathrm{true}$ for the session $s$
+  with $s.\mathit{id} = p.\mathit{session}$. Every access and refresh token
+  issued for that session, and so for that device, is rejected from then on.
+\end{itemize}
+
+\noindent endAllSessions($u$):
+\begin{itemize}
+\item transition: $s.\mathit{revoked} := \mathrm{true}$ for every $s \in
+  \mathit{sessions}$ with $s.\mathit{user} = u$; $\mathit{challenges} :=
+  \{h \in \mathit{challenges} \mid h.\mathit{user} \neq u\}$;
+  $\mathit{resetTokens} := \{r \in \mathit{resetTokens} \mid r.\mathit{user}
+  \neq u\}$
+\end{itemize}
+
+\noindent setMfaEnabled($p, \mathit{on}$):
+\begin{itemize}
+\item transition: $\mathit{mfaEnabled}(p.\mathit{user}) := \mathit{on}$
+\end{itemize}
+
+\noindent requestPasswordReset($\mathit{email}, \mathit{ip}$):
+\begin{itemize}
+\item Let $a = \mathit{findUser}(\mathit{email})$ and $t =
+  \mathit{newSecret}()$.
+\item transition:
+  \begin{itemize}
+  \item $a \neq \bot \Rightarrow$ the reset token $(\mathit{digest}(t),
+    a.\mathit{id}, \mathit{now}() + \textsf{ResetTokenExpiry})$ is added to
+    $\mathit{resetTokens}$, and a link containing $t$ is emailed to
+    $a.\mathit{email}$ through $\mathit{mailServer}$
+  \item $a = \bot \Rightarrow$ no change
+  \end{itemize}
+\item output: none in either case
+\item exception: $\mathit{overLimit}(\mathit{ip}) \Rightarrow
+  \mathrm{RateLimited}$
+\end{itemize}
+
+\noindent resetPassword($t, \mathit{pw}$):
+\begin{itemize}
+\item Let $r$ be the reset token in $\mathit{resetTokens}$ with
+  $r.\mathit{tokenHash} = \mathit{digest}(t)$.
+\item transition:
+  \begin{itemize}
+  \item $\mathit{account}(r.\mathit{user}).\mathit{passwordHash} :=
+    \mathit{hash}(\mathit{pw})$
+  \item $\mathit{failedAttempts}(r.\mathit{user}) := 0$ and
+    $\mathit{lockedUntil}(r.\mathit{user}) := 0$, so a locked-out user can
+    sign in again
+  \item the transition of endAllSessions($r.\mathit{user}$), which also
+    removes $r$ so the link cannot be used again
+  \end{itemize}
+\item exception: $r$ does not exist $\vee\ \mathit{now}() > r.\mathit{expires} \Rightarrow \mathrm{InvalidResetToken}
+  \mid \mathit{isWeak}(\mathit{pw}) \Rightarrow \mathrm{WeakPassword}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item UserRecord = tuple of ($\mathit{id}$: UserID, $\mathit{email}$: String,
+  $\mathit{role}$: Role, $\mathit{passwordHash}$: String)
+\item $\mathit{findUser}$: String $\rightarrow$ UserRecord $\cup \{\bot\}$\\
+  $\mathit{findUser}(e) \equiv$ the stored user record whose email is $e$,
+  read through the Persistence Module, or $\bot$ if there is none.
+\item $\mathit{account}$: UserID $\rightarrow$ UserRecord\\
+  $\mathit{account}(u) \equiv$ the stored user record whose id is $u$, read
+  and written through the Persistence Module.
+\item $\mathit{isWeak}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{isWeak}(\mathit{pw}) \equiv |\mathit{pw}| <
+  \textsf{MinPasswordLength} \vee \mathit{pw} \in \mathit{CommonPasswords}$
+\item $\mathit{hash}$: String $\rightarrow$ String\\
+  A salted one-way hash using a new random salt on each call. It is used for
+  passwords and multi-factor authentication codes. (Implemented with BCrypt
+  through Spring Security's \texttt{PasswordEncoder}.)
+\item $\mathit{matches}$: String $\times$ String $\rightarrow \mathbb{B}$\\
+  $\mathit{matches}(x, h) \equiv h$ is the result of $\mathit{hash}(x)$ under
+  the salt stored in $h$.
+\item $\mathit{digest}$: String $\rightarrow$ String\\
+  An unsalted one-way hash (SHA-256). It is used only for long random values
+  produced by $\mathit{newSecret}$, so that a stored value can be looked up
+  from the token the client presents.
+\item $\mathit{newSecret}$: $\rightarrow$ Token\\
+  A random value of at least 256 bits from a cryptographically secure random
+  number generator.
+\item $\mathit{newCode}$: $\rightarrow$ String\\
+  A random six-digit code from a cryptographically secure random number
+  generator.
+\item $\mathit{newId}$: $\rightarrow \mathbb{N}$\\
+  An identifier not used by any existing session or challenge.
+\item $\mathit{issueAccess}$: Session $\rightarrow$ Token\\
+  $\mathit{issueAccess}(s) \equiv$ a token containing $s.\mathit{user}$,
+  $\mathit{account}(s.\mathit{user}).\mathit{role}$, $s.\mathit{id}$,
+  $s.\mathit{device}$ and the expiry time $\mathit{now}() +
+  \textsf{AccessExpiry}$, signed with $\mathit{signingKey}$. (Implemented as a
+  JSON Web Token.)
+\item $\mathit{verifyAccess}$: Token $\rightarrow$ Principal $\cup \{\bot\}$\\
+  $\mathit{verifyAccess}(t) \equiv \bot$ if $t$ is missing, its signature does
+  not match $\mathit{signingKey}$, or its expiry time is not after
+  $\mathit{now}()$; otherwise the Principal contained in $t$.
+\item $\mathit{overLimit}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{overLimit}(k) \equiv |\langle x \in \mathit{requestLog}(k) \mid x >
+  \mathit{now}() - 60 \rangle| > \textsf{RateLimit}$
+\item $\mathit{log}$: event $\times$ severity $\times$ String $\times$ (UserID
+  $\cup \{\bot\}$) $\rightarrow$ none\\
+  Writes one structured JSON entry to $\mathit{securityLog}$ containing the
+  severity, a UTC timestamp in ISO 8601 format, the client IP address, the
+  event type, and the user ID or ``anonymous''. Passwords, codes and tokens
+  are never written.
+\end{itemize}
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
