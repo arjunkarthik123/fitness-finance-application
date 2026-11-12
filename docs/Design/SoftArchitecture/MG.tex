@@ -161,6 +161,12 @@ change.
   hardware on which the software is running.
 \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
   initial input data.
+\item[\refstepcounter{acnum} \actheacnum \label{acSignIn}:] The sign-in methods
+  supported, such as adding sign-in through a third-party identity provider
+  (for example, Google).
+\item[\refstepcounter{acnum} \actheacnum \label{acFundPricing}:] How ETF and
+  fund prices are determined, for example deriving them from the simulated
+  assets each fund holds instead of simulating them independently.
 \item ...
 \end{description}
 
@@ -484,10 +490,15 @@ to be implemented.
 \subsubsection{Market Simulation Module (\mref{mMkt})}
 
 \begin{description}
-\item[Secrets:] The algorithm used to simulate price movement over time and how
-  it is calibrated for each asset type.
+\item[Secrets:] The algorithm used to simulate price movement over time, how
+  it is calibrated for each asset type, how market-wide downturns are
+  generated, and how dividends are scheduled, sized and paid.
 \item[Services:] Provides the current price of each asset defined by the Asset
-  Module and its price history, and updates prices on a schedule.
+  Module and its price history, and updates prices on a schedule. Reports a
+  trend for each asset type and the market events that have occurred, such as
+  downturns and dividends. Announces each asset's dividends and pays them to
+  the users holding that asset through the Currency Ledger Module. Generates a
+  past price history for a newly listed asset.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -496,14 +507,19 @@ to be implemented.
 
 \begin{description}
 \item[Secrets:] The backend's address, the transport protocol and message
-  format, how credentials are attached to requests, and how network failures
-  are retried or reported.
+  format, how credentials and the device identifier are stored and attached
+  to requests, how network failures are retried or reported, how received
+  data is kept for use when the backend cannot be reached, and how a repeated
+  request is prevented from taking effect twice.
 \item[Services:] Gives the mobile modules one typed function per backend
   operation (for example syncing activity, reading the balance, listing assets
   and placing an order), so they never build requests or parse responses
-  themselves.
+  themselves. Keeps the user signed in by renewing access when it expires,
+  returns the last data received, marked as possibly out of date, when the
+  backend cannot be reached, and reports failures as typed errors that the
+  screens can explain to the user.
 \item[Implemented By:] \progname{} (mobile)
-\item[Type of Module:] Library
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsection{Software Decision Module}
@@ -525,13 +541,20 @@ to be implemented.
 
 \begin{description}
 \item[Secrets:] The authentication mechanism, how credentials are hashed and
-  verified, how sessions or tokens are issued, and which requests require an
-  authenticated user.
-\item[Services:] Verifies a user's credentials, identifies the user making each
-  request to the backend, and rejects requests that are unauthenticated or that
-  try to access another user's data.
+  verified, how sessions or tokens are issued, which requests require an
+  authenticated user, how multi-factor authentication codes and password reset
+  links are generated and sent by email, how request rates are limited, and how
+  security events are logged.
+\item[Services:] Verifies a user's credentials, enforces the password policy
+  and the sign-in lockout, offers optional multi-factor authentication and
+  password reset through the user's email, identifies the user making each
+  request to the backend, and rejects requests that are unauthenticated, that
+  exceed the request rate limit, or that try to access another user's data.
+  Ends sessions when the user signs out, after a period without use, and when
+  the account is deleted. Records failed sign-ins, rejected tokens, refused
+  access and rate limit violations in the security log.
 \item[Implemented By:] \progname{} (backend), using Spring Security
-\item[Type of Module:] Library
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
