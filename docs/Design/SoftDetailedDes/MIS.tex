@@ -1130,6 +1130,10 @@ state sees the state left by the most recent completed tick.
   \item Downturn: with probability $1 - e^{-\mathit{ShockRate} \cdot \Delta
     t}$, a SHOCK event with scope MARKET and magnitude $J$ drawn from
     $\mathit{ShockSize}$ is appended to $\mathit{events}$. Otherwise $J = 0$.
+    This is the probability that at least one downturn occurs within $\Delta
+    t$ when downturns arrive at random at an average rate of
+    $\mathit{ShockRate}$ per year, as in the jump model of
+    \citet{Merton1976}.
   \item Prices: one market draw $Z_m$, one draw $Z_y$ for each AssetType $y$
     and one draw $Z_a$ for each asset $a$ are taken with
     $\mathit{drawNormal}$. For each asset $a$ of type $y$ that already has a
@@ -1218,10 +1222,16 @@ the demonstration data script (TRN-03).
   W = \rho^m_y Z_m + \rho^t_y Z_y
   + \sqrt{1 - (\rho^m_y)^2 - (\rho^t_y)^2}\, Z_a
   \]
-  The yield is subtracted from the drift so that an asset's price growth plus
-  its dividends matches the calibrated total return $\mu_y$. (This is
-  geometric Brownian motion with correlated market, type and asset factors,
-  with downturns added as jumps in tick.)
+  This is geometric Brownian motion, the standard model of stock price
+  movement \citep{Samuelson1965, BlackAndScholes1973}. The yield is
+  subtracted from the drift so that an asset's price growth plus its
+  dividends matches the calibrated total return $\mu_y$, following the
+  treatment of continuous dividend yields in \citet{Merton1973}. $W$ splits
+  each asset's random movement into a part shared by the whole market, a part
+  shared by its asset type and a part of its own, extending the single-index
+  model of \citet{Sharpe1963}. The square root keeps the variance of $W$ at 1,
+  so $\sigma_y$ remains the asset's volatility. Market-wide downturns are added
+  as jumps in tick \citep{Merton1976}.
 \end{itemize}
 
 \section{MIS of API Client Module} \label{misAPI}
