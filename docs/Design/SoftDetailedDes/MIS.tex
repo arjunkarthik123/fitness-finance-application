@@ -113,6 +113,8 @@ are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
+The symbol $\bot$ means that there is no value, so a value of type $T \cup
+\{\bot\}$ is either a $T$ or absent.
 
 \section{Module Decomposition}
 
@@ -160,54 +162,240 @@ This module is M1 in the Module Guide.
 
 FitnessIntegration
 
+\medskip
+
+\noindent This module is an abstract data type with one instance for each
+fitness source: healthConnect and garmin. Every instance exports the
+same access programs, so the rest of the app reads fitness data without
+knowing which source it came from. The semantics below are given for the
+Health Connect instance. The Garmin instance follows the same rules, reading
+Garmin data through Garmin Connect IQ in place of Health Connect.
+
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\noindent None. This module runs on the phone and reaches each source only
+through the source's own SDK or API (SC-04), which is an environment variable
+of this module.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{Permissions} & read Steps, read ExerciseSession & The only Health
+  Connect permissions requested\\
+\textsf{MaxCadence} & 250 steps per minute, sustained & Steps from a
+  record whose average rate is above this are reported as unverified
+  (SEC-INT-01). The value is the SRS constant of the same name.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item FitnessSource = $\{\mathrm{healthConnect}, \mathrm{garmin}\}$
+\item Time: a point in time, independent of time zone
+\item LocalDate: a calendar date in the device's time zone
+\item ActivitySample = tuple of ($\mathit{source}$: FitnessSource,
+  $\mathit{id}$: String, $\mathit{type}$: String, $\mathit{startTime}$: Time,
+  $\mathit{endTime}$: Time). A workout as reported by a source.
+  $\mathit{id}$ is the source's own identifier for the workout and does not
+  change between reads (PR-PA-03).
+\item DailySteps = tuple of ($\mathit{source}$: FitnessSource,
+  $\mathit{date}$: LocalDate, $\mathit{steps}$: $\mathbb{Z}$,\linebreak
+  $\mathit{unverifiedSteps}$: $\mathbb{Z}$). The steps from one source on one
+  local day. $\mathit{unverifiedSteps}$ are the steps from records faster
+  than \textsf{MaxCadence}; they are not part of $\mathit{steps}$ and earn no
+  currency unless verified (SEC-INT-01). A later DailySteps for the same
+  source and date replaces an earlier one.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{2.7cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+isAvailable & - & $\mathbb{B}$ & - \\
+requestPermissions & - & $\mathbb{B}$ & - \\
+fetchActivities & $\mathit{since}$: Time & seq of ActivitySample &
+  ReadError \\
+fetchDailySteps & $\mathit{since}$: Time & seq of DailySteps & ReadError \\
+activityKey & $\mathit{a}$: ActivitySample & String & - \\
+dailyStepsKey & $\mathit{d}$: DailySteps & String & - \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent ReadError: the source cannot be read, because it is not available on
+the device or a permission in \textsf{Permissions} has not been granted.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{source}$: FitnessSource, the source this instance reads,
+  fixed when the instance is created
+\end{itemize}
+
+\noindent The module stores no fitness data (SEC-PRV-01).
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{hc}$: Health Connect on the device. It provides:
+  \begin{itemize}
+  \item $\mathit{hc}.\mathit{available}$: $\mathbb{B}$, whether Health
+    Connect can be used on the device.
+  \item $\mathit{hc}.\mathit{granted}$: the set of permissions the user has
+    granted to the app.
+  \item The Steps and ExerciseSession records written by other apps. Each
+    record $r$ has a start and end Time, an identifier $r.\mathit{id}$, the
+    app that wrote it $r.\mathit{origin}$, and how it was recorded
+    $r.\mathit{method}$. A Steps record also has a step count
+    $r.\mathit{count}$, and an ExerciseSession record has an exercise type.
+  \end{itemize}
+\item $\mathit{clock}$: the device clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{tz}$: the device time zone, which decides the local day that
+  a Time falls on.
+\item Garmin Connect IQ, Garmin's published SDK, which the Garmin instance
+  reads in place of $\mathit{hc}$ (SC-04).
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item $\mathit{since} \leq \mathit{now}()$ for every fetch.
+\item $\mathit{tz}$ does not change during a fetch.
+\item $r.\mathit{method}$ is reported by the app that wrote the record, so a
+  manual entry is recognised only when that app marks it as one. Invented
+  steps that are not marked as manual are caught only when they are faster
+  than \textsf{MaxCadence}.
+\item Workouts that overlap in time, including the same workout recorded by
+  two sources, are detected by the Activity Module (Section~\ref{misAct}),
+  which holds the workouts from earlier syncs (SEC-INT-01, PR-PA-03). This
+  module reports every workout it reads.
+\item Health Connect returns records from at most about 30 days before the
+  first permission grant. This covers \textsf{OfflineSyncWindow} (PR-RFT-01).
+\item The backend uses the keys from activityKey and dailyStepsKey so that
+  each workout is recorded once and each daily total replaces the previous
+  one, with currency awarded only for the increase.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent isAvailable():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: $\mathit{out} := \mathit{hc}.\mathit{available}$
 \end{itemize}
+
+\noindent requestPermissions():
+\begin{itemize}
+\item transition: if $\mathit{hc}.\mathit{available}$, the user is asked to
+  grant \textsf{Permissions}, and $\mathit{hc}.\mathit{granted}$ is updated
+  with the user's choice.
+\item output: $\mathit{out} := \mathit{hasPermissions}()$, so a partial
+  grant gives false.
+\end{itemize}
+
+\noindent fetchActivities($\mathit{since}$):
+\begin{itemize}
+\item output: one ActivitySample for each ExerciseSession record $r$ in
+  $\mathit{hc}$ between $\mathit{since}$ and $\mathit{now}()$ with
+  $r.\mathit{id} \neq \bot \land \lnot \mathit{manual}(r)$, giving its
+  identifier, exercise type, and start and end Time. Manual entries are left
+  out (SC-04).
+\item exception: $\lnot \mathit{hasPermissions}() \Rightarrow
+  \mathrm{ReadError}$
+\end{itemize}
+
+\noindent fetchDailySteps($\mathit{since}$):
+\begin{itemize}
+\item output: let $t = \mathit{now}()$ and let $R$ be the Steps records in
+  $\mathit{hc}$ between $\mathit{since}$ and $t$ with $\mathit{counted}(r)$.
+  Let $V = \{r \in R \mid \lnot \mathit{tooFast}(r)\}$ and $U = \{r \in R
+  \mid \mathit{tooFast}(r)\}$. Then $\mathit{out} := \langle
+  (\mathit{source}, d, \mathit{dayTotal}(V, d), \mathit{dayTotal}(U, d))
+  \mid d \in \mathit{days}(\mathit{since}, t) \rangle$. There is one
+  DailySteps for each local day from $\mathit{since}$ to today, with 0 for a
+  day with no steps. Steps are dated by when they happened, not when they
+  were read (PR-PA-05).
+\item exception: $\lnot \mathit{hasPermissions}() \Rightarrow
+  \mathrm{ReadError}$
+\end{itemize}
+
+\noindent activityKey($a$):
+\begin{itemize}
+\item output: a String determined by $(a.\mathit{source}, a.\mathit{id})$
+  alone, different for different pairs
+\end{itemize}
+
+\noindent dailyStepsKey($d$):
+\begin{itemize}
+\item output: a String determined by $(d.\mathit{source}, d.\mathit{date})$
+  alone, different for different pairs
+\end{itemize}
+
+\noindent So a sync that repeats or overlaps an earlier one never reports the
+same activity as new twice (PR-PA-03).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\noindent For a Steps record $r$, $\mathit{len}(r)$ is its length in minutes,
+and $\mathit{overlap}(r, d)$ is the time that $r$ shares with local day $d$,
+in minutes.
+
+\begin{itemize}
+\item $\mathit{hasPermissions}$: $\rightarrow \mathbb{B}$\\
+  $\mathit{hasPermissions}() \equiv \mathit{hc}.\mathit{available} \land
+  \textsf{Permissions} \subseteq \mathit{hc}.\mathit{granted}$
+\item $\mathit{manual}$: record $\rightarrow \mathbb{B}$\\
+  $\mathit{manual}(r) \equiv r.\mathit{method} = \mathrm{MANUAL\_ENTRY}$
+\item $\mathit{counted}$: Steps record $\rightarrow \mathbb{B}$\\
+  $\mathit{counted}(r) \equiv \lnot \mathit{manual}(r) \land \mathit{len}(r)
+  > 0 \land r.\mathit{count} \geq 0$. Steps of other records are not
+  reported at all, not even as unverified (SC-04).
+\item $\mathit{tooFast}$: Steps record $\rightarrow \mathbb{B}$\\
+  $\mathit{tooFast}(r) \equiv r.\mathit{count} / \mathit{len}(r) >
+  \textsf{MaxCadence}$, the rate sustained over the record (SEC-INT-01).
+\item $\mathit{appTotal}$: set of Steps record $\times$ String $\times$
+  LocalDate $\rightarrow \mathbb{R}$\\
+  $\mathit{appTotal}(R, o, d) \equiv \sum_{r \in R \,:\, r.\mathit{origin} =
+  o} r.\mathit{count} \cdot \mathit{overlap}(r, d) / \mathit{len}(r)$, the
+  steps that app $o$ recorded on day $d$, taking each record's steps as
+  spread evenly over its time.
+\item $\mathit{dayTotal}$: set of Steps record $\times$ LocalDate
+  $\rightarrow \mathbb{Z}$\\
+  The steps of $R$ on day $d$, with steps that more than one app recorded at
+  the same time counted once (PR-PA-03). It satisfies
+  \[
+  \max_{o} \mathit{appTotal}(R, o, d) \leq \mathit{dayTotal}(R, d) \leq
+  \sum_{o} \mathit{appTotal}(R, o, d)
+  \]
+  up to rounding. How overlapping records are combined is a secret of this
+  module (see the Module Guide).
+\item $\mathit{localDate}$: Time $\rightarrow$ LocalDate\\
+  The local calendar date of a Time in $\mathit{tz}$.
+\item $\mathit{days}$: Time $\times$ Time $\rightarrow$ seq of LocalDate\\
+  $\mathit{days}(s, t) \equiv$ every local date from $\mathit{localDate}(s)$
+  to $\mathit{localDate}(t)$ inclusive, in order.
+\end{itemize}
 
 \section{MIS of Persistence Module} \label{misPer}
 
