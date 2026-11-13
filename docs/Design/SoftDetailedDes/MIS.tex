@@ -562,7 +562,10 @@ TransactionOrder
 \subsection{Uses}
 
 \begin{itemize}
-\item Asset Module (Section~\ref{misAsset}): checks that an asset exists.
+\item Asset Module (Section~\ref{misAsset}): checks that an asset exists,
+  reads the quantity of it still available, takes units from that quantity
+  for each purchase and returns units to it for each sale. Like the ledger
+  entries, these changes join the unit of work of the trade.
 \item Market Simulation Module (Section~\ref{misMkt}): the current price of
   an asset, through getPrice.
 \item Currency Ledger Module (Section~\ref{misCur}): the user's balance, a
@@ -576,7 +579,9 @@ TransactionOrder
 \item Persistence Module (Section~\ref{misPer}): stores quotes and
   transactions. It provides a unit of work in which a group of writes, made
   by this module and by the modules above, takes effect together or not at
-  all, and runs the units of work for one user one at a time (PR-RFT-02). It
+  all. It runs the units of work for one user one at a time, and the units
+  of work that change the available quantity of one asset one at a time
+  (PR-RFT-02). It
   prevents stored transactions from being updated or deleted (SEC-AUD-01).
 \item Authentication and Security Module (Section~\ref{misAuth}): the
   Principal, UserID and Time types.
@@ -639,9 +644,11 @@ two decimal places, $\mathit{total}$ is an exact Amount and is never rounded.
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
 quote & $p$: Principal, $a$: AssetID, $s$: Side, $q$: Quantity & Quote &
-  UnknownAsset, NoPrice, InsufficientFunds, InsufficientUnits \\
+  UnknownAsset, NoPrice, InsufficientFunds, InsufficientSupply,
+  InsufficientUnits \\
 execute & $p$: Principal, $\mathit{id}$: $\mathbb{N}$ & Transaction &
-  UnknownQuote, QuoteExpired, InsufficientFunds, InsufficientUnits \\
+  UnknownQuote, QuoteExpired, InsufficientFunds, InsufficientSupply,
+  InsufficientUnits \\
 getTransaction & $p$: Principal, $\mathit{id}$: $\mathbb{N}$ & Transaction &
   UnknownTransaction \\
 getTransactions & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time
@@ -692,7 +699,9 @@ entry in the Market Simulation Module's price history.
   therefore rejected (SEC-INT-02).
 \item Units of work for the same user never run at the same time, so two
   trades by one user cannot both pass the checks on the same balance or
-  holdings.
+  holdings. Units of work that change the available quantity of the same
+  asset never run at the same time, so two purchases cannot both take the
+  last units of an asset.
 \item The time of the Market Simulation Module's current price for an asset
   changes only when a new price for that asset is published.
 \item Every asset defined by the Asset Module can be traded.
@@ -731,11 +740,14 @@ entry in the Market Simulation Module's price history.
   \mid{}$ $a$ has no price $\Rightarrow \mathrm{NoPrice} \mid{}$ $s =
   \mathrm{BUY} \wedge \mathit{balance}(u) < q \cdot
   \mathit{pp}.\mathit{price} \Rightarrow \mathrm{InsufficientFunds} \mid{}$
+  $s = \mathrm{BUY} \wedge \mathit{available}(a) < q \Rightarrow
+  \mathrm{InsufficientSupply} \mid{}$
   $s = \mathrm{SELL} \wedge \mathit{held}(u, a) < q \Rightarrow
   \mathrm{InsufficientUnits}$
 \end{itemize}
 
-\noindent quote checks the balance and holdings so the user learns of a
+\noindent quote checks the balance, the available quantity and the
+holdings so the user learns of a
 problem before confirming (BUC 4, BUC 5). execute checks them again, since
 they may change between the two calls.
 
@@ -760,11 +772,14 @@ they may change between the two calls.
   \item If $k.\mathit{side} = \mathrm{BUY}$, $k.\mathit{total}$ is debited
     from $u$ through the Currency Ledger Module, citing $t.\mathit{id}$, and
     $k.\mathit{qty}$ units of $k.\mathit{asset}$ costing $k.\mathit{total}$
-    are added to $u$'s holdings through the Portfolio Module. If
-    $k.\mathit{side} = \mathrm{SELL}$, $k.\mathit{total}$ is credited to $u$
-    through the Currency Ledger Module, citing $t.\mathit{id}$, and
-    $k.\mathit{qty}$ units of $k.\mathit{asset}$ are removed from $u$'s
-    holdings through the Portfolio Module.
+    are added to $u$'s holdings through the Portfolio Module, and
+    $k.\mathit{qty}$ units are taken from the available quantity of
+    $k.\mathit{asset}$ through the Asset Module. If $k.\mathit{side} =
+    \mathrm{SELL}$, $k.\mathit{total}$ is credited to $u$ through the
+    Currency Ledger Module, citing $t.\mathit{id}$, $k.\mathit{qty}$ units of
+    $k.\mathit{asset}$ are removed from $u$'s holdings through the Portfolio
+    Module, and $k.\mathit{qty}$ units are returned to the available quantity
+    of $k.\mathit{asset}$ through the Asset Module.
   \item $\mathit{quotes} := \mathit{quotes} - \{k\}$.
   \end{enumerate}
   If any step fails, the state is unchanged and the failure is passed to the
@@ -774,6 +789,8 @@ they may change between the two calls.
   \mid{}$ $\mathit{expired}(k) \Rightarrow \mathrm{QuoteExpired} \mid{}$
   $k.\mathit{side} = \mathrm{BUY} \wedge \mathit{balance}(u) <
   k.\mathit{total} \Rightarrow \mathrm{InsufficientFunds} \mid{}$
+  $k.\mathit{side} = \mathrm{BUY} \wedge \mathit{available}(k.\mathit{asset})
+  < k.\mathit{qty} \Rightarrow \mathrm{InsufficientSupply} \mid{}$
   $k.\mathit{side} = \mathrm{SELL} \wedge \mathit{held}(u, k.\mathit{asset})
   < k.\mathit{qty} \Rightarrow \mathrm{InsufficientUnits}$
 \end{itemize}
@@ -812,6 +829,9 @@ units.
   \{0\}$\\
   The number of units of the asset the user holds, read from the Portfolio
   Module.
+\item $\mathit{available}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$\\
+  The number of units of the asset still available in the simulated market,
+  read from the Asset Module.
 \item $\mathit{expired}$: Quote $\rightarrow \mathbb{B}$\\
   $\mathit{expired}(k) \equiv \mathit{now}() > k.\mathit{expires} \vee
   \mathit{priceTime}(k.\mathit{asset}) > k.\mathit{priced}$, where
