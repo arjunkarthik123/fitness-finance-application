@@ -457,29 +457,47 @@ Persistence
 \section{MIS of User and Onboarding Module} \label{misUser}
 
 This module is M3 in the Module Guide.
-
 \subsection{Module}
-
-User
+User and Onboarding Module
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence module: stores and send user information as needed. Checks to see if a user exists.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\toprule
+\textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
+\midrule
+MinAge & 18 & Minimum age to register (years)\\
+MinPassLength & 8 & Minimum length of a password string\\ 
+\bottomrule
+\end{tabular}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+% Account (login itself is in M16)
+register & email: String, password: string, dob: Date & userID: int & InvalidEmail, EmailTaken, Underage \\
+getUserProfile & userID: int & UserProfile & NoAccount \\
+updateUserPassword & userID: int, password: string, newPassword: string & N/A & NoAccount \\
+updateUserEmail & userID: int, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
+% Onboarding answers
+submitFinance & userID: int, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+submitFitness & userID: int, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+isOnboarded & userID: int & $\mathbb{B}$ & NoAccount \\
 \hline
 \end{tabular}
 \end{center}
@@ -487,29 +505,70 @@ User
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, user information will be saved to the database (Persistence Module).
 
 \subsubsection{Environment Variables}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
-\wss{Environment variables, or None}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The User and Onboarding Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+    \item An exception leaves the state unchanged.
+\end{itemize}
+
+\noindent register(email, password, dob) 
+\begin{itemize}
+    \item transition: the persistence module will store the user's valid inputted credentials
+    \item output: the new UserID.
+    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge
+\end{itemize}
+\noindent getUserProfile(userID)
+\begin{itemize}
+    \item output: the profile object attached to userID
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent updateUserPassword(userID, password, newPassword)
+\begin{itemize}
+    \item transition: the persistence module will replace the user's password with the user's new valid inputted password
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent updateUserEmail(userID, email, newEmail)
+\begin{itemize}
+    \item transition: the persistence module will replace the user's email with the user's new valid inputted email
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent submitFinance(userID, financeAnswers)
+\begin{itemize}
+    \item transition: the persistence module will store the users inputted responses
+    \item exception:NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent submitFitness(userID, fitnessAnswers)
+\begin{itemize}
+    \item transition: the persistence module will store the users inputted responses
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent isOnboarded(userID)
+\begin{itemize}
+    \item output: if the user has completed the onboarding surveys for both Fitness and Finance.
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+\begin{itemize}
+    \item validEmail(email: string) $\longrightarrow \mathbb{B}$: ensures email is valid and exists
+    \item validPassword(password: string) $\longrightarrow \mathbb{B}$: ensures password contains any needed characters and length(password) $\geq$ MinPassLength
+    \item validDOB(dob: Date)$\longrightarrow \mathbb{B}$: ensures user's age $\geq$ MinAge 
+\end{itemize}
 
 \section{MIS of Activity Module} \label{misAct}
 
