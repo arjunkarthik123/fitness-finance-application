@@ -46,8 +46,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 16, 2026 & 1.0 & Completed Revision -1 of the MG\\
 \bottomrule
 \end{tabularx}
 
@@ -55,26 +54,56 @@ Date 2 & 1.1 & Notes\\
 
 \section{Reference Material}
 
-This section records information for easy reference. 
+This section records information for easy reference.
+
+\subsection{Related Documents}
+
+The MG builds on the earlier \textit{Flexin'} documents listed below. Terms that
+are not defined here, such as portfolio, streak and
+virtual currency, are defined in the glossary of the SRS.
+
+\begin{itemize}
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals}:
+  the problem \textit{Flexin'} addresses, its stakeholders and the project goals.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}:
+  the team's workflow, the technology stack and the project schedule.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{Software Requirements Specification (SRS)}:
+  the functional and non-functional requirements that this design satisfies.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis}:
+  the hazards identified for the system and the safety requirements that
+  address them.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV Plan)}:
+  how the requirements and the design will be verified.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{Module Interface Specification (MIS)}:
+  the detailed access programs, state variables and semantics of each module
+  identified in this document.
+\end{itemize}
 
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
+  API & Application Programming Interface\\
+  DAG & Directed Acyclic Graph\\
+  ETF & Exchange-Traded Fund\\
+  FLX & Symbol of the \textit{Flexin'} virtual currency\\
+  JPA & Jakarta Persistence API\\
+  M & Module\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  OS & Operating System\\
   R & Requirement\\
-  SC & Scientific Computing \\
+  SDK & Software Development Kit\\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  \textit{Flexin'} & The name of the application, a play on ``flexing'' both\\
+  & physical fitness and financial gains\\
+  UC & Unlikely Change\\
+  UI & User Interface\\
+  VnV & Verification and Validation\\
   \bottomrule
 \end{tabular}\\
 
@@ -97,11 +126,25 @@ software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
 based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
-where modifications are frequent, especially during initial development as the
-solution space is explored.  
+hides represent likely future changes.
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Design for change is especially valuable for \textit{Flexin'}, an Android
+application that rewards users with virtual currency for their physical
+activity and lets them invest that currency in a simulated market. Several
+parts of the system are expected to change as the project develops: the
+fitness data providers it reads from, the rules that convert activity into
+currency, the calibration of the market simulation, and the look of the user
+interface (Section~\ref{SecChange}). Hiding each of these decisions in its own
+module means that a change to one of them can be made without rewriting the
+rest of the system.
+
+\textit{Flexin'} has two parts: a mobile application built with React Native and
+Expo, and a backend service built with Spring. This document treats both as a
+single module hierarchy. The mobile application reaches the backend only
+through the API Client Module (\mref{mAPI}), so the boundary between the two
+parts is itself a secret that can change.
+
+Our design follows the rules laid out by \citet{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
@@ -110,24 +153,36 @@ Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
   structures must obtain it by calling access programs belonging to that module.
 \end{itemize}
 
-After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
-specifies the modular structure of the system and is intended to allow both
-designers and maintainers to easily identify the parts of the software.  The
-potential readers of this document are as follows:
+After completing the first stage of the design, the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS},
+the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG specifies
+the modular structure of \textit{Flexin'} and is intended to allow both designers
+and maintainers to easily identify the parts of the software. The detailed
+interface of each module is given in the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{MIS},
+and the code that implements each module is listed in
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/src/TraceToDesign.md}{\texttt{src/TraceToDesign.md}}.
+The potential readers of this document are as follows:
 
 \begin{itemize}
-\item New project members: This document can be a guide for a new project member
-  to easily understand the overall structure and quickly find the
-  relevant modules they are searching for.
+\item New project members: This document can be a guide for a new project
+  member to understand the overall structure of the mobile application and the
+  backend, and to quickly find the module, and the code, responsible for a
+  feature such as goal tracking, the currency ledger or the market simulation.
 \item Maintainers: The hierarchical structure of the module guide improves the
-  maintainers' understanding when they need to make changes to the system. It is
-  important for a maintainer to update the relevant sections of the document
-  after changes have been made.
+  maintainers' understanding when they need to make changes to the system, for
+  example when a new fitness data provider is added or the reward rules are
+  adjusted. It is important for a maintainer to update the relevant sections of
+  the document after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
   check for consistency, feasibility, and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
+\item Testers and reviewers: The traceability matrices let the people who
+  carry out the
+  \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{VnV Plan},
+  including the teaching team, check that every requirement in the SRS is
+  covered by at least one module.
 \end{itemize}
 
 The rest of the document is organized as follows. Section
@@ -139,7 +194,10 @@ connections between the software requirements and the modules, and
 Section \ref{SecTM} within it includes two traceability matrices. One checks
 the completeness of the design against the requirements provided in the SRS. The
 other shows the relation between anticipated changes and the modules. Section
-\ref{SecUse} describes the use relation between modules.
+\ref{SecUse} describes the use relation between modules. The remaining
+sections describe the user interfaces, the communication protocols, the
+database design, the timeline and the use of generative AI in preparing this
+document.
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
