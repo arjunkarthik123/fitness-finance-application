@@ -630,27 +630,39 @@ Goals
 This module is M6 in the Module Guide.
 
 \subsection{Module}
-
-CurrencyLedger
+Currency Ledger Module
 
 \subsection{Uses}
+\begin{itemize}
+    \item The transaction order module will utilize the currency ledger to confirm currency amounts. This will dictate how much currency to remove or add to an account based on the action that has taken place. 
+    \item The leaderboard and friends module will utilize the currency ledger to allow users to compete against one another based on current balance. 
+    \item The persistence module will store user information for the movement of currency from a user's account.
 
-\wss{Modules this module uses}
+    \item Transaction Order Module: uses the Currency Ledger to add currency to, or remove currency from, a user's account based on the action that has taken place.
+    \item Leaderboard and Friends Module: uses the Currency Ledger to allow users to compete against one another.
+    \item Persistence Module: stores user balances and records the movement of currency into and out of a user's account.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+None, information will be store in the database (Persistence Module) and the Currency Ledger Module will rely on the database for information retrieval 
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{5.0cm}
+  >{\raggedright\arraybackslash}p{2.0cm}
+  >{\raggedright\arraybackslash}p{3.3cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getBalance & UserID: int & acctBalance: BigDecimal & NoAccount \\
+addBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\ 
+subtractBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\
 \hline
 \end{tabular}
 \end{center}
@@ -658,29 +670,51 @@ CurrencyLedger
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, user balances will be saved to the database (Persistence Module).
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The Curren Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item The Transaction Order Module verifies that an account has sufficient funds before calling subtractBalance, so a negative balance will not occur.
+    \item Valid response has been provided by the Authentication and Security Module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+    \item An exception leaves the state unchanged.
+\end{itemize}
+
+\noindent getBalance(userID)
+\begin{itemize}
+    \item output: returns the user's current account balance
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+
+\noindent addBalance(userID, amount)
+\begin{itemize}
+    \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+\end{itemize}
+
+\noindent subtractBalance(userID, amount)
+\begin{itemize}
+    \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+\begin{itemize}
+    \item \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
+\end{itemize}
 
 \section{MIS of Asset Module} \label{misAsset}
 
