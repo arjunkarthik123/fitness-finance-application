@@ -152,12 +152,15 @@ upon the initial findings stated in the \href{URL}{SRS}.
 \subsection{Anticipated Changes} \label{SecAchange}
 
 \begin{description}
-  \item[AC1: Data collection sources.] The sources from which fitness data can be tracked will be expanded as development continues, based on user demand.
+  \item[AC1: Data collection sources.] The sources from which fitness data can be tracked will be changed and updated fitness data providers are added or update their interfaces.
   \item[AC2: Educational content.] The content of the financial lessons will change as technical decisions are made.
   \item[AC3: Virtual reward system.] The rules for calculating reward values and amounts will be adjusted based on application testing to ensure the best user experience.
   \item[AC4: User interface look and feel.] The user interface will change over time as development continues, in order to provide the best user experience.
   \item[AC5: Market simulator.] The generation of assets and securities, and their rates of growth and decline, will require calibration to provide a realistic experience while balancing user time constraints and user experience.
   \item[AC6: Notifications.] The kinds of notifications and their default settings are likely to change based on user feedback.
+  \item[AC7: Hardware.] The specific hardware on which the software runs, including the phone's sensors and the wearable devices that record user activity, may change as new devices are supported.
+  \item[AC9: Sign-in methods.] The sign-in methods supported are likely to expand, for example through the addition of sign-in with a third-party identity provider such as Google.
+  \item[AC10: Fund pricing.] The method by which ETF and fund prices are determined may change, for example by deriving them from the simulated assets each fund holds instead of simulating them independently.
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
@@ -199,7 +202,8 @@ either side.
 \item [\refstepcounter{mnum} \mthemnum \label{mFI}:] Fitness Integration Module
 \item [\refstepcounter{mnum} \mthemnum \label{mPer}:] Persistence Module
 \item [\refstepcounter{mnum} \mthemnum \label{mUser}:] User and Onboarding Module
-\item [\refstepcounter{mnum} \mthemnum \label{mAct}:] Activity and Goals Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAct}:] Activity Module
+\item [\refstepcounter{mnum} \mthemnum \label{mGoal}:] Goals Module
 \item [\refstepcounter{mnum} \mthemnum \label{mCur}:] Currency Ledger Module
 \item [\refstepcounter{mnum} \mthemnum \label{mAsset}:] Asset Module
 \item [\refstepcounter{mnum} \mthemnum \label{mPurch}:] Transaction Order Module
@@ -209,8 +213,8 @@ either side.
 \item [\refstepcounter{mnum} \mthemnum \label{mUI}:] UI Screens Module
 \item [\refstepcounter{mnum} \mthemnum \label{mNoti}:] Notification Module
 \item [\refstepcounter{mnum} \mthemnum \label{mMkt}:] Market Simulation Module
-\item [\refstepcounter{mnum} \mthemnum \label{mAuth}:] Authentication and Security Module
 \item [\refstepcounter{mnum} \mthemnum \label{mAPI}:] API Client Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAuth}:] Authentication and Security Module
 \end{description}
 
 
@@ -221,12 +225,13 @@ either side.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Fitness Integration Module\\
-& Persistence Module\\
+Hardware-Hiding Module & Fitness Integration Module\\
 \midrule
 
-\multirow{10}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
-& Activity and Goals Module\\
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module} & Persistence Module\\
+& User and Onboarding Module\\
+& Activity Module\\
+& Goals Module\\
 & Currency Ledger Module\\
 & Asset Module\\
 & Transaction Order Module\\
@@ -235,11 +240,11 @@ either side.
 & Progress Reporting Module\\
 & UI Screens Module\\
 & Notification Module\\
+& Market Simulation Module\\
+& API Client Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Simulation Module\\
-& Authentication and Security Module\\
-& API Client Module\\
+Software Decision Module & Authentication and Security Module\\
 \bottomrule
 
 \end{tabular}
@@ -266,11 +271,15 @@ to be implemented.
 \subsection{Hardware-Hiding Modules}
 
 \begin{description}
-\item[Secrets:] The external devices, platform services and storage
-  technology the system depends on.
-\item[Services:] Serves as a virtual layer over the fitness data sources on the
-  phone and the database on the server, so the rest of the system can read
-  activity data and store records without knowing how either is accessed.
+\item[Secrets:] How the system interacts with physical devices: the phone's
+  sensors and the wearables that record the user's activity, and the platform
+  services that expose their readings.
+\item[Services:] Serves as a virtual layer over the devices that physically
+  measure the user's activity, so the rest of the system can read activity data
+  without knowing which device recorded it or how that device is accessed. Only
+  modules that directly manipulate or read from hardware belong here; modules
+  that merely use storage or the network, where the system does not choose or
+  control the physical device, are behaviour-hiding.
 \item[Implemented By:] --
 \end{description}
 
@@ -291,6 +300,23 @@ to be implemented.
   sharing a single interface)
 \end{description}
 
+\subsection{Behaviour-Hiding Module}
+
+\begin{description}
+\item[Secrets:] The contents of the required behaviours, and how the data and
+  services those behaviours depend on are represented within \progname{}.
+\item[Services:] Includes programs that provide externally visible behaviour of
+  the system as specified in the software requirements specification (SRS)
+  documents, together with the modules that are specific to \progname{} and
+  support that behaviour: storing the system's entities, simulating the market
+  and communicating between the mobile app and the backend. Storage is
+  behaviour-hiding rather than hardware-hiding because the system does not
+  choose or manipulate where its data is physically stored; it only decides
+  what is stored and how it is organised. The programs in this module will need
+  to change if there are changes in the SRS.
+\item[Implemented By:] --
+\end{description}
+
 \subsubsection{Persistence Module (\mref{mPer})}
 
 \begin{description}
@@ -305,18 +331,6 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
-
-\begin{description}
-\item[Secrets:] The contents of the required behaviours.
-\item[Services:] Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
 \subsubsection{User and Onboarding Module (\mref{mUser})}
 
 \begin{description}
@@ -329,16 +343,28 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Activity and Goals Module (\mref{mAct})}
+\subsubsection{Activity Module (\mref{mAct})}
 
 \begin{description}
-\item[Secrets:] How synced activity is stored and deduplicated, and how
-  progress towards a fitness goal is measured.
+\item[Secrets:] How synced activity is represented, stored and deduplicated,
+  and which records are eligible for a reward.
 \item[Services:] Accepts workouts and daily step totals synced from the mobile
-  app, ignores records that have already been received, lets users create and
-  manage fitness goals, tracks progress towards active goals, and tells the
-  Currency Ledger Module when new eligible activity or a completed goal should
-  be rewarded.
+  app, ignores records that have already been received, reports a user's
+  recorded activity over a given period, and tells the Currency Ledger Module
+  when new eligible activity should be rewarded.
+\item[Implemented By:] \progname{} (backend)
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Goals Module (\mref{mGoal})}
+
+\begin{description}
+\item[Secrets:] How fitness goals are represented and how progress towards a
+  goal is measured from recorded activity.
+\item[Services:] Lets users create, update and cancel fitness goals, measures
+  progress towards each active goal from the activity reported by the Activity
+  Module, marks a goal complete when its target is reached, and tells the
+  Currency Ledger Module when a completed goal should be rewarded.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -457,55 +483,74 @@ to be implemented.
 \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsection{Software Decision Module}
-
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user.
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
-
 \subsubsection{Market Simulation Module (\mref{mMkt})}
 
 \begin{description}
-\item[Secrets:] The algorithm used to simulate price movement over time and how
-  it is calibrated for each asset type.
+\item[Secrets:] The algorithm used to simulate price movement over time, how
+  it is calibrated for each asset type, how market-wide downturns are
+  generated, and how dividends are scheduled, sized and paid.
 \item[Services:] Provides the current price of each asset defined by the Asset
-  Module and its price history, and updates prices on a schedule.
+  Module and its price history, and updates prices on a schedule. Reports a
+  trend for each asset type and the market events that have occurred, such as
+  downturns and dividends. Announces each asset's dividends and pays them to
+  the users holding that asset through the Currency Ledger Module. Generates a
+  past price history for a newly listed asset.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
-\end{description}
-
-\subsubsection{Authentication and Security Module (\mref{mAuth})}
-
-\begin{description}
-\item[Secrets:] The authentication mechanism, how credentials are hashed and
-  verified, how sessions or tokens are issued, and which requests require an
-  authenticated user.
-\item[Services:] Verifies a user's credentials, identifies the user making each
-  request to the backend, and rejects requests that are unauthenticated or that
-  try to access another user's data.
-\item[Implemented By:] \progname{} (backend), using Spring Security
-\item[Type of Module:] Library
 \end{description}
 
 \subsubsection{API Client Module (\mref{mAPI})}
 
 \begin{description}
 \item[Secrets:] The backend's address, the transport protocol and message
-  format, how credentials are attached to requests, and how network failures
-  are retried or reported.
+  format, how credentials and the device identifier are stored and attached
+  to requests, how network failures are retried or reported, how received
+  data is kept for use when the backend cannot be reached, and how a repeated
+  request is prevented from taking effect twice.
 \item[Services:] Gives the mobile modules one typed function per backend
   operation (for example syncing activity, reading the balance, listing assets
   and placing an order), so they never build requests or parse responses
-  themselves.
+  themselves. Keeps the user signed in by renewing access when it expires,
+  returns the last data received, marked as possibly out of date, when the
+  backend cannot be reached, and reports failures as typed errors that the
+  screens can explain to the user.
 \item[Implemented By:] \progname{} (mobile)
-\item[Type of Module:] Library
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsection{Software Decision Module}
+
+\begin{description}
+\item[Secrets:] General-purpose design decisions based on mathematical
+  theorems, established algorithms or programming considerations. The secrets
+  of these modules are \emph{not} described in the SRS and do not depend on
+  anything specific to \progname{}.
+\item[Services:] Includes abstract data structures and algorithms that do not
+  provide direct interaction with the user and that could be reused, largely
+  unchanged, in other projects.
+  % Changes in these modules are more likely to be motivated by a desire to
+  % improve performance than by externally imposed changes.
+\item[Implemented By:] --
+\end{description}
+
+\subsubsection{Authentication and Security Module (\mref{mAuth})}
+
+\begin{description}
+\item[Secrets:] The authentication mechanism, how credentials are hashed and
+  verified, how sessions or tokens are issued, which requests require an
+  authenticated user, how multi-factor authentication codes and password reset
+  links are generated and sent by email, how request rates are limited, and how
+  security events are logged.
+\item[Services:] Verifies a user's credentials, enforces the password policy
+  and the sign-in lockout, offers optional multi-factor authentication and
+  password reset through the user's email, identifies the user making each
+  request to the backend, and rejects requests that are unauthenticated, that
+  exceed the request rate limit, or that try to access another user's data.
+  Ends sessions when the user signs out, after a period without use, and when
+  the account is deleted. Records failed sign-ins, rejected tokens, refused
+  access and rate limit violations in the security log.
+\item[Implemented By:] \progname{} (backend), using Spring Security
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \section{Connection Between Requirements and Design} \label{SecConnection}

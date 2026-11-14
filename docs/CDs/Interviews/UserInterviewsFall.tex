@@ -1,0 +1,182 @@
+
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{hyperref}
+\title{User Interviews for \progname{}} 
+\author{\authname}
+\date{\today}
+
+\input{../../Comments.text}
+\input{../../Common.text}
+	
+\begin{document}
+
+\maketitle
+\section{Introduction}
+This document presents the information gathered through the user interview process. It is used to elicit and inform the functional and non-functional requirements, user interests and needs, and technical decisions for the project. The document contains the list of interview questions, the rationale for each question, the standard follow-up questions, and a summary of the responses received. These summaries inform the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{Software Requirements Specification (SRS)}, the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV Plan)}, and the design documents: the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftArchitecture/MG.pdf}{Module Guide (MG)} and the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{Module Interface Specification (MIS)}. 
+
+\section{Interview Questions and Rationale}
+\begin{enumerate}
+
+\item \textbf{If you found \$1000 on the street, what would you do with it?}
+  \begin{itemize}
+    \item \textbf{Rationale:} See our interviewees' first thoughts on how they would spend money. Asking this first allows us to avoid introducing bias towards the answer of investing throughout the interview.
+    \item \textbf{Goal of question:} See trends in the thought process, such as saving money, paying bills, casino trips, etc.
+  \end{itemize}
+
+\item \textbf{On a scale of 1--5, how do you perceive your level of financial literacy?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Quick insight into the interviewee's financial literacy, needed to classify our users.
+    \item \textbf{Follow-up questions, depending on the answer:}
+      \begin{itemize}
+        \item \textbf{Answer 3--5:} What is your level of understanding of investment/saving strategies? Why?
+        \item \textbf{Answer 1--2:} Do you want to learn more about investment/savings?
+      \end{itemize}
+    \item \textbf{Goal of question:} Gauge a potential user's current level of understanding of basic personal financial measurement.
+  \end{itemize}
+
+\item \textbf{On a scale of 1--5, how do you perceive your level of personal fitness?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Same as above.
+    \item \textbf{Follow-up questions, depending on the answer:}
+      \begin{itemize}
+        \item \textbf{Answer 3--5:} What do you do for your personal fitness? How do you manage your supplements? How often do you work out? How do you work out? How do you set your goals?
+        \item \textbf{Answer 1--2:} Why do you feel this is your correct rating? Where do you think your gaps are?
+      \end{itemize}
+    \item \textbf{Goal of question:} Gauge a potential user's current level of understanding of basic personal fitness principles.
+  \end{itemize}
+
+\item \textbf{What fitness devices do you use? What tools do you use for investing/savings?}
+  \begin{itemize}
+    \item \textbf{Rationale:} Examining current user habits also determines how involved they are with maintaining their lifestyle with respect to both domains.
+    \item \textbf{Goal of question:} See what technology people use and what can be incorporated into our application.
+  \end{itemize}
+
+\item \textbf{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+  \begin{itemize}
+    \item \textbf{Rationale:} We would like to examine what potential users may see as a roadblock to building habits around personal fitness and finance.
+    \item \textbf{Follow-up questions:} What would give you more confidence/motivation to start investing or to invest more effectively? What would give you more confidence/motivation to begin taking your personal fitness more seriously?
+    \item \textbf{Conditional follow-up:} If a user has a combined score above 7 (based on questions 2 and 3), ask what they do to uphold their habits.
+    \item \textbf{Goal of question:} See what holds users back from building habits around personal fitness and finance.
+  \end{itemize}
+\end{enumerate}
+
+\section{Summary of Responses and Key Takeaways}
+This section will provide overview of the information elicited during the User Interviews that were conducted to help inform decisions made throughout the design and development of Flexin'.
+\section{Summary of Responses}
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{User} & \textbf{Finance (1--5)} & \textbf{Fitness (1--5)} & \textbf{Combined} \\ \hline
+1 & 2 & 4 & 6 \\ \hline
+2 & 3 & 3.5 & 6.5 \\ \hline
+3 & 2 & 2 & 4 \\ \hline
+4 & 2 & 2 & 4 \\ \hline
+5 & 3 & 2 & 5 \\ \hline
+6 & 3 & 4 & 7 \\ \hline
+7 & 5 & 3.5 & 8.5 \\ \hline
+\end{tabular}
+\caption{Self-rated financial literacy and fitness levels of the interview participants}
+\label{tab:interview-ratings}
+\end{table}
+
+\subsection{Finance}
+The key takeaways regarding finance are as follows.
+
+\subsubsection{Knowledge}
+\begin{itemize}
+    \item Many participants rated their financial literacy between 2 and 3 out of 5. These participants shared several trends:
+    \begin{itemize}
+        \item A general knowledge of good budgeting habits.
+        \item A basic knowledge of banking, including account types, benefits, and perks.
+        \item An understanding of the foundations of the stock market.
+        \item A feeling that they would benefit from more knowledge and experience.
+    \end{itemize}
+    \item User 7 was a standout participant and rated themselves 5 out of 5. Their interview showed the following trends:
+    \begin{itemize}
+        \item A strong understanding of personal finance.
+        \item A strong budgeting mindset, with set percentages of income allocated to expenses and investments.
+        \item The confidence to build their own portfolio, assessing opportunities by risk and potential growth or loss in order to balance their investments.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Barriers}
+Several barriers were consistent across the interviews. They include:
+\begin{itemize}
+    \item A lack of interest.
+    \item Time constraints.
+    \item A lack of experience.
+\end{itemize}
+
+\subsubsection{Tools}
+The tools used by interviewees include:
+\begin{itemize}
+    \item Banking applications.
+    \item Wealthsimple.
+\end{itemize}
+
+\subsection{Fitness}
+The key takeaways regarding fitness are as follows.
+
+\subsubsection{Habits}
+Fitness is something most people are taught from a young age, so habits appear to be the leading factor behind the ratings participants gave themselves. The key takeaways include:
+\begin{itemize}
+    \item Participants who rated themselves 3 or higher shared several trends:
+    \begin{itemize}
+        \item They keep a healthier diet and good eating habits.
+        \item They tend to go to the gym two to four times per week, and many follow a set weight training regimen.
+    \end{itemize}
+    \item Participants who rated themselves 2 or lower also shared several trends:
+    \begin{itemize}
+        \item Fitness habits are a lower priority for them.
+        \item They exercise outside of the gym, for example by walking to class or attending group exercise classes.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Barriers}
+Several barriers were consistent across the interviews. They include:
+\begin{itemize}
+    \item A lack of interest.
+    \item Time constraints.
+    \item Competing priorities.
+\end{itemize}
+
+\subsubsection{Tools}
+The tools used by interviewees include:
+\begin{itemize}
+    \item Excel spreadsheets.
+    \item Fitness watches, such as Garmin.
+    \item Smart device tracking.
+    \item Strava.
+    \item Google Fit.
+\end{itemize}
+
+\section{Key Takeaways for the Project}
+This section outlines key takaways that helped to inform decisions in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, and reinforce decisions made in previously completed documents
+\begin{enumerate}
+\item \textbf{Time is the main constraint.} Participants most often named a lack of time, not a lack of knowledge, as the barrier to building habits. This supports passive tracking through connected fitness data (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{FUNC-03, Third-Party Fitness Data Import}), minimal logging effort, and one small daily goal.
+\item \textbf{Beginners are the priority.} Most participants rated their financial literacy as 2 or 3 out of 5, which is consistent with the project's priority on novice users (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS, Section 2.6}). Lessons should use plain language and cover basics such as the Tax-Free Savings Account (TFSA) and First Home Savings Account (FHSA), loans and interest, and compounding. This is also consistent with the knowledge gap among young adults described in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals}~\cite{boisclair2017}.
+\item \textbf{Platform risk.} Users 1 and 4 use iPhones, and User 1 uses an Apple Watch. Because the application targets Android only (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SC-01, Android Platform}), these users could not use it. Support for iOS remains a stretch goal, and this limitation should be recorded. The remaining participants' tools (Google Fit, Garmin, and Strava) are covered by Health Connect, Garmin Connect IQ, and the Strava API.
+\item \textbf{Keep the application free and low-friction.} Participants reported abandoning applications because of paywalled basic features and long logging flows.
+\item \textbf{Goals should be gentle and adjustable.} User 4 stated that a goal of 8,000 steps per day would be attainable, which suggests that the initial HealthyDailyActivity default of 10,000 steps (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS, Table 2: Symbolic Constants}) may be too high for beginners. This also supports the safety requirements on rest days, supportive language, and streak freezes (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis, SR6, SR7, and SR8}).
+\item \textbf{Social features should remain optional.} Participants were divided on whether competition would motivate them, which supports opt-in participation and the leaderboard opt-out (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{FUNC-13, Leaderboard Participation}; \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis, SR9}).
+\item \textbf{Advanced users want depth.} User 7 asked about bond yields and User 2 about market timing, which supports the stretch goal of tailored interactions for users with different knowledge levels (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals, Section 3: Stretch Goals}).
+\end{enumerate}
+
+
+\section{Key Learning Points - SRS Mapping}
+
+
+\newpage{}
+
+\section{Appendix - Generative AI Use Disclosure}
+\subsection{AI Tools Used}
+\subsection{How and Where Used}
+\subsection{Verification of AI-Generated Content}
+
+\section{Appendix - Reflection}
+
+\section{Appendix - Transcripts}
+
+\end{document}

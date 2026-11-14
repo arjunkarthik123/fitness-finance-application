@@ -1,4 +1,9 @@
 {
+  "docs/CDs/Interviews/UserInterviewsFall.tex": [
+    "docs/CDs/Interviews/UserInterviewsFall.tex",
+    "docs/Comments.text",
+    "docs/Common.text"
+  ],
   "docs/CDs/MLReport/main.tex": [
     "docs/CDs/MLReport/acl.sty",
     "docs/CDs/MLReport/custom.bib",
