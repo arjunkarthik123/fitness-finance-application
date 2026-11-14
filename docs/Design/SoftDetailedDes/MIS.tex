@@ -668,14 +668,13 @@ None, information will be stored in the database (Persistence Module)
 \item transition: updates the period of an already started goal.
 \item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}.
-\end{itemize}
 
 \noindent collectReward(userID, goalID):
 \begin{itemize}
 \item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
 \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}.
-\end{itemize}
+
 
 \subsubsection{Local Functions}
 \begin{tabular}{p{3.4cm} p{4cm} p{6cm}}
