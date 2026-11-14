@@ -113,6 +113,8 @@ are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
+The symbol $\bot$ means that there is no value, so a value of type $T \cup
+\{\bot\}$ is either a $T$ or absent.
 
 \section{Module Decomposition}
 
@@ -125,12 +127,12 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Fitness Integration Module\\
-& Persistence Module\\
+Hardware-Hiding Module & Fitness Integration Module\\
 \midrule
 
-\multirow{10}{0.3\textwidth}{Behaviour-Hiding Module} & User and Onboarding Module\\
-& Activity Module\\ 
+\multirow{14}{0.3\textwidth}{Behaviour-Hiding Module} & Persistence Module\\
+& User and Onboarding Module\\
+& Activity Module\\
 & Goals Module\\
 & Currency Ledger Module\\
 & Asset Module\\
@@ -140,11 +142,11 @@ The following table is taken directly from the Module Guide document for this pr
 & Progress Reporting Module\\
 & UI Screens Module\\
 & Notification Module\\
+& Market Simulation Module\\
+& API Client Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Market Simulation Module\\
-& Authentication and Security Module\\
-& API Client Module\\
+Software Decision Module & Authentication and Security Module\\
 \bottomrule
 
 \end{tabular}
@@ -160,54 +162,240 @@ This module is M1 in the Module Guide.
 
 FitnessIntegration
 
+\medskip
+
+\noindent This module is an abstract data type with one instance for each
+fitness source: healthConnect and garmin. Every instance exports the
+same access programs, so the rest of the app reads fitness data without
+knowing which source it came from. The semantics below are given for the
+Health Connect instance. The Garmin instance follows the same rules, reading
+Garmin data through Garmin Connect IQ in place of Health Connect.
+
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\noindent None. This module runs on the phone and reaches each source only
+through the source's own SDK or API (SC-04), which is an environment variable
+of this module.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{6.8cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{Permissions} & read Steps, read ExerciseSession & The only Health
+  Connect permissions requested\\
+\textsf{MaxCadence} & 250 steps per minute, sustained & Steps from a
+  record whose average rate is above this are reported as unverified
+  (SEC-INT-01). The value is the SRS constant of the same name.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item FitnessSource = $\{\mathrm{healthConnect}, \mathrm{garmin}\}$
+\item Time: a point in time, independent of time zone
+\item LocalDate: a calendar date in the device's time zone
+\item ActivitySample = tuple of ($\mathit{source}$: FitnessSource,
+  $\mathit{id}$: String, $\mathit{type}$: String, $\mathit{startTime}$: Time,
+  $\mathit{endTime}$: Time). A workout as reported by a source.
+  $\mathit{id}$ is the source's own identifier for the workout and does not
+  change between reads (PR-PA-03).
+\item DailySteps = tuple of ($\mathit{source}$: FitnessSource,
+  $\mathit{date}$: LocalDate, $\mathit{steps}$: $\mathbb{Z}$,\linebreak
+  $\mathit{unverifiedSteps}$: $\mathbb{Z}$). The steps from one source on one
+  local day. $\mathit{unverifiedSteps}$ are the steps from records faster
+  than \textsf{MaxCadence}; they are not part of $\mathit{steps}$ and earn no
+  currency unless verified (SEC-INT-01). A later DailySteps for the same
+  source and date replaces an earlier one.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{2.7cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+isAvailable & - & $\mathbb{B}$ & - \\
+requestPermissions & - & $\mathbb{B}$ & - \\
+fetchActivities & $\mathit{since}$: Time & seq of ActivitySample &
+  ReadError \\
+fetchDailySteps & $\mathit{since}$: Time & seq of DailySteps & ReadError \\
+activityKey & $\mathit{a}$: ActivitySample & String & - \\
+dailyStepsKey & $\mathit{d}$: DailySteps & String & - \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent ReadError: the source cannot be read, because it is not available on
+the device or a permission in \textsf{Permissions} has not been granted.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{source}$: FitnessSource, the source this instance reads,
+  fixed when the instance is created
+\end{itemize}
+
+\noindent The module stores no fitness data (SEC-PRV-01).
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{hc}$: Health Connect on the device. It provides:
+  \begin{itemize}
+  \item $\mathit{hc}.\mathit{available}$: $\mathbb{B}$, whether Health
+    Connect can be used on the device.
+  \item $\mathit{hc}.\mathit{granted}$: the set of permissions the user has
+    granted to the app.
+  \item The Steps and ExerciseSession records written by other apps. Each
+    record $r$ has a start and end Time, an identifier $r.\mathit{id}$, the
+    app that wrote it $r.\mathit{origin}$, and how it was recorded
+    $r.\mathit{method}$. A Steps record also has a step count
+    $r.\mathit{count}$, and an ExerciseSession record has an exercise type.
+  \end{itemize}
+\item $\mathit{clock}$: the device clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{tz}$: the device time zone, which decides the local day that
+  a Time falls on.
+\item Garmin Connect IQ, Garmin's published SDK, which the Garmin instance
+  reads in place of $\mathit{hc}$ (SC-04).
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item $\mathit{since} \leq \mathit{now}()$ for every fetch.
+\item $\mathit{tz}$ does not change during a fetch.
+\item $r.\mathit{method}$ is reported by the app that wrote the record, so a
+  manual entry is recognised only when that app marks it as one. Invented
+  steps that are not marked as manual are caught only when they are faster
+  than \textsf{MaxCadence}.
+\item Workouts that overlap in time, including the same workout recorded by
+  two sources, are detected by the Activity Module (Section~\ref{misAct}),
+  which holds the workouts from earlier syncs (SEC-INT-01, PR-PA-03). This
+  module reports every workout it reads.
+\item Health Connect returns records from at most about 30 days before the
+  first permission grant. This covers \textsf{OfflineSyncWindow} (PR-RFT-01).
+\item The backend uses the keys from activityKey and dailyStepsKey so that
+  each workout is recorded once and each daily total replaces the previous
+  one, with currency awarded only for the increase.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent isAvailable():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: $\mathit{out} := \mathit{hc}.\mathit{available}$
 \end{itemize}
+
+\noindent requestPermissions():
+\begin{itemize}
+\item transition: if $\mathit{hc}.\mathit{available}$, the user is asked to
+  grant \textsf{Permissions}, and $\mathit{hc}.\mathit{granted}$ is updated
+  with the user's choice.
+\item output: $\mathit{out} := \mathit{hasPermissions}()$, so a partial
+  grant gives false.
+\end{itemize}
+
+\noindent fetchActivities($\mathit{since}$):
+\begin{itemize}
+\item output: one ActivitySample for each ExerciseSession record $r$ in
+  $\mathit{hc}$ between $\mathit{since}$ and $\mathit{now}()$ with
+  $r.\mathit{id} \neq \bot \land \lnot \mathit{manual}(r)$, giving its
+  identifier, exercise type, and start and end Time. Manual entries are left
+  out (SC-04).
+\item exception: $\lnot \mathit{hasPermissions}() \Rightarrow
+  \mathrm{ReadError}$
+\end{itemize}
+
+\noindent fetchDailySteps($\mathit{since}$):
+\begin{itemize}
+\item output: let $t = \mathit{now}()$ and let $R$ be the Steps records in
+  $\mathit{hc}$ between $\mathit{since}$ and $t$ with $\mathit{counted}(r)$.
+  Let $V = \{r \in R \mid \lnot \mathit{tooFast}(r)\}$ and $U = \{r \in R
+  \mid \mathit{tooFast}(r)\}$. Then $\mathit{out} := \langle
+  (\mathit{source}, d, \mathit{dayTotal}(V, d), \mathit{dayTotal}(U, d))
+  \mid d \in \mathit{days}(\mathit{since}, t) \rangle$. There is one
+  DailySteps for each local day from $\mathit{since}$ to today, with 0 for a
+  day with no steps. Steps are dated by when they happened, not when they
+  were read (PR-PA-05).
+\item exception: $\lnot \mathit{hasPermissions}() \Rightarrow
+  \mathrm{ReadError}$
+\end{itemize}
+
+\noindent activityKey($a$):
+\begin{itemize}
+\item output: a String determined by $(a.\mathit{source}, a.\mathit{id})$
+  alone, different for different pairs
+\end{itemize}
+
+\noindent dailyStepsKey($d$):
+\begin{itemize}
+\item output: a String determined by $(d.\mathit{source}, d.\mathit{date})$
+  alone, different for different pairs
+\end{itemize}
+
+\noindent So a sync that repeats or overlaps an earlier one never reports the
+same activity as new twice (PR-PA-03).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\noindent For a Steps record $r$, $\mathit{len}(r)$ is its length in minutes,
+and $\mathit{overlap}(r, d)$ is the time that $r$ shares with local day $d$,
+in minutes.
+
+\begin{itemize}
+\item $\mathit{hasPermissions}$: $\rightarrow \mathbb{B}$\\
+  $\mathit{hasPermissions}() \equiv \mathit{hc}.\mathit{available} \land
+  \textsf{Permissions} \subseteq \mathit{hc}.\mathit{granted}$
+\item $\mathit{manual}$: record $\rightarrow \mathbb{B}$\\
+  $\mathit{manual}(r) \equiv r.\mathit{method} = \mathrm{MANUAL\_ENTRY}$
+\item $\mathit{counted}$: Steps record $\rightarrow \mathbb{B}$\\
+  $\mathit{counted}(r) \equiv \lnot \mathit{manual}(r) \land \mathit{len}(r)
+  > 0 \land r.\mathit{count} \geq 0$. Steps of other records are not
+  reported at all, not even as unverified (SC-04).
+\item $\mathit{tooFast}$: Steps record $\rightarrow \mathbb{B}$\\
+  $\mathit{tooFast}(r) \equiv r.\mathit{count} / \mathit{len}(r) >
+  \textsf{MaxCadence}$, the rate sustained over the record (SEC-INT-01).
+\item $\mathit{appTotal}$: set of Steps record $\times$ String $\times$
+  LocalDate $\rightarrow \mathbb{R}$\\
+  $\mathit{appTotal}(R, o, d) \equiv \sum_{r \in R \,:\, r.\mathit{origin} =
+  o} r.\mathit{count} \cdot \mathit{overlap}(r, d) / \mathit{len}(r)$, the
+  steps that app $o$ recorded on day $d$, taking each record's steps as
+  spread evenly over its time.
+\item $\mathit{dayTotal}$: set of Steps record $\times$ LocalDate
+  $\rightarrow \mathbb{Z}$\\
+  The steps of $R$ on day $d$, with steps that more than one app recorded at
+  the same time counted once (PR-PA-03). It satisfies
+  \[
+  \max_{o} \mathit{appTotal}(R, o, d) \leq \mathit{dayTotal}(R, d) \leq
+  \sum_{o} \mathit{appTotal}(R, o, d)
+  \]
+  up to rounding. How overlapping records are combined is a secret of this
+  module (see the Module Guide).
+\item $\mathit{localDate}$: Time $\rightarrow$ LocalDate\\
+  The local calendar date of a Time in $\mathit{tz}$.
+\item $\mathit{days}$: Time $\times$ Time $\rightarrow$ seq of LocalDate\\
+  $\mathit{days}(s, t) \equiv$ every local date from $\mathit{localDate}(s)$
+  to $\mathit{localDate}(t)$ inclusive, in order.
+\end{itemize}
 
 \section{MIS of Persistence Module} \label{misPer}
 
@@ -382,7 +570,7 @@ The User and Onboarding Module will rely on:
     \item validDOB(dob: Date)$\longrightarrow \mathbb{B}$: ensures user's age $\geq$ MinAge 
 \end{itemize}
 
-\section{MIS of Activity and Goals Module} \label{misAct}
+\section{MIS of Activity Module} \label{misAct}
 
 This module is M4 in the Module Guide.
 
@@ -439,9 +627,66 @@ Activity
 
 \wss{Local functions, or None}
 
-\section{MIS of Currency Ledger Module} \label{misCur}
+\section{MIS of Goals Module} \label{misGoal}
 
 This module is M5 in the Module Guide.
+
+\subsection{Module}
+
+Goals
+
+\subsection{Uses}
+
+\wss{Modules this module uses}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\wss{Exported constants, or None}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{State variables, or None}
+
+\subsubsection{Environment Variables}
+
+\wss{Environment variables, or None}
+
+\subsubsection{Assumptions}
+
+\wss{Assumptions, or None}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate}
+\item output: \wss{if appropriate}
+\item exception: \wss{if appropriate}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{Local functions, or None}
+
+\section{MIS of Currency Ledger Module} \label{misCur}
+
+This module is M6 in the Module Guide.
 
 \subsection{Module}
 
@@ -498,7 +743,7 @@ CurrencyLedger
 
 \section{MIS of Asset Module} \label{misAsset}
 
-This module is M6 in the Module Guide.
+This module is M7 in the Module Guide.
 
 \subsection{Module}
 
@@ -506,56 +751,256 @@ Asset
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Persistence Module (Section~\ref{misPer}): stores the asset
+  definitions, the number of units of each asset held by users, and the log
+  of changes made by administrators. It prevents entries in the log from
+  being updated or deleted.
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types, and requireRole to check that a user is
+  an administrator.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constant, which is not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{MinStartPrice} & 0.01 FLX & Lowest starting price an asset can have.
+  It equals the Market Simulation Module's \textsf{MinPrice}.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item AssetID = $\mathbb{N}$
+\item AssetType = $\{\mathrm{STOCK}, \mathrm{BOND}, \mathrm{ETF},
+  \mathrm{FUND}\}$
+\item AssetRecord = tuple of ($\mathit{id}$: AssetID, $\mathit{symbol}$:
+  String, $\mathit{name}$: String, $\mathit{type}$: AssetType,
+  $\mathit{startPrice}$: $\mathbb{R}$, $\mathit{yield}$: $\mathbb{R}$,
+  $\mathit{supply}$: $\mathbb{N}$), the definition of an asset.
+  $\mathit{symbol}$ is a short code that identifies the asset to users.
+  $\mathit{startPrice}$ is its price in FLX when it is first priced.
+  $\mathit{yield}$ is its annual dividend yield, where 0 means it pays no
+  dividends. $\mathit{supply}$ is the total number of units that exist in the
+  simulated market.
+\item Asset = tuple of ($\mathit{id}$: AssetID, $\mathit{symbol}$: String,
+  $\mathit{name}$: String, $\mathit{type}$: AssetType, $\mathit{startPrice}$:
+  $\mathbb{R}$, $\mathit{yield}$: $\mathbb{R}$, $\mathit{supply}$:
+  $\mathbb{N}$, $\mathit{available}$: $\mathbb{N} \cup \{0\}$), an
+  AssetRecord together with the number of units not held by any user
+\item AssetChange = tuple of ($\mathit{time}$: Time, $\mathit{admin}$:
+  UserID, $\mathit{asset}$: AssetID, $\mathit{before}$: AssetRecord $\cup
+  \{\bot\}$, $\mathit{after}$: AssetRecord), a change made by an
+  administrator. $\mathit{before} = \bot$ when the asset was added.
+\end{itemize}
+
+\noindent An asset can only have one of the types in AssetType. Adding a new
+type of asset means adding a value to AssetType and calibrating the type in
+the Market Simulation Module. Neither changes the code that buys and sells
+assets (PR-SE-02).
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{5cm}
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+getAsset & $a$: AssetID & Asset & UnknownAsset \\
+getAssets & - & sequence of Asset & - \\
+take & $a$: AssetID, $q$: $\mathbb{N}$ & - & UnknownAsset,
+  InsufficientSupply \\
+release & $a$: AssetID, $q$: $\mathbb{N}$ & - & UnknownAsset,
+  NotOutstanding \\
+addAsset & $p$: Principal, $s$: String, $n$: String, $y$: AssetType,
+  $\mathit{sp}$: $\mathbb{R}$, $d$: $\mathbb{R}$, $\mathit{sup}$:
+  $\mathbb{N}$ & Asset & Forbidden, InvalidAsset, DuplicateSymbol \\
+updateAsset & $p$: Principal, $a$: AssetID, $n$: String, $\mathit{sup}$:
+  $\mathbb{N}$, $d$: $\mathbb{R}$ & Asset & Forbidden, UnknownAsset,
+  InvalidAsset \\
+getChanges & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time &
+  sequence of AssetChange & Forbidden, InvalidRange \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent take and release are used only by the Transaction Order Module and
+are not available through the API. addAsset, updateAsset and getChanges are
+available only to administrators. An asset's symbol, type and starting
+price cannot be changed once it is added.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{assets}$: set of AssetRecord, the definition of every asset
+\item $\mathit{outstanding}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$,
+  the number of units of each asset held by users
+\item $\mathit{changes}$: sequence of AssetChange, every change made by an
+  administrator, in time order. Entries are only ever appended.
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{assets} = \emptyset$,
+$\mathit{outstanding}$ has no entries and $\mathit{changes}$ is empty. All
+state variables are stored through the Persistence Module, so they keep
+their values when the backend restarts. The number of units available is not
+stored. It is calculated from $\mathit{supply}$ and $\mathit{outstanding}$
+whenever it is needed.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call that takes one.
+\item Only the Transaction Order Module calls take and release, and only
+  within the unit of work of a trade. Units of work that change the
+  available quantity of the same asset never run at the same time.
+\item The Market Simulation Module has calibration for every value of
+  AssetType.
+\item A new asset cannot be traded until it has a price. After addAsset, an
+  administrator or the demonstration data script (TRN-03) calls the Market
+  Simulation Module's backfill for the asset. This module does not call it,
+  because the Market Simulation Module uses this module.
+\item Assets are never removed.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item An exception leaves the state unchanged.
+\item In addAsset, updateAsset and getChanges, requireRole($p$,
+  ADMIN) is checked before anything else, and if it fails, Forbidden is
+  raised.
+\end{itemize}
+
+\medskip
+
+\noindent getAsset($a$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{view}(r)$, where $r$ is the
+  $r \in \mathit{assets}$ with $r.\mathit{id} = a$
+\item exception: no such $r$ exists $\Rightarrow \mathrm{UnknownAsset}$
+\end{itemize}
+
+\noindent getAssets():
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{view}(r)$ for every $r \in
+  \mathit{assets}$, in order of $\mathit{symbol}$
+\end{itemize}
+
+\noindent take($a, q$):
+\begin{itemize}
+\item transition: $\mathit{outstanding}(a) := \mathit{outstanding}(a) + q$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $\mathit{available}(a) < q \Rightarrow
+  \mathrm{InsufficientSupply}$
+\end{itemize}
+
+\noindent release($a, q$):
+\begin{itemize}
+\item transition: $\mathit{outstanding}(a) := \mathit{outstanding}(a) - q$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $\mathit{outstanding}(a) < q \Rightarrow \mathrm{NotOutstanding}$
+\end{itemize}
+
+\noindent Because take and release are called in the same unit of work as
+the change to the user's holdings, $\mathit{outstanding}(a)$ always equals
+the total number of units of $a$ held across all portfolios.
+NotOutstanding is raised only if this has been broken, and causes the trade
+to be rolled back.
+
+\medskip
+
+\noindent addAsset($p, s, n, y, \mathit{sp}, d, \mathit{sup}$):
+\begin{itemize}
+\item transition: let $r = (i, s, n, y, \mathit{sp}, d, \mathit{sup})$,
+  where $i$ is an AssetID not used by any earlier asset. $\mathit{assets} :=
+  \mathit{assets} \cup \{r\}$, $\mathit{outstanding}(i) := 0$, and
+  $(\mathit{now}(), p.\mathit{user}, i, \bot, r)$ is appended to
+  $\mathit{changes}$. These take effect together or not at all.
+\item output: $\mathit{out} := \mathit{view}(r)$
+\item exception: $\neg\mathit{validSymbol}(s) \vee n = \text{``''} \vee
+  \mathit{sp} < \textsf{MinStartPrice} \vee \mathit{sp}$ has more than two
+  decimal places $\vee\ d < 0 \Rightarrow \mathrm{InvalidAsset} \mid{}$
+  some $r' \in \mathit{assets}$ has $r'.\mathit{symbol} = s \Rightarrow
+  \mathrm{DuplicateSymbol}$
+\end{itemize}
+
+\noindent updateAsset($p, a, n, \mathit{sup}, d$):
+\begin{itemize}
+\item Let $r$ be the $r \in \mathit{assets}$ with $r.\mathit{id} = a$, and
+  $r'$ be $r$ with $\mathit{name} = n$, $\mathit{supply} = \mathit{sup}$
+  and $\mathit{yield} = d$.
+\item transition: if $r' \neq r$, $\mathit{assets} := (\mathit{assets} -
+  \{r\}) \cup \{r'\}$ and $(\mathit{now}(), p.\mathit{user}, a, r, r')$ is
+  appended to $\mathit{changes}$, together or not at all. If $r' = r$, the
+  state is unchanged and nothing is logged.
+\item output: $\mathit{out} := \mathit{view}(r')$
+\item exception: no such $r$ exists $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $n = \text{``''} \vee d < 0 \vee \mathit{sup} <
+  \mathit{outstanding}(a) \Rightarrow \mathrm{InvalidAsset}$
+\end{itemize}
+
+\noindent A new yield takes effect at the Market Simulation Module's next
+price update. It changes both the asset's next dividend and the drift of its
+price, so that its expected total return stays the same.
+
+\medskip
+
+\noindent getChanges($p, \mathit{from}, \mathit{to}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the entries $c$ of $\mathit{changes}$ with
+  $\mathit{from} \leq c.\mathit{time} \leq \mathit{to}$, in time order
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{available}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$\\
+  $\mathit{available}(a) \equiv r.\mathit{supply} -
+  \mathit{outstanding}(a)$, where $r$ is the $r \in \mathit{assets}$ with
+  $r.\mathit{id} = a$. It is never negative, because take never lets
+  $\mathit{outstanding}(a)$ exceed the supply, and updateAsset never lowers
+  the supply below $\mathit{outstanding}(a)$.
+\item $\mathit{view}$: AssetRecord $\rightarrow$ Asset\\
+  $\mathit{view}(r) \equiv$ ($r.\mathit{id}$, $r.\mathit{symbol}$,
+  $r.\mathit{name}$, $r.\mathit{type}$, $r.\mathit{startPrice}$,
+  $r.\mathit{yield}$, $r.\mathit{supply}$, $\mathit{available}(r.\mathit{id})$)
+\item $\mathit{validSymbol}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{validSymbol}(s) \equiv s$ consists of one to five capital
+  letters A to Z.
+\end{itemize}
 
 \section{MIS of Transaction Order Module} \label{misPurch}
 
-This module is M7 in the Module Guide.
+This module is M8 in the Module Guide.
 
 \subsection{Module}
 
@@ -563,56 +1008,289 @@ TransactionOrder
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Asset Module (Section~\ref{misAsset}): checks that an asset exists,
+  reads the quantity of it still available, takes units from that quantity
+  for each purchase and returns units to it for each sale. Like the ledger
+  entries, these changes join the unit of work of the trade.
+\item Market Simulation Module (Section~\ref{misMkt}): the current price of
+  an asset, through getPrice.
+\item Currency Ledger Module (Section~\ref{misCur}): the user's balance, a
+  debit for each purchase and a credit for each sale. Each debit and credit
+  cites the transaction that caused it as its source (SEC-AUD-01), and joins
+  the unit of work of the trade rather than taking effect on its own.
+\item Portfolio Module (Section~\ref{misPort}): the number of units of an
+  asset a user holds, adding units and their cost for each purchase, and
+  removing units for each sale. Like the ledger entries, these changes join
+  the unit of work of the trade.
+\item Persistence Module (Section~\ref{misPer}): stores quotes and
+  transactions. It provides a unit of work in which a group of writes, made
+  by this module and by the modules above, takes effect together or not at
+  all. It runs the units of work for one user one at a time, and the units
+  of work that change the available quantity of one asset one at a time
+  (PR-RFT-02). It
+  prevents stored transactions from being updated or deleted (SEC-AUD-01).
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constant, which is not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{QuoteLifetime} & 60 seconds & Time after a quote is issued during
+  which it can be executed\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item AssetID: as defined by the Asset Module (Section~\ref{misAsset})
+\item Amount and Price: as defined by the Market Simulation Module
+  (Section~\ref{misMkt})
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item Side = $\{\mathrm{BUY}, \mathrm{SELL}\}$
+\item Quantity = $\mathbb{N}$, a number of whole units of an asset
+\item Quote = tuple of ($\mathit{id}$: $\mathbb{N}$, $\mathit{user}$:
+  UserID, $\mathit{asset}$: AssetID, $\mathit{side}$: Side, $\mathit{qty}$:
+  Quantity, $\mathit{price}$: Price, $\mathit{total}$: Amount,
+  $\mathit{priced}$: Time, $\mathit{expires}$: Time). A Quote offers to
+  trade $\mathit{qty}$ units at $\mathit{price}$ each, for $\mathit{total}
+  = \mathit{qty} \cdot \mathit{price}$. $\mathit{priced}$ is the time of the
+  market price it uses.
+\item Transaction = tuple of ($\mathit{id}$: $\mathbb{N}$, $\mathit{user}$:
+  UserID, $\mathit{asset}$: AssetID, $\mathit{side}$: Side, $\mathit{qty}$:
+  Quantity, $\mathit{price}$: Price, $\mathit{total}$: Amount,
+  $\mathit{quote}$: $\mathbb{N}$, $\mathit{priced}$: Time, $\mathit{time}$:
+  Time). A Transaction records an executed trade, the quote it executed, and
+  the market price it used. $\mathit{time}$ is when it was executed.
+\end{itemize}
+
+\noindent Because $\mathit{qty}$ is a whole number and $\mathit{price}$ has
+two decimal places, $\mathit{total}$ is an exact Amount and is never rounded.
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+quote & $p$: Principal, $a$: AssetID, $s$: Side, $q$: Quantity & Quote &
+  UnknownAsset, NoPrice, InsufficientFunds, InsufficientSupply,
+  InsufficientUnits \\
+execute & $p$: Principal, $\mathit{id}$: $\mathbb{N}$ & Transaction &
+  UnknownQuote, QuoteExpired, InsufficientFunds, InsufficientSupply,
+  InsufficientUnits \\
+getTransaction & $p$: Principal, $\mathit{id}$: $\mathbb{N}$ & Transaction &
+  UnknownTransaction \\
+getTransactions & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time
+  & sequence of Transaction & InvalidRange \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent A trade takes two steps. quote prices the order on the server and
+shows the user what it will cost or pay. execute carries out the quote the
+user confirms. The app sends only the quote's $\mathit{id}$, never a price,
+so the trade happens at the price the user confirmed (PR-RFT-02) and that
+price is always one the server set (SEC-INT-02).
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{quotes}$: set of Quote, the quotes that have been issued and
+  not yet executed or removed
+\item $\mathit{transactions}$: sequence of Transaction, every executed trade
+  in time order. Entries are only ever appended.
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{quotes} = \emptyset$
+and $\mathit{transactions}$ is empty. Both are stored through the
+Persistence Module. $\mathit{transactions}$ is the audit record of simulated
+trades required by SEC-AUD-01. Each Transaction refers to the market price
+it used through ($\mathit{asset}$, $\mathit{priced}$), which identifies an
+entry in the Market Simulation Module's price history.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time. Tests may supply their own $\mathit{clock}$ to check when
+  quotes expire.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call, and has applied the request rate limit (SEC-IMM-02).
+\item The backend rejects, with HTTP 400, any request containing a field it
+  does not recognise. A request to execute a trade that also gives a price is
+  therefore rejected (SEC-INT-02).
+\item Units of work for the same user never run at the same time, so two
+  trades by one user cannot both pass the checks on the same balance or
+  holdings. Units of work that change the available quantity of the same
+  asset never run at the same time, so two purchases cannot both take the
+  last units of an asset.
+\item The time of the Market Simulation Module's current price for an asset
+  changes only when a new price for that asset is published.
+\item Every asset defined by the Asset Module can be traded.
+\item Each user has one portfolio.
+\item When an account is deleted, the user identifiers in
+  $\mathit{transactions}$ are replaced with a pseudonym by the User and
+  Onboarding Module through the Persistence Module, not by this module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item $u = p.\mathit{user}$, the user making the request. A user can only
+  quote, execute and view their own trades (SEC-ACC-01).
+\item Trades have no fees. A purchase costs exactly its $\mathit{total}$ and
+  a sale pays exactly its $\mathit{total}$.
+\item An exception leaves the state unchanged.
+\item A quote $k \in \mathit{quotes}$ with $\mathit{now}() >
+  k.\mathit{expires}$ may be removed from $\mathit{quotes}$ at any time. This
+  has no visible effect, because such a quote can no longer be executed.
+\end{itemize}
+
+\medskip
+
+\noindent quote($p, a, s, q$):
+\begin{itemize}
+\item Let $\mathit{pp}$ = getPrice($a$) from the Market Simulation Module.
+\item transition: $\mathit{quotes} := \mathit{quotes} \cup \{k\}$, where
+  $k = (i, u, a, s, q, \mathit{pp}.\mathit{price}, q \cdot
+  \mathit{pp}.\mathit{price}, \mathit{pp}.\mathit{time}, \mathit{now}() +
+  \textsf{QuoteLifetime})$ and $i$ is an $\mathit{id}$ not used by any
+  earlier quote
+\item output: $\mathit{out} := k$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $a$ has no price $\Rightarrow \mathrm{NoPrice} \mid{}$ $s =
+  \mathrm{BUY} \wedge \mathit{balance}(u) < q \cdot
+  \mathit{pp}.\mathit{price} \Rightarrow \mathrm{InsufficientFunds} \mid{}$
+  $s = \mathrm{BUY} \wedge \mathit{available}(a) < q \Rightarrow
+  \mathrm{InsufficientSupply} \mid{}$
+  $s = \mathrm{SELL} \wedge \mathit{held}(u, a) < q \Rightarrow
+  \mathrm{InsufficientUnits}$
+\end{itemize}
+
+\noindent quote checks the balance, the available quantity and the
+holdings so the user learns of a
+problem before confirming (BUC 4, BUC 5). execute checks them again, since
+they may change between the two calls.
+
+\medskip
+
+\noindent execute($p, \mathit{id}$):
+\begin{itemize}
+\item If some $t \in \mathit{transactions}$ has $t.\mathit{quote} =
+  \mathit{id} \wedge t.\mathit{user} = u$, the quote has already been
+  executed: $\mathit{out} := t$ and the state is unchanged. This check is
+  made before any other, so repeating a request executes the trade only
+  once.
+\item Otherwise, let $k$ be the quote in $\mathit{quotes}$ with
+  $k.\mathit{id} = \mathit{id} \wedge k.\mathit{user} = u$.
+\item transition: let $t = (j, u, k.\mathit{asset}, k.\mathit{side},
+  k.\mathit{qty}, k.\mathit{price}, k.\mathit{total}, k.\mathit{id},
+  k.\mathit{priced}, \mathit{now}())$, where $j$ is an $\mathit{id}$ not used
+  by any earlier transaction. Steps 1 to 3 take effect together or not at
+  all.
+  \begin{enumerate}
+  \item $t$ is appended to $\mathit{transactions}$.
+  \item If $k.\mathit{side} = \mathrm{BUY}$, $k.\mathit{total}$ is debited
+    from $u$ through the Currency Ledger Module, citing $t.\mathit{id}$, and
+    $k.\mathit{qty}$ units of $k.\mathit{asset}$ costing $k.\mathit{total}$
+    are added to $u$'s holdings through the Portfolio Module, and
+    $k.\mathit{qty}$ units are taken from the available quantity of
+    $k.\mathit{asset}$ through the Asset Module. If $k.\mathit{side} =
+    \mathrm{SELL}$, $k.\mathit{total}$ is credited to $u$ through the
+    Currency Ledger Module, citing $t.\mathit{id}$, $k.\mathit{qty}$ units of
+    $k.\mathit{asset}$ are removed from $u$'s holdings through the Portfolio
+    Module, and $k.\mathit{qty}$ units are returned to the available quantity
+    of $k.\mathit{asset}$ through the Asset Module.
+  \item $\mathit{quotes} := \mathit{quotes} - \{k\}$.
+  \end{enumerate}
+  If any step fails, the state is unchanged and the failure is passed to the
+  caller (PR-RFT-02).
+\item output: $\mathit{out} := t$
+\item exception: no such $k$ exists $\Rightarrow \mathrm{UnknownQuote}
+  \mid{}$ $\mathit{expired}(k) \Rightarrow \mathrm{QuoteExpired} \mid{}$
+  $k.\mathit{side} = \mathrm{BUY} \wedge \mathit{balance}(u) <
+  k.\mathit{total} \Rightarrow \mathrm{InsufficientFunds} \mid{}$
+  $k.\mathit{side} = \mathrm{BUY} \wedge \mathit{available}(k.\mathit{asset})
+  < k.\mathit{qty} \Rightarrow \mathrm{InsufficientSupply} \mid{}$
+  $k.\mathit{side} = \mathrm{SELL} \wedge \mathit{held}(u, k.\mathit{asset})
+  < k.\mathit{qty} \Rightarrow \mathrm{InsufficientUnits}$
+\end{itemize}
+
+\noindent A quote belonging to another user raises UnknownQuote, so a request
+cannot learn whether another user's quote exists. If the same request is
+made twice at the same time, the second runs after the first has finished
+and returns the first's Transaction. The gain or loss realized by a sale
+(FUNC-10) is calculated by the Portfolio Module, which holds the cost of the
+units.
+
+\medskip
+
+\noindent getTransaction($p, \mathit{id}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the $t \in \mathit{transactions}$ with
+  $t.\mathit{id} = \mathit{id} \wedge t.\mathit{user} = u$
+\item exception: no such $t$ exists $\Rightarrow \mathrm{UnknownTransaction}$
+\end{itemize}
+
+\noindent getTransactions($p, \mathit{from}, \mathit{to}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the entries $t$ of $\mathit{transactions}$
+  with $t.\mathit{user} = u \wedge \mathit{from} \leq t.\mathit{time} \leq
+  \mathit{to}$, in time order (FUNC-11)
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{balance}$: UserID $\rightarrow$ Amount\\
+  The user's virtual currency balance, read from the Currency Ledger Module.
+\item $\mathit{held}$: UserID $\times$ AssetID $\rightarrow \mathbb{N} \cup
+  \{0\}$\\
+  The number of units of the asset the user holds, read from the Portfolio
+  Module.
+\item $\mathit{available}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$\\
+  The number of units of the asset still available in the simulated market,
+  read from the Asset Module.
+\item $\mathit{expired}$: Quote $\rightarrow \mathbb{B}$\\
+  $\mathit{expired}(k) \equiv \mathit{now}() > k.\mathit{expires} \vee
+  \mathit{priceTime}(k.\mathit{asset}) > k.\mathit{priced}$, where
+  $\mathit{priceTime}(a)$ is the $\mathit{time}$ of getPrice($a$) from the
+  Market Simulation Module. A quote expires when \textsf{QuoteLifetime} has
+  passed or when a new price for its asset is published, so it can never be
+  executed at a price that is no longer current.
+\end{itemize}
 
 \section{MIS of Portfolio Module} \label{misPort}
 
-This module is M8 in the Module Guide.
+This module is M9 in the Module Guide.
 
 \subsection{Module}
 
@@ -669,7 +1347,7 @@ Portfolio
 
 \section{MIS of Leaderboard and Friends Module} \label{misLead}
 
-This module is M9 in the Module Guide.
+This module is M10 in the Module Guide.
 
 \subsection{Module}
 
@@ -726,7 +1404,7 @@ Leaderboard
 
 \section{MIS of Progress Reporting Module} \label{misProg}
 
-This module is M10 in the Module Guide.
+This module is M11 in the Module Guide.
 
 \subsection{Module}
 
@@ -783,7 +1461,7 @@ ProgressReport
 
 \section{MIS of UI Screens Module} \label{misUI}
 
-This module is M11 in the Module Guide.
+This module is M12 in the Module Guide.
 
 \subsection{Module}
 
@@ -840,7 +1518,7 @@ UIScreens
 
 \section{MIS of Notification Module} \label{misNoti}
 
-This module is M12 in the Module Guide.
+This module is M13 in the Module Guide.
 
 \subsection{Module}
 
@@ -895,9 +1573,10 @@ Notification
 
 \wss{Local functions, or None}
 
+\newpage
 \section{MIS of Market Simulation Module} \label{misMkt}
 
-This module is M13 in the Module Guide.
+This module is M14 in the Module Guide.
 
 \subsection{Module}
 
@@ -905,23 +1584,98 @@ MarketSimulation
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Asset Module (Section~\ref{misAsset}): the list of assets, and each
+  asset's type, starting price and annual dividend yield. The yield is read
+  at every tick, because an administrator may change it.
+\item Currency Ledger Module (Section~\ref{misCur}): credits dividend payouts
+  to users' balances.
+\item Persistence Module (Section~\ref{misPer}): stores prices, price
+  history, market events and dividend payouts, and reads the holdings of an
+  asset when a dividend is announced.
+\item Authentication and Security Module (Section~\ref{misAuth}): the Time
+  and UserID types.
+\end{itemize}
+
+\noindent Holdings are read through the Persistence Module rather than the
+Portfolio Module, because the Portfolio Module uses this module to value
+holdings and using it here would create a cycle in the uses hierarchy.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{TickInterval} & 15 minutes & Time between scheduled price updates\\
+\textsf{MinPrice} & 0.01 FLX & Lowest price an asset can have\\
+\textsf{DividendInterval} & \textsf{YearLength} / 4 & Time between an
+  asset's dividend payments (91.3125 days)\\
+\textsf{YearLength} & 365.25 days & Length of a year, used to express
+  elapsed time in years\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Durations are converted to seconds, the unit of Time, wherever they
+are combined with a Time. The $\mathit{step}$ inputs of getHistory and
+getTypeTrend are also durations in seconds.
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item AssetID and AssetType: as defined by the Asset Module (Section~\ref{misAsset}),
+  with AssetType = $\{\mathrm{STOCK}, \mathrm{BOND}, \mathrm{ETF},
+  \mathrm{FUND}\}$
+\item UserID and Time: as defined in Section~\ref{misAuth}
+\item Amount: a decimal number with exactly two decimal places, in FLX
+\item Price: an Amount that is at least \textsf{MinPrice}
+\item PricePoint = tuple of ($\mathit{asset}$: AssetID, $\mathit{time}$:
+  Time, $\mathit{price}$: Price)
+\item TrendPoint = tuple of ($\mathit{time}$: Time, $\mathit{value}$:
+  $\mathbb{R}$)
+\item EventKind = $\{\mathrm{SHOCK}, \mathrm{DIVIDEND}\}$
+\item MarketEvent = tuple of ($\mathit{id}$: $\mathbb{N}$, $\mathit{time}$:
+  Time, $\mathit{kind}$: EventKind, $\mathit{scope}$: AssetID $\cup
+  \{\mathrm{MARKET}\}$, $\mathit{magnitude}$: $\mathbb{R}$,
+  $\mathit{description}$: String). For a SHOCK, $\mathit{scope}$ is MARKET
+  and $\mathit{magnitude}$ is the fractional price change of the whole
+  market (negative for a downturn). For a DIVIDEND, $\mathit{scope}$ is the
+  asset paying it and $\mathit{magnitude}$ is the Amount paid per unit held.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{4.8cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+init & - & - & - \\
+getPrice & $a$: AssetID & PricePoint & UnknownAsset, NoPrice \\
+getPrices & - & sequence of PricePoint & - \\
+getPriceAt & $a$: AssetID, $t$: Time & PricePoint & UnknownAsset, NoPrice \\
+getHistory & $a$: AssetID, $\mathit{from}$: Time, $\mathit{to}$: Time,
+  $\mathit{step}$: $\mathbb{R}$ & sequence of PricePoint & UnknownAsset,
+  InvalidRange \\
+getTypeTrend & $y$: AssetType, $\mathit{from}$: Time, $\mathit{to}$: Time,
+  $\mathit{step}$: $\mathbb{R}$ & sequence of TrendPoint & InvalidRange \\
+getEvents & $\mathit{from}$: Time, $\mathit{to}$: Time & sequence of
+  MarketEvent & InvalidRange \\
+tick & - & - & - \\
+backfill & $a$: AssetID, $\mathit{from}$: Time & - & UnknownAsset,
+  AlreadyPriced, InvalidRange \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -929,86 +1683,277 @@ MarketSimulation
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{level}$: AssetID $\rightarrow \mathbb{R}$, the unrounded price
+  of each asset used by the price model
+\item $\mathit{price}$: AssetID $\rightarrow$ Price, the published price of
+  each asset
+\item $\mathit{history}$: sequence of PricePoint, every published price in
+  time order. Entries are only ever appended.
+\item $\mathit{typeIndex}$: AssetType $\rightarrow \mathbb{R}$, an index of
+  each asset type's overall price movement
+\item $\mathit{trends}$: sequence of tuples of ($\mathit{type}$: AssetType,
+  $\mathit{point}$: TrendPoint), every value of $\mathit{typeIndex}$ in time
+  order. Entries are only ever appended.
+\item $\mathit{events}$: sequence of MarketEvent, in time order. Entries are
+  only ever appended.
+\item $\mathit{payouts}$: set of tuples of ($\mathit{event}$: $\mathbb{N}$,
+  $\mathit{user}$: UserID, $\mathit{amount}$: Amount, $\mathit{paid}$:
+  $\mathbb{B}$), the dividend owed to each holder for each DIVIDEND event
+\item $\mathit{lastDividend}$: AssetID $\rightarrow$ Time, when each asset
+  last paid a dividend
+\item $\mathit{lastTick}$: Time $\cup \{\bot\}$, when prices were last
+  updated
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{level}$,
+$\mathit{price}$ and $\mathit{lastDividend}$ have no entries,
+$\mathit{history}$, $\mathit{trends}$ and $\mathit{events}$ are empty,
+$\mathit{payouts} = \emptyset$, $\mathit{typeIndex}(y) = 100$ for every
+AssetType $y$, and $\mathit{lastTick} = \bot$.
+
+\noindent All state variables are stored through the Persistence Module, so
+they keep their values when the backend restarts.
+$\mathit{history}$ and $\mathit{events}$ together form the audit record of
+market price updates and dividends required by SEC-AUD-01.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{rng}$: a source of random numbers, seeded from the backend
+  configuration.
+\item $\mathit{scheduler}$: calls tick once every \textsf{TickInterval}.
+\item $\mathit{calibration}$: the price model's parameters, read from a
+  configuration file. For each AssetType $y$ it gives the annual total return
+  $\mu_y$, the annual volatility $\sigma_y$, the correlation $\rho^m_y$ with
+  the whole market, the correlation $\rho^t_y$ with other assets of type $y$,
+  and the sensitivity $\beta_y$ to market-wide downturns. It also gives
+  $\mathit{ShockRate}$, the expected number of downturns per year, and
+  $\mathit{ShockSize}$, the distribution of their size. The parameters are
+  derived from historical market data that is free to use in an educational
+  application (PR-PA-06).
+\item $\mathit{log}$: the backend log, to which failed updates are written.
+\end{itemize}
+
+\noindent Tests may supply their own $\mathit{clock}$ and a fixed seed for
+$\mathit{rng}$, so that many simulated years can be run in seconds and
+repeated exactly (test-PR-PA-06). Setting $\sigma_y = 0$, $\mu_y = 0$ and
+$\mathit{ShockRate} = 0$ keeps prices fixed for tests that need known prices.
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item init is called once when the backend starts, before any other access
+  program and before the scheduler first calls tick.
+\item Every asset defined by the Asset Module has a type, a starting price of
+  at least \textsf{MinPrice}, and an annual dividend yield of at least 0.
+\item The number of units of an asset that a user holds is a natural number.
+\item For every AssetType $y$, $(\rho^m_y)^2 + (\rho^t_y)^2 \leq 1$.
+\item A single backend instance runs the scheduler, so tick is never run
+  twice at the same time.
+\item ETFs and funds are priced independently, with their own calibration
+  parameters, rather than from the assets they hold.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent Simulated time runs at the same rate as real time: one simulated
+year of price movement takes one real year. Every access program that reads
+state sees the state left by the most recent completed tick.
+
+\medskip
+
+\noindent init():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition: $(\mathit{lastTick} = \bot \Rightarrow \mathit{lastTick}
+  := \mathit{now}() \mid \mathit{lastTick} \neq \bot \Rightarrow$ no
+  change$)$
 \end{itemize}
+
+\noindent On first deployment, init starts simulated time. After a restart,
+the stored state is used unchanged, and the next tick covers the whole time
+since $\mathit{lastTick}$.
+
+\medskip
+
+\noindent getPrice($a$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the last entry in $\mathit{history}$ whose
+  $\mathit{asset}$ is $a$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid
+  a$ has no entry in $\mathit{history} \Rightarrow \mathrm{NoPrice}$
+\end{itemize}
+
+\noindent getPrices():
+\begin{itemize}
+\item output: $\mathit{out} :=$ getPrice($a$) for every asset $a$ that has
+  an entry in $\mathit{history}$
+\end{itemize}
+
+\noindent getPriceAt($a, t$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the last entry in $\mathit{history}$ whose
+  $\mathit{asset}$ is $a$ and whose $\mathit{time}$ is at most $t$, that is,
+  the price in effect at time $t$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid$
+  no such entry exists $\Rightarrow \mathrm{NoPrice}$
+\end{itemize}
+
+\noindent getHistory($a, \mathit{from}, \mathit{to}, \mathit{step}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ getPriceAt($a, \mathit{from} + k \cdot
+  \mathit{step}$) for $k = 0, 1, 2, \ldots$ while $\mathit{from} + k \cdot
+  \mathit{step} \leq \mathit{to}$, leaving out any time before $a$'s first
+  price
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset} \mid
+  \mathit{from} > \mathit{to} \vee \mathit{step} \leq 0 \Rightarrow
+  \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent getTypeTrend($y, \mathit{from}, \mathit{to}, \mathit{step}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ for $k = 0, 1, 2, \ldots$ while
+  $\mathit{from} + k \cdot \mathit{step} \leq \mathit{to}$, the last
+  TrendPoint in $\mathit{trends}$ for type $y$ whose $\mathit{time}$ is at
+  most $\mathit{from} + k \cdot \mathit{step}$, leaving out any time before
+  the first one
+\item exception: $\mathit{from} > \mathit{to} \vee \mathit{step} \leq 0
+  \Rightarrow \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent getEvents($\mathit{from}, \mathit{to}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the entries $e$ of $\mathit{events}$ with
+  $\mathit{from} \leq e.\mathit{time} \leq \mathit{to}$, in time order
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent tick():
+\begin{itemize}
+\item Let $n = \mathit{now}()$ and $\Delta t = (n -
+  \mathit{lastTick}) / \textsf{YearLength}$, the time since the last update
+  in years.
+\item transition, part 1 (prices, events and dividend announcements). Steps
+  1 to 5 take effect together or not at all.
+  \begin{enumerate}
+  \item Downturn: with probability $1 - e^{-\mathit{ShockRate} \cdot \Delta
+    t}$, a SHOCK event with scope MARKET and magnitude $J$ drawn from
+    $\mathit{ShockSize}$ is appended to $\mathit{events}$. Otherwise $J = 0$.
+    This is the probability that at least one downturn occurs within $\Delta
+    t$ when downturns arrive at random at an average rate of
+    $\mathit{ShockRate}$ per year, as in the jump model of
+    \citet{Merton1976}.
+  \item Prices: one market draw $Z_m$, one draw $Z_y$ for each AssetType $y$
+    and one draw $Z_a$ for each asset $a$ are taken with
+    $\mathit{drawNormal}$. For each asset $a$ of type $y$ that already has a
+    price, $\mathit{level}(a) := \mathit{level}(a) \cdot
+    e^{\mathit{logReturn}(a, \Delta t, Z_m, Z_y, Z_a)} \cdot (1 + \beta_y
+    J)$. An asset with no price yet starts with $\mathit{level}(a) :=
+    \mathit{startPrice}(a)$ and $\mathit{lastDividend}(a) := n$. Then
+    $\mathit{price}(a) := \max(\textsf{MinPrice},
+    \mathit{round}_2(\mathit{level}(a)))$ and $(a, n, \mathit{price}(a))$
+    is appended to $\mathit{history}$.
+  \item Type trends: for each AssetType $y$ with at least one priced asset,
+    $\mathit{typeIndex}(y)$ is multiplied by the average, over the assets of
+    type $y$ priced in step 2, of $\mathit{level}(a)$ after the step divided
+    by $\mathit{level}(a)$ before it. $(y, (n, \mathit{typeIndex}(y)))$ is
+    appended to $\mathit{trends}$.
+  \item Dividend announcements: for each asset $a$ with $\mathit{yield}(a) >
+    0$ whose last dividend, at $\mathit{lastDividend}(a)$, was at least
+    \textsf{DividendInterval} before $n$, let $f$ be
+    \textsf{DividendInterval} in years (here $\frac{1}{4}$) and $d =
+    \mathit{round}_2(\mathit{price}(a) \cdot \mathit{yield}(a) \cdot f)$, the
+    amount paid per unit. If $d \geq 0.01$, a
+    DIVIDEND event $e$ with scope $a$ and magnitude $d$ is appended to
+    $\mathit{events}$, and for every $(u, q) \in \mathit{holdings}(a)$ with
+    $q > 0$, $(e.\mathit{id}, u, q \cdot d, \mathrm{false})$ is added to
+    $\mathit{payouts}$. In either case $\mathit{lastDividend}(a) := n$.
+  \item $\mathit{lastTick} := n$.
+  \end{enumerate}
+  If any of steps 1 to 5 fails, the state is unchanged and the failure is
+  written to $\mathit{log}$. The last valid prices stay in effect, and the
+  next tick covers the whole time since $\mathit{lastTick}$ (BUC 6).
+\item transition, part 2 (dividend payouts): for each $p \in
+  \mathit{payouts}$ with $\neg p.\mathit{paid}$, $p.\mathit{amount}$ is
+  credited to $p.\mathit{user}$ through the Currency Ledger Module, citing
+  event $p.\mathit{event}$ as its source, and $p.\mathit{paid} :=
+  \mathrm{true}$. Each payout's credit and its change to $\mathit{paid}$
+  take effect together or not at all. A payout that fails stays unpaid and
+  is retried at the next tick, so each payout is credited exactly once.
+\end{itemize}
+
+\noindent backfill($a, \mathit{from}$):
+\begin{itemize}
+\item transition: $\mathit{level}(a) := \mathit{startPrice}(a)$. Then, for
+  each time $t = \mathit{from} + k \cdot \textsf{TickInterval}$ with $k = 1,
+  2, \ldots$ and $t \leq \mathit{now}()$, $\mathit{level}(a)$ is updated as in
+  step 2 of tick with $\Delta t = \textsf{TickInterval} /
+  \textsf{YearLength}$ and $J$ drawn as in step 1 of tick, and $(a, t,
+  \mathit{price}(a))$ is appended to $\mathit{history}$. Finally
+  $\mathit{lastDividend}(a) := \mathit{now}()$. No events or payouts are
+  created.
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $a$ has an entry in $\mathit{history} \Rightarrow
+  \mathrm{AlreadyPriced} \mid{}$ $\mathit{from} \geq \mathit{now}()
+  \Rightarrow \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent backfill gives a newly listed asset a price history, and is used by
+the demonstration data script (TRN-03).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
-
-\section{MIS of Authentication and Security Module} \label{misAuth}
-
-This module is M14 in the Module Guide.
-
-\subsection{Module}
-
-Auth
-
-\subsection{Uses}
-
-\wss{Modules this module uses}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{State variables, or None}
-
-\subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
-
-\subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
-
-\subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item $\mathit{type}$: AssetID $\rightarrow$ AssetType,
+  $\mathit{startPrice}$: AssetID $\rightarrow$ Price, and $\mathit{yield}$:
+  AssetID $\rightarrow \mathbb{R}$\\
+  The asset's type, starting price and annual dividend yield, read from the
+  Asset Module.
+\item $\mathit{holdings}$: AssetID $\rightarrow$ set of (UserID $\times
+  \mathbb{N}$)\\
+  $\mathit{holdings}(a) \equiv$ each user holding asset $a$ and the number of
+  units they hold, read through the Persistence Module.
+\item $\mathit{round}_2$: $\mathbb{R} \rightarrow$ Amount\\
+  $\mathit{round}_2(x) \equiv x$ rounded to two decimal places, with ties
+  rounded to the even digit.
+\item $\mathit{drawNormal}$: $\rightarrow \mathbb{R}$\\
+  A random number from the standard normal distribution, taken from
+  $\mathit{rng}$.
+\item $\mathit{logReturn}$: AssetID $\times \mathbb{R} \times \mathbb{R}
+  \times \mathbb{R} \times \mathbb{R} \rightarrow \mathbb{R}$\\
+  For an asset $a$ of type $y$ with $q = \mathit{yield}(a)$:
+  \[
+  \mathit{logReturn}(a, \Delta t, Z_m, Z_y, Z_a) \equiv
+  \left(\mu_y - q - \lambda\kappa_y - \frac{\sigma_y^2}{2}\right)\Delta t
+  + \sigma_y \sqrt{\Delta t}\, W
+  \]
+  where $\lambda = \mathit{ShockRate}$, $\kappa_y = \beta_y \cdot E[J]$ with
+  $E[J]$ the mean of $\mathit{ShockSize}$, and $W$ combines the market, type
+  and asset draws:
+  \[
+  W = \rho^m_y Z_m + \rho^t_y Z_y
+  + \sqrt{1 - (\rho^m_y)^2 - (\rho^t_y)^2}\, Z_a
+  \]
+  This is geometric Brownian motion, the standard model of stock price
+  movement \citep{Samuelson1965, BlackAndScholes1973}. The yield is
+  subtracted from the drift so that an asset's price growth plus its
+  dividends matches the calibrated total return $\mu_y$, following the
+  treatment of continuous dividend yields in \citet{Merton1973}. $W$ splits
+  each asset's random movement into a part shared by the whole market, a part
+  shared by its asset type and a part of its own, extending the single-index
+  model of \citet{Sharpe1963}. The square root keeps the variance of $W$ at 1,
+  so $\sigma_y$ remains the asset's volatility. Market-wide downturns are added
+  as jumps in tick. They occur $\lambda$ times a year on average and change a
+  type-$y$ asset's price by $\kappa_y$ each time on average ($\kappa_y < 0$),
+  so the term $\lambda\kappa_y$ raises the drift by the same amount and keeps
+  the expected total return at $\mu_y$, as in the jump model of
+  \citet{Merton1976}.
 \end{itemize}
 
-\subsubsection{Local Functions}
-
-\wss{Local functions, or None}
-
+\newpage
 \section{MIS of API Client Module} \label{misAPI}
 
 This module is M15 in the Module Guide.
@@ -1019,52 +1964,733 @@ ApiClient
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\noindent This module runs on the phone, and mobile modules reach the backend
+only through it. It uses every backend module whose access programs a user of
+the app can request, together with those programs' types and exceptions:
+
+\begin{itemize}
+\item User and Onboarding Module (Section~\ref{misUser})
+\item Activity Module (Section~\ref{misAct})
+\item Goals Module (Section~\ref{misGoal})
+\item Currency Ledger Module (Section~\ref{misCur})
+\item Asset Module (Section~\ref{misAsset})
+\item Transaction Order Module (Section~\ref{misPurch})
+\item Portfolio Module (Section~\ref{misPort})
+\item Leaderboard and Friends Module (Section~\ref{misLead})
+\item Progress Reporting Module (Section~\ref{misProg})
+\item Notification Module (Section~\ref{misNoti})
+\item Market Simulation Module (Section~\ref{misMkt})
+\item Authentication and Security Module (Section~\ref{misAuth}), which also
+  provides the session renewal this module performs on its own
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constants, which are not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7.5cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{RequestTimeout} & 10 seconds & Time after which a request with no
+  response counts as failed\\
+\textsf{MaxRetries} & 2 & Number of times a failed request is sent
+  again\\
+\textsf{RetryBaseDelay} & 0.5 seconds & Wait before the first retry; the
+  wait doubles for each further retry\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\noindent The inputs and outputs of the exported programs use the types
+defined in the sections of the backend modules listed under Uses. In
+addition:
+
+\begin{itemize}
+\item Time, DeviceID, Token and MfaChallenge: as defined in
+  Section~\ref{misAuth}
+\item SignInOutcome = $\{\mathrm{SIGNED\_IN}\} \cup$ MfaChallenge
+\item For any type $T$, Fresh($T$) = tuple of ($\mathit{data}$: $T$,
+  $\mathit{receivedAt}$: Time, $\mathit{stale}$: $\mathbb{B}$). A result of
+  this type is returned by every program that only reads data.
+  $\mathit{stale}$ is true when $\mathit{data}$ is a stored copy rather than
+  a response just received from the backend, so it may be out of date.
+\item ReadOp: the set of exported programs that only read data
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
+\noindent For each access program of a backend module listed under Uses,
+this module exports an access program with the same name, unless it is one
+of the backend-only programs listed below or is specified individually in
+the table. Its inputs are the backend program's inputs without the
+Principal, the client IP address and the DeviceID, which this module
+supplies itself. Its output is the backend program's output, wrapped in
+Fresh if the program only reads data. Its exceptions are the backend
+program's exceptions plus the transport exceptions listed below.
+
+\medskip
+
+\noindent The following backend programs are not exported by this module.
+All but refresh are used only within the backend; refresh is requested by
+this module itself to renew the session (rule 2 below). When the section of
+another backend module defines a program of this kind, it is added here.
+
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{5.2cm}
+  >{\raggedright\arraybackslash}p{8.8cm}}
+\toprule
+\textbf{Backend Module} & \textbf{Programs Not Exported}\\
+\midrule
+Market Simulation & init, tick, backfill\\
+Authentication and Security & init, hashPassword, authenticate, authorize,
+  requireRole, confirmPassword, refresh, endAllSessions\\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent The following programs are specified individually, because they
+keep the session and stored data on the phone or differ from the backend
+program of the same name.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}
+  >{\raggedright\arraybackslash}p{4.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\midrule
+init & - & - & - \\
+signIn & $\mathit{email}$: String, $\mathit{pw}$: String & SignInOutcome &
+  UnknownAccount, AccountLocked, InvalidCredentials \\
+verifyMfa & $\mathit{cid}$: Token, $\mathit{code}$: String & - &
+  InvalidCode \\
+signOut & - & - & - \\
+isSignedIn & - & $\mathbb{B}$ & - \\
+peek & $\mathit{op}$: ReadOp, $\mathit{args}$: the inputs of $\mathit{op}$
+  & Fresh($T$) $\cup \{\bot\}$, where $T$ is the data type of
+  $\mathit{op}$'s output & - \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent In addition to their other exceptions, signIn, verifyMfa and every
+program exported by the rule above may raise the following transport
+exceptions:
+\begin{itemize}
+\item NetworkError: the backend could not be reached, and no stored copy of
+  the requested data is available.
+\item ServerError: the backend failed because of a fault of its own.
+\item RateLimited: the backend refused the request because too many requests
+  were made; it carries the time to wait before trying again.
+\item SessionExpired: the program needs a signed-in user and the session
+  could not be renewed, so the user must sign in again. Raised only by
+  programs whose backend program needs an authenticated user; the
+  assumptions of Section~\ref{misAuth} list the requests that do not.
+\end{itemize}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{deviceId}$: DeviceID, created once for this installation
+\item $\mathit{accessToken}$: Token $\cup \{\bot\}$, the current access
+  token, held in memory only
+\item $\mathit{refreshToken}$: Token $\cup \{\bot\}$, the current refresh
+  token, held in $\mathit{secureStore}$
+\item $\mathit{cache}$: (ReadOp $\times$ inputs) $\rightarrow$ (data, Time),
+  the last data received for each read and when it was received, held in
+  $\mathit{localStore}$
+\item $\mathit{renewing}$: $\mathbb{B}$, true while a session renewal is in
+  progress
+\end{itemize}
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{backend}$: the backend service, reached over the network at
+  the address given in the app's build configuration.
+\item $\mathit{secureStore}$: encrypted storage on the device that other
+  apps cannot read.
+\item $\mathit{localStore}$: storage on the device that is private to the
+  app.
+\item $\mathit{clock}$: the device clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item init is called once, when the app starts, before any other access
+  program.
+\item In release builds the backend is reached only over TLS 1.3
+  (SEC-PRV-01), and a backend address that does not use it is refused.
+\item The backend treats requests that carry the same request key as one
+  request: it performs the action once and returns the same result for each.
+\item Only one user is signed in on an installation at a time.
+\item Amounts and prices are received as exact decimal values, and this
+  module never converts them to floating-point numbers (PR-PA-01). The
+  backend calculates all amounts and prices (SEC-INT-02).
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent Every request to the backend follows these rules.
+
+\begin{enumerate}
+\item Credentials: a request for a program that needs a signed-in user
+  carries $\mathit{accessToken}$. Every request carries $\mathit{deviceId}$.
+\item Renewal: if the backend rejects a request with Unauthenticated, the
+  session is renewed by requesting the backend's refresh with
+  $\mathit{refreshToken}$. Requests rejected while $\mathit{renewing}$ is
+  true wait for that renewal instead of starting another, because each
+  renewal replaces the refresh token. The renewal ends in one of three ways:
+  \begin{itemize}
+  \item refresh returns a TokenPair $r$ $\Rightarrow$ $\mathit{accessToken}
+    := r.\mathit{access}$ and $\mathit{refreshToken} := r.\mathit{refresh}$,
+    the new refresh token is stored in $\mathit{secureStore}$, and the
+    request is sent again once.
+  \item refresh raises Unauthenticated, or there is no refresh token
+    $\Rightarrow$ both tokens are set to $\bot$, $\mathit{cache} :=
+    \emptyset$, and SessionExpired is raised.
+  \item refresh gets no response or the backend reports a fault of its own
+    $\Rightarrow$ the tokens and $\mathit{cache}$ are unchanged, and the
+    request counts as failed: a read falls back as in rule 3, and a write
+    raises NetworkError or ServerError.
+  \end{itemize}
+\item Reads: if the backend gives no response within
+  \textsf{RequestTimeout} or reports a fault of its own, the request is sent
+  again up to \textsf{MaxRetries} times, waiting $\mathit{backoff}(k)$ before
+  retry $k$. When data $d$ is received, $\mathit{cache}(\mathit{op},
+  \mathit{args}) := (d, \mathit{now}())$ if $\mathit{cacheable}(\mathit{op})$,
+  and the output is $(d, \mathit{now}(), \mathrm{false})$. If every attempt
+  fails: $(\mathit{cache}(\mathit{op}, \mathit{args})$ exists $\Rightarrow$
+  its data and time with $\mathit{stale} = \mathrm{true} \mid$ otherwise
+  $\Rightarrow$ NetworkError or ServerError$)$. This keeps the app usable
+  with the last data received when the backend cannot be reached (PR-RFT-04).
+\item Writes: each call creates a new request key with
+  $\mathit{newRequestKey}$, and every retry of that call reuses it. Retries
+  follow rule 3, so a write whose response was lost takes effect only once
+  (PR-RFT-02). A write that fails is never stored to be sent later.
+\item RateLimited is raised as soon as it is received, with the wait time
+  given by the backend, and the request is not retried.
+\item Any other exception from the backend is raised under the same name.
+\end{enumerate}
+
+\noindent init():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition:
+  \begin{itemize}
+  \item $\mathit{deviceId} :=$ the DeviceID held in $\mathit{secureStore}$.
+    If there is none, a new one is created with $\mathit{newDeviceId}()$ and
+    stored in $\mathit{secureStore}$.
+  \item $\mathit{refreshToken} :=$ the token held in $\mathit{secureStore}$,
+    or $\bot$ if there is none.
+  \item $\mathit{accessToken} := \bot$.
+  \end{itemize}
+\end{itemize}
+
+\noindent signIn($\mathit{email}, \mathit{pw}$):
+\begin{itemize}
+\item transition: if the backend returns a TokenPair $r$, then
+  $\mathit{accessToken} := r.\mathit{access}$, and $\mathit{refreshToken}
+  := r.\mathit{refresh}$ is stored in $\mathit{secureStore}$.
+\item output: $\mathit{out} :=$ (the backend returns a TokenPair
+  $\Rightarrow \mathrm{SIGNED\_IN} \mid$ the backend returns an MfaChallenge
+  $c \Rightarrow c$)
+\item exception: the backend's exceptions, as in Section~\ref{misAuth}
+\end{itemize}
+
+\noindent verifyMfa($\mathit{cid}, \mathit{code}$):
+\begin{itemize}
+\item transition: $\mathit{accessToken}$ and $\mathit{refreshToken}$ are
+  set from the returned TokenPair, as in signIn
+\item exception: the backend's exceptions, as in Section~\ref{misAuth}
+\end{itemize}
+
+\noindent signOut():
+\begin{itemize}
+\item transition: the backend's signOut is requested once and its result is
+  ignored. Then $\mathit{accessToken}, \mathit{refreshToken} := \bot, \bot$,
+  the refresh token is removed from $\mathit{secureStore}$, and
+  $\mathit{cache} := \emptyset$. The device is signed out even when the
+  backend cannot be reached.
+\end{itemize}
+
+\noindent isSignedIn():
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{refreshToken} \neq \bot$
+\end{itemize}
+
+\noindent Every program $X$($\mathit{args}$) exported by the rule:
+\begin{itemize}
+\item transition and output: the backend program $X$ is requested with
+  $\mathit{args}$. If $X$ only reads data, the request is a read and
+  $\mathit{out}$ is given by rule 3. Otherwise the request is a write
+  (rule 4), and $\mathit{out}$ is the backend program's output.
+\item exception: the exceptions of the backend program $X$, as given in its
+  module's section, and the transport exceptions
+\end{itemize}
+
+\noindent peek($\mathit{op}, \mathit{args}$):
+\begin{itemize}
+\item output: $\mathit{out} := (\mathit{cache}(\mathit{op},
+  \mathit{args})$ exists $\Rightarrow$ its data and time with $\mathit{stale}
+  = \mathrm{true} \mid$ otherwise $\Rightarrow \bot)$
+\end{itemize}
+
+\noindent peek sends no request. It lets a screen show the last data
+received as soon as the app opens, while it requests current data with
+$\mathit{op}$ (PR-SL-01).
+
+\subsubsection{Local Functions}
+
+\begin{itemize}
+\item $\mathit{backoff}$: $\mathbb{N} \rightarrow \mathbb{R}$\\
+  $\mathit{backoff}(k) \equiv \textsf{RetryBaseDelay} \cdot 2^{k-1}$
+  seconds
+\item $\mathit{cacheable}$: ReadOp $\rightarrow \mathbb{B}$\\
+  $\mathit{cacheable}(\mathit{op}) \equiv$ the output of $\mathit{op}$
+  contains no profile details and no health or fitness data, which must be
+  encrypted when stored (SEC-PRV-01). Other data, such as balances, holdings
+  and prices, is cached.
+\item $\mathit{newRequestKey}$: $\rightarrow$ String\\
+  A random value that has not been used before.
+\item $\mathit{newDeviceId}$: $\rightarrow$ DeviceID\\
+  A random value that identifies this installation.
+\end{itemize}
+
+\newpage
+\section{MIS of Authentication and Security Module} \label{misAuth}
+
+This module is M16 in the Module Guide.
+
+\subsection{Module}
+
+Auth
+
+\subsection{Uses}
+
+\begin{itemize}
+\item Persistence Module (Section~\ref{misPer}): stores user records, sessions,
+  sign-in lockout state, multi-factor authentication challenges and password
+  reset tokens.
+\end{itemize}
+
+\noindent Auth runs on the backend only. Storing tokens on the phone and
+attaching them to requests is the responsibility of the API Client Module
+(Section~\ref{misAPI}).
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+The following constants are defined in the SRS.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{SRS Requirement}\\
+\midrule
+\textsf{AccessExpiry} & 60 minutes & SEC-ACC-01\\
+\textsf{SessionTimeout} & 30 days without use & SEC-ACC-05\\
+\textsf{MinPasswordLength} & 8 characters & SEC-ACC-04\\
+\textsf{LockoutAttempts} & 5 consecutive failures & SEC-ACC-04\\
+\textsf{LockoutDuration} & 15 minutes & SEC-ACC-04\\
+\textsf{RateLimit} & 60 requests per minute & SEC-IMM-02\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Two further constants are local to this module and are not exported:
+\textsf{MfaCodeExpiry} = 10 minutes, the time a multi-factor authentication
+code remains valid, and \textsf{ResetTokenExpiry} = 30 minutes, the time a
+password reset link remains valid.
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item UserID = $\mathbb{N}$
+\item SessionID = $\mathbb{N}$
+\item DeviceID = String, an identifier the client generates when the app is
+  installed
+\item Token = String
+\item Time = $\mathbb{R}$, seconds since the Unix epoch
+\item Role = $\{\mathrm{STANDARD}, \mathrm{ADMIN}\}$
+\item Principal = tuple of ($\mathit{user}$: UserID, $\mathit{role}$: Role,
+  $\mathit{session}$: SessionID, $\mathit{device}$: DeviceID)
+\item TokenPair = tuple of ($\mathit{access}$: Token, $\mathit{refresh}$:
+  Token, $\mathit{accessExpires}$: Time)
+\item MfaChallenge = tuple of ($\mathit{challengeId}$: Token)
+\item SignInResult = TokenPair $\cup$ MfaChallenge
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{4cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\midrule
+init & - & - & - \\
+hashPassword & $\mathit{pw}$: String & String & WeakPassword \\
+signIn & $\mathit{email}$: String, $\mathit{pw}$: String, $\mathit{dev}$:
+  DeviceID, $\mathit{ip}$: String & SignInResult & RateLimited,
+  UnknownAccount, AccountLocked, InvalidCredentials \\
+verifyMfa & $\mathit{cid}$: Token, $\mathit{code}$: String, $\mathit{ip}$:
+  String & TokenPair & RateLimited, InvalidCode \\
+refresh & $\mathit{rt}$: Token & TokenPair & Unauthenticated \\
+authenticate & $\mathit{tok}$: Token, $\mathit{ip}$: String & Principal &
+  Unauthenticated, RateLimited \\
+authorize & $p$: Principal, $\mathit{owner}$: UserID & - & Forbidden \\
+requireRole & $p$: Principal, $r$: Role & - & Forbidden \\
+confirmPassword & $p$: Principal, $\mathit{pw}$: String & - &
+  InvalidCredentials \\
+signOut & $p$: Principal & - & - \\
+endAllSessions & $u$: UserID & - & - \\
+setMfaEnabled & $p$: Principal, $\mathit{on}$: $\mathbb{B}$ & - & - \\
+requestPassword\-Reset & $\mathit{email}$: String, $\mathit{ip}$: String & - &
+  RateLimited \\
+resetPassword & $t$: Token, $\mathit{pw}$: String & - & InvalidResetToken,
+  WeakPassword \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent RateLimited carries the time the client must wait before its next
+request will be accepted.
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+\item $\mathit{sessions}$: set of Session, where Session = tuple of
+  ($\mathit{id}$: SessionID, $\mathit{user}$: UserID, $\mathit{device}$:
+  DeviceID, $\mathit{refreshHash}$: String, $\mathit{lastUsed}$: Time,
+  $\mathit{revoked}$: $\mathbb{B}$) (initially $\emptyset$)
+\item $\mathit{failedAttempts}$: UserID $\rightarrow \mathbb{Z}$, the number
+  of consecutive failed sign-in attempts (initially 0)
+\item $\mathit{lockedUntil}$: UserID $\rightarrow$ Time, the time until which
+  sign-in is locked (initially 0)
+\item $\mathit{mfaEnabled}$: UserID $\rightarrow \mathbb{B}$ (initially false)
+\item $\mathit{challenges}$: set of tuples of ($\mathit{id}$: Token,
+  $\mathit{user}$: UserID, $\mathit{device}$: DeviceID, $\mathit{codeHash}$:
+  String, $\mathit{expires}$: Time) (initially $\emptyset$)
+\item $\mathit{resetTokens}$: set of tuples of ($\mathit{tokenHash}$: String,
+  $\mathit{user}$: UserID, $\mathit{expires}$: Time) (initially $\emptyset$)
+\item $\mathit{requestLog}$: String $\rightarrow$ sequence of Time, the times
+  of recent requests, keyed by client IP address or by user ID
+\item $\mathit{commonPasswords}$: set of String, the common passwords that are
+  rejected (SEC-ACC-04)
+\end{itemize}
+
+\noindent The initial values above apply when the system is first deployed.
+All state variables except $\mathit{requestLog}$ and
+$\mathit{commonPasswords}$ are stored through the Persistence Module, so they
+keep their values when the backend restarts. $\mathit{requestLog}$ and
+$\mathit{commonPasswords}$ are held in memory and are set by init.
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{signingKey}$: the secret key used to sign access tokens. It is
+  read from the deployment environment and is never stored in the project
+  repository (SEC-ACC-03).
+\item $\mathit{mailServer}$: the outgoing email server used to send
+  multi-factor authentication codes and password reset links.
+\item $\mathit{securityLog}$: sequence of tuples of ($\mathit{time}$: Time,
+  $\mathit{ip}$: String $\cup \{\bot\}$, $\mathit{event}$: String,
+  $\mathit{user}$: UserID $\cup \{\bot\}$), the log to which security events
+  are written (SEC-AUD-02). Entries are only ever appended.
+\item $\mathit{passwordFile}$: the file listing common passwords, read by
+  init.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+\item init is called once when the backend starts, before any other access
+  program.
+\item Client--server communication uses TLS 1.3, configured when the backend
+  is deployed (SEC-PRV-01). This module does not enforce it.
+\item The User and Onboarding Module ensures that email addresses are unique.
+\item Each client sends the same DeviceID on every request from a given
+  installation.
+\item A single backend instance is running, so the in-memory
+  $\mathit{requestLog}$ counts every request. Running several instances would
+  require a shared store.
+\item authenticate is called before any other backend access program on every
+  protected request. Registration, signIn, verifyMfa, refresh,
+  requestPasswordReset, resetPassword and the health check are the only
+  unprotected requests.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent The following apply to every access routine below.
+\begin{itemize}
+\item Request counting: each call to signIn, verifyMfa or
+  requestPasswordReset first appends $\mathit{now}()$ to
+  $\mathit{requestLog}(\mathit{ip})$. In authenticate, once the token is
+  verified, $\mathit{now}()$ is appended to
+  $\mathit{requestLog}(p.\mathit{user})$.
+\item Rate limits: when RateLimited is raised for key $k$, it carries
+  $\mathit{waitTime}(k)$.
+\item Security log: every exception raised by this module, and every account
+  lockout, appends the entry $(\mathit{now}(), \mathit{ip}, e, u)$ to
+  $\mathit{securityLog}$. Here $\mathit{ip}$ is the routine's $\mathit{ip}$
+  input, or $\bot$ if it has none; $e$ is the name of the exception, or
+  LOCKOUT; and $u$ is the user concerned, or $\bot$ if none is known.
+  Passwords, codes and tokens are never written.
+\item An exception leaves the state unchanged apart from these entries,
+  unless a transition for that exception is given.
+\end{itemize}
+
+\medskip
+
+\noindent init():
+\begin{itemize}
+\item transition:
+  \begin{itemize}
+  \item $\mathit{requestLog} :=$ the mapping of every key to the empty
+    sequence
+  \item $\mathit{commonPasswords} :=$ the passwords listed in
+    $\mathit{passwordFile}$
+  \end{itemize}
+\end{itemize}
+
+\noindent hashPassword($\mathit{pw}$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{hash}(\mathit{pw})$
+\item exception: $\mathit{isWeak}(\mathit{pw}) \Rightarrow
+  \mathrm{WeakPassword}$
+\end{itemize}
+
+\noindent signIn($\mathit{email}, \mathit{pw}, \mathit{dev}, \mathit{ip}$):
+\begin{itemize}
+\item Let $a = \mathit{findUser}(\mathit{email})$, $\mathit{ok} =
+  \mathit{matches}(\mathit{pw}, a.\mathit{passwordHash})$, $\mathit{rt} =
+  \mathit{newSecret}()$, $c = \mathit{newCode}()$, and $s =
+  (\mathit{newId}(), a.\mathit{id}, \mathit{dev}, \mathit{digest}(\mathit{rt}),
+  \mathit{now}(), \mathrm{false})$.
+\item transition:
+  \begin{itemize}
+  \item $\mathit{ok} \wedge \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
+    \mathit{failedAttempts}(a.\mathit{id}) := 0$. A new challenge with id
+    $\mathit{newSecret}()$, user $a.\mathit{id}$, device $\mathit{dev}$, code hash
+    $\mathit{hash}(c)$ and expiry $\mathit{now}() + \textsf{MfaCodeExpiry}$ is
+    added to $\mathit{challenges}$. The code $c$ is emailed to the user's
+    address $a.\mathit{email}$ through the $\mathit{mailServer}$.
+  \item $\mathit{ok} \wedge \neg \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow
+    \mathit{failedAttempts}(a.\mathit{id}) := 0$, $\mathit{sessions} :=
+    \mathit{sessions} \cup \{s\}$
+  \item When InvalidCredentials is raised,
+    $\mathit{failedAttempts}(a.\mathit{id})$ increases by 1. If it then equals
+    \textsf{LockoutAttempts}, the account is locked:
+    $\mathit{lockedUntil}(a.\mathit{id}) := \mathit{now}() +
+    \textsf{LockoutDuration}$ and $\mathit{failedAttempts}(a.\mathit{id}) :=
+    0$.
+  \end{itemize}
+\item output: $\mathit{out} := (\mathit{mfaEnabled}(a.\mathit{id})
+  \Rightarrow (\mathit{id}$ of the new challenge$) \mid \neg
+  \mathit{mfaEnabled}(a.\mathit{id}) \Rightarrow (\mathit{issueAccess}(s),
+  \mathit{rt}, \mathit{now}() + \textsf{AccessExpiry}))$
+\item exception, with the cases checked in order:
+  \begin{itemize}
+  \item $\mathit{overLimit}(\mathit{ip}) \Rightarrow \mathrm{RateLimited}$
+  \item $a = \bot \Rightarrow \mathrm{UnknownAccount}$
+  \item $\mathit{now}() < \mathit{lockedUntil}(a.\mathit{id}) \Rightarrow
+    \mathrm{AccountLocked}$
+  \item $\neg \mathit{ok} \Rightarrow \mathrm{InvalidCredentials}$
+  \end{itemize}
+\end{itemize}
+
+\noindent verifyMfa($\mathit{cid}, \mathit{code}, \mathit{ip}$):
+\begin{itemize}
+\item Let $h$ be the challenge in $\mathit{challenges}$ with $h.\mathit{id} =
+  \mathit{cid}$, $\mathit{rt} = \mathit{newSecret}()$, and $s =
+  (\mathit{newId}(), h.\mathit{user}, h.\mathit{device},
+  \mathit{digest}(\mathit{rt}), \mathit{now}(), \mathrm{false})$.
+\item transition: $\mathit{challenges} := \mathit{challenges} - \{h\}$,
+  $\mathit{sessions} := \mathit{sessions} \cup \{s\}$
+\item output: $\mathit{out} := (\mathit{issueAccess}(s), \mathit{rt},
+  \mathit{now}() + \textsf{AccessExpiry})$
+\item exception: $\mathit{overLimit}(\mathit{ip}) \Rightarrow
+  \mathrm{RateLimited} \mid h$ does not exist $\vee\ \mathit{now}() >
+  h.\mathit{expires} \vee \neg \mathit{matches}(\mathit{code},
+  h.\mathit{codeHash}) \Rightarrow \mathrm{InvalidCode}$
+\end{itemize}
+
+\noindent refresh($\mathit{rt}$):
+\begin{itemize}
+\item Let $s$ be the session in $\mathit{sessions}$ with $\neg
+  s.\mathit{revoked} \wedge s.\mathit{refreshHash} =
+  \mathit{digest}(\mathit{rt})$, and $\mathit{rt}' = \mathit{newSecret}()$.
+\item transition: $s.\mathit{refreshHash}, s.\mathit{lastUsed} :=
+  \mathit{digest}(\mathit{rt}'), \mathit{now}()$. The old refresh token can
+  no longer be used.
+\item output: $\mathit{out} := (\mathit{issueAccess}(s), \mathit{rt}',
+  \mathit{now}() + \textsf{AccessExpiry})$
+\item exception: $s$ does not exist $\vee\ \mathit{now}() -
+  s.\mathit{lastUsed} > \textsf{SessionTimeout} \Rightarrow
+  \mathrm{Unauthenticated}$
+\end{itemize}
+
+\noindent authenticate($\mathit{tok}, \mathit{ip}$):
+\begin{itemize}
+\item Let $p = \mathit{verifyAccess}(\mathit{tok})$ and $s$ be the session in
+  $\mathit{sessions}$ with $s.\mathit{id} = p.\mathit{session}$.
+\item output: $\mathit{out} := p$
+\item exception, with the cases checked in order:
+  \begin{itemize}
+  \item $p = \bot \vee s.\mathit{revoked} \Rightarrow
+    \mathrm{Unauthenticated}$
+  \item $\mathit{overLimit}(p.\mathit{user}) \Rightarrow \mathrm{RateLimited}$
+  \end{itemize}
+\end{itemize}
+
+\noindent authorize($p, \mathit{owner}$):
+\begin{itemize}
+\item exception: $p.\mathit{user} \neq \mathit{owner} \Rightarrow
+  \mathrm{Forbidden}$
+\end{itemize}
+
+\noindent requireRole($p, r$):
+\begin{itemize}
+\item exception: $p.\mathit{role} \neq r \Rightarrow \mathrm{Forbidden}$
+\end{itemize}
+
+\noindent confirmPassword($p, \mathit{pw}$):
+\begin{itemize}
+\item exception: $\neg \mathit{matches}(\mathit{pw},
+  \mathit{account}(p.\mathit{user}).\mathit{passwordHash}) \Rightarrow
+  \mathrm{InvalidCredentials}$
+\end{itemize}
+
+\noindent signOut($p$):
+\begin{itemize}
+\item transition: $s.\mathit{revoked} := \mathrm{true}$ for the session $s$
+  with $s.\mathit{id} = p.\mathit{session}$. Every access and refresh token
+  issued for that session, and so for that device, is rejected from then on.
+\end{itemize}
+
+\noindent endAllSessions($u$):
+\begin{itemize}
+\item transition: $s.\mathit{revoked} := \mathrm{true}$ for every $s \in
+  \mathit{sessions}$ with $s.\mathit{user} = u$; $\mathit{challenges} :=
+  \{h \in \mathit{challenges} \mid h.\mathit{user} \neq u\}$;
+  $\mathit{resetTokens} := \{r \in \mathit{resetTokens} \mid r.\mathit{user}
+  \neq u\}$
+\end{itemize}
+
+\noindent setMfaEnabled($p, \mathit{on}$):
+\begin{itemize}
+\item transition: $\mathit{mfaEnabled}(p.\mathit{user}) := \mathit{on}$
+\end{itemize}
+
+\noindent requestPasswordReset($\mathit{email}, \mathit{ip}$):
+\begin{itemize}
+\item Let $a = \mathit{findUser}(\mathit{email})$ and $t =
+  \mathit{newSecret}()$.
+\item transition:
+  \begin{itemize}
+  \item $a \neq \bot \Rightarrow$ the reset token $(\mathit{digest}(t),
+    a.\mathit{id}, \mathit{now}() + \textsf{ResetTokenExpiry})$ is added to
+    $\mathit{resetTokens}$, and a link containing $t$ is emailed to
+    $a.\mathit{email}$ through $\mathit{mailServer}$
+  \item $a = \bot \Rightarrow$ no change
+  \end{itemize}
+\item output: none in either case
+\item exception: $\mathit{overLimit}(\mathit{ip}) \Rightarrow
+  \mathrm{RateLimited}$
+\end{itemize}
+
+\noindent resetPassword($t, \mathit{pw}$):
+\begin{itemize}
+\item Let $r$ be the reset token in $\mathit{resetTokens}$ with
+  $r.\mathit{tokenHash} = \mathit{digest}(t)$.
+\item transition:
+  \begin{itemize}
+  \item $\mathit{account}(r.\mathit{user}).\mathit{passwordHash} :=
+    \mathit{hash}(\mathit{pw})$
+  \item $\mathit{failedAttempts}(r.\mathit{user}) := 0$ and
+    $\mathit{lockedUntil}(r.\mathit{user}) := 0$, so a locked-out user can
+    sign in again
+  \item the transition of endAllSessions($r.\mathit{user}$), which also
+    removes $r$ so the link cannot be used again
+  \end{itemize}
+\item exception: $r$ does not exist $\vee\ \mathit{now}() > r.\mathit{expires} \Rightarrow \mathrm{InvalidResetToken}
+  \mid \mathit{isWeak}(\mathit{pw}) \Rightarrow \mathrm{WeakPassword}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item UserRecord = tuple of ($\mathit{id}$: UserID, $\mathit{email}$: String,
+  $\mathit{role}$: Role, $\mathit{passwordHash}$: String)
+\item $\mathit{findUser}$: String $\rightarrow$ UserRecord $\cup \{\bot\}$\\
+  $\mathit{findUser}(e) \equiv$ the stored user record whose email is $e$,
+  read through the Persistence Module, or $\bot$ if there is none.
+\item $\mathit{account}$: UserID $\rightarrow$ UserRecord\\
+  $\mathit{account}(u) \equiv$ the stored user record whose id is $u$, read
+  and written through the Persistence Module.
+\item $\mathit{isWeak}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{isWeak}(\mathit{pw}) \equiv |\mathit{pw}| <
+  \textsf{MinPasswordLength} \vee \mathit{pw} \in \mathit{commonPasswords}$
+\item $\mathit{hash}$: String $\rightarrow$ String\\
+  A deliberately slow, salted one-way hash using a new random salt on each
+  call. It is used for passwords and multi-factor authentication codes.
+\item $\mathit{matches}$: String $\times$ String $\rightarrow \mathbb{B}$\\
+  $\mathit{matches}(x, h) \equiv h$ is the result of $\mathit{hash}(x)$ under
+  the salt stored in $h$.
+\item $\mathit{digest}$: String $\rightarrow$ String\\
+  A fast, unsalted one-way hash. It is used only for long random values
+  produced by $\mathit{newSecret}$, so that a stored value can be looked up
+  from the token the client presents.
+\item $\mathit{newSecret}$: $\rightarrow$ Token\\
+  A random value of at least 256 bits from a cryptographically secure random
+  number generator.
+\item $\mathit{newCode}$: $\rightarrow$ String\\
+  A random six-digit code from a cryptographically secure random number
+  generator.
+\item $\mathit{newId}$: $\rightarrow \mathbb{N}$\\
+  An identifier not used by any existing session.
+\item $\mathit{issueAccess}$: Session $\rightarrow$ Token\\
+  $\mathit{issueAccess}(s) \equiv$ a token containing $s.\mathit{user}$,
+  $\mathit{account}(s.\mathit{user}).\mathit{role}$, $s.\mathit{id}$,
+  $s.\mathit{device}$ and the expiry time $\mathit{now}() +
+  \textsf{AccessExpiry}$, signed with $\mathit{signingKey}$.
+\item $\mathit{verifyAccess}$: Token $\rightarrow$ Principal $\cup \{\bot\}$\\
+  $\mathit{verifyAccess}(t) \equiv \bot$ if $t$ is missing, its signature does
+  not match $\mathit{signingKey}$, or its expiry time is not after
+  $\mathit{now}()$; otherwise the Principal contained in $t$.
+\item $\mathit{overLimit}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{overLimit}(k) \equiv |\langle x \in \mathit{requestLog}(k) \mid x >
+  \mathit{now}() - 60 \rangle| > \textsf{RateLimit}$
+\item $\mathit{waitTime}$: String $\rightarrow \mathbb{R}$\\
+  $\mathit{waitTime}(k) \equiv$ the smallest number of seconds $w \geq 0$ for
+  which $\mathit{requestLog}(k)$ has fewer than \textsf{RateLimit} entries
+  later than $\mathit{now}() + w - 60$. A request for $k$ made $w$ seconds
+  from now is accepted.
+\end{itemize}
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
