@@ -692,52 +692,252 @@ Asset
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Persistence Module (Section~\ref{misPer}): stores the asset
+  definitions, the number of units of each asset held by users, and the log
+  of changes made by administrators. It prevents entries in the log from
+  being updated or deleted.
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types, and requireRole to check that a user is
+  an administrator.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constant, which is not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{MinStartPrice} & 0.01 FLX & Lowest starting price an asset can have.
+  It equals the Market Simulation Module's \textsf{MinPrice}.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item AssetID = $\mathbb{N}$
+\item AssetType = $\{\mathrm{STOCK}, \mathrm{BOND}, \mathrm{ETF},
+  \mathrm{FUND}\}$
+\item AssetRecord = tuple of ($\mathit{id}$: AssetID, $\mathit{symbol}$:
+  String, $\mathit{name}$: String, $\mathit{type}$: AssetType,
+  $\mathit{startPrice}$: $\mathbb{R}$, $\mathit{yield}$: $\mathbb{R}$,
+  $\mathit{supply}$: $\mathbb{N}$), the definition of an asset.
+  $\mathit{symbol}$ is a short code that identifies the asset to users.
+  $\mathit{startPrice}$ is its price in FLX when it is first priced.
+  $\mathit{yield}$ is its annual dividend yield, where 0 means it pays no
+  dividends. $\mathit{supply}$ is the total number of units that exist in the
+  simulated market.
+\item Asset = tuple of ($\mathit{id}$: AssetID, $\mathit{symbol}$: String,
+  $\mathit{name}$: String, $\mathit{type}$: AssetType, $\mathit{startPrice}$:
+  $\mathbb{R}$, $\mathit{yield}$: $\mathbb{R}$, $\mathit{supply}$:
+  $\mathbb{N}$, $\mathit{available}$: $\mathbb{N} \cup \{0\}$), an
+  AssetRecord together with the number of units not held by any user
+\item AssetChange = tuple of ($\mathit{time}$: Time, $\mathit{admin}$:
+  UserID, $\mathit{asset}$: AssetID, $\mathit{before}$: AssetRecord $\cup
+  \{\bot\}$, $\mathit{after}$: AssetRecord), a change made by an
+  administrator. $\mathit{before} = \bot$ when the asset was added.
+\end{itemize}
+
+\noindent An asset can only have one of the types in AssetType. Adding a new
+type of asset means adding a value to AssetType and calibrating the type in
+the Market Simulation Module. Neither changes the code that buys and sells
+assets (PR-SE-02).
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{5cm}
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+getAsset & $a$: AssetID & Asset & UnknownAsset \\
+getAssets & - & sequence of Asset & - \\
+take & $a$: AssetID, $q$: $\mathbb{N}$ & - & UnknownAsset,
+  InsufficientSupply \\
+release & $a$: AssetID, $q$: $\mathbb{N}$ & - & UnknownAsset,
+  NotOutstanding \\
+addAsset & $p$: Principal, $s$: String, $n$: String, $y$: AssetType,
+  $\mathit{sp}$: $\mathbb{R}$, $d$: $\mathbb{R}$, $\mathit{sup}$:
+  $\mathbb{N}$ & Asset & Forbidden, InvalidAsset, DuplicateSymbol \\
+updateAsset & $p$: Principal, $a$: AssetID, $n$: String, $\mathit{sup}$:
+  $\mathbb{N}$, $d$: $\mathbb{R}$ & Asset & Forbidden, UnknownAsset,
+  InvalidAsset \\
+getChanges & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time &
+  sequence of AssetChange & Forbidden, InvalidRange \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent take and release are used only by the Transaction Order Module and
+are not available through the API. addAsset, updateAsset and getChanges are
+available only to administrators. An asset's symbol, type and starting
+price cannot be changed once it is added.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{assets}$: set of AssetRecord, the definition of every asset
+\item $\mathit{outstanding}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$,
+  the number of units of each asset held by users
+\item $\mathit{changes}$: sequence of AssetChange, every change made by an
+  administrator, in time order. Entries are only ever appended.
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{assets} = \emptyset$,
+$\mathit{outstanding}$ has no entries and $\mathit{changes}$ is empty. All
+state variables are stored through the Persistence Module, so they keep
+their values when the backend restarts. The number of units available is not
+stored. It is calculated from $\mathit{supply}$ and $\mathit{outstanding}$
+whenever it is needed.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call that takes one.
+\item Only the Transaction Order Module calls take and release, and only
+  within the unit of work of a trade. Units of work that change the
+  available quantity of the same asset never run at the same time.
+\item The Market Simulation Module has calibration for every value of
+  AssetType.
+\item A new asset cannot be traded until it has a price. After addAsset, an
+  administrator or the demonstration data script (TRN-03) calls the Market
+  Simulation Module's backfill for the asset. This module does not call it,
+  because the Market Simulation Module uses this module.
+\item Assets are never removed.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item An exception leaves the state unchanged.
+\item In addAsset, updateAsset and getChanges, requireRole($p$,
+  ADMIN) is checked before anything else, and if it fails, Forbidden is
+  raised.
+\end{itemize}
+
+\medskip
+
+\noindent getAsset($a$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{view}(r)$, where $r$ is the
+  $r \in \mathit{assets}$ with $r.\mathit{id} = a$
+\item exception: no such $r$ exists $\Rightarrow \mathrm{UnknownAsset}$
+\end{itemize}
+
+\noindent getAssets():
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{view}(r)$ for every $r \in
+  \mathit{assets}$, in order of $\mathit{symbol}$
+\end{itemize}
+
+\noindent take($a, q$):
+\begin{itemize}
+\item transition: $\mathit{outstanding}(a) := \mathit{outstanding}(a) + q$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $\mathit{available}(a) < q \Rightarrow
+  \mathrm{InsufficientSupply}$
+\end{itemize}
+
+\noindent release($a, q$):
+\begin{itemize}
+\item transition: $\mathit{outstanding}(a) := \mathit{outstanding}(a) - q$
+\item exception: $a$ is not an asset $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $\mathit{outstanding}(a) < q \Rightarrow \mathrm{NotOutstanding}$
+\end{itemize}
+
+\noindent Because take and release are called in the same unit of work as
+the change to the user's holdings, $\mathit{outstanding}(a)$ always equals
+the total number of units of $a$ held across all portfolios.
+NotOutstanding is raised only if this has been broken, and causes the trade
+to be rolled back.
+
+\medskip
+
+\noindent addAsset($p, s, n, y, \mathit{sp}, d, \mathit{sup}$):
+\begin{itemize}
+\item transition: let $r = (i, s, n, y, \mathit{sp}, d, \mathit{sup})$,
+  where $i$ is an AssetID not used by any earlier asset. $\mathit{assets} :=
+  \mathit{assets} \cup \{r\}$, $\mathit{outstanding}(i) := 0$, and
+  $(\mathit{now}(), p.\mathit{user}, i, \bot, r)$ is appended to
+  $\mathit{changes}$. These take effect together or not at all.
+\item output: $\mathit{out} := \mathit{view}(r)$
+\item exception: $\neg\mathit{validSymbol}(s) \vee n = \text{``''} \vee
+  \mathit{sp} < \textsf{MinStartPrice} \vee \mathit{sp}$ has more than two
+  decimal places $\vee\ d < 0 \Rightarrow \mathrm{InvalidAsset} \mid{}$
+  some $r' \in \mathit{assets}$ has $r'.\mathit{symbol} = s \Rightarrow
+  \mathrm{DuplicateSymbol}$
+\end{itemize}
+
+\noindent updateAsset($p, a, n, \mathit{sup}, d$):
+\begin{itemize}
+\item Let $r$ be the $r \in \mathit{assets}$ with $r.\mathit{id} = a$, and
+  $r'$ be $r$ with $\mathit{name} = n$, $\mathit{supply} = \mathit{sup}$
+  and $\mathit{yield} = d$.
+\item transition: if $r' \neq r$, $\mathit{assets} := (\mathit{assets} -
+  \{r\}) \cup \{r'\}$ and $(\mathit{now}(), p.\mathit{user}, a, r, r')$ is
+  appended to $\mathit{changes}$, together or not at all. If $r' = r$, the
+  state is unchanged and nothing is logged.
+\item output: $\mathit{out} := \mathit{view}(r')$
+\item exception: no such $r$ exists $\Rightarrow \mathrm{UnknownAsset}
+  \mid{}$ $n = \text{``''} \vee d < 0 \vee \mathit{sup} <
+  \mathit{outstanding}(a) \Rightarrow \mathrm{InvalidAsset}$
+\end{itemize}
+
+\noindent A new yield takes effect at the Market Simulation Module's next
+price update. It changes both the asset's next dividend and the drift of its
+price, so that its expected total return stays the same.
+
+\medskip
+
+\noindent getChanges($p, \mathit{from}, \mathit{to}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the entries $c$ of $\mathit{changes}$ with
+  $\mathit{from} \leq c.\mathit{time} \leq \mathit{to}$, in time order
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{available}$: AssetID $\rightarrow \mathbb{N} \cup \{0\}$\\
+  $\mathit{available}(a) \equiv r.\mathit{supply} -
+  \mathit{outstanding}(a)$, where $r$ is the $r \in \mathit{assets}$ with
+  $r.\mathit{id} = a$. It is never negative, because take never lets
+  $\mathit{outstanding}(a)$ exceed the supply, and updateAsset never lowers
+  the supply below $\mathit{outstanding}(a)$.
+\item $\mathit{view}$: AssetRecord $\rightarrow$ Asset\\
+  $\mathit{view}(r) \equiv$ ($r.\mathit{id}$, $r.\mathit{symbol}$,
+  $r.\mathit{name}$, $r.\mathit{type}$, $r.\mathit{startPrice}$,
+  $r.\mathit{yield}$, $r.\mathit{supply}$, $\mathit{available}(r.\mathit{id})$)
+\item $\mathit{validSymbol}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{validSymbol}(s) \equiv s$ consists of one to five capital
+  letters A to Z.
+\end{itemize}
 
 \section{MIS of Transaction Order Module} \label{misPurch}
 
@@ -1094,7 +1294,8 @@ MarketSimulation
 
 \begin{itemize}
 \item Asset Module (Section~\ref{misAsset}): the list of assets, and each
-  asset's type, starting price and annual dividend yield.
+  asset's type, starting price and annual dividend yield. The yield is read
+  at every tick, because an administrator may change it.
 \item Currency Ledger Module (Section~\ref{misCur}): credits dividend payouts
   to users' balances.
 \item Persistence Module (Section~\ref{misPer}): stores prices, price
