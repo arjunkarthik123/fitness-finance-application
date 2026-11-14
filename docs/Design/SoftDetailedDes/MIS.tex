@@ -553,7 +553,7 @@ getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\lon
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None, the persistence module will store the updated data for each user.
+None, the persistence module will store user activity records.
 
 \subsubsection{Environment Variables}
 \begin{itemize}
@@ -609,10 +609,12 @@ None.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-createGoal & activityType: string, activityMeasurement: int & goalID & InvalidActivityType, InvalidActivityMeasurement \\
-deleteGoal & goalID & N/A & NoGoal \\
-updateGoalMeasurement & goalID: int, activityMeasurement: int & N/A & NoGoal, InvalidActivityMeasurement\\
-collectReward & goalID: int & N/A & NoGoal \\
+getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
+createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
+deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
+updateGoalMeasurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
+collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
 \end{tabular}
 \end{center}
@@ -636,29 +638,43 @@ None, information will be stored in the database (Persistence Module)
 
 \subsubsection{Access Routine Semantics}
 
-\noindent createGoal(activityType, activityMeasurement):
+\noindent getAllGoals(userID):
+\begin{itemize}
+\item output: a map of the users activity type and the value attached to the actvity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input.
+\end{itemize}
+
+\noindent createGoal(userID, activityType, activityMeasurement):
 \begin{itemize}
 \item transition: a new goal will be added to the users goal data. 
 \item output: the new goalID.
-\item exception: InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
 \end{itemize}
 
-\noindent deleteGoal(goalID):
+\noindent deleteGoal(userID, goalID):
 \begin{itemize}
 \item transition: the goal will be removed from the users goal data. 
-\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input.
 \end{itemize}
 
-\noindent updateGoalMeasurement(goalID, activityMeasurement):
+\noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
 \begin{itemize}
 \item transition: updates the measurement on an already started goal. 
-\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}
 
-\noindent collectReward(goalID):
+\noindent updateGoalPeriod(userID, goalID, period):
 \begin{itemize}
-\item transition: notifies to the Currency Ledger Module to add the reward to the user's account. 
-\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input.
+\item transition: updates the period of an already started goal.
+\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
+\end{itemize}
+
+\noindent collectReward(userID, goalID):
+\begin{itemize}
+\item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -667,6 +683,7 @@ None, information will be stored in the database (Persistence Module)
 \textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
 \hline
 checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ current goal activity measurement values, then the goal is complete. \\
+isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
 \hline
 \end{tabular}
 
