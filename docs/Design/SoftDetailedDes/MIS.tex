@@ -575,27 +575,36 @@ The User and Onboarding Module will rely on:
 This module is M4 in the Module Guide.
 
 \subsection{Module}
-
 Activity
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence Module: stores user activity, current goals and progress toward those goals.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\toprule
+\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
+\bottomrule
+\end{tabular}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
 \end{tabular}
 \end{center}
@@ -603,56 +612,68 @@ Activity
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, the persistence module will store user activity records.
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The Currency Ledger Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+    \item \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent getActiviy(userID):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: returns a map of activity and tracked data attached to that activity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+None, this module is a getter and has no write capabilities.
 
 \section{MIS of Goals Module} \label{misGoal}
 
 This module is M5 in the Module Guide.
 
 \subsection{Module}
-
-Goals
+Goals (M5)
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence Module: stores user fitness activity for the user.
+    \item Activity Module: retrieves fitness activity to use in the app.
+    \item Currency Ledger Module: the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+None. 
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
+createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
+deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
+updateGoalMeasurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
+collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
 \end{tabular}
 \end{center}
@@ -660,29 +681,69 @@ Goals
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, information will be stored in the database (Persistence Module)
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+    \item Valid data from the Activity Module is retrieved.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent getAllGoals(userID):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: a map of the users activity type and the value attached to the actvity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input.
 \end{itemize}
 
-\subsubsection{Local Functions}
+\noindent createGoal(userID, activityType, activityMeasurement):
+\begin{itemize}
+\item transition: a new goal will be added to the users goal data. 
+\item output: the new goalID.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\end{itemize}
 
-\wss{Local functions, or None}
+\noindent deleteGoal(userID, goalID):
+\begin{itemize}
+\item transition: the goal will be removed from the users goal data. 
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input.
+\end{itemize}
+
+\noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
+\begin{itemize}
+\item transition: updates the measurement on an already started goal. 
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}
+
+\noindent updateGoalPeriod(userID, goalID, period):
+\begin{itemize}
+\item transition: updates the period of an already started goal.
+\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
+
+\noindent collectReward(userID, goalID):
+\begin{itemize}
+\item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
+
+
+\subsubsection{Local Functions}
+\begin{tabular}{p{3.4cm} p{4cm} p{6cm}}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
+\hline
+checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ current goal activity measurement values, then the goal is complete. \\
+isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
+\hline
+\end{tabular}
 
 \section{MIS of Currency Ledger Module} \label{misCur}
 

@@ -346,12 +346,9 @@ to be implemented.
 \subsubsection{Activity Module (\mref{mAct})}
 
 \begin{description}
-\item[Secrets:] How synced activity is represented, stored and deduplicated,
-  and which records are eligible for a reward.
-\item[Services:] Accepts workouts and daily step totals synced from the mobile
-  app, ignores records that have already been received, reports a user's
-  recorded activity over a given period, and tells the Currency Ledger Module
-  when new eligible activity should be rewarded.
+\item[Secrets:] How synced activity is represented and stored.
+\item[Services:] Accepts fitness information synced from the mobile
+client and reports the activity.  
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
