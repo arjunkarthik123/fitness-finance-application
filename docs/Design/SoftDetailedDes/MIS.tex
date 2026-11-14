@@ -519,23 +519,33 @@ This module is M4 in the Module Guide.
 Activity
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence Module: stores user activity, current goals and progress toward those goals.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\toprule
+\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
+\bottomrule
+\end{tabular}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
 \end{tabular}
 \end{center}
@@ -543,29 +553,31 @@ Activity
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, the persistence module will store the updated data for each user.
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The Currency Ledger Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+    \item \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent getActiviy(userID):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: returns a map of activity and tracked data attached to that activity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+None, this module is a getter and has no write capabilities.
 
 \section{MIS of Goals Module} \label{misGoal}
 
