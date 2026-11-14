@@ -796,6 +796,7 @@ TransactionOrder
 
 \wss{Local functions, or None}
 
+\newpage
 \section{MIS of Portfolio Module} \label{misPort}
 
 This module is M9 in the Module Guide.
@@ -806,53 +807,319 @@ Portfolio
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Market Simulation Module (Section~\ref{misMkt}): the current price of
+  each asset, through getPrice, and the price in effect at a past time,
+  through getPriceAt. Also the Amount and Price types.
+\item Currency Ledger Module (Section~\ref{misCur}): the user's balance now
+  and at a past time, and the total the user has been credited for activity
+  and for dividends up to a given time.
+\item Asset Module (Section~\ref{misAsset}): the AssetID type.
+\item Persistence Module (Section~\ref{misPer}): stores the portfolios,
+  holdings, realized gains and holding changes. Changes made by addUnits and
+  removeUnits join the unit of work of the trade that calls them.
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types.
+\end{itemize}
+
+\noindent This module does not use the Transaction Order Module, which uses
+it. It keeps its own record of holding changes so that it can value a
+portfolio at a past time without reading the transactions.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. The module uses the following local constant, which is not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{MaxPoints} & 1000 & Most points getValueHistory returns in one
+  call, so that a chart of two years of history (PR-C-02) still loads within
+  PR-SL-02\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item AssetID: as defined by the Asset Module (Section~\ref{misAsset})
+\item Amount and Price: as defined by the Market Simulation Module
+  (Section~\ref{misMkt})
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item Holding = tuple of ($\mathit{asset}$: AssetID, $\mathit{qty}$:
+  $\mathbb{N}$, $\mathit{cost}$: Amount, $\mathit{price}$: Price,
+  $\mathit{value}$: Amount, $\mathit{gain}$: Amount). One asset the user
+  holds: the number of units, what the user paid for the units still held,
+  the current price, the current value $\mathit{qty} \cdot \mathit{price}$,
+  and the unrealized gain $\mathit{value} - \mathit{cost}$ (negative for a
+  loss).
+\item Summary = tuple of ($\mathit{opened}$: Time, $\mathit{cash}$: Amount,
+  $\mathit{invested}$: Amount, $\mathit{total}$: Amount, $\mathit{cost}$:
+  Amount, $\mathit{unrealized}$: Amount, $\mathit{realized}$: Amount). The
+  portfolio as a whole: when it was opened, the uninvested currency, the
+  current value of all holdings, their sum, what was paid for the holdings,
+  the unrealized gain on them, and the gain realized by all sales so far
+  (FUNC-10, FUNC-12).
+\item ValuePoint = tuple of ($\mathit{time}$: Time, $\mathit{total}$:
+  Amount, $\mathit{earned}$: Amount, $\mathit{dividends}$: Amount,
+  $\mathit{gain}$: Amount). The portfolio's total value at one time, split
+  into the currency earned by activity up to that time, the dividends
+  received up to that time, and the gain from investing, so that
+  $\mathit{total} = \mathit{earned} + \mathit{dividends} + \mathit{gain}$.
+  These are the separate traces of the compounding chart (LF-APP-02,
+  UHR-UND-02).
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{5cm}
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+create & $u$: UserID & - & PortfolioExists \\
+getUnits & $u$: UserID, $a$: AssetID & $\mathbb{N} \cup \{0\}$ &
+  NoPortfolio \\
+addUnits & $u$: UserID, $a$: AssetID, $q$: $\mathbb{N}$, $c$: Amount & - &
+  NoPortfolio, InvalidCost \\
+removeUnits & $u$: UserID, $a$: AssetID, $q$: $\mathbb{N}$, $r$: Amount & -
+  & NoPortfolio, InsufficientUnits \\
+getHoldings & $p$: Principal & sequence of Holding & NoPortfolio \\
+getSummary & $p$: Principal & Summary & NoPortfolio \\
+getValueHistory & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$:
+  Time, $\mathit{step}$: $\mathbb{R}$ & sequence of ValuePoint & NoPortfolio,
+  InvalidRange, TooManyPoints \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent create, getUnits, addUnits and removeUnits are used only within the
+backend and are not available through the API. create is called by the User
+and Onboarding Module when an account is registered. getUnits, addUnits and
+removeUnits are called by the Transaction Order Module when a trade is
+executed. The other programs are requested by the user through the API.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{opened}$: UserID $\rightarrow$ Time, when each user's
+  portfolio was created. A user has a portfolio exactly when they have an
+  entry here.
+\item $\mathit{holdings}$: UserID $\times$ AssetID $\rightarrow$ tuple of
+  ($\mathit{qty}$: $\mathbb{N}$, $\mathit{cost}$: Amount), the units of each
+  asset a user holds and what they paid for them. There is no entry for an
+  asset the user does not hold.
+\item $\mathit{realized}$: UserID $\rightarrow$ Amount, the total gain
+  realized by the user's sales
+\item $\mathit{changes}$: sequence of tuples of ($\mathit{user}$: UserID,
+  $\mathit{asset}$: AssetID, $\mathit{dq}$: $\mathbb{Z}$, $\mathit{time}$:
+  Time), every change to a holding in time order, with $\mathit{dq}$
+  positive for units added and negative for units removed. Entries are only
+  ever appended.
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{opened}$,
+$\mathit{holdings}$ and $\mathit{realized}$ have no entries and
+$\mathit{changes}$ is empty. All state variables are stored through the
+Persistence Module, so they keep their values when the backend restarts.
+
+\medskip
+
+\noindent State invariant: for every entry $(u, a) \mapsto (n, c)$ of
+$\mathit{holdings}$, $n = \mathit{heldAt}(u, a, \mathit{now}()) \geq 1$ and
+$c \geq 0$, and $u$ has an entry in $\mathit{opened}$.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call that takes one.
+\item The User and Onboarding Module calls create in the same unit of work
+  that registers the account, so every registered user has exactly one
+  portfolio (FUNC-08).
+\item Only the Transaction Order Module calls addUnits and removeUnits, and
+  only within the unit of work of a trade. Units of work for the same user
+  never run at the same time.
+\item Currency enters a user's balance only as a reward for activity or
+  goals or as a dividend, and leaves it only to pay for a purchase. Sales
+  return currency to it. This is what makes $\mathit{gain}$ in a ValuePoint
+  equal to the gain from investing. If sponsored reward redemption (FUNC-17)
+  is added, the currency redeemed must be added back in
+  $\mathit{pointAt}$.
+\item A user can only hold an asset after it has a price, so getPriceAt
+  never raises NoPrice for an asset the user held at the time asked.
+\item When an account is deleted, its entries are removed or pseudonymized
+  by the User and Onboarding Module through the Persistence Module, not by
+  this module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
+
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item In the programs that take a Principal, $u = p.\mathit{user}$. A user
+  can only view their own portfolio (SEC-ACC-01).
+\item NoPortfolio is raised when $u$ has no entry in $\mathit{opened}$, and
+  is checked before any other exception.
+\item An exception leaves the state unchanged.
+\end{itemize}
+
+\medskip
+
+\noindent create($u$):
+\begin{itemize}
+\item transition: $\mathit{opened}(u) := \mathit{now}()$ and
+  $\mathit{realized}(u) := 0$. The new portfolio holds no assets.
+\item exception: $u$ has an entry in $\mathit{opened} \Rightarrow
+  \mathrm{PortfolioExists}$
+\end{itemize}
+
+\noindent getUnits($u, a$):
+\begin{itemize}
+\item output: $\mathit{out} := (\mathit{holdings}$ has an entry for $(u, a)
+  \Rightarrow \mathit{holdings}(u, a).\mathit{qty} \mid$ otherwise
+  $\Rightarrow 0)$
+\end{itemize}
+
+\noindent addUnits($u, a, q, c$):
+\begin{itemize}
+\item transition: let $(n, k) = \mathit{held}(u, a)$. $\mathit{holdings}(u,
+  a) := (n + q, k + c)$, and $(u, a, q, \mathit{now}())$ is appended to
+  $\mathit{changes}$. Both take effect together or not at all.
+\item exception: $c < 0 \Rightarrow \mathrm{InvalidCost}$
+\end{itemize}
+
+\noindent addUnits is called for a purchase of $q$ units, with $c$ the total
+the user paid for them.
+
+\medskip
+
+\noindent removeUnits($u, a, q, r$):
+\begin{itemize}
+\item transition: let $(n, k) = \mathit{held}(u, a)$ and let $s =
+  \mathit{costOf}(n, k, q)$, the part of the cost that belongs to the units
+  sold. Then
+  \begin{itemize}
+  \item $(q = n \Rightarrow$ the entry for $(u, a)$ is removed from
+    $\mathit{holdings} \mid q < n \Rightarrow \mathit{holdings}(u, a) := (n -
+    q, k - s))$
+  \item $\mathit{realized}(u) := \mathit{realized}(u) + r - s$
+  \item $(u, a, -q, \mathit{now}())$ is appended to $\mathit{changes}$
+  \end{itemize}
+  These take effect together or not at all.
+\item exception: $\mathit{held}(u, a).\mathit{qty} < q \Rightarrow
+  \mathrm{InsufficientUnits}$
+\end{itemize}
+
+\noindent removeUnits is called for a sale of $q$ units, with $r$ the total
+the user received for them. The gain or loss $r - s$ is what the sale
+realizes (FUNC-10).
+
+\medskip
+
+\noindent getHoldings($p$):
+\begin{itemize}
+\item output: $\mathit{out} := \langle \mathit{holdingOf}(u, a) \mid
+  \mathit{holdings}$ has an entry for $(u, a) \rangle$, in increasing order
+  of $a$
+\end{itemize}
+
+\noindent getSummary($p$):
+\begin{itemize}
+\item output: let $v = \sum_{h \in H} h.\mathit{value}$ and $k = \sum_{h \in
+  H} h.\mathit{cost}$, where $H$ is the output of getHoldings($p$), and let
+  $b = \mathit{balance}(u)$. Then $\mathit{out} := (\mathit{opened}(u), b, v,
+  b + v, k, v - k, \mathit{realized}(u))$.
+\end{itemize}
+
+\noindent The total value is each holding's quantity times its current
+price, plus uninvested currency (PR-PA-04). Because quantities are whole
+numbers and prices have two decimal places, no rounding is needed and the
+value is exact to the cent.
+
+\medskip
+
+\noindent getValueHistory($p, \mathit{from}, \mathit{to}, \mathit{step}$):
+\begin{itemize}
+\item output: let $T$ be the times $t = \mathit{from} + i \cdot
+  \mathit{step}$, for $i = 0, 1, 2, \ldots$, with $t \leq \mathit{to}$,
+  leaving out any time before $\mathit{opened}(u)$ or after
+  $\mathit{now}()$. Then $\mathit{out} := \langle \mathit{pointAt}(u, t)
+  \mid t \in T \rangle$, in time order.
+\item exception: $\mathit{from} > \mathit{to} \vee \mathit{step} \leq 0
+  \Rightarrow \mathrm{InvalidRange} \mid |T| > \textsf{MaxPoints}
+  \Rightarrow \mathrm{TooManyPoints}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{held}$: UserID $\times$ AssetID $\rightarrow$ tuple of
+  ($\mathit{qty}$: $\mathbb{N} \cup \{0\}$, $\mathit{cost}$: Amount)\\
+  $\mathit{held}(u, a) \equiv (\mathit{holdings}$ has an entry for $(u, a)
+  \Rightarrow \mathit{holdings}(u, a) \mid$ otherwise $\Rightarrow (0, 0))$
+\item $\mathit{costOf}$: $\mathbb{N} \times$ Amount $\times \mathbb{N}
+  \rightarrow$ Amount\\
+  $\mathit{costOf}(n, k, q) \equiv (q = n \Rightarrow k \mid q < n
+  \Rightarrow \mathit{round}_2(k \cdot q / n))$. Units are taken at their
+  average cost. Selling all the units takes the whole cost, so no rounding
+  remainder is left behind.
+\item $\mathit{round}_2$: as defined by the Market Simulation Module.
+\item $\mathit{holdingOf}$: UserID $\times$ AssetID $\rightarrow$ Holding\\
+  $\mathit{holdingOf}(u, a) \equiv (a, n, k, x, n \cdot x, n \cdot x - k)$,
+  where $(n, k) = \mathit{holdings}(u, a)$ and $x$ is the $\mathit{price}$
+  of getPrice($a$) from the Market Simulation Module.
+\item $\mathit{heldAt}$: UserID $\times$ AssetID $\times$ Time $\rightarrow
+  \mathbb{N} \cup \{0\}$\\
+  $\mathit{heldAt}(u, a, t) \equiv \sum_{e \in \mathit{changes} \,:\,
+  e.\mathit{user} = u \,\wedge\, e.\mathit{asset} = a \,\wedge\,
+  e.\mathit{time} \leq t} e.\mathit{dq}$, the units of $a$ that $u$ held at
+  time $t$.
+\item $\mathit{pointAt}$: UserID $\times$ Time $\rightarrow$ ValuePoint\\
+  $\mathit{pointAt}(u, t) \equiv (t, w, e, d, w - e - d)$, where
+  \[
+  w = \mathit{balanceAt}(u, t) + \sum_{a \,:\, \mathit{heldAt}(u, a, t) > 0}
+  \mathit{heldAt}(u, a, t) \cdot \mathit{priceAt}(a, t)
+  \]
+  is the total value at $t$, $e = \mathit{earnedBy}(u, t)$ and $d =
+  \mathit{dividendsBy}(u, t)$. Since currency only enters through rewards
+  and dividends (see Assumptions), $w - e - d$ is the gain from investing up
+  to $t$: realized gains plus unrealized gains on the units held at $t$.
+\item $\mathit{priceAt}$: AssetID $\times$ Time $\rightarrow$ Price\\
+  The $\mathit{price}$ of getPriceAt($a, t$) from the Market Simulation
+  Module.
+\item $\mathit{balance}$: UserID $\rightarrow$ Amount and
+  $\mathit{balanceAt}$: UserID $\times$ Time $\rightarrow$ Amount\\
+  The user's balance now and at time $t$, read from the Currency Ledger
+  Module.
+\item $\mathit{earnedBy}$: UserID $\times$ Time $\rightarrow$ Amount and
+  $\mathit{dividendsBy}$: UserID $\times$ Time $\rightarrow$ Amount\\
+  The total currency credited to the user up to time $t$ as rewards for
+  activity and goals, and as dividends, read from the Currency Ledger
+  Module.
+\end{itemize}
 
+\newpage
 \section{MIS of Leaderboard and Friends Module} \label{misLead}
 
 This module is M10 in the Module Guide.
@@ -863,53 +1130,405 @@ Leaderboard
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Goals Module (Section~\ref{misGoal}): each user's progress towards
+  their own active goals, and their progress towards a goal agreed by a
+  group. Also the GoalSpec type.
+\item Persistence Module (Section~\ref{misPer}): stores sharing settings,
+  aliases, friendships, friend requests, groups, invitations and
+  memberships.
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types.
+\end{itemize}
+
+\noindent This module does not use the Currency Ledger Module, so a ranking
+can never credit currency or any other reward (PR-SC-08, FUNC-15).
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7.5cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{PublicGroup} & 1 & The GroupID of the public, community-wide
+  leaderboard (UHR-PER-04)\\
+\textsf{MaxGroupSize} & 50 & Most members a private group can have\\
+\textsf{ScoreCap} & 100 & Highest score a member can have, in percent of a
+  goal\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent \textsf{ScoreCap} means that every member who has reached their
+goal shares first place. Going beyond a goal gives no advantage, so the
+leaderboard does not push users to overexert themselves (PR-SC-08, SR9).
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item GoalSpec: as defined by the Goals Module (Section~\ref{misGoal}), a
+  description of a fitness goal (the activity, the target and the period)
+  that is not tied to a particular user
+\item GroupID = $\mathbb{N}$
+\item GroupKind = $\{\mathrm{PUBLIC}, \mathrm{PRIVATE}\}$
+\item Sharing = tuple of ($\mathit{on}$: $\mathbb{B}$, $\mathit{alias}$:
+  String $\cup \{\bot\}$), whether the user takes part in community
+  features, and the alias shown to other users
+\item FriendRequest = tuple of ($\mathit{id}$: $\mathbb{N}$,
+  $\mathit{from}$: String, $\mathit{time}$: Time), a request received from
+  the user with alias $\mathit{from}$
+\item GroupInfo = tuple of ($\mathit{id}$: GroupID, $\mathit{kind}$:
+  GroupKind, $\mathit{name}$: String, $\mathit{goal}$: GoalSpec $\cup
+  \{\bot\}$, $\mathit{size}$: $\mathbb{N}$). $\mathit{goal}$ is the goal the
+  group has agreed on, or $\bot$ if each member is ranked by their own goals.
+\item Standing = tuple of ($\mathit{rank}$: $\mathbb{N}$, $\mathit{alias}$:
+  String, $\mathit{score}$: $\mathbb{R} \cup \{\bot\}$, $\mathit{self}$:
+  $\mathbb{B}$), one member's place in a group. $\mathit{score}$ is a
+  percentage from 0 to \textsf{ScoreCap}, or $\bot$ if the member has no
+  active goal. $\mathit{self}$ is true for the user who asked.
+\end{itemize}
+
+\noindent Other users are only ever identified by alias. No output of this
+module contains another user's UserID, name, email, activity, goals, balance
+or portfolio (SEC-PRV-02).
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{4.4cm}
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{3.9cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+setSharing & $p$: Principal, $s$: String & - & InvalidAlias,
+  OffensiveContent, AliasTaken \\
+stopSharing & $p$: Principal & - & - \\
+getSharing & $p$: Principal & Sharing & - \\
+requestFriend & $p$: Principal, $s$: String & - & SharingOff, UnknownUser,
+  AlreadyFriends, RequestExists \\
+respondFriend & $p$: Principal, $\mathit{id}$: $\mathbb{N}$, $\mathit{ok}$:
+  $\mathbb{B}$ & - & UnknownRequest \\
+removeFriend & $p$: Principal, $s$: String & - & NotFriends \\
+getFriends & $p$: Principal & sequence of String & - \\
+getFriend\-Requests & $p$: Principal & sequence of FriendRequest & - \\
+createGroup & $p$: Principal, $n$: String, $g$: GoalSpec $\cup \{\bot\}$ &
+  GroupID & SharingOff, InvalidName, OffensiveContent \\
+invite & $p$: Principal, $g$: GroupID, $s$: String & - & UnknownGroup,
+  NotFriends, AlreadyMember, GroupFull \\
+respondInvite & $p$: Principal, $g$: GroupID, $\mathit{ok}$: $\mathbb{B}$ &
+  - & NotInvited, SharingOff, GroupFull \\
+joinPublic & $p$: Principal & - & SharingOff, AlreadyMember \\
+leaveGroup & $p$: Principal, $g$: GroupID & - & NotMember \\
+getGroups & $p$: Principal & sequence of GroupInfo & - \\
+getInvites & $p$: Principal & sequence of GroupInfo & - \\
+getStandings & $p$: Principal, $g$: GroupID & sequence of Standing &
+  NotMember \\
+\bottomrule
 \end{tabular}
 \end{center}
+
+\noindent OffensiveContent tells the user that the alias or group name breaks
+the community guidelines (UHR-POL-05).
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{alias}$: UserID $\rightarrow$ String, the alias each user has
+  chosen. A user keeps their alias when they stop sharing.
+\item $\mathit{sharing}$: set of UserID, the users who currently take part
+  in community features
+\item $\mathit{friends}$: set of sets $\{u, v\}$ of two UserIDs, each
+  friendship. Friendship goes both ways.
+\item $\mathit{requests}$: set of tuples of ($\mathit{id}$: $\mathbb{N}$,
+  $\mathit{from}$: UserID, $\mathit{to}$: UserID, $\mathit{time}$: Time),
+  the friend requests waiting for an answer
+\item $\mathit{groups}$: set of tuples of ($\mathit{id}$: GroupID,
+  $\mathit{kind}$: GroupKind, $\mathit{name}$: String, $\mathit{goal}$:
+  GoalSpec $\cup \{\bot\}$)
+\item $\mathit{members}$: set of tuples of ($\mathit{group}$: GroupID,
+  $\mathit{user}$: UserID)
+\item $\mathit{invites}$: set of tuples of ($\mathit{group}$: GroupID,
+  $\mathit{user}$: UserID), the invitations waiting for an answer
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{groups} =
+\{(\textsf{PublicGroup}, \mathrm{PUBLIC}, \text{``Community''}, \bot)\}$
+and every other state variable is empty. A new account is therefore not on
+any leaderboard and shares nothing until the user opts in (PR-SC-08,
+SEC-PRV-02). All state variables are stored through the Persistence Module,
+so they keep their values when the backend restarts.
+
+\medskip
+
+\noindent State invariant: every user in $\mathit{members}$ is in
+$\mathit{sharing}$; every private group has between 1 and
+\textsf{MaxGroupSize} members; no two users in $\mathit{alias}$ have
+aliases that differ only in upper and lower case.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{prohibited}$: the list of terms that may not appear in
+  public content, read from a configuration file (UHR-POL-05)
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call.
+\item The app asks the user to confirm, before calling setSharing, that
+  their alias and their percentage of their goals will be shown to other
+  members of the groups they join (SEC-PRV-02).
+\item On a device where the app detects rooting or tampering, the app does
+  not show community features (SEC-IMM-03). This module does not check the
+  device.
+\item The Goals Module reports each progress figure as a percentage of the
+  goal's target in the goal's current period.
+\item The app presents standings without labels that demean lower-ranked
+  members (UHR-POL-04).
+\item When an account is deleted, the User and Onboarding Module calls
+  stopSharing for it, and its alias is then removed through the Persistence
+  Module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
+
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item $u = p.\mathit{user}$, the user making the request.
+\item An exception leaves the state unchanged.
+\item A user who does not share cannot be found by alias. Asking for one
+  raises the same exception as asking for an alias that does not exist, so
+  the request does not reveal that the account exists.
 \end{itemize}
+
+\medskip
+
+\noindent setSharing($p, s$):
+\begin{itemize}
+\item transition: $\mathit{alias}(u) := s$ and $\mathit{sharing} :=
+  \mathit{sharing} \cup \{u\}$. Calling it again while sharing changes the
+  alias.
+\item exception: $\lnot \mathit{validAlias}(s) \Rightarrow
+  \mathrm{InvalidAlias} \mid \mathit{offensive}(s) \Rightarrow
+  \mathrm{OffensiveContent} \mid \mathit{owner}(s) \neq \bot \wedge
+  \mathit{owner}(s) \neq u \Rightarrow \mathrm{AliasTaken}$
+\end{itemize}
+
+\noindent stopSharing($p$):
+\begin{itemize}
+\item transition: $\mathit{sharing} := \mathit{sharing} - \{u\}$; every
+  entry of $\mathit{members}$, $\mathit{invites}$ and $\mathit{requests}$
+  that involves $u$ is removed; and any private group left with no members
+  is removed from $\mathit{groups}$. Friendships are kept, so they return if
+  the user shares again.
+\end{itemize}
+
+\noindent The user leaves every leaderboard at once (UHR-PER-03, test-SEC-PRV-02).
+
+\medskip
+
+\noindent getSharing($p$):
+\begin{itemize}
+\item output: $\mathit{out} := (u \in \mathit{sharing}, (u$ has an entry in
+  $\mathit{alias} \Rightarrow \mathit{alias}(u) \mid$ otherwise
+  $\Rightarrow \bot))$
+\end{itemize}
+
+\noindent requestFriend($p, s$):
+\begin{itemize}
+\item transition: let $v = \mathit{find}(s)$. $(i, u, v, \mathit{now}())$ is
+  added to $\mathit{requests}$, where $i$ is an $\mathit{id}$ not used by
+  any earlier request.
+\item exception: $u \notin \mathit{sharing} \Rightarrow \mathrm{SharingOff}
+  \mid \mathit{find}(s) = \bot \vee \mathit{find}(s) = u \Rightarrow
+  \mathrm{UnknownUser} \mid \{u, v\} \in \mathit{friends} \Rightarrow
+  \mathrm{AlreadyFriends} \mid$ a request from $u$ to $v$ or from $v$ to $u$
+  is in $\mathit{requests} \Rightarrow \mathrm{RequestExists}$
+\end{itemize}
+
+\noindent respondFriend($p, \mathit{id}, \mathit{ok}$):
+\begin{itemize}
+\item transition: let $r$ be the request in $\mathit{requests}$ with
+  $r.\mathit{id} = \mathit{id} \wedge r.\mathit{to} = u$. $r$ is removed from
+  $\mathit{requests}$, and if $\mathit{ok}$, $\{r.\mathit{from}, u\}$ is
+  added to $\mathit{friends}$.
+\item exception: no such $r$ exists $\Rightarrow \mathrm{UnknownRequest}$
+\end{itemize}
+
+\noindent removeFriend($p, s$):
+\begin{itemize}
+\item transition: $\mathit{friends} := \mathit{friends} - \{\{u,
+  \mathit{find}(s)\}\}$. Shared group memberships are not affected.
+\item exception: $\mathit{find}(s) = \bot \vee \{u, \mathit{find}(s)\}
+  \notin \mathit{friends} \Rightarrow \mathrm{NotFriends}$
+\end{itemize}
+
+\noindent getFriends($p$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ $\mathit{alias}(v)$ for every $v \in
+  \mathit{sharing}$ with $\{u, v\} \in \mathit{friends}$, in alphabetical
+  order
+\end{itemize}
+
+\noindent getFriendRequests($p$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ $(r.\mathit{id},
+  \mathit{alias}(r.\mathit{from}), r.\mathit{time})$ for every $r \in
+  \mathit{requests}$ with $r.\mathit{to} = u$, in time order
+\end{itemize}
+
+\noindent createGroup($p, n, g$):
+\begin{itemize}
+\item transition: $(i, \mathrm{PRIVATE}, n, g)$ is added to
+  $\mathit{groups}$ and $(i, u)$ to $\mathit{members}$, where $i$ is a
+  GroupID not used by any earlier group.
+\item output: $\mathit{out} := i$
+\item exception: $u \notin \mathit{sharing} \Rightarrow \mathrm{SharingOff}
+  \mid n$ is empty or longer than 40 characters $\Rightarrow
+  \mathrm{InvalidName} \mid \mathit{offensive}(n) \Rightarrow
+  \mathrm{OffensiveContent}$
+\end{itemize}
+
+\noindent The members of a group with a goal agree to it by accepting the
+invitation, which shows the goal. A group's goal cannot be changed after it
+is created.
+
+\medskip
+
+\noindent invite($p, g, s$):
+\begin{itemize}
+\item transition: $(g, \mathit{find}(s))$ is added to $\mathit{invites}$
+\item exception: $g$ is not a private group with $(g, u) \in
+  \mathit{members} \Rightarrow \mathrm{UnknownGroup} \mid \mathit{find}(s) =
+  \bot \vee \{u, \mathit{find}(s)\} \notin \mathit{friends} \Rightarrow
+  \mathrm{NotFriends} \mid (g, \mathit{find}(s)) \in \mathit{members}
+  \Rightarrow \mathrm{AlreadyMember} \mid \mathit{size}(g) \geq
+  \textsf{MaxGroupSize} \Rightarrow \mathrm{GroupFull}$
+\end{itemize}
+
+\noindent Only friends can be invited to a private group (FUNC-15).
+
+\medskip
+
+\noindent respondInvite($p, g, \mathit{ok}$):
+\begin{itemize}
+\item transition: $(g, u)$ is removed from $\mathit{invites}$, and if
+  $\mathit{ok}$, $(g, u)$ is added to $\mathit{members}$.
+\item exception: $(g, u) \notin \mathit{invites} \Rightarrow
+  \mathrm{NotInvited} \mid \mathit{ok} \wedge u \notin \mathit{sharing}
+  \Rightarrow \mathrm{SharingOff} \mid \mathit{ok} \wedge \mathit{size}(g)
+  \geq \textsf{MaxGroupSize} \Rightarrow \mathrm{GroupFull}$
+\end{itemize}
+
+\noindent joinPublic($p$):
+\begin{itemize}
+\item transition: $(\textsf{PublicGroup}, u)$ is added to $\mathit{members}$
+\item exception: $u \notin \mathit{sharing} \Rightarrow \mathrm{SharingOff}
+  \mid (\textsf{PublicGroup}, u) \in \mathit{members} \Rightarrow
+  \mathrm{AlreadyMember}$
+\end{itemize}
+
+\noindent leaveGroup($p, g$):
+\begin{itemize}
+\item transition: $(g, u)$ is removed from $\mathit{members}$. If $g$ is a
+  private group with no members left, it is removed from $\mathit{groups}$
+  together with its invitations.
+\item exception: $(g, u) \notin \mathit{members} \Rightarrow
+  \mathrm{NotMember}$
+\end{itemize}
+
+\noindent A user who leaves stops appearing in the group's standings at once
+(PR-SC-08).
+
+\medskip
+
+\noindent getGroups($p$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{info}(g)$ for every $g$ with $(g, u)
+  \in \mathit{members}$, in increasing order of GroupID
+\end{itemize}
+
+\noindent getInvites($p$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{info}(g)$ for every $g$ with $(g, u)
+  \in \mathit{invites}$, in increasing order of GroupID
+\end{itemize}
+
+\noindent getStandings($p, g$):
+\begin{itemize}
+\item output: let $M = \{v \mid (g, v) \in \mathit{members}\}$. For each $v
+  \in M$, the Standing $(\mathit{rank}(g, v)$, $\mathit{alias}(v)$,
+  $\mathit{score}(g, v)$, $v = u)$, ordered by rank and then alphabetically by alias.
+\item exception: $(g, u) \notin \mathit{members} \Rightarrow
+  \mathrm{NotMember}$
+\end{itemize}
+
+\noindent Only members can see a group's standings. Scores are computed when
+the standings are requested, so they follow each member's latest progress
+(FUNC-13).
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{validAlias}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{validAlias}(s) \equiv s$ has 3 to 20 characters, each a letter, a
+  digit or an underscore.
+\item $\mathit{offensive}$: String $\rightarrow \mathbb{B}$\\
+  $\mathit{offensive}(s) \equiv$ some term in $\mathit{prohibited}$ appears
+  in $s$, ignoring upper and lower case.
+\item $\mathit{owner}$: String $\rightarrow$ UserID $\cup \{\bot\}$\\
+  The user whose alias equals $s$, ignoring upper and lower case, or $\bot$
+  if there is none.
+\item $\mathit{find}$: String $\rightarrow$ UserID $\cup \{\bot\}$\\
+  $\mathit{find}(s) \equiv (\mathit{owner}(s) \in \mathit{sharing}
+  \Rightarrow \mathit{owner}(s) \mid$ otherwise $\Rightarrow \bot)$
+\item $\mathit{size}$: GroupID $\rightarrow \mathbb{N} \cup \{0\}$\\
+  $\mathit{size}(g) \equiv |\{v \mid (g, v) \in \mathit{members}\}|$
+\item $\mathit{info}$: GroupID $\rightarrow$ GroupInfo\\
+  $\mathit{info}(g) \equiv (g, k, n, \mathit{goal}, \mathit{size}(g))$, where
+  $(g, k, n, \mathit{goal})$ is the entry of $\mathit{groups}$ for $g$.
+\item $\mathit{score}$: GroupID $\times$ UserID $\rightarrow \mathbb{R} \cup
+  \{\bot\}$\\
+  $\mathit{score}(g, v) \equiv (\mathit{goal}(g) \neq \bot \Rightarrow
+  \min(\textsf{ScoreCap}, \mathit{progressOn}(v, \mathit{goal}(g))) \mid
+  \mathit{goal}(g) = \bot \wedge P_v = \emptyset \Rightarrow \bot \mid
+  \mathit{goal}(g) = \bot \wedge P_v \neq \emptyset \Rightarrow
+  \frac{1}{|P_v|} \sum_{x \in P_v} \min(\textsf{ScoreCap}, x))$, where $P_v
+  = \mathit{ownProgress}(v)$ and $\mathit{goal}(g)$ is the group's agreed
+  goal. A member is ranked by their percentage of a goal, never by the
+  amount of activity, so users of different fitness levels compete fairly
+  (FUNC-13, PR-SC-08).
+\item $\mathit{rank}$: GroupID $\times$ UserID $\rightarrow \mathbb{N}$\\
+  $\mathit{rank}(g, v) \equiv 1 + |\{w \mid (g, w) \in \mathit{members}
+  \wedge \mathit{above}(\mathit{score}(g, w), \mathit{score}(g, v))\}|$, where
+  $\mathit{above}(x, y) \equiv x \neq \bot \wedge (y = \bot \vee x > y)$.
+  Members with equal scores share a rank, and members with no active goal
+  come last.
+\item $\mathit{ownProgress}$: UserID $\rightarrow$ set of $\mathbb{R}$\\
+  The user's progress towards each of their active goals, in percent, read
+  from the Goals Module.
+\item $\mathit{progressOn}$: UserID $\times$ GoalSpec $\rightarrow
+  \mathbb{R}$\\
+  The user's progress towards goal $s$ in its current period, in percent,
+  measured by the Goals Module from the user's recorded activity.
+\end{itemize}
 
+\newpage
 \section{MIS of Progress Reporting Module} \label{misProg}
 
 This module is M11 in the Module Guide.
@@ -920,23 +1539,101 @@ ProgressReport
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Activity Module (Section~\ref{misAct}): the user's steps, workouts and
+  active days over a period.
+\item Goals Module (Section~\ref{misGoal}): the goals the user completed in
+  a period and their progress towards their active goals. Also the
+  GoalStatus type.
+\item Currency Ledger Module (Section~\ref{misCur}): the currency credited
+  and debited to the user over a period, by kind of entry.
+\item Portfolio Module (Section~\ref{misPort}): the portfolio's value at
+  the start and end of a period, through getValueHistory, and when the
+  portfolio was opened, through getSummary.
+\item Leaderboard and Friends Module (Section~\ref{misLead}): the user's
+  current place in each group they belong to, through getGroups and
+  getStandings.
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal and Time types.
+\end{itemize}
+
+\noindent This module only reads from the modules above. It stores nothing
+of its own, so every summary matches the data those modules hold at the
+time it is requested.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7.5cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{MaxPeriods} & 731 & Most summaries getHistory returns in one call,
+  enough for two years of daily summaries (PR-C-02)\\
+\textsf{UnlockActiveDays} & 3 & Days of recorded activity after which
+  advanced portfolio analytics are shown (TRN-02)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item Principal and Time: as defined in Section~\ref{misAuth}
+\item Amount: as defined by the Market Simulation Module
+  (Section~\ref{misMkt})
+\item GoalStatus: as defined by the Goals Module (Section~\ref{misGoal}), an
+  active goal and the user's progress towards it in percent
+\item Granularity = $\{\mathrm{DAY}, \mathrm{WEEK}, \mathrm{MONTH}\}$
+\item ActivityReport = tuple of ($\mathit{steps}$: $\mathbb{N} \cup \{0\}$,
+  $\mathit{workouts}$: $\mathbb{N} \cup \{0\}$, $\mathit{activeDays}$:
+  $\mathbb{N} \cup \{0\}$)
+\item GoalReport = tuple of ($\mathit{completed}$: $\mathbb{N} \cup \{0\}$,
+  $\mathit{active}$: sequence of GoalStatus)
+\item CurrencyReport = tuple of ($\mathit{earned}$: Amount,
+  $\mathit{dividends}$: Amount, $\mathit{spent}$: Amount,
+  $\mathit{received}$: Amount), the currency earned by activity and goals,
+  received as dividends, paid for purchases and received from sales during
+  the period
+\item PortfolioReport = tuple of ($\mathit{start}$: Amount, $\mathit{end}$:
+  Amount, $\mathit{contributed}$: Amount, $\mathit{gain}$: Amount), the
+  portfolio's total value at the start and end of the period, the part of
+  the change that came from new activity earnings, and the part that came
+  from investing, including dividends, so that $\mathit{end} -
+  \mathit{start} = \mathit{contributed} + \mathit{gain}$ (UHR-UND-02)
+\item StandingReport = tuple of ($\mathit{group}$: String, $\mathit{rank}$:
+  $\mathbb{N}$, $\mathit{size}$: $\mathbb{N}$)
+\item ProgressSummary = tuple of ($\mathit{from}$: Time, $\mathit{to}$:
+  Time, $\mathit{partial}$: $\mathbb{B}$, $\mathit{activity}$:
+  ActivityReport, $\mathit{goals}$: GoalReport, $\mathit{currency}$:
+  CurrencyReport, $\mathit{portfolio}$: PortfolioReport,
+  $\mathit{standings}$: sequence of StandingReport, $\mathit{unlocked}$:
+  $\mathbb{B}$). $\mathit{partial}$ is true when the period starts before
+  the user's account existed or ends in the future, so that some figures
+  cover less than the whole period (BUC 7). $\mathit{unlocked}$ says whether
+  advanced analytics should be shown (TRN-02).
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{5.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{3cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+getSummary & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time &
+  ProgressSummary & InvalidRange \\
+getHistory & $p$: Principal, $\mathit{from}$: Time, $\mathit{to}$: Time,
+  $k$: Granularity & sequence of ProgressSummary & InvalidRange,
+  TooManyPeriods \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -944,28 +1641,114 @@ ProgressReport
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+None.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item The Authentication and Security Module has authenticated $p$ before
+  every call. Every module this module reads from only returns $p$'s own
+  data, so a summary never contains another user's data.
+\item Leaderboards are not stored over time, so a summary always reports
+  the user's current standings, even for a past period.
+\item The Activity Module reports only activity that is eligible for a
+  reward, so the activity in a summary matches the activity that earned
+  currency.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent In both routines, $u = p.\mathit{user}$.
+
+\medskip
+
+\noindent getSummary($p, \mathit{from}, \mathit{to}$):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: $\mathit{out} := \mathit{summaryOf}(p, \mathit{from},
+  \mathit{to})$
+\item exception: $\mathit{from} > \mathit{to} \Rightarrow
+  \mathrm{InvalidRange}$
+\end{itemize}
+
+\noindent getHistory($p, \mathit{from}, \mathit{to}, k$):
+\begin{itemize}
+\item output: let $t_0 = \mathit{from}$ and $t_{i+1} = \mathit{next}(t_i,
+  k)$, and let $n$ be the number of $i$ with $t_i < \mathit{to}$. Then
+  $\mathit{out} := \langle \mathit{summaryOf}(p, t_i, \min(t_{i+1},
+  \mathit{to})) \mid 0 \leq i < n \rangle$, one summary for each day, week
+  or month from $\mathit{from}$ to $\mathit{to}$, in time order (FUNC-16).
+\item exception: $\mathit{from} \geq \mathit{to} \Rightarrow
+  \mathrm{InvalidRange} \mid n > \textsf{MaxPeriods} \Rightarrow
+  \mathrm{TooManyPeriods}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{summaryOf}$: Principal $\times$ Time $\times$ Time
+  $\rightarrow$ ProgressSummary\\
+  Let $o$ be the $\mathit{opened}$ time of the Portfolio Module's
+  getSummary($p$), which is when the account was created, and let $s =
+  \max(\mathit{from}, o)$ and $e = \min(\mathit{to}, \mathit{now}())$. If $s
+  > e$, every count and Amount in the summary is 0 and every sequence is
+  empty. Otherwise $\mathit{summaryOf}(p, \mathit{from}, \mathit{to}) \equiv
+  (\mathit{from}, \mathit{to}, s > \mathit{from} \vee e < \mathit{to},
+  A, G, C, P, S, \mathit{unlocked}(u))$, where:
+  \begin{itemize}
+  \item $A = (\mathit{steps}(u, s, e), \mathit{workouts}(u, s, e),
+    \mathit{activeDays}(u, s, e))$
+  \item $G = (\mathit{completedGoals}(u, s, e), \mathit{activeGoals}(u))$
+  \item $C = (\mathit{credited}(u, \mathrm{REWARD}, s, e)$,
+    $\mathit{credited}(u, \mathrm{DIVIDEND}, s, e)$, $\mathit{debited}(u,
+    \mathrm{PURCHASE}, s, e)$, $\mathit{credited}(u, \mathrm{SALE}, s, e))$
+  \item $P = (v_s.\mathit{total}, v_e.\mathit{total}, v_e.\mathit{earned} -
+    v_s.\mathit{earned}, (v_e.\mathit{total} - v_s.\mathit{total}) -
+    (v_e.\mathit{earned} - v_s.\mathit{earned}))$, where $v_s$ and $v_e$ are
+    the ValuePoints for times $s$ and $e$ from the Portfolio Module's
+    getValueHistory($p, s, e, \max(e - s, 1)$). When $s = e$ it returns a
+    single point, which is used as both. The gain includes dividends, since
+    they are a return on investing.
+  \item $S = \langle (\mathit{name}, r, \mathit{size}) \rangle$ for each
+    group $(g, \cdot, \mathit{name}, \cdot, \mathit{size})$ in getGroups($p$)
+    from the Leaderboard and Friends Module, where $r$ is the
+    $\mathit{rank}$ of the Standing with $\mathit{self}$ true in
+    getStandings($p, g$)
+  \end{itemize}
+\item $\mathit{next}$: Time $\times$ Granularity $\rightarrow$ Time\\
+  $\mathit{next}(t, k) \equiv (k = \mathrm{DAY} \Rightarrow t + 1$ day
+  $\mid k = \mathrm{WEEK} \Rightarrow t + 7$ days $\mid k = \mathrm{MONTH}
+  \Rightarrow$ the same time on the same day of the next calendar month, or
+  on its last day if that month is shorter$)$
+\item $\mathit{unlocked}$: UserID $\rightarrow \mathbb{B}$\\
+  $\mathit{unlocked}(u) \equiv \mathit{debited}(u, \mathrm{PURCHASE}, o,$
+  $\mathit{now}()) > 0 \vee \mathit{activeDays}(u, o, \mathit{now}()) \geq
+  \textsf{UnlockActiveDays}$. Advanced analytics are shown once the user
+  has made a trade or has three days of recorded activity (TRN-02). A user
+  can only sell after buying, so checking purchases covers every trade.
+\item $\mathit{steps}$, $\mathit{workouts}$ and $\mathit{activeDays}$:
+  UserID $\times$ Time $\times$ Time $\rightarrow \mathbb{N} \cup \{0\}$\\
+  The user's total steps, number of workouts, and number of days with any
+  recorded activity between the two times, read from the Activity Module.
+\item $\mathit{completedGoals}$: UserID $\times$ Time $\times$ Time
+  $\rightarrow \mathbb{N} \cup \{0\}$ and $\mathit{activeGoals}$: UserID
+  $\rightarrow$ sequence of GoalStatus\\
+  The number of goals the user completed between the two times, and the
+  user's active goals with their current progress, read from the Goals
+  Module.
+\item $\mathit{credited}$ and $\mathit{debited}$: UserID $\times$ EntryKind
+  $\times$ Time $\times$ Time $\rightarrow$ Amount, where EntryKind =
+  $\{\mathrm{REWARD}, \mathrm{DIVIDEND}, \mathrm{PURCHASE},
+  \mathrm{SALE}\}$\\
+  The total of the user's ledger entries of that kind between the two
+  times, read from the Currency Ledger Module.
+\end{itemize}
 
 \section{MIS of UI Screens Module} \label{misUI}
 
@@ -1557,6 +2340,7 @@ another backend module defines a program of this kind, it is added here.
 \textbf{Backend Module} & \textbf{Programs Not Exported}\\
 \midrule
 Market Simulation & init, tick, backfill\\
+Portfolio & create, getUnits, addUnits, removeUnits\\
 Authentication and Security & init, hashPassword, authenticate, authorize,
   requireRole, confirmPassword, refresh, endAllSessions\\
 \bottomrule
