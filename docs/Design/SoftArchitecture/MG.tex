@@ -146,54 +146,43 @@ other shows the relation between anticipated changes and the modules. Section
 This section lists possible changes to the system. According to the likeliness
 of the change, the possible changes are classified into two
 categories. Anticipated changes are listed in Section \ref{SecAchange}, and
-unlikely changes are listed in Section \ref{SecUchange}.
+unlikely changes are listed in Section \ref{SecUchange}. The information for the sections was based 
+upon the initial findings stated in the \href{URL}{SRS}.
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Anticipated changes are the source of the information that is to be hidden
-inside the modules. Ideally, changing one of the anticipated changes will only
-require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
-
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item[\refstepcounter{acnum} \actheacnum \label{acSignIn}:] The sign-in methods
-  supported, such as adding sign-in through a third-party identity provider
-  (for example, Google).
-\item[\refstepcounter{acnum} \actheacnum \label{acFundPricing}:] How ETF and
-  fund prices are determined, for example deriving them from the simulated
-  assets each fund holds instead of simulating them independently.
-\item[\refstepcounter{acnum} \actheacnum \label{acFractional}:] Allowing
-  users to buy and sell fractions of a unit of an asset, instead of only
-  whole units.
-\item[\refstepcounter{acnum} \actheacnum \label{acPortfolios}:] Allowing a
-  user to have more than one portfolio.
-\item[\refstepcounter{acnum} \actheacnum \label{acDelist}:] Allowing an
-  asset to be withdrawn from trading.
-\item ...
+  \item[AC1: Data collection sources.] The sources from which fitness data can be tracked will be changed and updated fitness data providers are added or update their interfaces.
+  \item[AC2: Educational content.] The content of the financial lessons will change as technical decisions are made.
+  \item[AC3: Virtual reward system.] The rules for calculating reward values and amounts will be adjusted based on application testing to ensure the best user experience.
+  \item[AC4: User interface look and feel.] The user interface will change over time as development continues, in order to provide the best user experience.
+  \item[AC5: Market simulator.] The generation of assets and securities, and their rates of growth and decline, will require calibration to provide a realistic experience while balancing user time constraints and user experience.
+  \item[AC6: Notifications.] The kinds of notifications and their default settings are likely to change based on user feedback.
+  \item[AC7: Hardware.] The specific hardware on which the software runs, including the phone's sensors and the wearable devices that record user activity, may change as new devices are supported.
+  \item[AC9: Sign-in methods.] The sign-in methods supported are likely to expand, for example through the addition of sign-in with a third-party identity provider such as Google.
+  \item[AC10: Fund pricing.] The method by which ETF and fund prices are determined may change, for example by deriving them from the simulated assets each fund holds instead of simulating them independently.
 \end{description}
-
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
-The module design should be as general as possible. However, a general system is
-more complex. Sometimes this complexity is not necessary. Fixing some design
-decisions at the system architecture stage can simplify the software design. If
-these decision should later need to be changed, then many parts of the design
-will potentially need to be modified. Hence, it is not intended that these
-decisions will be changed.
-
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[UC1: Core functionality.] The following core functions of the application will not change:
+    \begin{itemize}
+      \item \textbf{Investing:} Users can purchase and sell securities and assets.
+      \item \textbf{Portfolio:} Users can hold securities, and the portfolio's value can grow or decline.
+      \item \textbf{Fitness goals:} Users can set and work toward fitness goals to earn virtual currency.
+      \item \textbf{Market simulation:} The market is a simulated environment that is separate from the real world.
+    \end{itemize}
+  \item[UC2: Virtual currency.] The virtual currency used in the application has no monetary value.
+  \item[UC3: Social features.] The following social features will not change:
+    \begin{itemize}
+      \item \textbf{Friends:} Users can add friends and communicate with them.
+      \item \textbf{Leaderboards:} Users can join groups and compete against each other on multiple statistics, such as portfolio performance and currency acquired.
+    \end{itemize}
+  \item[UC4: Privacy.] User data will be protected in accordance with all applicable legal requirements.
+  \item[UC5: Platform.] The application will be developed for the Android operating system. Additional platforms will not be added due to time constraints.
+  \item[UC6: Technology stack.] The tools used to build the application will remain consistent throughout development.
+  \item[UC7: Web API.] The API will be developed as a web API.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
