@@ -457,29 +457,47 @@ Persistence
 \section{MIS of User and Onboarding Module} \label{misUser}
 
 This module is M3 in the Module Guide.
-
 \subsection{Module}
-
-User
+User and Onboarding Module
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence module: stores and send user information as needed. Checks to see if a user exists.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\toprule
+\textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
+\midrule
+MinAge & 18 & Minimum age to register (years)\\
+MinPassLength & 8 & Minimum length of a password string\\ 
+\bottomrule
+\end{tabular}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+% Account (login itself is in M16)
+register & email: String, password: string, dob: Date & userID: int & InvalidEmail, EmailTaken, Underage \\
+getUserProfile & userID: int & UserProfile & NoAccount \\
+updateUserPassword & userID: int, password: string, newPassword: string & N/A & NoAccount \\
+updateUserEmail & userID: int, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
+% Onboarding answers
+submitFinance & userID: int, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+submitFitness & userID: int, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+isOnboarded & userID: int & $\mathbb{B}$ & NoAccount \\
 \hline
 \end{tabular}
 \end{center}
@@ -487,56 +505,106 @@ User
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, user information will be saved to the database (Persistence Module).
 
 \subsubsection{Environment Variables}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
-\wss{Environment variables, or None}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The User and Onboarding Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+    \item An exception leaves the state unchanged.
+\end{itemize}
+
+\noindent register(email, password, dob) 
+\begin{itemize}
+    \item transition: the persistence module will store the user's valid inputted credentials
+    \item output: the new UserID.
+    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge
+\end{itemize}
+\noindent getUserProfile(userID)
+\begin{itemize}
+    \item output: the profile object attached to userID
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent updateUserPassword(userID, password, newPassword)
+\begin{itemize}
+    \item transition: the persistence module will replace the user's password with the user's new valid inputted password
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent updateUserEmail(userID, email, newEmail)
+\begin{itemize}
+    \item transition: the persistence module will replace the user's email with the user's new valid inputted email
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent submitFinance(userID, financeAnswers)
+\begin{itemize}
+    \item transition: the persistence module will store the users inputted responses
+    \item exception:NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent submitFitness(userID, fitnessAnswers)
+\begin{itemize}
+    \item transition: the persistence module will store the users inputted responses
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+\noindent isOnboarded(userID)
+\begin{itemize}
+    \item output: if the user has completed the onboarding surveys for both Fitness and Finance.
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+\begin{itemize}
+    \item validEmail(email: string) $\longrightarrow \mathbb{B}$: ensures email is valid and exists
+    \item validPassword(password: string) $\longrightarrow \mathbb{B}$: ensures password contains any needed characters and length(password) $\geq$ MinPassLength
+    \item validDOB(dob: Date)$\longrightarrow \mathbb{B}$: ensures user's age $\geq$ MinAge 
+\end{itemize}
 
 \section{MIS of Activity Module} \label{misAct}
 
 This module is M4 in the Module Guide.
 
 \subsection{Module}
-
 Activity
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence Module: stores user activity, current goals and progress toward those goals.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\toprule
+\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
+\bottomrule
+\end{tabular}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
 \end{tabular}
 \end{center}
@@ -544,56 +612,68 @@ Activity
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, the persistence module will store user activity records.
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The Currency Ledger Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+    \item \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent getActiviy(userID):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: returns a map of activity and tracked data attached to that activity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+None, this module is a getter and has no write capabilities.
 
 \section{MIS of Goals Module} \label{misGoal}
 
 This module is M5 in the Module Guide.
 
 \subsection{Module}
-
-Goals
+Goals (M5)
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Persistence Module: stores user fitness activity for the user.
+    \item Activity Module: retrieves fitness activity to use in the app.
+    \item Currency Ledger Module: the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+None. 
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{3.1cm}
+  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{2.4cm}
+  >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
+createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
+deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
+updateGoalMeasurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
+collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
 \end{tabular}
 \end{center}
@@ -601,56 +681,104 @@ Goals
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, information will be stored in the database (Persistence Module)
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item Valid response has been provided by the Authentication and Security Module.
+    \item Valid data from the Activity Module is retrieved.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent getAllGoals(userID):
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item output: a map of the users activity type and the value attached to the actvity.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input.
 \end{itemize}
 
-\subsubsection{Local Functions}
+\noindent createGoal(userID, activityType, activityMeasurement):
+\begin{itemize}
+\item transition: a new goal will be added to the users goal data. 
+\item output: the new goalID.
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\end{itemize}
 
-\wss{Local functions, or None}
+\noindent deleteGoal(userID, goalID):
+\begin{itemize}
+\item transition: the goal will be removed from the users goal data. 
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input.
+\end{itemize}
+
+\noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
+\begin{itemize}
+\item transition: updates the measurement on an already started goal. 
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}
+
+\noindent updateGoalPeriod(userID, goalID, period):
+\begin{itemize}
+\item transition: updates the period of an already started goal.
+\item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
+
+\noindent collectReward(userID, goalID):
+\begin{itemize}
+\item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
+\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\end{itemize}.
+
+
+\subsubsection{Local Functions}
+\begin{tabular}{p{3.4cm} p{4cm} p{6cm}}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
+\hline
+checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ current goal activity measurement values, then the goal is complete. \\
+isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
+\hline
+\end{tabular}
 
 \section{MIS of Currency Ledger Module} \label{misCur}
 
 This module is M6 in the Module Guide.
 
 \subsection{Module}
-
-CurrencyLedger
+Currency Ledger Module
 
 \subsection{Uses}
-
-\wss{Modules this module uses}
+\begin{itemize}
+    \item Transaction Order Module: uses the Currency Ledger to add currency to, or remove currency from, a user's account based on the action that has taken place.
+    \item Leaderboard and Friends Module: uses the Currency Ledger to allow users to compete against one another.
+    \item Persistence Module: stores user balances and records the movement of currency into and out of a user's account.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-\wss{Exported constants, or None}
+None, information will be store in the database (Persistence Module) and the Currency Ledger Module will rely on the database for information retrieval 
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{5.0cm}
+  >{\raggedright\arraybackslash}p{2.0cm}
+  >{\raggedright\arraybackslash}p{3.3cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+getBalance & UserID: int & acctBalance: BigDecimal & NoAccount \\
+addBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\ 
+subtractBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\
 \hline
 \end{tabular}
 \end{center}
@@ -658,29 +786,51 @@ CurrencyLedger
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{State variables, or None}
+None, user balances will be saved to the database (Persistence Module).
 
 \subsubsection{Environment Variables}
-
-\wss{Environment variables, or None}
+\begin{itemize}
+    \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+\end{itemize}
 
 \subsubsection{Assumptions}
-
-\wss{Assumptions, or None}
+The Currency Module will rely on:
+\begin{itemize}
+    \item The Persistence Module is active and can be accessed.
+    \item The Transaction Order Module verifies that an account has sufficient funds before calling subtractBalance, so a negative balance will not occur.
+    \item Valid response has been provided by the Authentication and Security Module.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent The following apply to every access routine below.
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+    \item An exception leaves the state unchanged.
+\end{itemize}
+
+\noindent getBalance(userID)
+\begin{itemize}
+    \item output: returns the user's current account balance
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+\end{itemize}
+
+\noindent addBalance(userID, amount)
+\begin{itemize}
+    \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+\end{itemize}
+
+\noindent subtractBalance(userID, amount)
+\begin{itemize}
+    \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
+    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \subsubsection{Local Functions}
-
-\wss{Local functions, or None}
+\begin{itemize}
+    \item \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
+\end{itemize}
 
 \section{MIS of Asset Module} \label{misAsset}
 
