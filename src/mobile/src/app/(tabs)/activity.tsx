@@ -12,6 +12,14 @@ import {
 } from '@/integrations/healthConnect';
 import { colors, spacing } from '@/theme';
 
+// Dev-only seed tool. The __DEV__ guard around require() lets the release bundler
+// drop the module entirely, so no seed code ships in production.
+const HealthConnectSeedTool:
+  typeof import('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool | null = __DEV__
+  ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool
+  : null;
+
 type ConnectionState = HealthConnectStatus | 'checking' | 'connected' | 'not-connected';
 
 const MESSAGES: Record<ConnectionState, string> = {
@@ -66,6 +74,9 @@ export default function ActivityScreen() {
           </AppText>
         </Link>
       </Card>
+      {HealthConnectSeedTool && state === 'connected' && (
+        <HealthConnectSeedTool style={styles.card} />
+      )}
       <WireframeScreen
         title="Activity"
         purpose="Track workouts and see the virtual currency they earned."
