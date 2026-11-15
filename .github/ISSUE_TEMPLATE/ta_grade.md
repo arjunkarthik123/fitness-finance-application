@@ -1,7 +1,7 @@
 ---
 name: TA Grading
 about: Track TA feedback and needed.
-title: 'TA Meeting - Date'
+title: 'TA Grading: Document - Criteria'
 labels: 'meeting'
 assignees: ''
 
