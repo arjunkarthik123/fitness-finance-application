@@ -237,6 +237,7 @@ fetchActivities & $\mathit{since}$: Time & seq of ActivitySample &
 fetchDailySteps & $\mathit{since}$: Time & seq of DailySteps & ReadError \\
 activityKey & $\mathit{a}$: ActivitySample & String & - \\
 dailyStepsKey & $\mathit{d}$: DailySteps & String & - \\
+unlink & - & - & - \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -355,6 +356,22 @@ the device or a permission in \textsf{Permissions} has not been granted.
 \noindent So a sync that repeats or overlaps an earlier one never reports the
 same activity as new twice (PR-PA-03).
 
+\medskip
+
+\noindent unlink():
+\begin{itemize}
+\item transition: $\mathit{hc}.\mathit{available} \Rightarrow
+  \mathit{hc}.\mathit{granted} := \emptyset$, so every permission the user
+  granted to the app is revoked. The Garmin instance instead removes the
+  app's connection to Garmin, including any credentials stored for it on the
+  device (SEC-ACC-03).
+\end{itemize}
+
+\noindent After unlink, $\mathit{hasPermissions}()$ is false, so every fetch
+raises ReadError until requestPermissions is called again. unlink is called
+for each fitness source when the user signs out, so no device link remains
+active (SEC-ACC-05).
+
 \subsubsection{Local Functions}
 
 \noindent For a Steps record $r$, $\mathit{len}(r)$ is its length in minutes,
@@ -462,7 +479,11 @@ User and Onboarding Module
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence module: stores and send user information as needed. Checks to see if a user exists.
+    \item Persistence Module (Section~\ref{misPer}): stores and send user information as needed. Checks to see if a user exists.
+    \item Authentication and Security Module (Section~\ref{misAuth}): hashes
+      the password given at registration and a changed password, through
+      hashPassword, and checks the current password before it is changed,
+      through confirmPassword. Also the Principal and UserID types.
 \end{itemize}
 
 \subsection{Syntax}
@@ -473,7 +494,6 @@ User and Onboarding Module
 \textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
 \midrule
 MinAge & 18 & Minimum age to register (years)\\
-MinPassLength & 8 & Minimum length of a password string\\ 
 \bottomrule
 \end{tabular}
 
@@ -482,22 +502,22 @@ MinPassLength & 8 & Minimum length of a password string\\
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{3.9cm}
+  >{\raggedright\arraybackslash}p{4.5cm}
   >{\raggedright\arraybackslash}p{2.4cm}
   >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 % Account (login itself is in M16)
-register & email: String, password: string, dob: Date & userID: int & InvalidEmail, EmailTaken, Underage \\
-getUserProfile & userID: int & UserProfile & NoAccount \\
-updateUserPassword & userID: int, password: string, newPassword: string & N/A & NoAccount \\
-updateUserEmail & userID: int, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
+register & email: String, password: string, dob: Date & UserID & InvalidEmail, EmailTaken, Underage, WeakPassword \\
+getUserProfile & $p$: Principal & UserProfile & NoAccount \\
+updateUserPassword & $p$: Principal, password: string, newPassword: string & N/A & NoAccount, InvalidCredentials, WeakPassword \\
+updateUserEmail & $p$: Principal, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
 % Onboarding answers
-submitFinance & userID: int, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
-submitFitness & userID: int, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
-isOnboarded & userID: int & $\mathbb{B}$ & NoAccount \\
+submitFinance & $p$: Principal, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+submitFitness & $p$: Principal, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+isOnboarded & $p$: Principal & $\mathbb{B}$ & NoAccount \\
 \hline
 \end{tabular}
 \end{center}
@@ -528,45 +548,49 @@ The User and Onboarding Module will rely on:
 
 \noindent register(email, password, dob) 
 \begin{itemize}
-    \item transition: the persistence module will store the user's valid inputted credentials
+    \item transition: the persistence module will store the user's email, dob and hashPassword(password). The password itself is never stored.
     \item output: the new UserID.
-    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge
+    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge, WeakPassword $\longrightarrow$ hashPassword rejects the password as too short or too common (Section~\ref{misAuth})
 \end{itemize}
-\noindent getUserProfile(userID)
+\noindent getUserProfile($p$)
 \begin{itemize}
-    \item output: the profile object attached to userID
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item output: the profile object attached to $p.\mathit{user}$
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent updateUserPassword(userID, password, newPassword)
+\noindent updateUserPassword($p$, password, newPassword)
 \begin{itemize}
-    \item transition: the persistence module will replace the user's password with the user's new valid inputted password
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item transition: the persistence module will replace the user's stored password hash with hashPassword(newPassword)
+    \item exception:
+    \begin{itemize}
+        \item NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
+        \item InvalidCredentials $\longrightarrow$ confirmPassword($p$, password) finds that password is not the user's current password
+        \item WeakPassword $\longrightarrow$ hashPassword rejects newPassword as too short or too common (Section~\ref{misAuth})
+    \end{itemize}
 \end{itemize}
-\noindent updateUserEmail(userID, email, newEmail)
+\noindent updateUserEmail($p$, email, newEmail)
 \begin{itemize}
     \item transition: the persistence module will replace the user's email with the user's new valid inputted email
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent submitFinance(userID, financeAnswers)
+\noindent submitFinance($p$, financeAnswers)
 \begin{itemize}
     \item transition: the persistence module will store the users inputted responses
-    \item exception:NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception:NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent submitFitness(userID, fitnessAnswers)
+\noindent submitFitness($p$, fitnessAnswers)
 \begin{itemize}
     \item transition: the persistence module will store the users inputted responses
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent isOnboarded(userID)
+\noindent isOnboarded($p$)
 \begin{itemize}
     \item output: if the user has completed the onboarding surveys for both Fitness and Finance.
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 \begin{itemize}
     \item validEmail(email: string) $\longrightarrow \mathbb{B}$: ensures email is valid and exists
-    \item validPassword(password: string) $\longrightarrow \mathbb{B}$: ensures password contains any needed characters and length(password) $\geq$ MinPassLength
     \item validDOB(dob: Date)$\longrightarrow \mathbb{B}$: ensures user's age $\geq$ MinAge 
 \end{itemize}
 
@@ -579,7 +603,7 @@ Activity
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence Module: stores user activity, current goals and progress toward those goals.
+    \item Persistence Module (Section~\ref{misPer}): stores user activity.
 \end{itemize}
 
 \subsection{Syntax}
@@ -620,11 +644,11 @@ None, the persistence module will store user activity records.
 \end{itemize}
 
 \subsubsection{Assumptions}
-The Currency Ledger Module will rely on:
+The Activity Module will rely on:
 \begin{itemize}
     \item The Persistence Module is active and can be accessed.
     \item Valid response has been provided by the Authentication and Security Module.
-    \item \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
+    \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
@@ -632,7 +656,7 @@ The Currency Ledger Module will rely on:
 \noindent getActiviy(userID):
 \begin{itemize}
 \item output: returns a map of activity and tracked data attached to that activity.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -647,9 +671,9 @@ Goals (M5)
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence Module: stores user fitness activity for the user.
-    \item Activity Module: retrieves fitness activity to use in the app.
-    \item Currency Ledger Module: the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
+    \item Persistence Module (Section~\ref{misPer}): stores the user's current goals and progress toward those goals.
+    \item Activity Module (Section~\ref{misAct}): retrieves fitness activity to use in the app.
+    \item Currency Ledger Module (Section~\ref{misCur}): the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
 \end{itemize}
 
 \subsection{Syntax}
@@ -700,26 +724,26 @@ None, information will be stored in the database (Persistence Module)
 \noindent getAllGoals(userID):
 \begin{itemize}
 \item output: a map of the users activity type and the value attached to the actvity.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$.
 \end{itemize}
 
 \noindent createGoal(userID, activityType, activityMeasurement):
 \begin{itemize}
 \item transition: a new goal will be added to the users goal data. 
 \item output: the new goalID.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
 \end{itemize}
 
 \noindent deleteGoal(userID, goalID):
 \begin{itemize}
 \item transition: the goal will be removed from the users goal data. 
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input.
 \end{itemize}
 
 \noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
 \begin{itemize}
 \item transition: updates the measurement on an already started goal. 
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}
 
 \noindent updateGoalPeriod(userID, goalID, period):
@@ -731,7 +755,7 @@ None, information will be stored in the database (Persistence Module)
 \noindent collectReward(userID, goalID):
 \begin{itemize}
 \item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}.
 
 
@@ -754,9 +778,7 @@ Currency Ledger Module
 
 \subsection{Uses}
 \begin{itemize}
-    \item Transaction Order Module: uses the Currency Ledger to add currency to, or remove currency from, a user's account based on the action that has taken place.
-    \item Leaderboard and Friends Module: uses the Currency Ledger to allow users to compete against one another.
-    \item Persistence Module: stores user balances and records the movement of currency into and out of a user's account.
+    \item Persistence Module (Section~\ref{misPer}): stores user balances and records the movement of currency into and out of a user's account.
 \end{itemize}
 
 \subsection{Syntax}
@@ -810,21 +832,21 @@ The Currency Module will rely on:
 \noindent getBalance(userID)
 \begin{itemize}
     \item output: returns the user's current account balance
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
 
 \noindent addBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
     \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \noindent subtractBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
     \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -2343,7 +2365,14 @@ UIScreens
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item API Client Module (Section~\ref{misAPI}): every request to the
+  backend.
+\item Fitness Integration Module (Section~\ref{misFI}): checks whether each
+  fitness source is available, requests read permission, and fetches new
+  workouts and daily step totals, which are then sent to the backend through
+  the API Client Module.
+\end{itemize}
 
 \subsection{Syntax}
 
