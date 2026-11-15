@@ -2429,7 +2429,23 @@ Notification
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Goals Module (Section~\ref{misGoal}): each user's active goals and
+  progress towards them, for workout reminders and achievement notices.
+\item Currency Ledger Module (Section~\ref{misCur}): the currency credited to
+  each user, for reward notices.
+\item Market Simulation Module (Section~\ref{misMkt}): downturns and
+  dividends, through getEvents, for simulated market notices.
+\item Persistence Module (Section~\ref{misPer}): stores each user's
+  notification preferences and quiet hours, and the notifications sent each
+  day, so that the daily limit can be enforced (PR-SC-07).
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types.
+\end{itemize}
+
+\noindent This module reads from the modules above on its own schedule, and
+none of them uses it. Notifications reach the phone through the Android
+notification service, which is an environment variable of this module.
 
 \subsection{Syntax}
 
