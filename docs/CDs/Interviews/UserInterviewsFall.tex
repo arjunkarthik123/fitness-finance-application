@@ -2,6 +2,8 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{hyperref}
+\usepackage{array}
+\usepackage{enumitem}
 \title{User Interviews for \progname{}} 
 \author{\authname}
 \date{\today}
@@ -151,6 +153,90 @@ The tools used by interviewees include:
     \item Strava.
     \item Google Fit.
 \end{itemize}
+
+\section{Empathy Map}
+
+Figure~\ref{fig:empathy-map} brings the responses above together in an
+empathy map of a typical participant. The map follows the usual four
+quadrants: what participants said, what they think, what they do, and how
+they feel, with their pains and the gains they hope for below. It describes
+Users 1 to 6, who rated their financial literacy 2 or 3 out of 5 and are the
+novice users the project targets. User 7 is described separately below.
+
+Each entry comes from the summaries in this document. The interviews did not
+ask directly about feelings, so the Feels quadrant is drawn from the barriers
+participants described.
+
+\begin{figure}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\newcommand{\mapcell}[2]{\textbf{#1}
+  \begin{itemize}[leftmargin=1.2em, itemsep=1pt, parsep=0pt, topsep=2pt,
+    after=\vspace{2pt}]#2\end{itemize}}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{0.46\textwidth}
+  |>{\raggedright\arraybackslash}p{0.46\textwidth}|}
+\hline
+\multicolumn{2}{|c|}{\rule{0pt}{2.6ex}\textbf{Novice young adult} (Users 1--6)}\\
+\hline
+\mapcell{Says}{
+  \item An 8,000-step daily goal would be attainable (User 4).
+  \item Has dropped applications that charge for basic features or need
+    long logging.
+  \item Some would be motivated by competing with others, and some would
+    not.
+  \item Asks about topics beyond the basics, such as market timing
+    (User 2).}
+&
+\mapcell{Thinks}{
+  \item Knows the basics of budgeting, banking and the stock market.
+  \item Would benefit from more financial knowledge and experience.
+  \item Fitness habits are set early in life.
+  \item Fitness comes after other priorities (fitness rated 2 or lower).}
+\\ \hline
+\mapcell{Does}{
+  \item Manages money with banking applications and Wealthsimple.
+  \item Tracks activity with Garmin watches, Strava, Google Fit, phone
+    tracking or spreadsheets.
+  \item Goes to the gym two to four times a week on a weight training
+    plan (fitness rated 3 or higher).
+  \item Stays active by walking to class or joining group classes
+    (fitness rated 2 or lower).
+  \item Uses an iPhone or Apple Watch (Users 1 and 4).}
+&
+\mapcell{Feels}{
+  \item Short of time, with fitness and finance competing with school,
+    work and other priorities.
+  \item Not very interested in either topic without a reason to start.
+  \item Unsure of themselves when investing, through lack of experience.}
+\\ \hline
+\mapcell{Pains}{
+  \item Too little time to build habits.
+  \item Little interest or experience to get started.
+  \item Paywalled features and long logging flows.
+  \item Default goals that may be too high, such as 10,000 steps a day.
+  \item No Android device, for iPhone users.}
+&
+\mapcell{Gains}{
+  \item Activity tracked automatically from tools they already use.
+  \item Plain-language lessons on TFSAs, FHSAs, loans, interest and
+    compounding.
+  \item A free application that needs little effort each day.
+  \item Gentle goals that can be adjusted.
+  \item Competition that they can choose to join.}
+\\ \hline
+\end{tabular}
+\caption{Empathy map of a novice interview participant}
+\label{fig:empathy-map}
+\end{figure}
+
+User 7 rated their financial literacy 5 out of 5 and does not fit this map.
+They budget by setting fixed percentages of income for expenses and
+investments, build their own portfolio by weighing risk against potential
+growth or loss, and asked about bond yields. They would gain little from
+the beginner lessons and want more depth, which is the reason for the
+stretch goal of tailoring the application to users with different levels
+of knowledge (takeaway 7 below).
 
 \section{Key Takeaways for the Project}
 This section outlines key takaways that helped to inform decisions in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, and reinforce decisions made in previously completed documents
