@@ -405,15 +405,19 @@ This module is M2 in the Module Guide.
 
 Persistence
 
+\medskip
+
+\noindent This module is an abstract object responsible for storing and retrieving all persistent application information. It abstracts the underlying database technology from the remainder of the system. All modules that require long-term storage communicate with the database exclusively through this module.
+
 \subsection{Uses}
 
-\wss{Modules this module uses}
+None. This module is the lowest-level application module and directly accesses the database management system. Higher-level modules depend on it, but it depends only on its environment variables.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. This module relies on the database schema defined in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftArchitecture/MG.pdf}{Module Guide, Section 11 - Database Design}.
 
 \subsubsection{Exported Access Programs}
 
@@ -422,37 +426,109 @@ Persistence
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+create & entityType: String, record: T & recordID: int & InvalidRecord \\
+read & entityType: String, recordID: int & T & RecordNotFound \\
+update & entityType: String, recordID: int, record: T & N/A & RecordNotFound, InvalidRecord \\
+delete & entityType: String, recordID: int & N/A & RecordNotFound \\
+query & entityType: String, filter: Map & sequence of T & InvalidQuery \\
 \hline
 \end{tabular}
 \end{center}
+
+\noindent Where T represents any persistent entity supported by the application, including users, activities, goals, ledger entries, assets, transactions, portfolios, leaderboard data, and notification preferences.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+The following collections are maintained persistently:
+
+\begin{itemize}
+  \item $\mathit{users}$
+  \item $\mathit{activities}$
+  \item $\mathit{fitnessGoals}$
+  \item $\mathit{currencyLedgerEntries}$
+  \item $\mathit{financialAssets}$
+  \item $\mathit{assetPrices}$
+  \item $\mathit{transactionHistory}$
+  \item $\mathit{portfolioHoldings}$
+  \item $\mathit{portfolioHistory}$
+  \item $\mathit{leaderboardGroups}$
+  \item $\mathit{friendsList}$
+  \item $\mathit{notificationPreferences}$
+\end{itemize}
+
+All state variables are stored in the database and survive application restarts.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+  \item $\mathit{db}$: the MySQL database server; provides methods for executing queries and transactions.
+  \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+  \item $\mathit{tz}$: the system time zone; used for timestamping records.
+  \item $\mathit{migrationFramework}$: database migration service used to maintain schema compatibility between releases.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+  \item The database server is available and operating correctly.
+  \item Database credentials and connection information are valid.
+  \item Calling modules perform business-rule validation before invoking persistence operations.
+  \item Database transactions provide atomicity and consistency.
+  \item Data schemas are synchronized with the application's current version.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+The following apply to every access routine:
+
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+  \item An exception leaves the persistent state unchanged.
+  \item Every successful write operation is durable once committed.
+\end{itemize}
+
+\noindent create(entityType, record):
+\begin{itemize}
+  \item transition: record is inserted into the database under entityType.
+  \item output: newly assigned recordID.
+  \item exception: InvalidRecord $\rightarrow$ record does not conform to the schema for entityType.
+\end{itemize}
+
+\noindent read(entityType, recordID):
+\begin{itemize}
+  \item output: stored record associated with recordID from entityType.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+\end{itemize}
+
+\noindent update(entityType, recordID, record):
+\begin{itemize}
+  \item transition: the stored record with recordID from entityType is replaced by record.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+  \item exception: InvalidRecord $\rightarrow$ record does not conform to the schema for entityType.
+\end{itemize}
+
+\noindent delete(entityType, recordID):
+\begin{itemize}
+  \item transition: removes the specified record with recordID from entityType.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+\end{itemize}
+
+\noindent query(entityType, filter):
+\begin{itemize}
+  \item output: list of stored records from entityType that match the filter.
+  \item exception: InvalidQuery $\rightarrow$ filter cannot be executed.
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+  \item validateRecord(record: T, entityType: String) $\rightarrow \mathbb{B}$: ensures record satisfies constraints and required fields for entityType.
+  \item entityExists(entityType: String, recordID: int) $\rightarrow \mathbb{B}$: checks if a record with recordID exists in entityType.
+  \item generateFilterQuery(entityType: String, filter: Map) $\rightarrow$ SQL query string: converts a filter map into a valid SQL database query.
+  \item serialize(record: T) $\rightarrow$ database-compatible format: converts an application object into a format suitable for database storage.
+  \item deserialize(database-compatible format) $\rightarrow$ T: converts stored database data back into an application object.
+\end{itemize}
 
 \section{MIS of User and Onboarding Module} \label{misUser}
 
