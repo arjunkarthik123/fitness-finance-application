@@ -2417,24 +2417,53 @@ This module is M12 in the Module Guide.
 
 UIScreens
 
+\medskip
+
+\noindent This module is a library responsible for presenting the user interface of the Flexin’ mobile application. It manages navigation, screen rendering, user interaction handling, and presentation of data obtained through the API Client and Fitness Integration modules.
+
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+  \item API Client Module (Section~\ref{misAPI}): obtains all backend data required for display.
+  \item Fitness Integration Module (Section~\ref{misFI}): requests permissions and initiates activity synchronization.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{DefaultRefreshInterval} & 30 seconds & Default UI refresh interval\\
+\textsf{MaxSearchLength} & 100 Characters & Maximum search text length\\
+\textsf{SupportedThemeModes} & Light, Dark & Available application Themes\\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{p{5cm} p{3cm} p{2cm} p{3cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+showLoginScreen & - & N/A & - \\
+showOnboardingScreen & userID: int & N/A & NoAccount \\
+showHomepageScreen & userID: int & N/A & NoAccount \\
+showFitnessScreen & userID: int & N/A & NoAccount \\
+showPortfolioScreen & userID: int & N/A & NoAccount \\
+showAssetCatalogueScreen & userID: int & N/A & NoAccount \\
+showLeaderboardScreen & userID: int & N/A & NoAccount \\
+showUserProfileScreen & userID: int & N/A & NoAccount \\
+showSettingsScreen & userID: int & N/A & NoAccount \\
+navigateTo & screenName: String & N/A & InvalidScreen \\
+displayError & message: String & N/A & - \\
+refreshScreen & currentScreen: String & N/A & NetworkError \\
 \hline
 \end{tabular}
 \end{center}
@@ -2443,28 +2472,114 @@ UIScreens
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+  \item $\mathit{currentScreen}$: String, the name of the currently displayed screen.
+  \item $\mathit{selectedTheme}$: {Light, Dark}, the current theme mode of the application.
+  \item $\mathit{currentUser}$: UserID $\cup \{\bot\}$, the ID of the user currently logged in - this may be null when the user is not logged in or when the app was just opened.  \item $\mathit{userPreferences}$: Dictionary, stores user-specific settings and preferences.
+  \item $\mathit{navigationHistory}$: List, stores the history of screens navigated to.
+\end{itemize}
+
+\noindent These values only exist while the application is executing.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+  \item $\mathit{mobileOperatingSystem}$: The mobile device operating system responsible for executing the application and providing operating-system-level services.
+  \item $\mathit{touchScreen}$: The device touch interface through which users provide input such as taps, swipes, scrolling, and gesture-based navigation.
+  \item $\mathit{deviceStorage}$: The local storage available on the user's device for temporarily storing application data, cached information, and user preferences.
+  \item $\mathit{networkConnection}$: The network service that enables communication between the application and backend services through internet connectivity.
+  \item $\mathit{deviceClock}$: The device's system clock used for displaying timestamps, scheduling refresh operations, and time-dependent UI functionality.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+  \item Screen dimensions are sufficient to display supported layouts.
+  \item User authentication has been completed before restricted screens are shown.
+  \item The API Client Module provides valid responses.
+  \item Network connectivity may be unavailable; the UI must continue displaying the most recently retrieved information when possible.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent showLoginScreen():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition: currentScreen $\mathit{out} :=$ Login.
+\item output: login interface is rendered.
+\end{itemize}
+
+\noindent showOnboardingScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Onboarding.
+\item output: onboarding interface is rendered.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showHomepageScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Homepage.
+\item output: overview of FLX balance, portfolio value, fitness progress, and leaderboard summary.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showFitnessScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Fitness.
+\item output: active goals, recommended goals, connected-device status, and sync information are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showPortfolioScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Portfolio.
+\item output: holdings, recent transactions, portfolio value, and performance information are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showAssetCatalogue(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ AssetCatalogue.
+\item output: available assets, search controls, and purchase actions are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showLeaderboardScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Leaderboards.
+\item output: private and public leaderboard views are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent navigateTo(screenID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ screenID.
+\item output: new screen is displayed that matches screenID.
+\item exception: screenID $\notin$ valid screens $\Rightarrow$ InvalidScreen.
+\end{itemize}
+
+\noindent displayError(message):
+\begin{itemize}
+\item output: error banner, dialog, or message displayed to the user.
+\end{itemize}
+
+\noindent refreshScreen(currentScreen):
+\begin{itemize}
+\item transition: latest available information is requested from the API Client Module and rendered.
+\item exception: NetworkUnavailable $\rightarrow$ cached information is shown if available.
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+  \item validateNavigation(screenID: String) $\rightarrow \mathbb{B}$: Returns true, if and only if, screenID references a valid application screen.
+  \item formatCurrency(value: $\mathbb{R}$) $\rightarrow$ String: Converts a numeric value into FLX display format.
+  \item formatPercentage(value: $\mathbb{R}$) $\rightarrow$ String: Converts a numeric value into a percentage string.
+  \item buildDashboardView(userData, portfolioData, activityData) $\rightarrow$ ViewModel: Creates dashboard presentation data.
+  \item buildPortfolioView(portfolioData) $\rightarrow$ ViewModel: Creates presentation data for finance-related screens.
+  \item buildFitnessView(goalData, activityData) $\rightarrow$ ViewModel: Creates presentation data for fitness-related screens.
+  \item showLoadingState() $\rightarrow$ N/A: Displays a loading indicator while data is being retrieved.
+  \item showEmptyState() $\rightarrow$ N/A: Displays a message when no content is available.
+\end{itemize}
 
 \section{MIS of Notification Module} \label{misNoti}
 
