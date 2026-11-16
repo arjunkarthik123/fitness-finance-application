@@ -173,7 +173,12 @@ Garmin data through Garmin Connect IQ in place of Health Connect.
 
 \subsection{Uses}
 
-\noindent None. This module runs on the phone and reaches each source only
+\begin{itemize}
+    \item Persistence Module (Section~\ref{misPer}): stores which fitness
+      sources each user has linked. No fitness data is stored (SEC-PRV-01).
+\end{itemize}
+
+\noindent This module runs on the phone and reaches each source only
 through the source's own SDK or API (SC-04), which is an environment variable
 of this module.
 
@@ -604,6 +609,8 @@ Activity
 \subsection{Uses}
 \begin{itemize}
     \item Persistence Module (Section~\ref{misPer}): stores user activity.
+    \item Fitness Integration Module (Section~\ref{misFI}): reads the user's
+      workouts and daily step totals from each fitness source.
 \end{itemize}
 
 \subsection{Syntax}
@@ -779,6 +786,7 @@ Currency Ledger Module
 \subsection{Uses}
 \begin{itemize}
     \item Persistence Module (Section~\ref{misPer}): stores user balances and records the movement of currency into and out of a user's account.
+    \item Fitness Integration Module (Section~\ref{misFI}): uses activityKey and dailyStepsKey so that each workout, and each increase in a daily step total, is credited only once.
 \end{itemize}
 
 \subsection{Syntax}
