@@ -4147,40 +4147,139 @@ document.
 
 \section{Appendix --- Reflection}
 
-\wss{Not required for CAS 741 projects}
-
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
 
 \input{../../Reflection.text}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which of your design decisions stemmed from speaking to your client(s)
-  or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-  were not, why, and where did they come from?
-  \item While creating the design doc, what parts of your other documents (e.g.
-  requirements, hazard analysis, etc), it any, needed to be changed, and why?
-  \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)
-  \item (After you have implemented another team's module, which means this
-  isn't filled in until after the original deadline). What did you learn by
-  implementing another team's module? Were all the details you needed in the
-  documentation, or did you need to make assumptions, or ask the other team
-  questions?  If your team also had another team implement one of your modules,
-  what was this experience like?  Are there things in your documentation you
+  \item \textbf{What went well while writing this deliverable?}
+
+  The work was delegated efficiently. Each member took a set of modules and
+  wrote their MG entries and MIS sections, which kept the workload even.
+  Team members responded quickly to each other's questions and reviews, and
+  we met our internal deadlines.
+
+  Ideation also went well. We used team discussions to bounce ideas off each
+  other and get feedback before writing anything down. This was most useful
+  for the module decomposition and the database design, where one member's
+  choices affect everyone else's modules.
+
+  \item \textbf{What pain points did you experience during this deliverable,
+  and how did you resolve them?}
+
+  \begin{itemize}
+  \item \textbf{Cyclic dependencies.} Because the modules were split between
+    team members, it was easy for two people to make their modules depend on
+    each other without noticing. For example, the Portfolio Module uses the
+    Market Simulation Module to value holdings, so the Market Simulation
+    Module could not also use the Portfolio Module to find the holders of an
+    asset when paying dividends. It reads the holdings through the
+    Persistence Module instead.
+  \item \textbf{Low coupling and high cohesion.} With modules written by
+    different people, we had to keep checking that each module hid one secret
+    and depended on as few other modules as possible.
+  \item \textbf{The number of modules.} The design has sixteen modules, which
+    made it harder to keep the whole design consistent and to divide the
+    document fairly.
+  \item \textbf{Tracing a detailed SRS.} Our SRS is very detailed, with over
+    140 requirements, and every one had to be traced to the modules that
+    satisfy it.
+  \item \textbf{The level of detail.} A detailed design at this stage needs a
+    lot of work on both the modules and the user interface, before much of the
+    system has been built.
+  \end{itemize}
+
+  We resolved the first pain point at a team meeting on November 14 at noon,
+  where each member brought their work and we talked through the
+  dependencies between modules together. For the second and third, we had the
+  list of modules ready for our TA meeting, so we could confirm the
+  decomposition was correct before writing it up and then split the document
+  fairly. The traceability matrix in the Module Guide now traces every SRS
+  requirement to at least one module. The amount of detail needed is still a
+  concern, and it is part of why some goals may become stretch goals (see
+  question 4).
+
+  \item \textbf{Which of your design decisions stemmed from speaking to your
+  client(s) or a proxy (e.g. your peers, stakeholders, potential users)? For
+  those that were not, why, and where did they come from?}
+
+  Our design decisions came from three places: the SRS, the interviews we held
+  with potential users, and team members' previous co-op experience. Many of
+  the decisions that came from the interviews are described in Section~5,
+  Empathy Map, of our
+  \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/CDs/Interviews/UserInterviewsFall.pdf}{user
+  interviews report} (CD-Fall).
+
+  The clearest example is the leaderboards. Interviewees were divided on
+  whether competition would motivate them, and some may not want to compete
+  with strangers at all, since it could discourage them. We therefore made the
+  public leaderboard optional and let users compete in private groups with
+  their friends instead, which may be more encouraging. Decisions that did not
+  come from users, such as splitting fitness activity and goals into separate
+  modules (see question 6), came from the requirements in the SRS and from
+  team discussion.
+
+  \item \textbf{While creating the design doc, what parts of your other
+  documents (e.g. requirements, hazard analysis, etc), if any, needed to be
+  changed, and why?}
+
+  Some requirements in the SRS need to change. We decided to remove the check
+  on the maximum step rate in the fitness integration (\textsf{MaxCadence}
+  in SEC-INT-01). Flexin' will not verify the number of steps or any other
+  data it receives from a fitness provider, because that data has already been
+  verified by the provider's API.
+
+  More generally, the design depends on the SRS, but the SRS may need to be
+  adjusted as we learn more about what is feasible in the time we have. Some
+  goals may become stretch goals so that we can deliver a working end-to-end
+  product, and some stretch goals may become goals if they turn out to be
+  more important than expected.
+
+  \item \textbf{What are the limitations of your solution? Put another way,
+  given unlimited resources, what could you do to make the project better?
+  (LO\_\allowbreak ProbSolutions)}
+
+  Time is our main limit. With more time we would support other mobile
+  operating systems, most importantly iOS, which two of our interviewees use.
+  We are also limited in the number of people on the team and in the AI
+  credits available to us. With more resources, we would run more thorough
+  beta testing and user testing to check that the design works for the people
+  we are building it for.
+
+  \item \textbf{Give a brief overview of other design solutions you
+  considered. What are the benefits and tradeoffs of those other designs
+  compared with the chosen design? From all the potential options, why did
+  you select the documented design? (LO\_Explores)}
+
+  \begin{itemize}
+  \item \textbf{Activities and goals as one module.} We first planned a single
+    module for fitness activity and goals. It would have meant fewer modules
+    and fewer interfaces between them. However, it would have hidden two
+    secrets in one module: how synced activity is stored and deduplicated, and
+    how progress towards a goal is measured. We split it into the Activity
+    Module and the Goals Module, so that the rules for goals can change without
+    touching the code that receives activity, and each module has one secret.
+  \item \textbf{Mandatory public leaderboards.} We first had every user take
+    part in the public leaderboard. This would give users a larger group to
+    compete against and make the competitive features simpler. We changed it
+    so that the public leaderboard is optional and users can compete privately
+    instead. This was the better choice because interviewees were divided on
+    competition, and it matches the SRS requirements that leaderboards are off
+    by default (PR-SC-08, SEC-PRV-02).
+  \end{itemize}
+
+  \item \textbf{(After you have implemented another team's module, which means
+  this isn't filled in until after the original deadline). What did you learn
+  by implementing another team's module? Were all the details you needed in
+  the documentation, or did you need to make assumptions, or ask the other team
+  questions? If your team also had another team implement one of your modules,
+  what was this experience like? Are there things in your documentation you
   could have changed to make the process go more smoothly for when an
-  ``outsider'' completes some of the implementation?
+  ``outsider'' completes some of the implementation?}
 
-  Your reflection should be about concepts learned in your SE education, such as modular decomposition, cohesion, coupling, information hiding, etc.  You should critique the quality and utility of the specification you received.
-
-  You should create a PR for your implemented module.  A link to the PR should be part of your reflection.
+  Not applicable yet. This question will be answered in a later revision,
+  after we have implemented another team's module.
 
 \end{enumerate}
 
