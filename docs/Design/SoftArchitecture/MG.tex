@@ -7,6 +7,8 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, fit, backgrounds}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -46,8 +48,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 16, 2026 & 1.0 & Completed Revision -1 of the MG\\
 \bottomrule
 \end{tabularx}
 
@@ -55,26 +56,56 @@ Date 2 & 1.1 & Notes\\
 
 \section{Reference Material}
 
-This section records information for easy reference. 
+This section records information for easy reference.
+
+\subsection{Related Documents}
+
+The MG builds on the earlier \textit{Flexin'} documents listed below. Terms that
+are not defined here, such as portfolio, streak and
+virtual currency, are defined in the glossary of the SRS.
+
+\begin{itemize}
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals}:
+  the problem \textit{Flexin'} addresses, its stakeholders and the project goals.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}:
+  the team's workflow, the technology stack and the project schedule.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{Software Requirements Specification (SRS)}:
+  the functional and non-functional requirements that this design satisfies.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis}:
+  the hazards identified for the system and the safety requirements that
+  address them.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV Plan)}:
+  how the requirements and the design will be verified.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{Module Interface Specification (MIS)}:
+  the detailed access programs, state variables and semantics of each module
+  identified in this document.
+\end{itemize}
 
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
+  API & Application Programming Interface\\
+  DAG & Directed Acyclic Graph\\
+  ETF & Exchange-Traded Fund\\
+  FLX & Symbol of the \textit{Flexin'} virtual currency\\
+  JPA & Jakarta Persistence API\\
+  M & Module\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  OS & Operating System\\
   R & Requirement\\
-  SC & Scientific Computing \\
+  SDK & Software Development Kit\\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  \textit{Flexin'} & The name of the application, a play on ``flexing'' both\\
+  & physical fitness and financial gains\\
+  UC & Unlikely Change\\
+  UI & User Interface\\
+  VnV & Verification and Validation\\
   \bottomrule
 \end{tabular}\\
 
@@ -97,11 +128,25 @@ software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
 based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
-where modifications are frequent, especially during initial development as the
-solution space is explored.  
+hides represent likely future changes.
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Design for change is especially valuable for \textit{Flexin'}, an Android
+application that rewards users with virtual currency for their physical
+activity and lets them invest that currency in a simulated market. Several
+parts of the system are expected to change as the project develops: the
+fitness data providers it reads from, the rules that convert activity into
+currency, the calibration of the market simulation, and the look of the user
+interface (Section~\ref{SecChange}). Hiding each of these decisions in its own
+module means that a change to one of them can be made without rewriting the
+rest of the system.
+
+\textit{Flexin'} has two parts: a mobile application built with React Native and
+Expo, and a backend service built with Spring. This document treats both as a
+single module hierarchy. The mobile application reaches the backend only
+through the API Client Module (\mref{mAPI}), so the boundary between the two
+parts is itself a secret that can change.
+
+Our design follows the rules laid out by \citet{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
@@ -110,24 +155,36 @@ Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
   structures must obtain it by calling access programs belonging to that module.
 \end{itemize}
 
-After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
-specifies the modular structure of the system and is intended to allow both
-designers and maintainers to easily identify the parts of the software.  The
-potential readers of this document are as follows:
+After completing the first stage of the design, the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS},
+the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG specifies
+the modular structure of \textit{Flexin'} and is intended to allow both designers
+and maintainers to easily identify the parts of the software. The detailed
+interface of each module is given in the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{MIS},
+and the code that implements each module is listed in
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/src/TraceToDesign.md}{\texttt{src/TraceToDesign.md}}.
+The potential readers of this document are as follows:
 
 \begin{itemize}
-\item New project members: This document can be a guide for a new project member
-  to easily understand the overall structure and quickly find the
-  relevant modules they are searching for.
+\item New project members: This document can be a guide for a new project
+  member to understand the overall structure of the mobile application and the
+  backend, and to quickly find the module, and the code, responsible for a
+  feature such as goal tracking, the currency ledger or the market simulation.
 \item Maintainers: The hierarchical structure of the module guide improves the
-  maintainers' understanding when they need to make changes to the system. It is
-  important for a maintainer to update the relevant sections of the document
-  after changes have been made.
+  maintainers' understanding when they need to make changes to the system, for
+  example when a new fitness data provider is added or the reward rules are
+  adjusted. It is important for a maintainer to update the relevant sections of
+  the document after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
   check for consistency, feasibility, and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
+\item Testers and reviewers: The traceability matrices let the people who
+  carry out the
+  \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{VnV Plan},
+  including the teaching team, check that every requirement in the SRS is
+  covered by at least one module.
 \end{itemize}
 
 The rest of the document is organized as follows. Section
@@ -139,7 +196,10 @@ connections between the software requirements and the modules, and
 Section \ref{SecTM} within it includes two traceability matrices. One checks
 the completeness of the design against the requirements provided in the SRS. The
 other shows the relation between anticipated changes and the modules. Section
-\ref{SecUse} describes the use relation between modules.
+\ref{SecUse} describes the use relation between modules. The remaining
+sections describe the user interfaces, the communication protocols, the
+database design, the timeline and the use of generative AI in preparing this
+document.
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
@@ -631,18 +691,114 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
+In Figure \ref{FigUH}, an arrow from module A to module B means that A uses B.
+The arrows are the ones listed in the Uses section of each module's MIS. The
+API Client Module (\mref{mAPI}) uses every module inside the shaded box, so a
+single arrow to the box stands for one arrow to each of those modules. The
+Persistence Module (\mref{mPer}) and the Authentication and Security Module
+(\mref{mAuth}) are used by many modules, so the arrows into them are grey and
+blue respectively. Each row of the box is one level of the hierarchy, and
+every arrow points to a lower row. The Fitness Integration Module
+(\mref{mFI}) runs on the phone, so it is outside the box. It sits below the
+box because the Activity Module (\mref{mAct}) and the Currency Ledger Module
+(\mref{mCur}) use it, and the arrow to it from the UI Screens Module
+(\mref{mUI}) runs down the right side of the figure.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\resizebox{\textwidth}{!}{%
+% Uses hierarchy for Section 8.
+% Each arrow line ends with a comment naming the uses relation it draws.
+% The arrows must match the Uses sections of the MIS: when a module's Uses
+% section changes, add or remove the matching arrow here.
+\begin{tikzpicture}[
+  >={Stealth[length=2.2mm]},
+  mod/.style={draw, rounded corners=2pt, fill=white, align=center,
+    font=\fontsize{9}{10.5}\selectfont, minimum height=1.25cm, text width=2.55cm, inner sep=2pt,
+    execute at begin node={\hyphenpenalty=10000}},
+  use/.style={->, semithick},
+  useper/.style={->, semithick, black!45},
+  useauth/.style={->, semithick, blue!65!black}]
+
+% Mobile modules
+\node[mod] (M12) at (10, 4.75) {UI Screens\\(\mref{mUI})};
+\node[mod] (M15) at (10, 2.85) {API Client\\(\mref{mAPI})};
+
+% Backend modules used by the API Client, one row per level of the hierarchy
+\node[mod] (M11) at (7.85, 0) {Progress Reporting\\(\mref{mProg})};
+\node[mod] (M8) at (14.07, 0) {Transaction Order\\(\mref{mPurch})};
+\node[mod] (M13) at (17.43, 0) {Notification\\(\mref{mNoti})};
+\node[mod] (M9) at (11.03, -2.3) {Portfolio\\(\mref{mPort})};
+\node[mod] (M10) at (2.65, -4.61) {Leaderboard and Friends\\(\mref{mLead})};
+\node[mod] (M14) at (18.6, -4.61) {Market Simulation\\(\mref{mMkt})};
+\node[mod] (M3) at (1.9, -6.91) {User and Onboarding\\(\mref{mUser})};
+\node[mod] (M5) at (7.16, -6.91) {Goals\\(\mref{mGoal})};
+\node[mod] (M7) at (17.4, -6.91) {Asset\\(\mref{mAsset})};
+\node[mod] (M4) at (3.23, -9.21) {Activity\\(\mref{mAct})};
+\node[mod, text width=4cm] (M16) at (8.33, -9.21) {Authentication and Security (\mref{mAuth})};
+\node[mod] (M6) at (12.74, -9.21) {Currency Ledger\\(\mref{mCur})};
+
+% Fitness Integration runs on the phone, so it is outside the box. It sits
+% below Activity and Currency Ledger because both of them use it.
+\node[mod] (M1) at (10, -11.51) {Fitness Integration\\(\mref{mFI})};
+\node[mod, text width=20.46cm] (M2) at (10, -13.82) {Persistence (\mref{mPer})};
+
+\begin{scope}[on background layer]
+  \node[draw, rounded corners=4pt, fill=black!4, inner sep=8pt,
+    fit={(0, 1.07) (20, -9.84)}] (backend) {};
+\end{scope}
+\node[anchor=north west, font=\fontsize{8}{9.5}\selectfont\itshape, inner sep=3pt]
+  at (backend.north west) {Backend modules used by the API Client};
+
+% Uses arrows: black between modules, grey into Persistence,
+% blue into Authentication and Security
+\draw[use] (M12) -- (M15);  % M12 uses M15
+\draw[use] (M12.east) -- (20.8, 4.75) |- (M1.east);  % M12 uses M1
+\draw[use] (M15) -- (backend.north -| M15);  % M15 uses every module in the box
+\draw[use] (M11) -- (3.56, -8.59);  % M11 uses M4
+\draw[use] (M11) -- (7.24, -6.28);  % M11 uses M5
+\draw[use] (M11) -- (12.41, -8.59);  % M11 uses M6
+\draw[use] (M11) -- (10.16, -1.68);  % M11 uses M9
+\draw[use] (M11) -- (3.38, -3.98);  % M11 uses M10
+\draw[useauth] (M11) -- (9.03, -8.59);  % M11 uses M16
+\draw[useper] (M8) -- (14.64, -13.19);  % M8 uses M2
+\draw[use] (M8) -- (12.86, -8.59);  % M8 uses M6
+\draw[use] (M8) -- (17.08, -6.28);  % M8 uses M7
+\draw[use] (M8) -- (11.86, -1.68);  % M8 uses M9
+\draw[use] (M8) -- (17.98, -3.98);  % M8 uses M14
+\draw[useauth] (M8) -- (9.93, -8.59);  % M8 uses M16
+\draw[useper] (M13) -- (14.19, -13.19);  % M13 uses M2
+\draw[use] (M13) -- (8.09, -6.28);  % M13 uses M5
+\draw[use] (M13) -- (13.76, -8.59);  % M13 uses M6
+\draw[use] (M13) -- (18.43, -3.98);  % M13 uses M14
+\draw[useauth] (M13) -- (10.43, -8.83);  % M13 uses M16
+\draw[useper] (M9) -- (16.64, -13.19);  % M9 uses M2
+\draw[use] (M9) -- (13.31, -8.59);  % M9 uses M6
+\draw[use] (M9) -- (16.53, -6.28);  % M9 uses M7
+\draw[use] (M9) -- (17.23, -4.16);  % M9 uses M14
+\draw[useauth] (M9) -- (8.38, -8.59);  % M9 uses M16
+\draw[useper] (M10) -- (7.24, -13.19);  % M10 uses M2
+\draw[use] (M10) -- (6.04, -6.28);  % M10 uses M5
+\draw[useauth] (M10) -- (6.48, -8.59);  % M10 uses M16
+\draw[useper] (M14) -- (20.09, -13.19);  % M14 uses M2
+\draw[use] (M14) -- (11.86, -8.59);  % M14 uses M6
+\draw[use] (M14) -- (17.73, -6.28);  % M14 uses M7
+\draw[useauth] (M14) -- (7.93, -8.59);  % M14 uses M16
+\draw[useper] (M3) -- (1.24, -13.19);  % M3 uses M2
+\draw[useauth] (M3) -- (6.23, -8.89);  % M3 uses M16
+\draw[useper] (M5) -- (3.09, -13.19);  % M5 uses M2
+\draw[use] (M5) -- (4.31, -8.59);  % M5 uses M4
+\draw[use] (M5) -- (11.36, -8.65);  % M5 uses M6
+\draw[useper] (M7) -- (16.19, -13.19);  % M7 uses M2
+\draw[useauth] (M7) -- (9.48, -8.59);  % M7 uses M16
+\draw[useper] (M4) -- (3.54, -13.19);  % M4 uses M2
+\draw[use] (M4) -- (8.62, -11.07);  % M4 uses M1
+\draw[useper] (M16) -- (8.44, -13.19);  % M16 uses M2
+\draw[useper] (M6) -- (12.64, -13.19);  % M6 uses M2
+\draw[use] (M6) -- (10.73, -10.89);  % M6 uses M1
+\draw[useper] (M1) -- (9.99, -13.19);  % M1 uses M2
+\end{tikzpicture}%
+}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
@@ -679,36 +835,73 @@ In this section the database design is provided. The figure below outlines the r
 
 \section{Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+\begin{itemize}
+    \item \textbf{Claude Opus 5.5}
+    \item \textbf{Claude Sonnet 5.5}
+    \item \textbf{GitHub Copilot}, using the GPT-5.6 model
+\end{itemize}
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+The AI tools listed above were used in the following ways while drafting and
+refining the Module Guide:
+\begin{itemize}
+    \item \textbf{Idea Generation (Document-wide):} AI tools were used to
+    brainstorm candidate modules, the secrets each module hides, and likely
+    and unlikely changes. The team chose the final decomposition and wrote
+    the module descriptions.
+    \item \textbf{Cross-Referencing Completed Deliverables (Document-wide):}
+    AI tools were used to compare this document against the team's completed
+    deliverables (Problem Statement, Development Plan, SRS, Hazard Analysis
+    and VnV Plan) to find inconsistencies in terminology, requirement
+    identifiers and scope.
+    \item \textbf{Uses Hierarchy Diagram (Section~\ref{SecUse}):} The uses
+    hierarchy diagram in Figure~\ref{FigUH} was generated with AI, based on
+    the uses relations decided by the team.
+    \item \textbf{Traceability Matrices (Section~\ref{SecTM}):} The
+    traceability matrices between modules and requirements
+    (Table~\ref{TblRT}) and between modules and anticipated changes
+    (Table~\ref{TblACT}) were generated with AI from the SRS requirements,
+    the anticipated changes in Section~\ref{SecChange} and the module
+    decomposition in Section~\ref{SecMD}.
+    \item \textbf{Table Generation (Document-wide):} AI tools were used to
+    build the LaTeX tables in this document, including the module
+    hierarchy table and the abbreviations and acronyms table.
+    \item \textbf{LaTeX Syntax and Grammar Checks (Document-wide):} AI tools
+    were used to debug LaTeX markup and to check spelling, grammar and
+    phrasing.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+All AI-generated and AI-assisted material was reviewed by team members before
+it was included in the document:
+\begin{itemize}
+    \item \textbf{Ideas and Cross-Referencing:} Ideas suggested by AI were
+    only used once the team agreed they fit the project. Each inconsistency
+    reported by AI was confirmed by reading the relevant passage of the
+    source deliverable before any change was made, and the team decided how
+    each one was resolved.
+    \item \textbf{Uses Hierarchy Diagram:} Every arrow in the diagram was
+    checked against the uses relations agreed by the team and against the
+    module descriptions in Section~\ref{SecMD}, and the diagram was checked
+    to confirm that it is a directed acyclic graph.
+    \item \textbf{Traceability Matrices:} Each row was checked against the
+    requirement identifiers in the SRS and the anticipated changes in
+    Section~\ref{SecChange}, to confirm that every requirement and
+    anticipated change is mapped to at least one module and that each
+    mapping matches the module's responsibilities.
+    \item \textbf{Tables, LaTeX and Grammar:} The document was compiled after
+    each change and the output was checked to confirm that it rendered as
+    intended. All changes were reviewed by other team members through a pull
+    request before being merged.
+\end{itemize}
+
+The team is responsible for the accuracy, completeness, consistency and
+appropriateness of this document, whether material was written by a team
+member or generated by an AI system.
 
 \section{Appendix}
 
