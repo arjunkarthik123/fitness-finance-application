@@ -173,7 +173,12 @@ Garmin data through Garmin Connect IQ in place of Health Connect.
 
 \subsection{Uses}
 
-\noindent None. This module runs on the phone and reaches each source only
+\begin{itemize}
+    \item Persistence Module (Section~\ref{misPer}): stores which fitness
+      sources each user has linked. No fitness data is stored (SEC-PRV-01).
+\end{itemize}
+
+\noindent This module runs on the phone and reaches each source only
 through the source's own SDK or API (SC-04), which is an environment variable
 of this module.
 
@@ -237,6 +242,7 @@ fetchActivities & $\mathit{since}$: Time & seq of ActivitySample &
 fetchDailySteps & $\mathit{since}$: Time & seq of DailySteps & ReadError \\
 activityKey & $\mathit{a}$: ActivitySample & String & - \\
 dailyStepsKey & $\mathit{d}$: DailySteps & String & - \\
+unlink & - & - & - \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -355,6 +361,22 @@ the device or a permission in \textsf{Permissions} has not been granted.
 \noindent So a sync that repeats or overlaps an earlier one never reports the
 same activity as new twice (PR-PA-03).
 
+\medskip
+
+\noindent unlink():
+\begin{itemize}
+\item transition: $\mathit{hc}.\mathit{available} \Rightarrow
+  \mathit{hc}.\mathit{granted} := \emptyset$, so every permission the user
+  granted to the app is revoked. The Garmin instance instead removes the
+  app's connection to Garmin, including any credentials stored for it on the
+  device (SEC-ACC-03).
+\end{itemize}
+
+\noindent After unlink, $\mathit{hasPermissions}()$ is false, so every fetch
+raises ReadError until requestPermissions is called again. unlink is called
+for each fitness source when the user signs out, so no device link remains
+active (SEC-ACC-05).
+
 \subsubsection{Local Functions}
 
 \noindent For a Steps record $r$, $\mathit{len}(r)$ is its length in minutes,
@@ -462,7 +484,11 @@ User and Onboarding Module
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence module: stores and send user information as needed. Checks to see if a user exists.
+    \item Persistence Module (Section~\ref{misPer}): stores and send user information as needed. Checks to see if a user exists.
+    \item Authentication and Security Module (Section~\ref{misAuth}): hashes
+      the password given at registration and a changed password, through
+      hashPassword, and checks the current password before it is changed,
+      through confirmPassword. Also the Principal and UserID types.
 \end{itemize}
 
 \subsection{Syntax}
@@ -473,7 +499,6 @@ User and Onboarding Module
 \textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
 \midrule
 MinAge & 18 & Minimum age to register (years)\\
-MinPassLength & 8 & Minimum length of a password string\\ 
 \bottomrule
 \end{tabular}
 
@@ -482,22 +507,22 @@ MinPassLength & 8 & Minimum length of a password string\\
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
+  >{\raggedright\arraybackslash}p{3.9cm}
+  >{\raggedright\arraybackslash}p{4.5cm}
   >{\raggedright\arraybackslash}p{2.4cm}
   >{\raggedright\arraybackslash}p{3.6cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 % Account (login itself is in M16)
-register & email: String, password: string, dob: Date & userID: int & InvalidEmail, EmailTaken, Underage \\
-getUserProfile & userID: int & UserProfile & NoAccount \\
-updateUserPassword & userID: int, password: string, newPassword: string & N/A & NoAccount \\
-updateUserEmail & userID: int, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
+register & email: String, password: string, dob: Date & UserID & InvalidEmail, EmailTaken, Underage, WeakPassword \\
+getUserProfile & $p$: Principal & UserProfile & NoAccount \\
+updateUserPassword & $p$: Principal, password: string, newPassword: string & N/A & NoAccount, InvalidCredentials, WeakPassword \\
+updateUserEmail & $p$: Principal, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
 % Onboarding answers
-submitFinance & userID: int, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
-submitFitness & userID: int, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
-isOnboarded & userID: int & $\mathbb{B}$ & NoAccount \\
+submitFinance & $p$: Principal, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+submitFitness & $p$: Principal, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
+isOnboarded & $p$: Principal & $\mathbb{B}$ & NoAccount \\
 \hline
 \end{tabular}
 \end{center}
@@ -528,45 +553,49 @@ The User and Onboarding Module will rely on:
 
 \noindent register(email, password, dob) 
 \begin{itemize}
-    \item transition: the persistence module will store the user's valid inputted credentials
+    \item transition: the persistence module will store the user's email, dob and hashPassword(password). The password itself is never stored.
     \item output: the new UserID.
-    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge
+    \item exception: InvalidEmail $\longrightarrow$ $\mathbf{validEmail}$ does not validate the email, EmailTaken $\longrightarrow$ an email is already in use, Underage $\longrightarrow$ user dob $\leq$ MinAge, WeakPassword $\longrightarrow$ hashPassword rejects the password as too short or too common (Section~\ref{misAuth})
 \end{itemize}
-\noindent getUserProfile(userID)
+\noindent getUserProfile($p$)
 \begin{itemize}
-    \item output: the profile object attached to userID
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item output: the profile object attached to $p.\mathit{user}$
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent updateUserPassword(userID, password, newPassword)
+\noindent updateUserPassword($p$, password, newPassword)
 \begin{itemize}
-    \item transition: the persistence module will replace the user's password with the user's new valid inputted password
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item transition: the persistence module will replace the user's stored password hash with hashPassword(newPassword)
+    \item exception:
+    \begin{itemize}
+        \item NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
+        \item InvalidCredentials $\longrightarrow$ confirmPassword($p$, password) finds that password is not the user's current password
+        \item WeakPassword $\longrightarrow$ hashPassword rejects newPassword as too short or too common (Section~\ref{misAuth})
+    \end{itemize}
 \end{itemize}
-\noindent updateUserEmail(userID, email, newEmail)
+\noindent updateUserEmail($p$, email, newEmail)
 \begin{itemize}
     \item transition: the persistence module will replace the user's email with the user's new valid inputted email
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent submitFinance(userID, financeAnswers)
+\noindent submitFinance($p$, financeAnswers)
 \begin{itemize}
     \item transition: the persistence module will store the users inputted responses
-    \item exception:NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception:NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent submitFitness(userID, fitnessAnswers)
+\noindent submitFitness($p$, fitnessAnswers)
 \begin{itemize}
     \item transition: the persistence module will store the users inputted responses
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
-\noindent isOnboarded(userID)
+\noindent isOnboarded($p$)
 \begin{itemize}
     \item output: if the user has completed the onboarding surveys for both Fitness and Finance.
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
 
 \subsubsection{Local Functions}
 \begin{itemize}
     \item validEmail(email: string) $\longrightarrow \mathbb{B}$: ensures email is valid and exists
-    \item validPassword(password: string) $\longrightarrow \mathbb{B}$: ensures password contains any needed characters and length(password) $\geq$ MinPassLength
     \item validDOB(dob: Date)$\longrightarrow \mathbb{B}$: ensures user's age $\geq$ MinAge 
 \end{itemize}
 
@@ -579,7 +608,9 @@ Activity
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence Module: stores user activity, current goals and progress toward those goals.
+    \item Persistence Module (Section~\ref{misPer}): stores user activity.
+    \item Fitness Integration Module (Section~\ref{misFI}): reads the user's
+      workouts and daily step totals from each fitness source.
 \end{itemize}
 
 \subsection{Syntax}
@@ -620,11 +651,11 @@ None, the persistence module will store user activity records.
 \end{itemize}
 
 \subsubsection{Assumptions}
-The Currency Ledger Module will rely on:
+The Activity Module will rely on:
 \begin{itemize}
     \item The Persistence Module is active and can be accessed.
     \item Valid response has been provided by the Authentication and Security Module.
-    \item \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
+    \item Each record carries a stable identifier and the time it occurred on the source device. Records have already been validated by the fitness data provider and are trusted.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
@@ -632,7 +663,7 @@ The Currency Ledger Module will rely on:
 \noindent getActiviy(userID):
 \begin{itemize}
 \item output: returns a map of activity and tracked data attached to that activity.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -647,9 +678,9 @@ Goals (M5)
 
 \subsection{Uses}
 \begin{itemize}
-    \item Persistence Module: stores user fitness activity for the user.
-    \item Activity Module: retrieves fitness activity to use in the app.
-    \item Currency Ledger Module: the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
+    \item Persistence Module (Section~\ref{misPer}): stores the user's current goals and progress toward those goals.
+    \item Activity Module (Section~\ref{misAct}): retrieves fitness activity to use in the app.
+    \item Currency Ledger Module (Section~\ref{misCur}): the goals module tracks progress toward goals and will be rewarded by the currency ledger module. 
 \end{itemize}
 
 \subsection{Syntax}
@@ -700,26 +731,26 @@ None, information will be stored in the database (Persistence Module)
 \noindent getAllGoals(userID):
 \begin{itemize}
 \item output: a map of the users activity type and the value attached to the actvity.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$.
 \end{itemize}
 
 \noindent createGoal(userID, activityType, activityMeasurement):
 \begin{itemize}
 \item transition: a new goal will be added to the users goal data. 
 \item output: the new goalID.
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidActivityType $\longrightarrow$ a non-supported activity type, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0.
 \end{itemize}
 
 \noindent deleteGoal(userID, goalID):
 \begin{itemize}
 \item transition: the goal will be removed from the users goal data. 
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input.
 \end{itemize}
 
 \noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
 \begin{itemize}
 \item transition: updates the measurement on an already started goal. 
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}
 
 \noindent updateGoalPeriod(userID, goalID, period):
@@ -731,7 +762,7 @@ None, information will be stored in the database (Persistence Module)
 \noindent collectReward(userID, goalID):
 \begin{itemize}
 \item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
-\item exception: NoAccount $\longrightarrow$ no userID found that matches the input, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
+\item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
 \end{itemize}.
 
 
@@ -754,9 +785,8 @@ Currency Ledger Module
 
 \subsection{Uses}
 \begin{itemize}
-    \item Transaction Order Module: uses the Currency Ledger to add currency to, or remove currency from, a user's account based on the action that has taken place.
-    \item Leaderboard and Friends Module: uses the Currency Ledger to allow users to compete against one another.
-    \item Persistence Module: stores user balances and records the movement of currency into and out of a user's account.
+    \item Persistence Module (Section~\ref{misPer}): stores user balances and records the movement of currency into and out of a user's account.
+    \item Fitness Integration Module (Section~\ref{misFI}): uses activityKey and dailyStepsKey so that each workout, and each increase in a daily step total, is credited only once.
 \end{itemize}
 
 \subsection{Syntax}
@@ -810,21 +840,21 @@ The Currency Module will rely on:
 \noindent getBalance(userID)
 \begin{itemize}
     \item output: returns the user's current account balance
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
 \end{itemize}
 
 \noindent addBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
     \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \noindent subtractBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
     \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
-    \item exception: NoAccount $\longrightarrow$ no userID found that matches the input, InvalidAmount $\longrightarrow$ amount $<$ 0
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -2343,7 +2373,14 @@ UIScreens
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item API Client Module (Section~\ref{misAPI}): every request to the
+  backend.
+\item Fitness Integration Module (Section~\ref{misFI}): checks whether each
+  fitness source is available, requests read permission, and fetches new
+  workouts and daily step totals, which are then sent to the backend through
+  the API Client Module.
+\end{itemize}
 
 \subsection{Syntax}
 
@@ -2390,6 +2427,7 @@ UIScreens
 
 \wss{Local functions, or None}
 
+\newpage
 \section{MIS of Notification Module} \label{misNoti}
 
 This module is M13 in the Module Guide.
@@ -2400,23 +2438,119 @@ Notification
 
 \subsection{Uses}
 
-\wss{Modules this module uses}
+\begin{itemize}
+\item Goals Module (Section~\ref{misGoal}): each user's active goals and
+  progress towards them, for workout reminders and achievement notices.
+\item Currency Ledger Module (Section~\ref{misCur}): the currency credited to
+  each user, for reward notices.
+\item Market Simulation Module (Section~\ref{misMkt}): downturns and
+  dividends, through getEvents, for simulated market notices.
+\item Persistence Module (Section~\ref{misPer}): stores each user's
+  notification preferences and quiet hours, and the notifications sent each
+  day, so that the daily limit can be enforced (PR-SC-07).
+\item Authentication and Security Module (Section~\ref{misAuth}): the
+  Principal, UserID and Time types.
+\end{itemize}
+
+\noindent This module reads from the modules above on its own schedule, and
+none of them uses it. Notifications reach the phone through the Android
+notification service, which is an environment variable of this module.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+The following constant is defined in the SRS.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{SRS Requirement}\\
+\midrule
+\textsf{MaxDailyNotifications} & 3 per day & PR-SC-07\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The module also uses the following local constants, which are not
+exported. They are the defaults for a user who has not changed their
+settings, and are likely to change after user testing (LC-06).
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{RunInterval} & 15 minutes & Time between scheduled checks for new
+  notifications\\
+\textsf{DefaultQuietStart} & 22:00 & Start of the default quiet hours\\
+\textsf{DefaultQuietEnd} & 08:00 & End of the default quiet hours\\
+\textsf{DefaultReminderTime} & 18:00 & Default time of the daily workout
+  reminder\\
+\textsf{DefaultTimeZone} & Eastern Time & Time zone used until the app
+  reports the device's own\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Exported Types}
+
+\begin{itemize}
+\item Principal, UserID and Time: as defined in Section~\ref{misAuth}
+\item NoticeKind = $\{\mathrm{REMINDER}, \mathrm{ACHIEVEMENT},
+  \mathrm{REWARD}, \mathrm{MARKET}\}$: workout reminders, completed goals,
+  currency earned from activity and goals, and simulated market notices
+  (downturns and dividends received)
+\item GoalRelated = $\{\mathrm{REMINDER}, \mathrm{ACHIEVEMENT},
+  \mathrm{REWARD}\}$, the kinds that count towards the daily limit of
+  PR-SC-07
+\item TimeOfDay: a time of day in hours and minutes, from 00:00 to 23:59
+\item TimeZone: a named time zone, such as Eastern Time
+\item Language = $\{\mathrm{EN}, \mathrm{FR}\}$
+\item DeviceToken = String, the identifier the push service gives to one
+  installation of the app
+\item Preferences = tuple of:
+  \begin{itemize}
+  \item $\mathit{enabled}$: NoticeKind $\rightarrow \mathbb{B}$, whether
+    each kind of notice is wanted
+  \item $\mathit{quietStart}$, $\mathit{quietEnd}$: TimeOfDay, the quiet
+    hours. They may pass midnight, and equal values mean no quiet hours.
+  \item $\mathit{dailyLimit}$: $\mathbb{N} \cup \{0\}$, the most
+    goal-related notices pushed in one day
+  \item $\mathit{reminderTime}$: TimeOfDay, when the daily workout reminder
+    is sent
+  \item $\mathit{zone}$: TimeZone and $\mathit{language}$: Language, taken
+    from the device
+  \end{itemize}
+\item Notice = tuple of ($\mathit{id}$: $\mathbb{N}$, $\mathit{kind}$:
+  NoticeKind, $\mathit{text}$: String, $\mathit{time}$: Time,
+  $\mathit{pushed}$: $\mathbb{B}$). $\mathit{pushed}$ is true when the notice
+  was sent to the user's device, and false when it is only shown in the app.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{2.8cm}
+  >{\raggedright\arraybackslash}p{3.4cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+init & - & - & - \\
+getPreferences & $p$: Principal & Preferences & - \\
+setPreferences & $p$: Principal, $P$: Preferences & - &
+  InvalidPreferences \\
+registerDevice & $p$: Principal, $d$: DeviceToken & - & - \\
+unregisterDevice & $p$: Principal, $d$: DeviceToken & - & - \\
+getNotices & $p$: Principal, $\mathit{since}$: Time & sequence of Notice &
+  - \\
+run & - & - & - \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -2424,28 +2558,222 @@ Notification
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+\item $\mathit{prefs}$: UserID $\rightarrow$ Preferences, the settings each
+  user has saved. A user with no entry uses $\mathit{defaults}$.
+\item $\mathit{devices}$: UserID $\rightarrow$ set of DeviceToken, the
+  installations each user's notices are sent to
+\item $\mathit{notices}$: sequence of tuples of ($\mathit{notice}$: Notice,
+  $\mathit{user}$: UserID, $\mathit{sources}$: set of String), every notice
+  created, with the events it reports. Entries are only ever appended.
+\item $\mathit{checkedUntil}$: UserID $\rightarrow$ Time, the time up to
+  which each user's events have been checked
+\end{itemize}
+
+\noindent When the system is first deployed, $\mathit{prefs}$,
+$\mathit{devices}$ and $\mathit{checkedUntil}$ have no entries and
+$\mathit{notices}$ is empty. All state variables are stored through the
+Persistence Module, so they keep their values when the backend restarts.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+\item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the
+  current Time.
+\item $\mathit{scheduler}$: calls run once every \textsf{RunInterval}.
+\item $\mathit{push}$: the Android notification service.
+  $\mathit{push}(d, s)$ sends text $s$ to installation $d$ and returns true if
+  the service accepted it. The phone shows each notice it receives on screen
+  and with a vibration, so it is signalled in two ways even when the sound is
+  off (UHR-ACC-05).
+\item $\mathit{log}$: the backend log, to which failed checks are written.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+\item init is called once when the backend starts, before any other access
+  program and before the scheduler first calls run.
+\item The Goals Module reports, for a user, whether an active goal is not
+  yet met on a given local day, and the goals the user completed in a period
+  with the time each was completed.
+\item The Currency Ledger Module reports the credits made to a user in a
+  period, each with an identifier, an amount and its source: activity, a
+  goal, or a dividend.
+\item A single backend instance runs the scheduler, so run is never run
+  twice at the same time.
+\item Delivery to the phone is not guaranteed: the user may have turned off
+  notifications in the device settings (BUC 10). A notice that is not
+  delivered is still shown in the app through getNotices.
+\item The app calls setPreferences when the device's time zone or language
+  changes, and registerDevice after each sign-in. Before signing out it calls
+  unregisterDevice, so no notices reach a signed-out device (SEC-ACC-05).
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent init():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition: for each $u \in \mathit{users}()$ with no entry in
+  $\mathit{checkedUntil}$, $\mathit{checkedUntil}(u) := \mathit{now}()$
 \end{itemize}
+
+\noindent So a new deployment does not notify users about events from before
+it started.
+
+\medskip
+
+\noindent getPreferences($p$):
+\begin{itemize}
+\item output: $\mathit{out} := \mathit{pref}(p.\mathit{user})$
+\end{itemize}
+
+\noindent setPreferences($p, P$):
+\begin{itemize}
+\item transition: $\mathit{prefs}(p.\mathit{user}) := P$. The new settings
+  apply from the next run. A user may raise or lower the daily limit
+  (PR-SC-07) and turn each kind on or off independently (UHR-PER-02).
+\item exception: $P.\mathit{zone}$ is not a known time zone $\Rightarrow
+  \mathrm{InvalidPreferences}$
+\end{itemize}
+
+\noindent registerDevice($p, d$):
+\begin{itemize}
+\item transition: $d$ is removed from the devices of every other user, and
+  $\mathit{devices}(p.\mathit{user}) := \mathit{devices}(p.\mathit{user})
+  \cup \{d\}$. An installation receives notices for at most one user, so a
+  user who signs in on a phone after someone else does not receive that
+  person's notices.
+\end{itemize}
+
+\noindent unregisterDevice($p, d$):
+\begin{itemize}
+\item transition: $\mathit{devices}(p.\mathit{user}) :=
+  \mathit{devices}(p.\mathit{user}) - \{d\}$
+\end{itemize}
+
+\noindent getNotices($p, \mathit{since}$):
+\begin{itemize}
+\item output: $\mathit{out} :=$ the notices $n.\mathit{notice}$ of the
+  entries $n$ in $\mathit{notices}$ with $n.\mathit{user} = p.\mathit{user}$
+  and $n.\mathit{notice}.\mathit{time} \geq \mathit{since}$, in time order
+\end{itemize}
+
+\noindent getNotices lets the app show recent notices, including those that
+were not pushed during quiet hours, over the daily limit or after a delivery
+failure (BUC 10).
+
+\medskip
+
+\noindent run():
+\begin{itemize}
+\item Let $t = \mathit{now}()$. Each user $u \in \mathit{users}()$ is checked
+  in turn. The changes for one user take effect together or not at all. A
+  check that fails leaves that user's state unchanged, is written to
+  $\mathit{log}$, and is repeated at the next run, without affecting the other
+  users.
+\item transition, for a user $u$ with no entry in $\mathit{checkedUntil}$:
+  $\mathit{checkedUntil}(u) := t$.
+\item transition, for any other user $u$: let $a =
+  \mathit{checkedUntil}(u)$, $P = \mathit{pref}(u)$ and $D =
+  \mathit{localDate}(t, u)$.
+  \begin{enumerate}
+  \item The candidate notices are those below whose kind $k$ has
+    $P.\mathit{enabled}(k)$. Each has a kind, a set of sources, and the text
+    $\mathit{message}(k, \ldots, P.\mathit{language})$.
+    \begin{itemize}
+    \item REMINDER: one notice, with source ``reminder:$D$'', if
+      $\mathit{localTime}(t, u) \geq P.\mathit{reminderTime}$ and
+      $\mathit{unmetGoal}(u, D)$.
+    \item ACHIEVEMENT: one notice for each goal $g \in
+      \mathit{completedGoals}(u, a, t)$, with source ``goal:$g$''.
+    \item REWARD: one notice for the total of the credits $c \in
+      \mathit{credits}(u, a, t)$ from activity or goals, with source
+      ``credit:$c$'' for each, if there are any.
+    \item MARKET: one notice for each SHOCK event $e$ in
+      getEvents($a, t$) of the Market Simulation Module, with source
+      ``event:$e.\mathit{id}$''; and one notice for the total of the dividend
+      credits $c \in \mathit{credits}(u, a, t)$, with source ``credit:$c$''
+      for each, if there are any.
+    \end{itemize}
+  \item A candidate is dropped if one of its sources is already among the
+    sources of $u$'s entries in $\mathit{notices}$, so no event is reported
+    twice.
+  \item Each remaining candidate $c$ is appended to $\mathit{notices}$ as a
+    new notice with time $t$, after deciding whether to push it. It is pushed
+    if $\neg \mathit{quiet}(t, u)$, and either $c.\mathit{kind} \notin$
+    GoalRelated or $\mathit{pushedToday}(u, D) < P.\mathit{dailyLimit}$. If
+    so, $\mathit{push}(d, c.\mathit{text})$ is called for each $d \in
+    \mathit{devices}(u)$, and $\mathit{pushed}$ is true if any call returns
+    true. Otherwise $\mathit{pushed}$ is false. Candidates are handled in the
+    order listed above, so each push counts towards the limit for the next.
+  \item $\mathit{checkedUntil}(u) := t$.
+  \end{enumerate}
+\end{itemize}
+
+\noindent So no notice is pushed during quiet hours, and no more than
+$P.\mathit{dailyLimit}$ goal-related notices are pushed on one local day
+(PR-SC-07, SR7, test-PR-SC-07). A failed push is not an error: the notice
+stays in $\mathit{notices}$ with $\mathit{pushed}$ false and the rest of the
+system is not affected.
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+\item $\mathit{defaults}$: Preferences, the settings of a user who has not
+  saved any:
+  \begin{itemize}
+  \item every kind enabled
+  \item quiet hours from \textsf{DefaultQuietStart} to
+    \textsf{DefaultQuietEnd}
+  \item $\mathit{dailyLimit}$ = \textsf{MaxDailyNotifications}
+  \item $\mathit{reminderTime}$ = \textsf{DefaultReminderTime}
+  \item $\mathit{zone}$ = \textsf{DefaultTimeZone} and $\mathit{language}$
+    = EN
+  \end{itemize}
+\item $\mathit{pref}$: UserID $\rightarrow$ Preferences\\
+  $\mathit{pref}(u) \equiv (u$ has an entry in $\mathit{prefs} \Rightarrow
+  \mathit{prefs}(u) \mid$ otherwise $\Rightarrow \mathit{defaults})$
+\item $\mathit{users}$: $\rightarrow$ set of UserID\\
+  Every user with an account, read through the Persistence Module.
+\item $\mathit{localTime}$: Time $\times$ UserID $\rightarrow$ TimeOfDay and
+  $\mathit{localDate}$: Time $\times$ UserID $\rightarrow$ date\\
+  The time of day and the calendar date of a Time in
+  $\mathit{pref}(u).\mathit{zone}$, so reminders, quiet hours and the daily
+  limit follow the user's own day (UHR-INT-01).
+\item $\mathit{quiet}$: Time $\times$ UserID $\rightarrow \mathbb{B}$\\
+  Let $x = \mathit{localTime}(t, u)$, and let $s$ and $e$ be the user's
+  $\mathit{quietStart}$ and $\mathit{quietEnd}$. Then
+  \[
+  \mathit{quiet}(t, u) \equiv (s < e \Rightarrow s \leq x < e \mid s > e
+  \Rightarrow x \geq s \vee x < e \mid s = e \Rightarrow \mathrm{false})
+  \]
+\item $\mathit{pushedToday}$: UserID $\times$ date $\rightarrow \mathbb{N}
+  \cup \{0\}$\\
+  The number of entries $n$ in $\mathit{notices}$ with $n.\mathit{user} = u$,
+  $n.\mathit{notice}.\mathit{kind} \in$ GoalRelated,
+  $n.\mathit{notice}.\mathit{pushed}$, and
+  $\mathit{localDate}(n.\mathit{notice}.\mathit{time}, u) = D$.
+\item $\mathit{unmetGoal}$: UserID $\times$ date $\rightarrow \mathbb{B}$\\
+  True if $u$ has an active goal that is not yet met on local day $D$, read
+  from the Goals Module.
+\item $\mathit{completedGoals}$: UserID $\times$ Time $\times$ Time
+  $\rightarrow$ set of goal identifiers\\
+  The goals $u$ completed after $a$ and at or before $b$, read from the Goals
+  Module.
+\item $\mathit{credits}$: UserID $\times$ Time $\times$ Time $\rightarrow$
+  set of credit identifiers\\
+  The credits made to $u$ after $a$ and at or before $b$, read from the
+  Currency Ledger Module, each with its amount and source.
+\item $\mathit{message}$: NoticeKind $\times$ details $\times$ Language
+  $\rightarrow$ String\\
+  The text of a notice in the user's language. How each message is worded is
+  a secret of this module, but every message is supportive and never shaming:
+  a reminder invites the user to be active rather than pointing out a missed
+  goal, and a downturn notice describes what happened without judging the
+  user's choices (UHR-POL-01, UHR-POL-02, UHR-POL-03, SR7). The team reviews
+  every message before release (test-UHR-POL-01).
+\end{itemize}
 
 \newpage
 \section{MIS of Market Simulation Module} \label{misMkt}
@@ -2923,6 +3251,7 @@ another backend module defines a program of this kind, it is added here.
 \toprule
 \textbf{Backend Module} & \textbf{Programs Not Exported}\\
 \midrule
+Notification & init, run\\
 Market Simulation & init, tick, backfill\\
 Portfolio & create, getUnits, addUnits, removeUnits\\
 Authentication and Security & init, hashPassword, authenticate, authorize,
