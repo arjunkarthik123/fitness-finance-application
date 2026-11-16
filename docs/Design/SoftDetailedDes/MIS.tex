@@ -71,11 +71,11 @@ See SRS Documentation at \wss{give url}
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+Flexin'. Flexin' is a mobile application that teaches users the compounding benefits of fitness and finance by rewarding users with virtual currency for setting and completing fitness goals. The virtual currency can be used to purchase virtual assets and help grow their virtual portfolio. Users can also compete with friends and other users on the leaderboard to see who can earn the most virtual currency. The application is designed to be used on mobile devices and will integrate with fitness tracking applications such as Google Fit, Apple Health, and Garmin Connect.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/arjunkarthik123/fitness-finance-application}.
 
 \section{Notation}
 
@@ -3763,36 +3763,61 @@ $\mathit{commonPasswords}$ are held in memory and are set by init.
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+\begin{itemize}
+    \item \textbf{Claude Opus 5.5}
+    \item \textbf{Github Copilot}
+    \item \textbf{Microsoft Office Copilot}
+    \item \textbf{ChatGPT 5.6}
+    \item \textbf{Gemini 3.8}
+\end{itemize}
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+\begin{itemize}
+    \item \textbf{MIS Module Design and Brainstorming (Document-wide):} AI was used 
+    to assist with the brainstorming and refinement of MIS modules throughout the 
+    document. During module decomposition, AI was used as an ideation tool to suggest 
+    potential modules, identify missing responsibilities, and highlight possible 
+    abstractions that may not have been considered during the team's initial design 
+    sessions.
+    \item \textbf{MIS Component Development (Document-wide):} AI was used to help 
+    develop MIS module components, including exported constants, state variables, 
+    environment variables, assumptions, access routine semantics, and local functions. 
+    AI was primarily used for idea generation, ensuring completeness of module specifications, 
+    and identifying common MIS elements that may have been omitted during manual development. 
+    \item \textbf{Consistency Checking Between Documents (Document-wide):} AI was used to 
+    compare MIS module specifications against the Module Guide (MG), Software Requirements 
+    Specification (SRS), and database design documentation to help identify inconsistencies, 
+    missing functionality, and potential gaps in module responsibilities. All identified 
+    suggestions were manually reviewed and validated by the team before incorporation into the document.
+    \item \textbf{Reflection Drafting (Appendix --- Reflection):} The team met
+    and agreed on the answers to the reflection questions, and recorded them as
+    notes. AI was used to turn those notes into the written answers.
+    \item \textbf{Symbols, Abbreviations, Acronyms, and Notation(Section 2 and Section 4):} AI was used to build the
+    symbols, abbreviations, and acronyms table from the terms used in this
+    document. Symbols, abbreviations, and acronyms that already exist in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} reuse
+    the SRS names and values. AI was also used to build the notation table from the terms used in this document. The notation table was built by using the terms used in this document and the SRS, and then AI was used to find the proper notation for each term.
+    \item \textbf{Formatting Consistency (Document-wide):} AI was used to
+    find and fix formatting that differed between sections written by
+    different team members to ensure consistency in MIS module structures, notations, and general formatting.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+All AI-assisted material was reviewed by the team before it was merged. All 
+MIS module suggestions were thoroughly reviewed by the team memeber and were 
+only included when they aligned with the software architecture and requirements 
+defined in the SRS and MG. All identified suggestions that the AI recommended 
+based on other documentation specifications (i.e. SRS and MG) were manually 
+reviewed and validated by the team before incorporation into the document to 
+ensure that the AI did not hallucinate information that is not included in 
+the team's SRS or MG. Reflection answers were checked against the meeting 
+notes to ensure accuracy in the responses based on the team's discussion. 
+Changes were made through pull requests and reviewed by at least one 
+other team member, and the team is responsible for the accuracy of the final 
+document.
 
 \section{Appendix --- Reflection}
 
