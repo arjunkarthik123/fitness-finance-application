@@ -71,11 +71,11 @@ See SRS Documentation at \wss{give url}
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+Flexin'. Flexin' is a mobile application that teaches users the compounding benefits of fitness and finance by rewarding users with virtual currency for setting and completing fitness goals. The virtual currency can be used to purchase virtual assets and help grow their virtual portfolio. Users can also compete with friends and other users on the leaderboard to see who can earn the most virtual currency. The application is designed to be used on mobile devices and will integrate with fitness tracking applications such as Google Fit, Apple Health, and Garmin Connect.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/arjunkarthik123/fitness-finance-application}.
 
 \section{Notation}
 
@@ -427,15 +427,19 @@ This module is M2 in the Module Guide.
 
 Persistence
 
+\medskip
+
+\noindent This module is an abstract object responsible for storing and retrieving all persistent application information. It abstracts the underlying database technology from the remainder of the system. All modules that require long-term storage communicate with the database exclusively through this module.
+
 \subsection{Uses}
 
-\wss{Modules this module uses}
+None. This module is the lowest-level application module and directly accesses the database management system. Higher-level modules depend on it, but it depends only on its environment variables.
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+None. This module relies on the database schema defined in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftArchitecture/MG.pdf}{Module Guide, Section 11 - Database Design}.
 
 \subsubsection{Exported Access Programs}
 
@@ -444,37 +448,109 @@ Persistence
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+create & entityType: String, record: T & recordID: int & InvalidRecord \\
+read & entityType: String, recordID: int & T & RecordNotFound \\
+update & entityType: String, recordID: int, record: T & N/A & RecordNotFound, InvalidRecord \\
+delete & entityType: String, recordID: int & N/A & RecordNotFound \\
+query & entityType: String, filter: Map & sequence of T & InvalidQuery \\
 \hline
 \end{tabular}
 \end{center}
+
+\noindent Where T represents any persistent entity supported by the application, including users, activities, goals, ledger entries, assets, transactions, portfolios, leaderboard data, and notification preferences.
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+The following collections are maintained persistently:
+
+\begin{itemize}
+  \item $\mathit{users}$
+  \item $\mathit{activities}$
+  \item $\mathit{fitnessGoals}$
+  \item $\mathit{currencyLedgerEntries}$
+  \item $\mathit{financialAssets}$
+  \item $\mathit{assetPrices}$
+  \item $\mathit{transactionHistory}$
+  \item $\mathit{portfolioHoldings}$
+  \item $\mathit{portfolioHistory}$
+  \item $\mathit{leaderboardGroups}$
+  \item $\mathit{friendsList}$
+  \item $\mathit{notificationPreferences}$
+\end{itemize}
+
+All state variables are stored in the database and survive application restarts.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+  \item $\mathit{db}$: the MySQL database server; provides methods for executing queries and transactions.
+  \item $\mathit{clock}$: the system clock; $\mathit{now}()$ returns the current Time.
+  \item $\mathit{tz}$: the system time zone; used for timestamping records.
+  \item $\mathit{migrationFramework}$: database migration service used to maintain schema compatibility between releases.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+  \item The database server is available and operating correctly.
+  \item Database credentials and connection information are valid.
+  \item Calling modules perform business-rule validation before invoking persistence operations.
+  \item Database transactions provide atomicity and consistency.
+  \item Data schemas are synchronized with the application's current version.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+The following apply to every access routine:
+
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+  \item An exception leaves the persistent state unchanged.
+  \item Every successful write operation is durable once committed.
+\end{itemize}
+
+\noindent create(entityType, record):
+\begin{itemize}
+  \item transition: record is inserted into the database under entityType.
+  \item output: newly assigned recordID.
+  \item exception: InvalidRecord $\rightarrow$ record does not conform to the schema for entityType.
+\end{itemize}
+
+\noindent read(entityType, recordID):
+\begin{itemize}
+  \item output: stored record associated with recordID from entityType.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+\end{itemize}
+
+\noindent update(entityType, recordID, record):
+\begin{itemize}
+  \item transition: the stored record with recordID from entityType is replaced by record.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+  \item exception: InvalidRecord $\rightarrow$ record does not conform to the schema for entityType.
+\end{itemize}
+
+\noindent delete(entityType, recordID):
+\begin{itemize}
+  \item transition: removes the specified record with recordID from entityType.
+  \item exception: RecordNotFound $\rightarrow$ no matching record exists.
+\end{itemize}
+
+\noindent query(entityType, filter):
+\begin{itemize}
+  \item output: list of stored records from entityType that match the filter.
+  \item exception: InvalidQuery $\rightarrow$ filter cannot be executed.
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+  \item validateRecord(record: T, entityType: String) $\rightarrow \mathbb{B}$: ensures record satisfies constraints and required fields for entityType.
+  \item entityExists(entityType: String, recordID: int) $\rightarrow \mathbb{B}$: checks if a record with recordID exists in entityType.
+  \item generateFilterQuery(entityType: String, filter: Map) $\rightarrow$ SQL query string: converts a filter map into a valid SQL database query.
+  \item serialize(record: T) $\rightarrow$ database-compatible format: converts an application object into a format suitable for database storage.
+  \item deserialize(database-compatible format) $\rightarrow$ T: converts stored database data back into an application object.
+\end{itemize}
 
 \section{MIS of User and Onboarding Module} \label{misUser}
 
@@ -2371,6 +2447,10 @@ This module is M12 in the Module Guide.
 
 UIScreens
 
+\medskip
+
+\noindent This module is a library responsible for presenting the user interface of the Flexin’ mobile application. It manages navigation, screen rendering, user interaction handling, and presentation of data obtained through the API Client and Fitness Integration modules.
+
 \subsection{Uses}
 
 \begin{itemize}
@@ -2386,16 +2466,38 @@ UIScreens
 
 \subsubsection{Exported Constants}
 
-\wss{Exported constants, or None}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{DefaultRefreshInterval} & 30 seconds & Default UI refresh interval\\
+\textsf{MaxSearchLength} & 100 Characters & Maximum search text length\\
+\textsf{SupportedThemeModes} & Light, Dark & Available application Themes\\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{p{5cm} p{3cm} p{2cm} p{3cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+showLoginScreen & - & N/A & - \\
+showOnboardingScreen & userID: int & N/A & NoAccount \\
+showHomepageScreen & userID: int & N/A & NoAccount \\
+showFitnessScreen & userID: int & N/A & NoAccount \\
+showPortfolioScreen & userID: int & N/A & NoAccount \\
+showAssetCatalogueScreen & userID: int & N/A & NoAccount \\
+showLeaderboardScreen & userID: int & N/A & NoAccount \\
+showUserProfileScreen & userID: int & N/A & NoAccount \\
+showSettingsScreen & userID: int & N/A & NoAccount \\
+navigateTo & screenName: String & N/A & InvalidScreen \\
+displayError & message: String & N/A & - \\
+refreshScreen & currentScreen: String & N/A & NetworkError \\
 \hline
 \end{tabular}
 \end{center}
@@ -2404,28 +2506,114 @@ UIScreens
 
 \subsubsection{State Variables}
 
-\wss{State variables, or None}
+\begin{itemize}
+  \item $\mathit{currentScreen}$: String, the name of the currently displayed screen.
+  \item $\mathit{selectedTheme}$: {Light, Dark}, the current theme mode of the application.
+  \item $\mathit{currentUser}$: UserID $\cup \{\bot\}$, the ID of the user currently logged in - this may be null when the user is not logged in or when the app was just opened.  \item $\mathit{userPreferences}$: Dictionary, stores user-specific settings and preferences.
+  \item $\mathit{navigationHistory}$: List, stores the history of screens navigated to.
+\end{itemize}
+
+\noindent These values only exist while the application is executing.
 
 \subsubsection{Environment Variables}
 
-\wss{Environment variables, or None}
+\begin{itemize}
+  \item $\mathit{mobileOperatingSystem}$: The mobile device operating system responsible for executing the application and providing operating-system-level services.
+  \item $\mathit{touchScreen}$: The device touch interface through which users provide input such as taps, swipes, scrolling, and gesture-based navigation.
+  \item $\mathit{deviceStorage}$: The local storage available on the user's device for temporarily storing application data, cached information, and user preferences.
+  \item $\mathit{networkConnection}$: The network service that enables communication between the application and backend services through internet connectivity.
+  \item $\mathit{deviceClock}$: The device's system clock used for displaying timestamps, scheduling refresh operations, and time-dependent UI functionality.
+\end{itemize}
 
 \subsubsection{Assumptions}
 
-\wss{Assumptions, or None}
+\begin{itemize}
+  \item Screen dimensions are sufficient to display supported layouts.
+  \item User authentication has been completed before restricted screens are shown.
+  \item The API Client Module provides valid responses.
+  \item Network connectivity may be unavailable; the UI must continue displaying the most recently retrieved information when possible.
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent showLoginScreen():
 \begin{itemize}
-\item transition: \wss{if appropriate}
-\item output: \wss{if appropriate}
-\item exception: \wss{if appropriate}
+\item transition: currentScreen $\mathit{out} :=$ Login.
+\item output: login interface is rendered.
+\end{itemize}
+
+\noindent showOnboardingScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Onboarding.
+\item output: onboarding interface is rendered.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showHomepageScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Homepage.
+\item output: overview of FLX balance, portfolio value, fitness progress, and leaderboard summary.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showFitnessScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Fitness.
+\item output: active goals, recommended goals, connected-device status, and sync information are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showPortfolioScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Portfolio.
+\item output: holdings, recent transactions, portfolio value, and performance information are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showAssetCatalogue(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ AssetCatalogue.
+\item output: available assets, search controls, and purchase actions are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent showLeaderboardScreen(userID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ Leaderboards.
+\item output: private and public leaderboard views are displayed.
+\item exception: userID $\notin$ valid users $\Rightarrow$ NoAccount.
+\end{itemize}
+
+\noindent navigateTo(screenID):
+\begin{itemize}
+\item transition: currentScreen $\mathit{out} :=$ screenID.
+\item output: new screen is displayed that matches screenID.
+\item exception: screenID $\notin$ valid screens $\Rightarrow$ InvalidScreen.
+\end{itemize}
+
+\noindent displayError(message):
+\begin{itemize}
+\item output: error banner, dialog, or message displayed to the user.
+\end{itemize}
+
+\noindent refreshScreen(currentScreen):
+\begin{itemize}
+\item transition: latest available information is requested from the API Client Module and rendered.
+\item exception: NetworkUnavailable $\rightarrow$ cached information is shown if available.
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{Local functions, or None}
+\begin{itemize}
+  \item validateNavigation(screenID: String) $\rightarrow \mathbb{B}$: Returns true, if and only if, screenID references a valid application screen.
+  \item formatCurrency(value: $\mathbb{R}$) $\rightarrow$ String: Converts a numeric value into FLX display format.
+  \item formatPercentage(value: $\mathbb{R}$) $\rightarrow$ String: Converts a numeric value into a percentage string.
+  \item buildDashboardView(userData, portfolioData, activityData) $\rightarrow$ ViewModel: Creates dashboard presentation data.
+  \item buildPortfolioView(portfolioData) $\rightarrow$ ViewModel: Creates presentation data for finance-related screens.
+  \item buildFitnessView(goalData, activityData) $\rightarrow$ ViewModel: Creates presentation data for fitness-related screens.
+  \item showLoadingState() $\rightarrow$ N/A: Displays a loading indicator while data is being retrieved.
+  \item showEmptyState() $\rightarrow$ N/A: Displays a message when no content is available.
+\end{itemize}
 
 \newpage
 \section{MIS of Notification Module} \label{misNoti}
@@ -3901,36 +4089,61 @@ $\mathit{commonPasswords}$ are held in memory and are set by init.
 
 \section{Appendix --- Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+\begin{itemize}
+    \item \textbf{Claude Opus 5.5}
+    \item \textbf{Github Copilot}
+    \item \textbf{Microsoft Office Copilot}
+    \item \textbf{ChatGPT 5.6}
+    \item \textbf{Gemini 3.8}
+\end{itemize}
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+\begin{itemize}
+    \item \textbf{MIS Module Design and Brainstorming (Document-wide):} AI was used 
+    to assist with the brainstorming and refinement of MIS modules throughout the 
+    document. During module decomposition, AI was used as an ideation tool to suggest 
+    potential modules, identify missing responsibilities, and highlight possible 
+    abstractions that may not have been considered during the team's initial design 
+    sessions.
+    \item \textbf{MIS Component Development (Document-wide):} AI was used to help 
+    develop MIS module components, including exported constants, state variables, 
+    environment variables, assumptions, access routine semantics, and local functions. 
+    AI was primarily used for idea generation, ensuring completeness of module specifications, 
+    and identifying common MIS elements that may have been omitted during manual development. 
+    \item \textbf{Consistency Checking Between Documents (Document-wide):} AI was used to 
+    compare MIS module specifications against the Module Guide (MG), Software Requirements 
+    Specification (SRS), and database design documentation to help identify inconsistencies, 
+    missing functionality, and potential gaps in module responsibilities. All identified 
+    suggestions were manually reviewed and validated by the team before incorporation into the document.
+    \item \textbf{Reflection Drafting (Appendix --- Reflection):} The team met
+    and agreed on the answers to the reflection questions, and recorded them as
+    notes. AI was used to turn those notes into the written answers.
+    \item \textbf{Symbols, Abbreviations, Acronyms, and Notation(Section 2 and Section 4):} AI was used to build the
+    symbols, abbreviations, and acronyms table from the terms used in this
+    document. Symbols, abbreviations, and acronyms that already exist in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} reuse
+    the SRS names and values. AI was also used to build the notation table from the terms used in this document. The notation table was built by using the terms used in this document and the SRS, and then AI was used to find the proper notation for each term.
+    \item \textbf{Formatting Consistency (Document-wide):} AI was used to
+    find and fix formatting that differed between sections written by
+    different team members to ensure consistency in MIS module structures, notations, and general formatting.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+All AI-assisted material was reviewed by the team before it was merged. All 
+MIS module suggestions were thoroughly reviewed by the team memeber and were 
+only included when they aligned with the software architecture and requirements 
+defined in the SRS and MG. All identified suggestions that the AI recommended 
+based on other documentation specifications (i.e. SRS and MG) were manually 
+reviewed and validated by the team before incorporation into the document to 
+ensure that the AI did not hallucinate information that is not included in 
+the team's SRS or MG. Reflection answers were checked against the meeting 
+notes to ensure accuracy in the responses based on the team's discussion. 
+Changes were made through pull requests and reviewed by at least one 
+other team member, and the team is responsible for the accuracy of the final 
+document.
 
 \section{Appendix --- Reflection}
 
