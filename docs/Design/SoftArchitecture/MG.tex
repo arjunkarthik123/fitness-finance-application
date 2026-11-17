@@ -3,10 +3,14 @@
 \usepackage{fullpage}
 \usepackage[round]{natbib}
 \usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, fit, backgrounds}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -46,8 +50,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 16, 2026 & 1.0 & Completed Revision -1 of the MG\\
 \bottomrule
 \end{tabularx}
 
@@ -55,26 +58,56 @@ Date 2 & 1.1 & Notes\\
 
 \section{Reference Material}
 
-This section records information for easy reference. 
+This section records information for easy reference.
+
+\subsection{Related Documents}
+
+The MG builds on the earlier \textit{Flexin'} documents listed below. Terms that
+are not defined here, such as portfolio, streak and
+virtual currency, are defined in the glossary of the SRS.
+
+\begin{itemize}
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals}:
+  the problem \textit{Flexin'} addresses, its stakeholders and the project goals.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}:
+  the team's workflow, the technology stack and the project schedule.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{Software Requirements Specification (SRS)}:
+  the functional and non-functional requirements that this design satisfies.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis}:
+  the hazards identified for the system and the safety requirements that
+  address them.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV Plan)}:
+  how the requirements and the design will be verified.
+\item \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{Module Interface Specification (MIS)}:
+  the detailed access programs, state variables and semantics of each module
+  identified in this document.
+\end{itemize}
 
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
+  API & Application Programming Interface\\
+  DAG & Directed Acyclic Graph\\
+  ETF & Exchange-Traded Fund\\
+  FLX & Symbol of the \textit{Flexin'} virtual currency\\
+  JPA & Jakarta Persistence API\\
+  M & Module\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  OS & Operating System\\
   R & Requirement\\
-  SC & Scientific Computing \\
+  SDK & Software Development Kit\\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  \textit{Flexin'} & The name of the application, a play on ``flexing'' both\\
+  & physical fitness and financial gains\\
+  UC & Unlikely Change\\
+  UI & User Interface\\
+  VnV & Verification and Validation\\
   \bottomrule
 \end{tabular}\\
 
@@ -97,11 +130,25 @@ software.  A module is a work assignment for a programmer or programming
 team~\citep{ParnasEtAl1984}.  We advocate a decomposition
 based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
-where modifications are frequent, especially during initial development as the
-solution space is explored.  
+hides represent likely future changes.
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Design for change is especially valuable for \textit{Flexin'}, an Android
+application that rewards users with virtual currency for their physical
+activity and lets them invest that currency in a simulated market. Several
+parts of the system are expected to change as the project develops: the
+fitness data providers it reads from, the rules that convert activity into
+currency, the calibration of the market simulation, and the look of the user
+interface (Section~\ref{SecChange}). Hiding each of these decisions in its own
+module means that a change to one of them can be made without rewriting the
+rest of the system.
+
+\textit{Flexin'} has two parts: a mobile application built with React Native and
+Expo, and a backend service built with Spring. This document treats both as a
+single module hierarchy. The mobile application reaches the backend only
+through the API Client Module (\mref{mAPI}), so the boundary between the two
+parts is itself a secret that can change.
+
+Our design follows the rules laid out by \citet{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
@@ -110,24 +157,36 @@ Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
   structures must obtain it by calling access programs belonging to that module.
 \end{itemize}
 
-After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
-specifies the modular structure of the system and is intended to allow both
-designers and maintainers to easily identify the parts of the software.  The
-potential readers of this document are as follows:
+After completing the first stage of the design, the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS},
+the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG specifies
+the modular structure of \textit{Flexin'} and is intended to allow both designers
+and maintainers to easily identify the parts of the software. The detailed
+interface of each module is given in the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{MIS},
+and the code that implements each module is listed in
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/src/TraceToDesign.md}{\texttt{src/TraceToDesign.md}}.
+The potential readers of this document are as follows:
 
 \begin{itemize}
-\item New project members: This document can be a guide for a new project member
-  to easily understand the overall structure and quickly find the
-  relevant modules they are searching for.
+\item New project members: This document can be a guide for a new project
+  member to understand the overall structure of the mobile application and the
+  backend, and to quickly find the module, and the code, responsible for a
+  feature such as goal tracking, the currency ledger or the market simulation.
 \item Maintainers: The hierarchical structure of the module guide improves the
-  maintainers' understanding when they need to make changes to the system. It is
-  important for a maintainer to update the relevant sections of the document
-  after changes have been made.
+  maintainers' understanding when they need to make changes to the system, for
+  example when a new fitness data provider is added or the reward rules are
+  adjusted. It is important for a maintainer to update the relevant sections of
+  the document after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
   check for consistency, feasibility, and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
+\item Testers and reviewers: The traceability matrices let the people who
+  carry out the
+  \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{VnV Plan},
+  including the teaching team, check that every requirement in the SRS is
+  covered by at least one module.
 \end{itemize}
 
 The rest of the document is organized as follows. Section
@@ -139,54 +198,53 @@ connections between the software requirements and the modules, and
 Section \ref{SecTM} within it includes two traceability matrices. One checks
 the completeness of the design against the requirements provided in the SRS. The
 other shows the relation between anticipated changes and the modules. Section
-\ref{SecUse} describes the use relation between modules.
+\ref{SecUse} describes the use relation between modules. The remaining
+sections describe the user interfaces, the communication protocols, the
+database design, the timeline and the use of generative AI in preparing this
+document.
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
 This section lists possible changes to the system. According to the likeliness
 of the change, the possible changes are classified into two
 categories. Anticipated changes are listed in Section \ref{SecAchange}, and
-unlikely changes are listed in Section \ref{SecUchange}.
+unlikely changes are listed in Section \ref{SecUchange}. The information for the sections was based 
+upon the initial findings stated in the \href{URL}{SRS}.
 
 \subsection{Anticipated Changes} \label{SecAchange}
 
-Anticipated changes are the source of the information that is to be hidden
-inside the modules. Ideally, changing one of the anticipated changes will only
-require changing the one module that hides the associated decision. The approach
-adapted here is called design for
-change.
-
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item[\refstepcounter{acnum} \actheacnum \label{acSignIn}:] The sign-in methods
-  supported, such as adding sign-in through a third-party identity provider
-  (for example, Google).
-\item[\refstepcounter{acnum} \actheacnum \label{acFundPricing}:] How ETF and
-  fund prices are determined, for example deriving them from the simulated
-  assets each fund holds instead of simulating them independently.
-\item ...
+  \item[AC1: Data collection sources.] The sources from which fitness data can be tracked will be changed and updated fitness data providers are added or update their interfaces.
+  \item[AC2: Educational content.] The content of the financial lessons will change as technical decisions are made.
+  \item[AC3: Virtual reward system.] The rules for calculating reward values and amounts will be adjusted based on application testing to ensure the best user experience.
+  \item[AC4: User interface look and feel.] The user interface will change over time as development continues, in order to provide the best user experience.
+  \item[AC5: Market simulator.] The generation of assets and securities, and their rates of growth and decline, will require calibration to provide a realistic experience while balancing user time constraints and user experience.
+  \item[AC6: Notifications.] The kinds of notifications and their default settings are likely to change based on user feedback.
+  \item[AC7: Hardware.] The specific hardware on which the software runs, including the phone's sensors and the wearable devices that record user activity, may change as new devices are supported.
+  \item[AC9: Sign-in methods.] The sign-in methods supported are likely to expand, for example through the addition of sign-in with a third-party identity provider such as Google.
+  \item[AC10: Fund pricing.] The method by which ETF and fund prices are determined may change, for example by deriving them from the simulated assets each fund holds instead of simulating them independently.
 \end{description}
-
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
-The module design should be as general as possible. However, a general system is
-more complex. Sometimes this complexity is not necessary. Fixing some design
-decisions at the system architecture stage can simplify the software design. If
-these decision should later need to be changed, then many parts of the design
-will potentially need to be modified. Hence, it is not intended that these
-decisions will be changed.
-
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[UC1: Core functionality.] The following core functions of the application will not change:
+    \begin{itemize}
+      \item \textbf{Investing:} Users can purchase and sell securities and assets.
+      \item \textbf{Portfolio:} Users can hold securities, and the portfolio's value can grow or decline.
+      \item \textbf{Fitness goals:} Users can set and work toward fitness goals to earn virtual currency.
+      \item \textbf{Market simulation:} The market is a simulated environment that is separate from the real world.
+    \end{itemize}
+  \item[UC2: Virtual currency.] The virtual currency used in the application has no monetary value.
+  \item[UC3: Social features.] The following social features will not change:
+    \begin{itemize}
+      \item \textbf{Friends:} Users can add friends and communicate with them.
+      \item \textbf{Leaderboards:} Users can join groups and compete against each other on multiple statistics, such as portfolio performance and currency acquired.
+    \end{itemize}
+  \item[UC4: Privacy.] User data will be protected in accordance with all applicable legal requirements.
+  \item[UC5: Platform.] The application will be developed for the Android operating system. Additional platforms will not be added due to time constraints.
+  \item[UC6: Technology stack.] The tools used to build the application will remain consistent throughout development.
+  \item[UC7: Web API.] The API will be developed as a web API.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -350,12 +408,9 @@ to be implemented.
 \subsubsection{Activity Module (\mref{mAct})}
 
 \begin{description}
-\item[Secrets:] How synced activity is represented, stored and deduplicated,
-  and which records are eligible for a reward.
-\item[Services:] Accepts workouts and daily step totals synced from the mobile
-  app, ignores records that have already been received, reports a user's
-  recorded activity over a given period, and tells the Currency Ledger Module
-  when new eligible activity should be rewarded.
+\item[Secrets:] How synced activity is represented and stored.
+\item[Services:] Accepts fitness information synced from the mobile
+client and reports the activity.  
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -396,8 +451,9 @@ to be implemented.
   available in the simulated market.
 \item[Services:] Lists the assets that can be traded, describes each asset
   (symbol, name and asset type), and reports and updates the quantity of each
-  asset available. A new asset type can be added through new asset definitions
-  alone, without changes to the trading logic.
+  asset available. Lets administrators add assets and change an asset's name,
+  supply and dividend yield, and keeps a permanent log of these changes. A new
+  asset type can be added without changes to the trading logic.
 \item[Implemented By:] \progname{} (backend)
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -563,61 +619,290 @@ The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
 between requirements and modules is listed in Table~\ref{TblRT}.
 
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
+Some requirements could only be met by making a design decision that the SRS
+does not state. These decisions are recorded here so that they are not left
+implicit.
+
+\begin{itemize}
+\item \textbf{Prices are set by the server through quotes} (SEC-INT-02,
+  PR-RFT-02). A trade takes two steps. The Transaction Order Module
+  (\mref{mPurch}) first issues a quote at the current simulated price, and the
+  app then confirms the quote by its identifier alone. The app never sends a
+  price, and the trade happens at the price the user saw. A quote expires
+  after a short time or when a new price is published.
+\item \textbf{Trades are carried out as a single unit of work} (PR-RFT-02). The
+  changes a trade makes to the currency balance, the holdings and the asset's
+  available quantity, through \mref{mCur}, \mref{mPort} and \mref{mAsset}, take
+  effect together or not at all. Units of work for the same user never run at
+  the same time, so two requests cannot both spend the same balance.
+\item \textbf{Leaderboards cannot award currency} (PR-SC-08, FUNC-15). The
+  Leaderboard and Friends Module (\mref{mLead}) does not use the Currency
+  Ledger Module, so no ranking can change a balance. Scores are each member's
+  percentage of a goal, capped at 100\%, so going beyond a goal gives no
+  advantage.
+\item \textbf{Community features are opt-in and use an alias} (SEC-PRV-02,
+  UHR-PER-03). Other users are identified only by an alias the user chooses,
+  and a user who does not share cannot be found.
+\item \textbf{Money values are exact} (PR-PA-01, PR-PA-04). Amounts have
+  exactly two decimal places and assets are traded in whole units, so the cost
+  of a trade and the value of a portfolio never need rounding.
+\item \textbf{Every activity record has a stable key} (PR-PA-03). The Fitness
+  Integration Module (\mref{mFI}) gives each workout and each daily step total
+  a key that does not change between syncs, so the Activity Module
+  (\mref{mAct}) can tell new records from ones it has already received.
+\item \textbf{The app reaches the backend only through the API Client Module}
+  (\mref{mAPI}) (PR-RFT-04, MAS-ADPT-02). It keeps the last data received and
+  marks it as possibly out of date when the backend cannot be reached. Another
+  mobile platform would only need its own screens and API client, since all
+  calculations are done on the backend.
+\item \textbf{Market history is append-only} (SEC-AUD-01). The Market
+  Simulation (\mref{mMkt}), Transaction Order (\mref{mPurch}) and Currency
+  Ledger (\mref{mCur}) modules only ever append to their records of prices,
+  trades and currency entries, which together form the audit ledger.
+\end{itemize}
 
 \subsection{Traceability Matrix} \label{SecTM}
 
 This section shows two traceability matrices: between the modules and the
 requirements and between the modules and the anticipated changes.
 
-% the table should use mref, the requirements should be named, use something
-% like fref
-\begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Req.} & \textbf{Modules}\\
-\midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
-\bottomrule
-\end{tabular}
+Table~\ref{TblRT} lists every requirement in the SRS, grouped by section, with
+the modules that satisfy it. Requirements marked with $\dagger$ are not met by
+any module. They are met by how the team builds, tests and documents the
+system: PROD-01, MAS-MNT-03, MAS-MNT-05, COMP-LEG-07, COMP-STD-01,
+COMP-STD-03, COMP-STD-04, COMP-STD-06, DOC-04 and SC-06. They are listed so
+that the table covers the whole SRS. Every module in Section~\ref{SecMH}
+satisfies at least one requirement.
+
+The educational content (lessons, glossary and help center) and the
+disclaimers are presented by the UI Screens Module (\mref{mUI}), which is
+why it appears against the documentation, learning and safety requirements.
+
+{\small
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.17\textwidth}
+  >{\raggedright\arraybackslash}p{0.36\textwidth}
+  >{\raggedright\arraybackslash}p{0.38\textwidth}}
 \caption{Trace Between Requirements and Modules}
-\label{TblRT}
-\end{table}
+\label{TblRT}\\
+\toprule
+\textbf{Req.} & \textbf{Name} & \textbf{Modules}\\
+\endfirsthead
+\toprule
+\textbf{Req.} & \textbf{Name} & \textbf{Modules}\\
+\endhead
+\bottomrule
+\multicolumn{3}{l}{$\dagger$ Met by the development process, not by a
+  module.}\\
+\endlastfoot
+\midrule
+\multicolumn{3}{r}{\textit{Continued on next page}}\\
+\endfoot
+\midrule
+\multicolumn{3}{l}{\textit{Functional Requirements}}\\
+FUNC-01 & User Registration & \mref{mUser}, \mref{mUI}, \mref{mAPI}, \mref{mAuth}\\
+FUNC-02 & User Authentication & \mref{mUI}, \mref{mAPI}, \mref{mAuth}\\
+FUNC-03 & Third-Party Fitness Data Import & \mref{mFI}, \mref{mAct}, \mref{mUI}\\
+FUNC-04 & Fitness Goal Creation & \mref{mGoal}, \mref{mUI}\\
+FUNC-05 & Fitness Goal Tracking & \mref{mAct}, \mref{mGoal}\\
+FUNC-06 & Reward Allocation & \mref{mAct}, \mref{mGoal}, \mref{mCur}\\
+FUNC-07 & Virtual Currency Tracking & \mref{mCur}\\
+FUNC-08 & Portfolio Creation & \mref{mUser}, \mref{mPort}\\
+FUNC-09 & Asset Purchase & \mref{mCur}, \mref{mAsset}, \mref{mPurch}, \mref{mPort}, \mref{mUI}, \mref{mMkt}\\
+FUNC-10 & Asset Sale & \mref{mCur}, \mref{mPurch}, \mref{mPort}, \mref{mUI}\\
+FUNC-11 & Transaction Recording & \mref{mPurch}, \mref{mUI}\\
+FUNC-12 & Portfolio Performance Calculation & \mref{mPort}, \mref{mMkt}\\
+FUNC-13 & Leaderboard Participation & \mref{mGoal}, \mref{mLead}\\
+FUNC-14 & Friend Management & \mref{mLead}\\
+FUNC-15 & Private Leaderboards & \mref{mLead}\\
+FUNC-16 & Progress Reporting & \mref{mProg}, \mref{mUI}\\
+FUNC-17 & Sponsored Reward Redemption & \mref{mCur}, \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Look and Feel Requirements}}\\
+LF-APP-01 & Visual Hierarchy & \mref{mProg}, \mref{mUI}\\
+LF-APP-02 & Compounding Chart & \mref{mPort}, \mref{mUI}\\
+LF-APP-03 & Responsive Layout & \mref{mUI}\\
+LF-APP-04 & Theme and Contrast & \mref{mUI}\\
+LF-APP-05 & Navigation & \mref{mUI}\\
+LF-STY-01 & Approachable Tone & \mref{mUI}\\
+LF-STY-02 & Virtual Currency Symbol & \mref{mUI}\\
+LF-STY-03 & Non-Intrusive Gamification & \mref{mUI}\\
+LF-STY-04 & Component Consistency & \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Usability and Humanity Requirements}}\\
+UHR-EOU-01 & Onboarding Completion Time & \mref{mUser}, \mref{mUI}\\
+UHR-EOU-02 & Dashboard Accessibility & \mref{mProg}, \mref{mUI}\\
+UHR-EOU-03 & Minimal Screen Navigation & \mref{mUI}\\
+UHR-EOU-04 & Error Feedback and Recovery & \mref{mUI}, \mref{mAPI}\\
+UHR-EOU-05 & Positive Feedback & \mref{mUI}\\
+UHR-EOU-06 & Simple and Reliable Device Connectivity & \mref{mFI}, \mref{mUI}\\
+UHR-EOU-07 & Consistent User Interface & \mref{mUI}\\
+UHR-EOU-08 & Learnability & \mref{mUI}\\
+UHR-EOU-09 & Efficient Re-Learnability & \mref{mUI}\\
+UHR-PER-01 & Personalized Fitness Goals & \mref{mGoal}, \mref{mUI}\\
+UHR-PER-02 & Customizable Notifications & \mref{mNoti}\\
+UHR-PER-03 & Customizable Privacy Settings & \mref{mLead}, \mref{mUI}\\
+UHR-PER-04 & Customizable Competition Groups & \mref{mLead}\\
+UHR-INT-01 & Canadian Time Zone Support & \mref{mFI}, \mref{mAct}, \mref{mGoal}\\
+UHR-LRN-01 & Minimal User Training & \mref{mUI}\\
+UHR-LRN-02 & Learning Curve of Financial Concepts & \mref{mUI}\\
+UHR-LRN-03 & Learning Curve of Fitness Based Concepts & \mref{mUI}\\
+UHR-LRN-04 & Integrated Educational Assistance & \mref{mUI}\\
+UHR-UND-01 & Plain Language Communication & \mref{mUI}\\
+UHR-UND-02 & Compounding Transparency and Distinction & \mref{mPort}, \mref{mProg}, \mref{mUI}\\
+UHR-UND-03 & Action Outcome Transparency & \mref{mPurch}, \mref{mUI}\\
+UHR-POL-01 & Respectful User Communication & \mref{mUI}, \mref{mNoti}\\
+UHR-POL-02 & Positive Motivational Feedback & \mref{mUI}, \mref{mNoti}\\
+UHR-POL-03 & Non-Punitive Performance Messaging & \mref{mUI}, \mref{mNoti}\\
+UHR-POL-04 & Respectful Competitive Features & \mref{mLead}, \mref{mUI}\\
+UHR-POL-05 & Respectful User-Generated Content & \mref{mUser}, \mref{mLead}\\
+UHR-ACC-01 & Screen Reader Compatibility & \mref{mUI}\\
+UHR-ACC-02 & Scalable Text Support & \mref{mUI}\\
+UHR-ACC-03 & Color Independent Information & \mref{mUI}\\
+UHR-ACC-04 & Touch Target Accessibility & \mref{mUI}\\
+UHR-ACC-05 & Alternative Notification Methods & \mref{mUI}, \mref{mNoti}\\
+UHR-ACC-06 & Inclusive Activity Tracking & \mref{mAct}, \mref{mCur}\\
+\midrule
+\multicolumn{3}{l}{\textit{Performance Requirements}}\\
+PR-SL-01 & App launch & \mref{mUI}, \mref{mAPI}\\
+PR-SL-02 & Response to input & \mref{mUI}, \mref{mAPI}\\
+PR-SL-03 & Trades & \mref{mPurch}, \mref{mUI}, \mref{mAPI}\\
+PR-SL-04 & Activity sync & \mref{mFI}, \mref{mAct}, \mref{mCur}, \mref{mAPI}\\
+PR-SC-01 & Daily earning limits & \mref{mCur}\\
+PR-SC-02 & No penalties for missed days & \mref{mGoal}, \mref{mCur}\\
+PR-SC-03 & Simulated market is labelled & \mref{mUI}\\
+PR-SC-04 & Not financial advice & \mref{mUser}, \mref{mUI}\\
+PR-SC-05 & Exercise injury warning & \mref{mUI}\\
+PR-SC-06 & Safe goal progression & \mref{mGoal}\\
+PR-SC-07 & Notification limits & \mref{mNoti}\\
+PR-SC-08 & Safe leaderboard rules & \mref{mLead}\\
+PR-PA-01 & Exact money values & \mref{mCur}, \mref{mPurch}, \mref{mPort}, \mref{mMkt}\\
+PR-PA-02 & Consistent currency awards & \mref{mCur}\\
+PR-PA-03 & No double counting & \mref{mFI}, \mref{mAct}\\
+PR-PA-04 & Portfolio value & \mref{mPort}\\
+PR-PA-05 & Workout dates & \mref{mFI}, \mref{mAct}, \mref{mCur}\\
+PR-PA-06 & Realistic market simulation & \mref{mMkt}\\
+PR-RFT-01 & Offline activity & \mref{mFI}, \mref{mAct}\\
+PR-RFT-02 & Atomic writes & \mref{mPer}, \mref{mCur}, \mref{mPurch}, \mref{mPort}\\
+PR-RFT-03 & Failing data sources & \mref{mFI}, \mref{mAct}\\
+PR-RFT-04 & Backend unavailable & \mref{mUI}, \mref{mAPI}\\
+PR-C-01 & Users & \mref{mPer}, \mref{mAPI}\\
+PR-C-02 & History & \mref{mPer}, \mref{mAct}, \mref{mPurch}, \mref{mPort}\\
+PR-SE-01 & Adding fitness sources & \mref{mFI}, \mref{mAct}, \mref{mCur}\\
+PR-SE-02 & Adding asset types & \mref{mAsset}, \mref{mPurch}, \mref{mMkt}\\
+PR-SE-03 & More server capacity & \mref{mPer}, \mref{mAPI}\\
+PR-L-01 & Supported Android versions & \mref{mFI}, \mref{mUI}\\
+PR-L-02 & Keeping user history & \mref{mPer}, \mref{mUser}\\
+\midrule
+\multicolumn{3}{l}{\textit{Operational and Environmental Requirements}}\\
+PROD-01 & Build and Quality Assurance & --\textsuperscript{$\dagger$}\\
+PROD-02 & Installability & \mref{mFI}, \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Maintainability and Support Requirements}}\\
+MAS-MNT-01 & Fitness Activity Addition Effort & \mref{mAct}, \mref{mCur}\\
+MAS-MNT-02 & Investment Asset Addition Effort & \mref{mAsset}, \mref{mMkt}\\
+MAS-MNT-03 & Corrective Maintenance Effort & --\textsuperscript{$\dagger$}\\
+MAS-MNT-04 & Third-Party Integration Maintenance & \mref{mFI}\\
+MAS-MNT-05 & Traceability & --\textsuperscript{$\dagger$}\\
+MAS-SUP-01 & Contact Support Capability & \mref{mUI}\\
+MAS-ADPT-01 & External Fitness Provider Adaptability & \mref{mFI}\\
+MAS-ADPT-02 & Mobile Platform Portability & \mref{mUI}, \mref{mAPI}\\
+MAS-ADPT-03 & Future Artificial Intelligence Service Adaptability & \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Security Requirements}}\\
+SEC-ACC-01 & Authenticated Access & \mref{mAPI}, \mref{mAuth}\\
+SEC-ACC-02 & Role-Based Authorization & \mref{mAuth}\\
+SEC-ACC-03 & Fitness Integration Authorization & \mref{mFI}\\
+SEC-ACC-04 & Password and Sign-In Protection & \mref{mUI}, \mref{mAuth}\\
+SEC-ACC-05 & Session End and Device Unlinking & \mref{mFI}, \mref{mAPI}, \mref{mAuth}\\
+SEC-INT-01 & Activity Validation & \mref{mFI}, \mref{mAct}\\
+SEC-INT-02 & Server-Side Valuation & \mref{mCur}, \mref{mPurch}, \mref{mPort}, \mref{mMkt}\\
+SEC-INT-03 & Data Backups and Recovery & \mref{mPer}\\
+SEC-PRV-01 & Health Data Protection & \mref{mPer}, \mref{mAPI}\\
+SEC-PRV-02 & Private by Default & \mref{mLead}, \mref{mAuth}\\
+SEC-PRV-03 & User Data Deletion & \mref{mPer}, \mref{mUser}, \mref{mAuth}\\
+SEC-AUD-01 & Economic Event Logging & \mref{mPer}, \mref{mCur}, \mref{mPurch}, \mref{mMkt}\\
+SEC-AUD-02 & Security Event Logging & \mref{mAct}, \mref{mAuth}\\
+SEC-IMM-01 & Injection Defense & \mref{mPer}, \mref{mAPI}\\
+SEC-IMM-02 & Rate Limiting & \mref{mAuth}\\
+SEC-IMM-03 & Client Environment Validation & \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Cultural Requirements}}\\
+CUL-01 & Supports Canadian Languages & \mref{mUI}, \mref{mNoti}\\
+CUL-02 & Culturally Neutral Educational Content & \mref{mAsset}, \mref{mUI}\\
+\midrule
+\multicolumn{3}{l}{\textit{Compliance Requirements}}\\
+COMP-LEG-01 & User Consent for Health Data Collection & \mref{mFI}, \mref{mUI}\\
+COMP-LEG-02 & Protection of Personal Information & \mref{mPer}, \mref{mUser}, \mref{mAuth}\\
+COMP-LEG-03 & Sharing of User Data & \mref{mPer}, \mref{mLead}\\
+COMP-LEG-04 & User Data Deletion Rights & \mref{mPer}, \mref{mUser}\\
+COMP-LEG-05 & AI-Content Disclosure & \mref{mUI}\\
+COMP-LEG-06 & Age Verification & \mref{mUser}\\
+COMP-LEG-07 & Third-Party Licensing Compliance & --\textsuperscript{$\dagger$}\\
+COMP-STD-01 & Android Platform Compliance & --\textsuperscript{$\dagger$}\\
+COMP-STD-02 & Accessibility Compliance & \mref{mUI}\\
+COMP-STD-03 & TypeScript Coding Standards Compliance & --\textsuperscript{$\dagger$}\\
+COMP-STD-04 & Java Coding Standards Compliance & --\textsuperscript{$\dagger$}\\
+COMP-STD-05 & Database Compliance & \mref{mPer}\\
+COMP-STD-06 & Software Testing Standard Compliance & --\textsuperscript{$\dagger$}\\
+COMP-STD-07 & Information Security Compliance & \mref{mPer}, \mref{mAuth}\\
+\midrule
+\multicolumn{3}{l}{\textit{Documentation Requirements}}\\
+DOC-01 & Financial and Fitness Glossary & \mref{mUI}\\
+DOC-02 & Fitness Integration Guide & \mref{mUI}\\
+DOC-03 & Searchable Help Center & \mref{mUI}\\
+DOC-04 & Digital Manual and Release Notes & --\textsuperscript{$\dagger$}\\
+\midrule
+\multicolumn{3}{l}{\textit{Training Requirements}}\\
+TRN-01 & Interactive Onboarding & \mref{mUI}\\
+TRN-02 & Progressive Feature Discovery & \mref{mProg}, \mref{mUI}\\
+TRN-03 & Demonstrator Quick-Start Kit & \mref{mAsset}, \mref{mMkt}\\
+\midrule
+\multicolumn{3}{l}{\textit{Solution Constraints}}\\
+SC-01 & Android platform & \mref{mFI}, \mref{mUI}\\
+SC-02 & Frontend technology & \mref{mFI}, \mref{mUI}, \mref{mAPI}\\
+SC-03 & Backend technology & \mref{mPer}, \mref{mAuth}\\
+SC-04 & Fitness data sources & \mref{mFI}\\
+SC-05 & Simulated market only & \mref{mMkt}\\
+SC-06 & Distribution & --\textsuperscript{$\dagger$}\\
+
+\end{longtable}
+}
+
+Table~\ref{TblACT} traces each anticipated change in Section~\ref{SecAchange}
+to the module that hides it. Some modules hide more than one anticipated
+change, because the changes are closely related:
+
+\begin{itemize}
+\item AC1 and AC7 are both hidden by the Fitness Integration Module
+  (\mref{mFI}). New fitness data providers and new devices are both reached
+  through the provider's SDK or web API, which is the secret of this module.
+\item AC2 and AC4 are both hidden by the UI Screens Module (\mref{mUI}),
+  because the educational content is part of what the screens present.
+\item AC5 and AC10 are both hidden by the Market Simulation Module
+  (\mref{mMkt}). Fund pricing is part of how prices are generated.
+\end{itemize}
+
+\noindent The modules that do not appear in Table~\ref{TblACT} hide design
+decisions that follow from the requirements in the SRS, such as how holdings,
+transactions or leaderboard groups are represented. Changes to those decisions
+are not expected to come from outside the team, so no anticipated change is
+listed for them.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\begin{tabular}{p{0.45\textwidth} p{0.45\textwidth}}
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+AC1: Data collection sources & \mref{mFI}\\
+AC2: Educational content & \mref{mUI}\\
+AC3: Virtual reward system & \mref{mCur}\\
+AC4: User interface look and feel & \mref{mUI}\\
+AC5: Market simulator & \mref{mMkt}\\
+AC6: Notifications & \mref{mNoti}\\
+AC7: Hardware & \mref{mFI}\\
+AC9: Sign-in methods & \mref{mAuth}\\
+AC10: Fund pricing & \mref{mMkt}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -637,18 +922,114 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
+In Figure \ref{FigUH}, an arrow from module A to module B means that A uses B.
+The arrows are the ones listed in the Uses section of each module's MIS. The
+API Client Module (\mref{mAPI}) uses every module inside the shaded box, so a
+single arrow to the box stands for one arrow to each of those modules. The
+Persistence Module (\mref{mPer}) and the Authentication and Security Module
+(\mref{mAuth}) are used by many modules, so the arrows into them are grey and
+blue respectively. Each row of the box is one level of the hierarchy, and
+every arrow points to a lower row. The Fitness Integration Module
+(\mref{mFI}) runs on the phone, so it is outside the box. It sits below the
+box because the Activity Module (\mref{mAct}) and the Currency Ledger Module
+(\mref{mCur}) use it, and the arrow to it from the UI Screens Module
+(\mref{mUI}) runs down the right side of the figure.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\resizebox{\textwidth}{!}{%
+% Uses hierarchy for Section 8.
+% Each arrow line ends with a comment naming the uses relation it draws.
+% The arrows must match the Uses sections of the MIS: when a module's Uses
+% section changes, add or remove the matching arrow here.
+\begin{tikzpicture}[
+  >={Stealth[length=2.2mm]},
+  mod/.style={draw, rounded corners=2pt, fill=white, align=center,
+    font=\fontsize{9}{10.5}\selectfont, minimum height=1.25cm, text width=2.55cm, inner sep=2pt,
+    execute at begin node={\hyphenpenalty=10000}},
+  use/.style={->, semithick},
+  useper/.style={->, semithick, black!45},
+  useauth/.style={->, semithick, blue!65!black}]
+
+% Mobile modules
+\node[mod] (M12) at (10, 4.75) {UI Screens\\(\mref{mUI})};
+\node[mod] (M15) at (10, 2.85) {API Client\\(\mref{mAPI})};
+
+% Backend modules used by the API Client, one row per level of the hierarchy
+\node[mod] (M11) at (7.85, 0) {Progress Reporting\\(\mref{mProg})};
+\node[mod] (M8) at (14.07, 0) {Transaction Order\\(\mref{mPurch})};
+\node[mod] (M13) at (17.43, 0) {Notification\\(\mref{mNoti})};
+\node[mod] (M9) at (11.03, -2.3) {Portfolio\\(\mref{mPort})};
+\node[mod] (M10) at (2.65, -4.61) {Leaderboard and Friends\\(\mref{mLead})};
+\node[mod] (M14) at (18.6, -4.61) {Market Simulation\\(\mref{mMkt})};
+\node[mod] (M3) at (1.9, -6.91) {User and Onboarding\\(\mref{mUser})};
+\node[mod] (M5) at (7.16, -6.91) {Goals\\(\mref{mGoal})};
+\node[mod] (M7) at (17.4, -6.91) {Asset\\(\mref{mAsset})};
+\node[mod] (M4) at (3.23, -9.21) {Activity\\(\mref{mAct})};
+\node[mod, text width=4cm] (M16) at (8.33, -9.21) {Authentication and Security (\mref{mAuth})};
+\node[mod] (M6) at (12.74, -9.21) {Currency Ledger\\(\mref{mCur})};
+
+% Fitness Integration runs on the phone, so it is outside the box. It sits
+% below Activity and Currency Ledger because both of them use it.
+\node[mod] (M1) at (10, -11.51) {Fitness Integration\\(\mref{mFI})};
+\node[mod, text width=20.46cm] (M2) at (10, -13.82) {Persistence (\mref{mPer})};
+
+\begin{scope}[on background layer]
+  \node[draw, rounded corners=4pt, fill=black!4, inner sep=8pt,
+    fit={(0, 1.07) (20, -9.84)}] (backend) {};
+\end{scope}
+\node[anchor=north west, font=\fontsize{8}{9.5}\selectfont\itshape, inner sep=3pt]
+  at (backend.north west) {Backend modules used by the API Client};
+
+% Uses arrows: black between modules, grey into Persistence,
+% blue into Authentication and Security
+\draw[use] (M12) -- (M15);  % M12 uses M15
+\draw[use] (M12.east) -- (20.8, 4.75) |- (M1.east);  % M12 uses M1
+\draw[use] (M15) -- (backend.north -| M15);  % M15 uses every module in the box
+\draw[use] (M11) -- (3.56, -8.59);  % M11 uses M4
+\draw[use] (M11) -- (7.24, -6.28);  % M11 uses M5
+\draw[use] (M11) -- (12.41, -8.59);  % M11 uses M6
+\draw[use] (M11) -- (10.16, -1.68);  % M11 uses M9
+\draw[use] (M11) -- (3.38, -3.98);  % M11 uses M10
+\draw[useauth] (M11) -- (9.03, -8.59);  % M11 uses M16
+\draw[useper] (M8) -- (14.64, -13.19);  % M8 uses M2
+\draw[use] (M8) -- (12.86, -8.59);  % M8 uses M6
+\draw[use] (M8) -- (17.08, -6.28);  % M8 uses M7
+\draw[use] (M8) -- (11.86, -1.68);  % M8 uses M9
+\draw[use] (M8) -- (17.98, -3.98);  % M8 uses M14
+\draw[useauth] (M8) -- (9.93, -8.59);  % M8 uses M16
+\draw[useper] (M13) -- (14.19, -13.19);  % M13 uses M2
+\draw[use] (M13) -- (8.09, -6.28);  % M13 uses M5
+\draw[use] (M13) -- (13.76, -8.59);  % M13 uses M6
+\draw[use] (M13) -- (18.43, -3.98);  % M13 uses M14
+\draw[useauth] (M13) -- (10.43, -8.83);  % M13 uses M16
+\draw[useper] (M9) -- (16.64, -13.19);  % M9 uses M2
+\draw[use] (M9) -- (13.31, -8.59);  % M9 uses M6
+\draw[use] (M9) -- (16.53, -6.28);  % M9 uses M7
+\draw[use] (M9) -- (17.23, -4.16);  % M9 uses M14
+\draw[useauth] (M9) -- (8.38, -8.59);  % M9 uses M16
+\draw[useper] (M10) -- (7.24, -13.19);  % M10 uses M2
+\draw[use] (M10) -- (6.04, -6.28);  % M10 uses M5
+\draw[useauth] (M10) -- (6.48, -8.59);  % M10 uses M16
+\draw[useper] (M14) -- (20.09, -13.19);  % M14 uses M2
+\draw[use] (M14) -- (11.86, -8.59);  % M14 uses M6
+\draw[use] (M14) -- (17.73, -6.28);  % M14 uses M7
+\draw[useauth] (M14) -- (7.93, -8.59);  % M14 uses M16
+\draw[useper] (M3) -- (1.24, -13.19);  % M3 uses M2
+\draw[useauth] (M3) -- (6.23, -8.89);  % M3 uses M16
+\draw[useper] (M5) -- (3.09, -13.19);  % M5 uses M2
+\draw[use] (M5) -- (4.31, -8.59);  % M5 uses M4
+\draw[use] (M5) -- (11.36, -8.65);  % M5 uses M6
+\draw[useper] (M7) -- (16.19, -13.19);  % M7 uses M2
+\draw[useauth] (M7) -- (9.48, -8.59);  % M7 uses M16
+\draw[useper] (M4) -- (3.54, -13.19);  % M4 uses M2
+\draw[use] (M4) -- (8.62, -11.07);  % M4 uses M1
+\draw[useper] (M16) -- (8.44, -13.19);  % M16 uses M2
+\draw[useper] (M6) -- (12.64, -13.19);  % M6 uses M2
+\draw[use] (M6) -- (10.73, -10.89);  % M6 uses M1
+\draw[useper] (M1) -- (9.99, -13.19);  % M1 uses M2
+\end{tikzpicture}%
+}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
@@ -657,8 +1038,9 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+Figma was used to design the user interfaces of Flexin'. The Figma prototype is available at \url{https://www.figma.com/design/XYYlxxNJ2Ar0Fw3FS51wkH/Flexin-?node-id=0-1&t=znK4WMT1IdooXAyN-1}.
+
+Screenshots of the user interfaces can also be found in the Appendix of this document and even in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/assets/images/FigmaAllUserInterfaces.pdf}{assets/images folder} in this repository.
 
 \section{Design of Communication Protocols}
 
@@ -668,9 +1050,13 @@ in with NA if it is not appropriate for a given project.}
 
 \section{Database Design}
 
-\wss{If a database is a significant component of the project, the database
-design should be summarized here.  This section should be filled in with NA if
-it is not appropriate for a given project.}
+In this section the database design is provided. The figure below outlines the required database tables, their individual schemas (including primary and foreign keys), and the relationships between tables.
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[page=2, width=1\textwidth]{../../../assets/images/DatabaseDesign.pdf}
+    \caption{The database design for the Flexin' application.} 
+\end{figure}
 
 \section{Timeline}
 
@@ -680,36 +1066,107 @@ it is not appropriate for a given project.}
 
 \section{Generative AI Use Disclosure}
 
-\wss{ChatGPT (version 5) was used to brainstorm ideas for the template for this disclose section.}
-
 \subsection{AI Tools Used}
 
-\wss{Give the name of the AI tool(s) used and the version.}
+\begin{itemize}
+    \item \textbf{Claude Opus 5.5}
+    \item \textbf{Claude Sonnet 5.5}
+    \item \textbf{GitHub Copilot}, using the GPT-5.6 model
+\end{itemize}
 
 \subsection{How and Where Used}
 
-\wss{Explain what the tool(s) were used for.  Examples include: brainstorming,
-explaining a technical concept, reviewing the document, generating or modifying
-text, generating or modifying diagrams, identifying errors or omissions or
-inconsistencies.}
-
-\wss{For each of the uses, identify which parts of the document were affected.}
-
-\wss{You do not need to report every interaction, but you should disclose the 
-uses that materially contributed to your work}
+The AI tools listed above were used in the following ways while drafting and
+refining the Module Guide:
+\begin{itemize}
+    \item \textbf{Idea Generation (Document-wide):} AI tools were used to
+    brainstorm candidate modules, the secrets each module hides, and likely
+    and unlikely changes. The team chose the final decomposition and wrote
+    the module descriptions.
+    \item \textbf{Cross-Referencing Completed Deliverables (Document-wide):}
+    AI tools were used to compare this document against the team's completed
+    deliverables (Problem Statement, Development Plan, SRS, Hazard Analysis
+    and VnV Plan) to find inconsistencies in terminology, requirement
+    identifiers and scope.
+    \item \textbf{Uses Hierarchy Diagram (Section~\ref{SecUse}):} The uses
+    hierarchy diagram in Figure~\ref{FigUH} was generated with AI, based on
+    the uses relations decided by the team.
+    \item \textbf{Traceability Matrices (Section~\ref{SecTM}):} The
+    traceability matrices between modules and requirements
+    (Table~\ref{TblRT}) and between modules and anticipated changes
+    (Table~\ref{TblACT}) were generated with AI from the SRS requirements,
+    the anticipated changes in Section~\ref{SecChange} and the module
+    decomposition in Section~\ref{SecMD}.
+    \item \textbf{Table Generation (Document-wide):} AI tools were used to
+    build the LaTeX tables in this document, including the module
+    hierarchy table and the abbreviations and acronyms table.
+    \item \textbf{LaTeX Syntax and Grammar Checks (Document-wide):} AI tools
+    were used to debug LaTeX markup and to check spelling, grammar and
+    phrasing.
+\end{itemize}
 
 \subsection{Verification of AI-Generated Content}
 
-\wss{\begin{itemize}
-    \item Describe how the team checked AI-generated or AI-assisted material
-    before including it in the document.
-    \item In particular, verify factual claims, technical assertions,
-    requirements, calculations, references, and other information for which an
-    AI system may produce incorrect or fabricated results.
-    \item \textbf{The team is responsible for the accuracy, completeness,
-consistency, and appropriateness of the submitted document, regardless of
-whether material was generated by a human or an AI system.}
-\end{itemize}}
+All AI-generated and AI-assisted material was reviewed by team members before
+it was included in the document:
+\begin{itemize}
+    \item \textbf{Ideas and Cross-Referencing:} Ideas suggested by AI were
+    only used once the team agreed they fit the project. Each inconsistency
+    reported by AI was confirmed by reading the relevant passage of the
+    source deliverable before any change was made, and the team decided how
+    each one was resolved.
+    \item \textbf{Uses Hierarchy Diagram:} Every arrow in the diagram was
+    checked against the uses relations agreed by the team and against the
+    module descriptions in Section~\ref{SecMD}, and the diagram was checked
+    to confirm that it is a directed acyclic graph.
+    \item \textbf{Traceability Matrices:} Each row was checked against the
+    requirement identifiers in the SRS and the anticipated changes in
+    Section~\ref{SecChange}, to confirm that every requirement and
+    anticipated change is mapped to at least one module and that each
+    mapping matches the module's responsibilities.
+    \item \textbf{Tables, LaTeX and Grammar:} The document was compiled after
+    each change and the output was checked to confirm that it rendered as
+    intended. All changes were reviewed by other team members through a pull
+    request before being merged.
+\end{itemize}
+
+The team is responsible for the accuracy, completeness, consistency and
+appropriateness of this document, whether material was written by a team
+member or generated by an AI system.
+
+\section{Appendix}
+
+\subsection{Screenshots of User Interfaces}
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.3\textwidth]{../../../assets/images/FigmaAppIconInterface.pdf}
+    \caption{Flexin' App Icon on an iPhone Home Screen.} 
+\end{figure}
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.5\textwidth]{../../../assets/images/FigmaLoginAndHomepageScreens.pdf}
+    \caption{The login screen (on the left) and homepage screen (on the right).} 
+\end{figure}
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.5\textwidth]{../../../assets/images/FigmaFitnessScreens.pdf}
+    \caption{The fitness tracking screens. Main screen (on the left) and the outcome of selecting the "Add New Goal" button (on the right).} 
+\end{figure}
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.5\textwidth]{../../../assets/images/FigmaFinanceScreens.pdf}
+    \caption{The finance tracking screens. Main screen (on the top left), the outcome of selecting the "Sell Assets" button (on the top right), the financial assets catalogue screen - as an outcome of selecting the "Buy Assets" button (on the bottom left), and the outcome of selecting the "Buy" button on an asset on the financial assets catalogue screen (on the bottom right).} 
+\end{figure}
+
+\begin{figure}[H] 
+    \centering 
+    \includegraphics[width=0.5\textwidth]{../../../assets/images/FigmaLeaderboardScreens.pdf}
+    \caption{The leaderboard screens. Private leaderboards view (on the left) and public leaderboards view (on the right).} 
+\end{figure}
 
 \newpage{}
 
