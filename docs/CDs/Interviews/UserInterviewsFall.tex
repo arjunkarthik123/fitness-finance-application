@@ -14,6 +14,12 @@
 \begin{document}
 
 \maketitle
+
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+
 \section{Introduction}
 This document presents the information gathered through the user interview process. It is used to elicit and inform the functional and non-functional requirements, user interests and needs, and technical decisions for the project. The document contains the list of interview questions, the rationale for each question, the standard follow-up questions, and a summary of the responses received. These summaries inform the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{Software Requirements Specification (SRS)}, the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV Plan)}, and the design documents: the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftArchitecture/MG.pdf}{Module Guide (MG)} and the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/Design/SoftDetailedDes/MIS.pdf}{Module Interface Specification (MIS)}. 
 
@@ -238,8 +244,8 @@ the beginner lessons and want more depth, which is the reason for the
 stretch goal of tailoring the application to users with different levels
 of knowledge (takeaway 7 below).
 
-\section{Key Takeaways for the Project}
-This section outlines key takaways that helped to inform decisions in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS}, and reinforce decisions made in previously completed documents
+\section{Key Takeaways for the Project - Mapping to Previous Decisions}
+This section outlines key takaways that helped to inform decisions in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS} and \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/HazardAnalysis/HazardAnalysis.pdf}{Hazard Analysis} and helped to reinforce decisions made in previously completed documents.
 \begin{enumerate}
 \item \textbf{Time is the main constraint.} Participants most often named a lack of time, not a lack of knowledge, as the barrier to building habits. This supports passive tracking through connected fitness data (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{FUNC-03, Third-Party Fitness Data Import}), minimal logging effort, and one small daily goal.
 \item \textbf{Beginners are the priority.} Most participants rated their financial literacy as 2 or 3 out of 5, which is consistent with the project's priority on novice users (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS, Section 2.6}). Lessons should use plain language and cover basics such as the Tax-Free Savings Account (TFSA) and First Home Savings Account (FHSA), loans and interest, and compounding. This is also consistent with the knowledge gap among young adults described in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals}~\cite{boisclair2017}.
@@ -250,19 +256,365 @@ This section outlines key takaways that helped to inform decisions in the \href{
 \item \textbf{Advanced users want depth.} User 7 asked about bond yields and User 2 about market timing, which supports the stretch goal of tailored interactions for users with different knowledge levels (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/ProblemStatementAndGoals/ProblemStatement.pdf}{Problem Statement and Goals, Section 3: Stretch Goals}).
 \end{enumerate}
 
-
-\section{Key Learning Points - SRS Mapping}
-
-
 \newpage{}
 
 \section{Appendix - Generative AI Use Disclosure}
 \subsection{AI Tools Used}
+The following AI tools were used:
+\begin{itemize}
+  \item Claude Sonnet 5.5
+  \item Claude Fable 5.2
+\end{itemize}
 \subsection{How and Where Used}
+The AI tools listed above were used throughout the drafting and refinement of
+the Custom Document -- User Interviews, as follows:
+\begin{itemize}
+  \item \textbf{Document Formatting}: AI tools assisted in authoring, refining,
+    and debugging the LaTeX markup, particularly the configuration, alignment,
+    and formatting of the document. They also helped set up cross-references to
+    other documents, configure the overall document layout, and adding a table of contents
+    and list of figures.
+  \item \textbf{Interview Summarization and Requirements Mapping}: AI tools
+    helped summarize the interview findings so the team could report on them.
+    They were also used to identify and describe connections between interview responses and
+    the team's past and current decisions, as recorded in previous documents,
+    and to produce ideas based on those connections.
+  \item \textbf{Text Quality}: AI tools were used to review and improve the
+    written text, including grammar, word choice, and clarity.
+  \item \textbf{Interview Responses Display}: AI tools were used to extract the interview
+    responses presented below. They also helped review those responses and
+    remove personally identifying information (e.g., gender, age, and body
+    measurements). Any such information was generalized; for example,
+    gender-specific pronouns were replaced with gender-neutral ones.
+\end{itemize}
 \subsection{Verification of AI-Generated Content}
-
-\section{Appendix - Reflection}
+All content produced or modified with AI assistance was verified by the team to ensure accuracy, technical correctness, and alignment with project goals. 
+\begin{itemize}
+    \item \textbf{Peer Review and Cross-Reading:} Every section developed or
+    refined using AI was reviewed by multiple team members through peer reviews
+    and pull request evaluations to ensure the content accurately reflected
+    project goals and engineering specifications.
+    \item \textbf{Source and Fact Verification:} All factual assertions,
+    financial principles, domain definitions, and references were verified
+    against authoritative academic sources, financial standards, and official
+    platform documentation to guard against hallucinated or fabricated claims.
+    \item \textbf{Diagram and Implementation Validation:} The PlantUML code,
+    architectural models, and state diagrams generated with AI assistance were validated by the team
+    against our planned backend data schema and system requirements to ensure
+    technical correctness and consistency.
+    \item \textbf{Document and Compilation Testing:} All LaTeX markup,
+    tables, and environments generated with AI assistance were compiled locally
+    to ensure syntax validity, proper page flow, and adherence to document
+    formatting standards.
+\end{itemize}
+The team assumes full responsibility for the accuracy, completeness,
+consistency, and appropriateness of this document.
 
 \section{Appendix - Transcripts}
+\subsection{Interviewee 1}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you were given \$1000 to spend in any way you would like, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Contribute money to savings, has a savings mindset.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Response:} 2, understands general budgeting and good spending habits. More knowledge to be obtained on the specifics of investment side of finance. Does not have a personal interest in finance but does think they should learn more. This is due to lack of interest and balancing current priorities.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Response:} 4, works out approx.\ 3 times a week, keeps clean healthy and trackable eating habits (minimize sweets, focus on balance), and does not take extra supplements. Goals are more general/soft without specific tracking; ``Get stronger, feel better''.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Response:} Apple Watch as the main workout tracker, step tracker, calorie burning and heart rate monitor. Used to use an Ultrahuman Ring (like an Oura ring). Outside of banking applications nothing is used.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Response:} Due to lack of interest and not being a part of a school degree, basics are known but anything other than surface level topics seem uninterested. Bank advisors help guide the banking decisions. Good habits in fitness are upheld by personal motivation. Fitness motivation comes from personal goals and enjoyment.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Additional question.} \textit{What are some things that would provide an interest in getting more involved?}
+
+\begin{quote}
+\textbf{Response:} Objective/daily games tend to make a bigger want to do it (example: Wordle). One objective per day and a guided approach. Fitness is not as big of a focus, but finance would provide more value (already into fitness).\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 2}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Probably buy a Sharks jersey -- spend immediately on consumer goods -- half is splurging. Save or invest half of it.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Response:} 3, feels like they know enough and stay relatively on top of the stock market. But does not feel confident enough that they could give financial advice. Feel smart enough with your savings and money management.\par
+\textbf{Follow-up response:} Pretty good -- general understanding of which accounts have what levels of risk. Could invest on their own -- they have their own investing portfolio. They know what a TFSA is and have one maxed out. They also know FHSA, RESP, RRSP, and savings: chequing, US accounts, foreign exchange account types.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Response:} 3 or 4 -- because they have cheat days (i.e.\ eat sweets). But can manage their temptations overall -- rarely eat out. Pretty good at staying active -- work out $\sim$2--3 times a week and play other sports in between.\par
+\textbf{Follow-up response:} Workout -- basic weight training 2--3 times per week, try to stay active doing cardio through sports. No supplements outside of vitamins, and just protein powder in the form of a protein shake. Sets workout goals -- no firm goal process, just do it and try to hit weight training 2 times a week and stay as best on top of meals. No firm metrics of goal tracking. Usually goes in phases, sometimes routine/goals are more strict, other times it becomes looser/less strict -- school has been keeping them busy and led to the goals becoming harder to manage.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Fitness:} Usually nothing -- no fitness devices. Scale for weight, loose measuring tape -- more manual and less digital fitness devices/tools. Currently tracks fitness data on a calendar. Has tried an app but usually they uninstall it because they don't like it. With apps, it annoys them that a lot of features are paid -- this is usually what drives them away from apps -- basic/free features are not enough. With apps they also find that it takes too many steps/clicks just to log basic data -- do not want the extra work of logging. Used to have a Fitbit -- did not use it enough, used a lot when running -- not used for weight training.\par
+\textbf{Investing/savings:} TFSA -- only holds indexes (ETF version not mutual fund), has savings accounts, chequing account, separate portfolio on a normal account to invest in stocks -- try to diversify to cover different sectors of the stock market. Has these with 2 different banks.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Finance:} Nothing in the financial realm that they feel they can't learn. But a few areas that they could learn: liquidity zones, macro and micro effects on currency conversion rates, analyzing stocks to see if you are doing it right/it is healthy -- more the when to buy (i.e.\ have money in the market and hold out or time purchases).\par
+\textbf{Fitness:} Same thing for fitness -- you can learn anything, nothing super intimidating. At one point wanted to try calisthenics.\par
+\textbf{Confidence/motivation:} A steady income is the only thing that would make them want to invest more. For fitness, would like to better develop a routine to be consistent.\par
+\textbf{Staying on habits:} Set a certain amount of \$ each paycheck ($\leq$ 50\%) into savings and investments -- want a minimum in their spending accounts. Won't touch any investments or savings unless making a big purchase. For fitness, more of a mental discipline -- most of it is mental/from the head.\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 3}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Putting all of the money into the bank account (keeping 50--100 dollars as cash).
+\begin{itemize}
+  \item Too much to have in cash on you.
+  \item 100 dollars could be spent towards social hangouts, nails.
+    \begin{itemize}
+      \item Tell oneself these are expensive therefore spend on it.
+    \end{itemize}
+  \item Rest goes into savings immediately.
+\end{itemize}
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Response:} Rates themselves a 2 (possibly a 3), not 1 due to some knowledge (has idea of diversification, TFSA/FHSA), feels as though people have more knowledge and can make better investments. Feels like they know as much as the average person does. They would want to learn more, however time is a constraint, would want to learn more however, good to be knowledgeable about this kind of content. Stereotype about people of their demographic not knowing finances, they do not want to be amongst that and want to know more beyond the basics. Doesn't want regrets in the future by not having the knowledge fair.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Response:} Rates themselves a 2 for this as well. They can do workouts and have knowledge, but time is a usual constraint. Challenge in building a habit when there's a lot to juggle. A higher rating could be making time to go to the gym at a scheduled time, some steps from going to classes but not as much as would be ideal. Knowledge of running techniques (need to also do other exercises), knowledge of stretches, and how to do different workouts. Building the habit/discipline is the core challenge here.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Fitness:} Checks the Google Fit app and checks the step counter on there occasionally (mainly if there is a notification on it). May be interested in tech for fitness (like aura rings that tell more information on heart rate and sleep) but these tools are not financially accessible, Apple watches same thing, too expensive.\par
+\textbf{Investing/savings:} Does not use any tools. Only way of getting info is from friends/family or a financial advisor. Knowing themselves, may get hyper fixated on the number and could be stressful. May be interested in it as a learning tool however but to check own values not as much. Does have the standard savings/checking, also a TFSA and FHSA. Has monthly auto deposits, checks on the accounts every couple months.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Finance:} Anything home related (i.e.\ mortgages), paying back loans, these are topics that are not as known therefore it can be intimidating to hear about. Example being for loans, not necessarily paying back right away, guessing that it is something to do with interest. Mainly these topics exist, not too knowledgeable about how they work.\par
+\textbf{Fitness:} With running, seems like in the media people are able to pick it up a lot faster compared to themselves. At some point, would want to keep up a regular exercise schedule multiple times a week, in ideal world, run a half-marathon but gotta make time and that is not easy.\par
+\textbf{Motivations:} Maybe open discussions how people are not all at the same level, people go at it at different paces. Not a confidence aspect, time is the key limiter. Maybe trying to start small with something (not having an all or nothing mindset).\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 4}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Realistically, they would see if someone dropped it.\par
+\textbf{Follow-up question:} \textit{If it was yours to take?}\par
+\textbf{Follow-up response:} They would give some to their partner so that the partner could afford flights. They would give to their parents to pay back for their ubers. And they would invest some.\par
+\textbf{Follow-up question:} \textit{What would you invest in (say you had 10k)?}\par
+\textbf{Follow-up response:} After splitting up the 10k, they would buy a few things for themselves, and then invest it in stocks. They would make their dad teach them where and how to invest the money.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Response:} 2 -- their parents have not taught them much when it comes to money, when they ask, their parents say ``you will learn later''. Their dad does it for them rather than teaching, but they know they should learn about it.\par
+\textbf{Follow-up response:} Yes, they do want to learn more about investing, they want to learn how to properly save money since they are in fine arts and may have a hard time finding a stable income in the future.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Response:} Right now, 2. They eat healthy and try to sleep well but they don't really go to the gym and get too much exercise.\par
+\textbf{Follow-up response:} More focus on exercise is the main gap, they would be motivated to exercise more if they had a friend to go with.\par
+\textbf{Follow-up question:} \textit{What if you had a way to compete with your friend and compare progress? Would that motivate?}\par
+\textbf{Follow-up response:} They are not sure if this would motivate them in the gym, but that would help them in their main hobbies.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Response:} They would like to use an Apple Watch but they don't have one, they use the built-in step counter on their iPhone. They use no tools for investing, everything goes through their dad.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Response:} They know nothing about investing, so everything is confusing. They do not know what a TFSA is. Fitness can be overwhelming, but they do have ADHD. If they had a goal of 8000 steps a day, they think that would be attainable.\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 5}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Invest into savings.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Response:} 3/5 -- strong understanding of finances. Lack of real-world experience due to lack of interest (financial advisor and banking advisors help to make majority of decisions).\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Response:} 2/5 -- not an interest. Does Spin and Pilates classes when able and wanting to. They already have a busy schedule and without a much higher level of motivation squeezing in workouts is not a priority.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Response:} None but does check phone information.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Response:} Roadblocks come from lack of interest. Motivation comes and goes. Just generally sticking to habits with a busy schedule is a challenge.\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 6}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} Would probably save \$300, put \$300 towards paying off cards/bills, and use the other \$400 to splurge on myself/family.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Rating:} 3\par
+\textbf{Response:} Understanding the very basics of investment/saving strategies, but unsure about how to figure out which strategy is most suited to my own goals.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Rating:} 4\par
+\textbf{Response:} Gym regularly (usually 3--4x a week). Don't take supplements aside from vitamins and the occasional protein shake. Used to set my goals based on shared team goals for a sports team I was a part of, currently set my goals based on wanting to work towards achieving certain metrics (i.e.\ reaching certain number of pushups, increasing weight for a certain movement).\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Fitness:} Use Garmin watch \& Strava.\par
+\textbf{Investing/savings:} Use Wealthsimple and simple banking tools.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Finance:} Figuring out how to understand the market better feels intimidating.\par
+\textbf{Fitness:} The fitness lifestyle NO LONGER feels intimidating, but it did when I first began (felt like there was a lot of information out there and it was hard to tell what the most accurate info was).\par
+\end{quote}
+
+% --------------------------------------------------------------------------
+\subsection{Interviewee 7}
+
+\medskip
+\noindent\textbf{Q1.} \textit{If you found \$1000 on the street, what would you do with it?}
+
+\begin{quote}
+\textbf{Response:} If it's cash, I'll take all of it. I'll look around to make sure no one is looking for it, and then it's mine. I'll use that cash as spending money for gas and other expenses instead of using my credit card, until it runs out.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q2.} \textit{On a scale of 1--5, how do you perceive your level of financial literacy?}
+
+\begin{quote}
+\textbf{Rating:} 5\par
+\textbf{Response:} I allocate 15\% of my monthly income to personal spending and another 15\% to my mortgage. The rest goes toward investments, which I divide across different asset classes, such as the S\&P 500, individual long positions, the TSX, and others.\par
+My approach is based on interest and compounding. Some financial obligations, like my mortgage, represent negative cash flow, while investments, like the S\&P 500, have the potential for positive returns. Each asset class has a different risk profile, so I balance my portfolio accordingly.\par
+The reasoning behind this approach is that I limit my spending to 15\% of my income, so I'd rather put the remaining money to work instead of letting inflation erode its purchasing power.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q3.} \textit{On a scale of 1--5, how do you perceive your level of personal fitness?}
+
+\begin{quote}
+\textbf{Rating:} 3.5\par
+\textbf{Response:} I go to the gym 3--5 times a week, following a push/pull/legs/upper/lower split. I also play soccer once a week and ultimate frisbee once a week, for approximately one hour each. I walk most days and aim to reach my daily step goal.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q4.} \textit{What fitness devices do you use? What tools do you use for investing/savings?}
+
+\begin{quote}
+\textbf{Response:} I use Excel to track my gym progress and Wealthsimple to manage my investments. I don't currently use any other tools.\par
+\end{quote}
+
+\medskip
+\noindent\textbf{Q5.} \textit{What financial topics feel confusing or intimidating? Does the fitness lifestyle seem intimidating?}
+
+\begin{quote}
+\textbf{Finance:} I'm interested in understanding how the petrodollar affects bond yields and how changes in bond yields influence other economic factors, such as interest rates and inflation.\par
+\textbf{Fitness:} As for fitness, I don't find it intimidating, and I don't feel that I need more confidence in that area. However, I think I could benefit from winding down my fitness routine slightly and prioritizing better sleep. Sometimes, I feel like I have to go to the gym, even when I might benefit more from taking a break.\par
+\end{quote}
 
 \end{document}
