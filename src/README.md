@@ -53,6 +53,37 @@ real UI as each screen gets built.
   committed.
 - `npm run lint`, `npm run typecheck`, `npm test`, `npm run format`.
 
+### Installing the dev build
+
+Health Connect is built into Android 14 and later. On older phones, install the Health Connect
+app from the Play Store first.
+
+1. **Turn on USB debugging.** Settings → About phone, tap **Build number** 7 times (on Samsung
+   it is under Software information). Then Developer options → **USB debugging**.
+2. **Plug the phone in** and accept the "Allow USB debugging?" prompt. If no prompt appears,
+   set the USB mode to File transfer or try another cable. `adb devices` should list the phone
+   as `device`.
+3. **Build and install** from `src/mobile`:
+
+   ```sh
+   npx expo run:android --device
+   ```
+
+   The first build takes 5–10 minutes. Samsung phones may ask to allow the install over USB.
+   This also starts Metro.
+4. **Point the phone at Metro.** If the app says it can't reach the development server, run
+   `adb reverse tcp:8081 tcp:8081` and open `http://localhost:8081` in the dev client.
+   Run it again whenever the phone is reconnected.
+5. **Try it.** Activity tab → **Connect** → grant access → **Sync**. On a device with no real
+   steps (a tablet, an emulator), use **Seed test data** on the same screen to write a week of
+   sample steps, including one manual entry that should not count. **Clear test data** removes
+   only records this app wrote. Clear it before comparing against real steps, because the seed
+   writes records for today too.
+
+To check the result, compare the app's totals with Health Connect → Data and access →
+Activity → Steps. Match against Health Connect, not the source app: Samsung Health writes to
+Health Connect in batches, so it can be a little ahead.
+
 ### Detox (not wired up yet)
 
 `.detoxrc.js`, `e2e/jest.config.js` and a smoke test are in place. The community
