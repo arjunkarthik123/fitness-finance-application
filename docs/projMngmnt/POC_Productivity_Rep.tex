@@ -22,55 +22,66 @@ This document summarizes the contributions of each team member up to the POC
 Demo.  The time period of interest is the time between the beginning of the term
 and the POC demo.
 
-\wss{Please do not delete sections or modify the table formats.  Standardization
-helps the instructors and TAs to review these documents. You may add sections to
-the report.}
+\noindent \textbf{Project Repository:}
+\url{https://github.com/arjunkarthik123/fitness-finance-application}
 
-\wss{Remove the instructor guidelines/comments in the final version.}
-
-\wss{Fill in the requested information, like project url, TA name, supervisor name, etc.}
+\noindent \textbf{Data Collected:} November 17, 2026. The POC demos are
+scheduled for the weeks of November 23 and November 30, 2026, so all counts
+below cover September 18, 2026 (the first commit) to November 17, 2026.
 
 \section{Demo Plans}
 
-\wss{What is your feasibility risk?}
+\subsection*{Feasibility Risk}
 
-\wss{What will you be demonstrating}
+The main feasibility risk, as identified in the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development
+Plan}, is whether \progname{} can gamify and incentivize compounding habits by
+rewarding healthy long-term thinking. This is the core thesis of the product.
+The secondary risks are:
+\begin{itemize}
+    \item Improper workout verification, which leads to rewarding too little or
+    too much virtual currency, or to users exploiting the tracking system.
+    \item Users being unable to invest the virtual currency that they earn.
+    \item Failure to integrate with physical fitness technologies.
+\end{itemize}
+
+\subsection*{What Will Be Demonstrated}
+
+The POC will demonstrate the end-to-end flow that links fitness activity to
+investing:
+\begin{itemize}
+    \item Connecting to a fitness data source (Android Health Connect) and
+    importing the user's steps.
+    \item Turning the imported fitness activity (steps) into virtual currency.
+    \item Investing the virtual currency in a security.
+    \item Simulating market behaviour for that security.
+\end{itemize}
 
 \section{Team Meeting Attendance}
 
-\wss{For each team member how many team meetings have they attended over the
-time period of interest.  This number should be determined from the meeting
-issues in the team's repo.  The first entry in the table should be the total
-number of team meetings held by the team.}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{ll}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 13\\
+Arjun Karthik & 13\\
+Shao (Daniel) Hu & 12\\
+Noah Goldschmied & 12\\
+Peter DeForest & 13\\
+Daniel Franze-Da Silva & 13\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+These counts cover the 13 team meetings held between September 27 and
+November 14, 2026, which are recorded as \textit{Team Meeting} issues in the
+repository.
 
 \section{Supervisor/Stakeholder Meeting Attendance}
 
-\wss{For each team member how many supervisor/stakeholder team meetings have
-they attended over the time period of interest.  This number should be determined
-from the supervisor meeting issues in the team's repo.  The first entry in the
-table should be the total number of supervisor and team meetings held by the
-team.  If there is no supervisor, there will usually be meetings with
-stakeholders (potential users) that can serve a similar purpose.}
-
-\noindent \textbf{Supervisor's Name: } [fill in this information]
+\noindent \textbf{Supervisor's Name: } Christopher Schankula
 
 \begin{table}[H]
 \centering
@@ -78,30 +89,22 @@ stakeholders (potential users) that can serve a similar purpose.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 2\\
+Arjun Karthik & 2\\
+Shao (Daniel) Hu & 2\\
+Noah Goldschmied & 2\\
+Peter DeForest & 2\\
+Daniel Franze-Da Silva & 2\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+The team's TA is also the team's supervisor (see the Team Meeting Plan in the
+Development Plan). The team held 2 meetings with the supervisor, and every
+member attended all of them. The user interviews used for the User Interviews
+CD were held with potential users individually and are not counted here.
 
 \section{Lecture Attendance}
-
-\wss{For each team member how many lectures have they attended over the time
-period of interest.  This number should be determined from the lecture issues in
-the team's repo. You can find the number of lectures in the time period of
-interest by looking at the
-\href{https://calendar.google.com/calendar/u/0/embed?src=rnboqiaki1k2la7rpu3bn0um58@group.calendar.google.com&ctz=America/Toronto}
-{Google calendar} for the capstone course. The first entry in the
-table should be the total number of lectures held for the class during the period of interest.}
-
-\wss{NOTE: There will be approximately 13 lectures between the start of class
-and the POC demos}
 
 \begin{table}[H]
 \centering
@@ -109,25 +112,22 @@ and the POC demos}
 \toprule
 \textbf{Student} & \textbf{Lectures}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 11\\
+Arjun Karthik & 10\\
+Shao (Daniel) Hu & 9\\
+Noah Goldschmied & 10\\
+Peter DeForest & 9\\
+Daniel Franze-Da Silva & 11\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the lecture attendance can be provided here.}
+The total is the number of lectures held between the start of the term and
+the POC demo.
 
-\section{TA Document Discussion Attendance}
+\section{TA Document Discussion Attendance} \label{SecTA}
 
-\wss{For each team member how many of the informal document discussion meetings
-with the TA were attended over the time period of interest. The first row is the
-total number of discussion meetings scheduled by the TA with the team.}
-
-\noindent \textbf{TA's Name: } [fill in this information]
+\noindent \textbf{TA's Name: } Christopher Schankula
 
 \begin{table}[H]
 \centering
@@ -135,35 +135,20 @@ total number of discussion meetings scheduled by the TA with the team.}
 \toprule
 \textbf{Student} & \textbf{Meetings}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 4\\
+Arjun Karthik & 4\\
+Shao (Daniel) Hu & 4\\
+Noah Goldschmied & 4\\
+Peter DeForest & 4\\
+Daniel Franze-Da Silva & 4\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the attendance can be provided here.}
+These counts come from the \textit{TA Meeting} issues for October 7, 2026 (SRS
+and Hazard Analysis) and October 28, 2026 (VnV Plan).
 
 \section{Commits, Lines Added and Lines Deleted, Pull Requests}
-
-\wss{For each team member how many commits to the main branch have been made
-over the time period of interest.  The total is the total number of commits for
-the entire team since the beginning of the term.  The percentage is the
-percentage of the total commits made by each team member.}
-
-\wss{There are also columns for lines added and lines deleted to give a sense of
-the magnitude of each team member's contributions.  Note that these numbers can
-be somewhat misleading, as a team member who does refactoring may have high
-numbers in both columns, while a team member who implements a large new feature
-may have a high number of lines added, but few lines deleted.  As for all commit
-information, these numbers will be interpreted with care.}
-
-\wss{The pull requests column counts the number of pull requests created by each
-team member.  This is a measure of how many contributions were made in branches,
-which may not be reflected in the commit counts for the main branch.}
 
 \begin{table}[H]
 \centering
@@ -172,26 +157,42 @@ which may not be reflected in the commit counts for the main branch.}
 \textbf{Student} & \textbf{Commits} & \textbf{Percent} & \textbf{Lines Added} &
 \textbf{Lines Deleted} & \textbf{Pull Requests}\\
 \midrule
-Total & Num & 100\% & total added & total deleted & total PRs\\
-Name 1 & Num & \% & num & num & num\\
-Name 2 & Num & \% & num & num & num\\
-Name 3 & Num & \% & num & num & num\\
-Name 4 & Num & \% & num & num & num\\
-Name 5 & Num & \% & num & num & num\\
+Total & 310 & 100\% & 22239 & 5303 & 171\\
+Arjun Karthik & 44 & 14.2\% & 4281 & 821 & 34\\
+Shao (Daniel) Hu & 58 & 18.7\% & 5799 & 2042 & 15\\
+Noah Goldschmied & 49 & 15.8\% & 7785 & 1601 & 35\\
+Peter DeForest & 79 & 25.5\% & 1752 & 561 & 49\\
+Daniel Franze-Da Silva & 80 & 25.8\% & 2622 & 278 & 38\\
+\midrule
+GitHub Actions bot & 129 & -- & 21 & 20 & 0\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.  For
-instance, if a team member has more commits to unmerged branches, these numbers
-can be provided here.  If multiple people contribute to a commit, git allows for
-multi-author commits.}
+The counts were taken from the \texttt{main} branch with \texttt{git log} and
+from the GitHub API, as follows:
+\begin{itemize}
+    \item \textbf{Commits} are non-merge commits on \texttt{main}. Merge commits
+    created when pull requests were merged or branches were updated are not
+    counted. The \texttt{github-actions} bot made 129 commits, which commit
+    the compiled PDFs to the \texttt{pdfs/} folder. These are shown in a
+    separate row and are not included in the team's total or percentages.
+    One commit by the Copilot agent is also not counted. Commits made under more than one git identity (for example, a
+    university email and a GitHub no-reply email) are combined for each
+    member.
+    \item \textbf{Lines Added and Lines Deleted} leave out generated and
+    imported files: the initial commit that imported the course template
+    (11,354 lines), \texttt{src/mobile/package-lock.json} (generated by npm,
+    over 21,000 lines), PDF files, and the \texttt{.bst} bibliography style
+    file. With these included, the totals are 67,055 lines added and 5,767
+    lines deleted.
+    \item \textbf{Pull Requests} are all pull requests opened by each member,
+    including open pull requests and those closed without merging. Of the
+    171 pull requests, 1 is open and 170 are closed, of which 166 were merged
+    and 4 were closed without merging.
+\end{itemize}
 
 \section{Issue Tracker}
-
-\wss{For each team member how many issues have they authored (including open and
-closed issues (O+C)) and how many have they been assigned (only counting closed
-issues (C only)) over the time period of interest.}
 
 \begin{table}[H]
 \centering
@@ -199,53 +200,138 @@ issues (C only)) over the time period of interest.}
 \toprule
 \textbf{Student} & \textbf{Authored (O+C)} & \textbf{Assigned (C only)}\\
 \midrule
-Name 1 & Num & Num \\
-Name 2 & Num & Num \\
-Name 3 & Num & Num \\
-Name 4 & Num & Num \\
-Name 5 & Num & Num \\
+Arjun Karthik & 52 & 50 \\
+Shao (Daniel) Hu & 44 & 57 \\
+Noah Goldschmied & 40 & 53 \\
+Peter DeForest & 48 & 46 \\
+Daniel Franze-Da Silva & 51 & 57 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the counts can be provided here.}
+These counts include issues only, not pull requests. 18 of the closed issues
+(the meeting, lecture and TA meeting issues) are assigned to all five members,
+so they are included in every member's assigned count. The 19 peer review
+issues opened by Team 9 are not included in the authored counts, since they
+were not written by members of this team.
 
 \section{CICD via GitHub Actions}
 
-\wss{Say how CICD technology is used and will be used in your project.}
+The team uses two GitHub Actions workflows:
+\begin{itemize}
+    \item \textbf{App CI}
+    (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/.github/workflows/app-ci.yml}{\texttt{app-ci.yml}}):
+    runs on every push and pull request to \texttt{main} that changes the
+    source code. The \texttt{mobile} job installs the React Native app's
+    dependencies and runs ESLint, the TypeScript type check, the Prettier
+    format check and the Jest tests. The \texttt{api} job starts a MySQL
+    database and runs \texttt{./mvnw verify} on the Spring Boot backend, which
+    builds the API and runs its tests against the same database used in
+    production.
+    \item \textbf{Build LaTeX and Deploy PDFs}
+    (\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/.github/workflows/latex-pages.yml}{\texttt{latex-pages.yml}}):
+    compiles every changed LaTeX document on each pull request. The
+    \texttt{build} check is required before a pull request can be merged, so
+    a document that does not compile cannot reach \texttt{main}. On a push to
+    \texttt{main}, the workflow commits the compiled PDFs to the
+    \texttt{pdfs/} folder for TA review and deploys them to GitHub Pages.
+\end{itemize}
 
-\wss{Provide links to your CICD yaml files}
+As development continues, the team plans to add the remaining unit and
+integration tests to these workflows as each module is implemented, and to
+add the end-to-end tests once the main screens are in place.
 
 \section{Custom Documents (CDs)}
 
-\wss{What is the plan (as documented in TeamComposition.csv) for the team's
-CDs?  Should the CDs be modified now that the team knows more about the
-project?}
+
+The team has completed the User Interviews CD
+(\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/docs/CDs/Interviews/UserInterviewsFall.tex}{\texttt{UserInterviewsFall.tex}}),
+which summarizes the interviews with potential users, includes an empathy map
+of a novice participant, and lists the key takeaways that informed the SRS.
 
 \section{Team Charter Trigger Items}
 
-\wss{Provide a summary of the quantified triggers identified in the team's
-charter.}
+\subsection*{Quantified Triggers}
 
-\wss{Provide a list of any violations of the triggers.  If the team wishes, the
-violations can be summarized on aggregate, instead of naming specific team
-members.}
+The team charter (Development Plan, Appendix --- Team Charter) defines the
+following quantified triggers:
+\begin{itemize}
+    \item Each member attends at least 90\% of all scheduled meetings.
+    \item Missing 2 meetings in a row without an acceptable excuse or proper
+    communication leads to an emergency team meeting, and to escalation to the
+    TA and/or instructor if the issue continues.
+    \item Arriving late or leaving early without an acceptable excuse more
+    than 3 times leads to an emergency team meeting, and to escalation if the
+    issue continues.
+    \item Members notify the team at least 24 hours before missing a meeting,
+    unless it is an emergency.
+    \item By the end of the project, each member contributes 20--30\% of the
+    total contributions.
+\end{itemize}
 
-\wss{Provide a plan to address the violations.  This could include revising the
-triggers, if they are found to be too weak, strong or ambiguous.}
+\subsection*{Violations}
+
+There have been no violations of the triggers. Across the 30 scheduled
+meetings (13 team meetings, 11 lectures, 4 TA meetings and 2 supervisor
+meetings), every member attended at least 90\%, which meets the attendance
+trigger.
+
+\subsection*{Plan to Address the Violations}
+
+As there are no violations, no corrective action is needed. To keep the
+triggers easy to check, the team will add a field to the team meeting and
+lecture issue templates for the reason for an absence, and will review
+attendance again at the end of the fall term.
 
 \section{Additional Productivity Metrics}
 
-\wss{If your team has additional metrics of productivity, please feel free to
-add them to this report.  If not, please explicitly state that there are no additional
-metrics.}
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Metric} & \textbf{Value}\\
+\midrule
+Pull requests open & 1 of 171\\
+Pull requests closed & 170 of 171 (166 merged)\\
+Issues closed & 210 of 254\\
+Peer review issues received (Team 9) & 19 (0 closed)\\
+TA feedback issues created & 19 (0 closed)\\
+Automated test files (mobile app) & 6\\
+Automated test files (API) & 3\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\wss{Additional metrics can include things like code reviews done, pull requests
-created, count of joining meetings late, count of number of times contributions
-had to be corrected, number of internal deadlines missed, test cases written, etc.}
+The TA feedback issues were created on November 14--15, 2026, and will be
+addressed in Revision 1 of each document, along with the peer review issues.
 
-\wss{We are looking for data on these metrics, not just a list of additional
-metrics the team is planning on tracking.  However, if all you have is a plan,
-please share it here.}
+\subsection*{Pull Request Reviews}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Student} & \textbf{PRs Reviewed}\\
+\midrule
+Arjun Karthik & 39\\
+Shao (Daniel) Hu & 13\\
+Noah Goldschmied & 22\\
+Peter DeForest & 44\\
+Daniel Franze-Da Silva & 11\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These counts are the number of pull requests on which each member submitted at
+least one review (an approval, a comment or a request for changes), taken from
+GitHub. Each pull request is counted once per reviewer. Comments that were not
+part of a review, and reviews by Copilot or other bots, are not counted.
+
+Not every pull request was reviewed. As recorded in the October 18, 2026 team
+meeting issue, the team temporarily disabled branch protection and mandatory
+reviews while finishing the SRS and Hazard Analysis, because of other school
+deadlines and a busy schedule for all team members. Instead of reviewing each
+pull request individually, the team reviewed the SRS and every member's
+sections together during that meeting.
 
 \end{document}
