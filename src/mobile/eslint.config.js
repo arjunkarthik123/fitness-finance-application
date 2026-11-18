@@ -9,4 +9,23 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*', 'android/*', 'ios/*', '.expo/*'],
   },
+  {
+    // All storage goes through src/persistence (MIS M2), so only it may touch the database.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/persistence/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [{ name: 'expo-sqlite', message: 'Use @/persistence instead.' }],
+          patterns: [
+            {
+              group: ['@/persistence/*', '**/persistence/*'],
+              message: 'Import from @/persistence, not its files.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);

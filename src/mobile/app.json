@@ -38,7 +38,8 @@
             "minSdkVersion": 26
           }
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "scheme": "flexin",
     "experiments": {
