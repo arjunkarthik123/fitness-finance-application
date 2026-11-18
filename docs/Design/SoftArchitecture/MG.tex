@@ -1043,10 +1043,7 @@ Figma was used to design the user interfaces of Flexin'. The Figma prototype is 
 Screenshots of the user interfaces can also be found in the Appendix of this document and even in the \href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/assets/images/FigmaAllUserInterfaces.pdf}{assets/images folder} in this repository.
 
 \section{Design of Communication Protocols}
-
-\wss{If there is communication between hardware and software, it may be necessary 
-to explain the design of the communication protocol.  This section should be filled 
-in with NA if it is not appropriate for a given project.}
+N/A.
 
 \section{Database Design}
 
@@ -1058,11 +1055,56 @@ In this section the database design is provided. The figure below outlines the r
     \caption{The database design for the Flexin' application.} 
 \end{figure}
 
-\section{Timeline}
+\section{Timeline} \label{SecTimeline}
 
-\wss{Schedule of tasks and who is responsible}
+The schedule of tasks has been outlined in Section~22 (Tasks) of the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}{SRS},
+which is based on Section 9 (Project Decomposition and Scheduling) of the
+\href{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/DevelopmentPlan/DevelopmentPlan.pdf}{Development Plan}.
+Table~\ref{tab:mg_timeline} reproduces that task breakdown and adds the team
+members assigned to each task. Each design, development and testing task is
+assigned to two team members; documentation tasks are shared by the whole team.
 
-\wss{You can point to GitHub if this information is included there}
+% Table ported from SRS Section 22 (Tasks), table tab:flexin_gantt_tasks.
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{3.4cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}%
+  |>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}p{2.6cm}|}
+\caption{Project Schedule and Task Breakdown} \label{tab:mg_timeline} \\
+\hline
+\textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} & \textbf{Assigned Leaders} \\ \hline
+\endfirsthead
+\hline
+\textbf{Task} & \textbf{Duration} & \textbf{Start} & \textbf{Finish} & \textbf{Dependency} & \textbf{Assigned Leaders} \\ \hline
+\endhead
+Requirements Gathering \& Analysis & 4 weeks & 21-Sep-26 & 18-Oct-26 & None & Team \\ \hline
+User Interviews \& Validation & 3 weeks & 05-Oct-26 & 25-Oct-26 & Requirements Gathering \& Analysis & Noah~G., Daniel~F. \\ \hline
+Fitness API Research \& Integration Design & 3 weeks & 12-Oct-26 & 01-Nov-26 & Requirements Gathering \& Analysis & Arjun~K., Daniel~H. \\ \hline
+Virtual Currency System Design & 2 weeks & 26-Oct-26 & 08-Nov-26 & User Interviews \& Validation & Peter~D., Noah~G. \\ \hline
+Market Simulation Design & 3 weeks & 19-Oct-26 & 08-Nov-26 & Requirements Gathering \& Analysis & Daniel~H., Daniel~F. \\ \hline
+UI and UX Design \& Prototyping & 4 weeks & 26-Oct-26 & 22-Nov-26 & User Interviews \& Validation & Noah~G., Peter~D. \\ \hline
+Proof of Concept Development & 5 weeks & 02-Nov-26 & 06-Dec-26 & Fitness API Design, Currency Design & Arjun~K., Peter~D. \\ \hline
+Backend Architecture \& Database Development & 5 weeks & 11-Jan-27 & 14-Feb-27 & Design Document & Daniel~H., Peter~D. \\ \hline
+Frontend Development & 6 weeks & 11-Jan-27 & 21-Feb-27 & UI Design & Noah~G., Daniel~F. \\ \hline
+Fitness Provider Integration & 5 weeks & 18-Jan-27 & 21-Feb-27 & Backend Development & Arjun~K., Daniel~H. \\ \hline
+Portfolio Management Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Backend Development & Daniel~F., Peter~D. \\ \hline
+Gamification \& Rewards Implementation & 4 weeks & 25-Jan-27 & 21-Feb-27 & Currency Design & Noah~G., Arjun~K. \\ \hline
+Rev 0 Demo Preparation & 2 weeks & 25-Jan-27 & 07-Feb-27 & Core Workflow Demonstrable & Arjun~K., Daniel~F. \\ \hline
+User Testing Round 1 & 2 weeks & 25-Jan-27 & 07-Feb-27 & Demo Build for User Testing & Noah~G., Peter~D. \\ \hline
+Accessibility, Security, \& Compliance Improvements & 2 weeks & 15-Feb-27 & 28-Feb-27 & User Testing Round 1 & Daniel~H., Daniel~F. \\ \hline
+Final User Testing & 2 weeks & 01-Mar-27 & 14-Mar-27 & Accessibility, Security, \& Compliance Improvements & Noah~G., Arjun~K. \\ \hline
+V\&V Execution & 4 weeks & 15-Feb-27 & 14-Mar-27 & Most Development Tasks Complete & Peter~D., Daniel~H. \\ \hline
+Final Bug Fixes \& Stabilization & 2 weeks & 08-Mar-27 & 21-Mar-27 & V\&V Execution & Arjun~K., Daniel~F. \\ \hline
+Final Demo Preparation & 1 week & 15-Mar-27 & 21-Mar-27 & Final Bug Fixes \& Stabilization & Peter~D., Daniel~H. \\ \hline
+EXPO Preparation & 2 weeks & 22-Mar-27 & 05-Apr-27 & Final Demo Preparation & Noah~G., Daniel~F. \\ \hline
+\end{longtable}
+}
+
+The team members assigned to each task lead that phase of development. The whole
+team will contribute as needed to complete every task, while the assigned leaders
+are responsible for ensuring that their tasks are completed correctly. All dates
+and assignments in Table~\ref{tab:mg_timeline} are subject to change based on
+project needs, team members' expertise and time constraints.
 
 \section{Generative AI Use Disclosure}
 
@@ -1080,7 +1122,7 @@ The AI tools listed above were used in the following ways while drafting and
 refining the Module Guide:
 \begin{itemize}
     \item \textbf{Idea Generation (Document-wide):} AI tools were used to
-    brainstorm candidate modules, the secrets each module hides, and likely
+    brainstorm candidate modules, the secrets each module hides, and anticipated
     and unlikely changes. The team chose the final decomposition and wrote
     the module descriptions.
     \item \textbf{Cross-Referencing Completed Deliverables (Document-wide):}
@@ -1097,12 +1139,19 @@ refining the Module Guide:
     (Table~\ref{TblACT}) were generated with AI from the SRS requirements,
     the anticipated changes in Section~\ref{SecChange} and the module
     decomposition in Section~\ref{SecMD}.
+    \item \textbf{Anticipated and Likely Changes:} AI tools were used to generate this
+    section when completed initially in the SRS.
     \item \textbf{Table Generation (Document-wide):} AI tools were used to
     build the LaTeX tables in this document, including the module
     hierarchy table and the abbreviations and acronyms table.
     \item \textbf{LaTeX Syntax and Grammar Checks (Document-wide):} AI tools
     were used to debug LaTeX markup and to check spelling, grammar and
     phrasing.
+    \item \textbf{References:} AI tools were used to generate the inline citations 
+    and references section of the document.
+    \item \textbf{Timeline (Section~\ref{SecTimeline}):} AI tools were used to write and display
+    the timeline in Table~\ref{tab:mg_timeline} from the SRS. AI tools were used to assign leaders 
+    to each development phase as shown in the timeline.
 \end{itemize}
 
 \subsection{Verification of AI-Generated Content}
@@ -1170,10 +1219,6 @@ member or generated by an AI system.
 
 \newpage{}
 
-% References are listed inline rather than pulled from refs/References.bib
-% with BibTeX: the CI build did not resolve them, leaving every citation
-% as (?). The optional argument of each \bibitem is natbib's author-year
-% label, so \citet and \citep render as they would with plainnat.
 \begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 
