@@ -17,6 +17,10 @@ const HealthConnectSeedTool:
   ? // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool
   : null;
+const ResetDataTool: typeof import('@/components/dev/ResetDataTool').ResetDataTool | null = __DEV__
+  ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('@/components/dev/ResetDataTool').ResetDataTool
+  : null;
 
 type ConnectionState = HealthConnectStatus | 'checking' | 'connected' | 'not-connected';
 
@@ -74,6 +78,7 @@ export default function ActivityScreen() {
       </Card>
       {state === 'connected' && <HealthConnectSyncPreview />}
       {HealthConnectSeedTool && state === 'connected' && <HealthConnectSeedTool />}
+      {ResetDataTool && <ResetDataTool />}
     </Screen>
   );
 }
