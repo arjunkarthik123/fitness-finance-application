@@ -37,6 +37,7 @@ src/app/                 Screens. Every file is a route (Expo Router).
 src/components/          Shared UI (WireframeScreen is the placeholder used by every screen)
 src/services/api.ts      Typed client for the API (reads EXPO_PUBLIC_API_URL)
 src/integrations/        Health Connect, Strava, Garmin stubs behind one FitnessIntegration interface
+src/persistence/         On-device SQLite storage (MIS M2): step totals, ledger entries
 src/theme/               Colors and spacing tokens (replace with values from Figma)
 __tests__/               Jest unit tests
 e2e/                     Detox end-to-end tests
@@ -83,6 +84,27 @@ app from the Play Store first.
 To check the result, compare the app's totals with Health Connect → Data and access →
 Activity → Steps. Match against Health Connect, not the source app: Samsung Health writes to
 Health Connect in batches, so it can be a little ahead.
+
+### Data on the device
+
+For the PoC the app has no backend: everything it stores (daily step totals and ledger entries)
+is in an SQLite database on the phone, `flexin.db`, through `expo-sqlite`. Screens and
+other modules only use `src/persistence/`, so storage can move to the API later without changing
+them. `expo-sqlite` is a native module, so pull and rebuild the dev build
+(`npx expo run:android --device`) after it is added. It does not run on web.
+
+- **Schema changes:** append a migration to `MIGRATIONS` in `src/persistence/schema.ts`. Never
+  edit one that is already on main. The database's `user_version` records which have run.
+- **Storage only:** `src/persistence/` reads and writes rows and has no business rules. Import it
+  as `@/persistence`; ESLint blocks `expo-sqlite` and its inner files everywhere else, so no other
+  code runs its own SQL.
+- **Ledger:** entries can only be inserted and read (there is no update or delete), each has a
+  unique key so the same change can't be stored twice, and the balance is the sum of the amounts.
+- **Reset:** in a dev build, Activity tab → **Reset data** deletes the database. The app starts
+  again from zero balance and no synced steps. Uninstalling the app or clearing its storage in
+  Android settings does the same.
+- **Tests:** Jest replaces `expo-sqlite` with `__mocks__/expo-sqlite.ts`, which runs the same SQL
+  on `sql.js` in memory.
 
 ### Detox (not wired up yet)
 
