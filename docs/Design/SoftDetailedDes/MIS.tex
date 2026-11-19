@@ -811,7 +811,7 @@ None. The module uses the following local constant, which is not exported.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\rightarrow$ value: int] & NoAccount, InvalidDate\\
+getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
 \end{tabularx}
 \end{center}
@@ -821,7 +821,7 @@ getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\rig
 \subsubsection{State Variables}
 The user activity records are stored by the Persistence Module. For each user, the Persistence Module also stores:
 \begin{itemize}
-    \item $\mathit{lastSync}$: UserID $\rightarrow$ Time, the time new fitness data was last read from the Fitness Integration Module for that user. It is the start of time for a user whose data has never been read.
+    \item $\mathit{lastSync}$: UserID $\longrightarrow$ Time, the time new fitness data was last read from the Fitness Integration Module for that user. It is the start of time for a user whose data has never been read.
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -841,7 +841,10 @@ The Activity Module will rely on:
 
 \noindent getActiviy(userID, date):
 \begin{itemize}
-\item transition: if needsRefresh(userID), new fitness data is read with fetchActivities($\mathit{lastSync}$(userID)) and fetchDailySteps($\mathit{lastSync}$(userID)) from the Fitness Integration Module, the new records are stored through the Persistence Module, and $\mathit{lastSync}$(userID) := $\mathit{now}()$. Otherwise, no new data is read and the stored records are used.
+\item transition: if needsRefresh($p.\mathit{user}$), new fitness data is read from the Fitness Integration Module.
+  \begin{itemize}
+    \item $\mathit{lastSync}$(userID) := $\mathit{now}()$.
+  \end{itemize}
 \item output: returns a map of activity and tracked data attached to that activity on $\mathbf{date}$, from the stored records.
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
 \item If the Fitness Integration Module raises ReadError, $\mathit{lastSync}$(userID) is not changed and the output is built from the records already stored.
@@ -883,8 +886,8 @@ None.
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getAllGoals & userID: int & goalMap: Map[activityType: string $\rightarrow$ activityMeasurement: int] & NoAccount \\
-createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\rightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
+getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
+createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
 deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
 updateGoal\-Measurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
 updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
