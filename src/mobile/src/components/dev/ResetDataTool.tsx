@@ -9,12 +9,13 @@ import { useEffect, useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import { AppText, Button, Card } from '@/components/ui';
-import { insertLedgerEntry, listDailySteps, resetDatabase, sumLedgerEntries } from '@/persistence';
+import { addBalance, getBalance } from '@/ledger';
+import { listDailySteps, resetDatabase } from '@/persistence';
 
 type Stored = { balance: number; days: number };
 
 async function loadStored(): Promise<Stored> {
-  const [balance, days] = await Promise.all([sumLedgerEntries(), listDailySteps()]);
+  const [balance, days] = await Promise.all([getBalance(), listDailySteps()]);
   return { balance, days: days.length };
 }
 
@@ -56,8 +57,7 @@ export function ResetDataTool({ style }: { style?: StyleProp<ViewStyle> }) {
         variant="secondary"
         onPress={() =>
           run(
-            () =>
-              insertLedgerEntry({ key: `dev-test:${Date.now()}`, amount: 10, reason: 'dev-test' }),
+            () => addBalance(10, { key: `dev-test:${Date.now()}`, reason: 'dev-test' }),
             'Added 10 coins.',
           )
         }
