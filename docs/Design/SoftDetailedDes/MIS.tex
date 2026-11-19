@@ -53,16 +53,43 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 18, 2026 & 1.0 & Completed Revision -1 of the MIS\\
 \bottomrule
 \end{tabularx}
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
+See SRS Documentation at
+\url{https://github.com/arjunkarthik123/fitness-finance-application/blob/main/pdfs/SRS-Volere/SRS.pdf}
+(Section 4, Naming Conventions and Terminology, and the symbolic constants in
+Section 1).
 
-\wss{Also add any additional symbols, abbreviations or acronyms}
+The following symbols, abbreviations and acronyms are used in this document
+and are not defined in the SRS.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l p{0.7\textwidth}}
+\toprule
+\textbf{Symbol} & \textbf{Description}\\
+\midrule
+$\mathbb{B}$ & Boolean, a value in $\{\mathit{true}, \mathit{false}\}$\\
+$\langle a_1, \ldots, a_n \rangle$ & A sequence with elements $a_1$ to $a_n$\\
+$|s|$ & The number of elements in the sequence or set $s$\\
+seq of $T$ & A sequence whose elements are of type $T$\\
+set of $T$ & A set whose elements are of type $T$\\
+EN & English, as a language setting\\
+FR & French, as a language setting\\
+M & Module, numbered as in the MG (for example, M1)\\
+MG & Module Guide\\
+MIS & Module Interface Specification\\
+TA & Teaching Assistant\\
+test- & Prefix of a test case identifier from the VnV Plan (for example,
+test-PR-SC-07)\\
+VnV & Verification and Validation\\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \tableofcontents
 
@@ -78,9 +105,6 @@ and Module Guide.  The full documentation and implementation can be
 found at \url{https://github.com/arjunkarthik123/fitness-finance-application}.
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
 
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
@@ -98,6 +122,7 @@ The following table summarizes the primitive data types used by \progname.
 \toprule 
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
+boolean & $\mathbb{B}$ & a value in $\{\mathit{true}, \mathit{false}\}$\\
 character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
@@ -115,6 +140,70 @@ are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
 The symbol $\bot$ means that there is no value, so a value of type $T \cup
 \{\bot\}$ is either a $T$ or absent.
+
+\noindent
+The derived data types are written as follows:
+\begin{itemize}
+\item \textbf{Sequences:} ``seq of $T$'' or ``sequence of $T$'' is a sequence
+  whose elements are of type $T$. A sequence is written $\langle a_1, \ldots,
+  a_n \rangle$, and $\langle f(x) \mid x \in S \rangle$ is the sequence of
+  $f(x)$ for each $x$ in $S$.
+\item \textbf{Strings:} String is a sequence of char.
+\item \textbf{Sets:} ``set of $T$'' is a set whose elements are of type $T$. A
+  set is written $\{a_1, \ldots, a_n\}$, and $\{x \in S \mid P(x)\}$ is the
+  set of elements of $S$ for which $P(x)$ is true.
+\item \textbf{Tuples:} ``tuple of ($f_1$: $T_1$, \ldots, $f_n$: $T_n$)'' is a
+  tuple with fields $f_1$ to $f_n$ of types $T_1$ to $T_n$. The field $f$ of a
+  tuple $t$ is written $t.f$.
+\item \textbf{Maps:} Map is a set of key and value pairs in which each key
+  appears at most once.
+\item \textbf{Enumerated types:} a type written as a set of names, such as
+  FitnessSource $= \{\mathrm{healthConnect}, \mathrm{garmin}\}$, has exactly
+  those values. Enumerated values and exception names are written in upright
+  text, for example $\mathrm{garmin}$ and $\mathrm{ReadError}$.
+\item \textbf{Generic types:} $T$ stands for any type, given where the module
+  is used.
+\end{itemize}
+
+\noindent
+The following symbols and conventions are used throughout this document:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\noindent
+\begin{tabular}{l p{10cm}}
+\toprule
+\textbf{Notation} & \textbf{Meaning}\\
+\midrule
+$f: T_1 \times T_2 \rightarrow T$ & $f$ is a function that takes a $T_1$ and
+  a $T_2$ and returns a $T$. A function with no inputs is written $f:
+  \rightarrow T$\\
+$f(x) \equiv e$ & $f(x)$ is defined to be $e$ (used for local functions)\\
+$x := e$ & $x$ is assigned the value of $e$. $\mathit{out} := e$ gives the
+  output of an access program\\
+$c \Rightarrow r$ & if $c$ is true, then $r$ (used for transitions,
+  exceptions and conditional rules)\\
+$\land$ ($\wedge$), $\lor$ ($\vee$), $\lnot$ ($\neg$) & logical and, or, not\\
+$\in$, $\notin$ & is, or is not, an element of\\
+$\cup$, $\subseteq$, $\emptyset$ & set union, subset, the empty set\\
+$|s|$ & the number of elements in the sequence or set $s$, or the length of
+  the String $s$\\
+$\sum_{x \in S} f(x)$ & the sum of $f(x)$ over every $x$ in $S$\\
+$\max$, $\min$ & the larger, or smaller, of the given values\\
+$\textsf{Name}$ & a symbolic constant. Constants that share a name with an
+  SRS constant have the value given in the SRS\\
+- & in an access program table, the program has no inputs, no output, or no
+  exceptions\\
+(SEC-INT-01) & a requirement in the SRS, or a test case in the VnV Plan when
+  prefixed by test-, that the specification satisfies\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+Each access program is specified by its transition (the change to the state
+variables and environment variables), its output, and its exceptions. A part
+that does not apply is left out.
 
 \section{Module Decomposition}
 
@@ -570,37 +659,42 @@ User and Onboarding Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+
+None. The module uses the following local constant, which is not exported.\\
+
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
 \midrule
 MinAge & 18 & Minimum age to register (years)\\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.9cm}
-  >{\raggedright\arraybackslash}p{4.5cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.8cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{4.4cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-% Account (login itself is in M16)
 register & email: String, password: string, dob: Date & UserID & InvalidEmail, EmailTaken, Underage, WeakPassword \\
 getUserProfile & $p$: Principal & UserProfile & NoAccount \\
 updateUserPassword & $p$: Principal, password: string, newPassword: string & N/A & NoAccount, InvalidCredentials, WeakPassword \\
 updateUserEmail & $p$: Principal, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
-% Onboarding answers
 submitFinance & $p$: Principal, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
 submitFitness & $p$: Principal, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
 isOnboarded & $p$: Principal & $\mathbb{B}$ & NoAccount \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -680,7 +774,7 @@ The User and Onboarding Module will rely on:
 This module is M4 in the Module Guide.
 
 \subsection{Module}
-Activity
+Activity 
 
 \subsection{Uses}
 \begin{itemize}
@@ -692,34 +786,43 @@ Activity
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+None. The module uses the following local constant, which is not exported.\\
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
 \toprule
-\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
 \midrule
-RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
+\textsf{RefreshRate} & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
 \bottomrule
 \end{tabular}
+\end{center}
 
 \subsubsection{Exported Access Programs}
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{3.8cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None, the persistence module will store user activity records.
+The user activity records are stored by the Persistence Module. For each user, the Persistence Module also stores:
+\begin{itemize}
+    \item $\mathit{lastSync}$: UserID $\longrightarrow$ Time, the time new fitness data was last read from the Fitness Integration Module for that user. It is the start of time for a user whose data has never been read.
+\end{itemize}
 
 \subsubsection{Environment Variables}
 \begin{itemize}
@@ -736,21 +839,28 @@ The Activity Module will rely on:
 
 \subsubsection{Access Routine Semantics}
 
-\noindent getActiviy(userID):
+\noindent getActiviy(userID, date):
 \begin{itemize}
-\item output: returns a map of activity and tracked data attached to that activity.
+\item transition: if needsRefresh($p.\mathit{user}$), new fitness data is read from the Fitness Integration Module.
+  \begin{itemize}
+    \item $\mathit{lastSync}$(userID) := $\mathit{now}()$.
+  \end{itemize}
+\item output: returns a map of activity and tracked data attached to that activity on $\mathbf{date}$, from the stored records.
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
+\item If the Fitness Integration Module raises ReadError, $\mathit{lastSync}$(userID) is not changed and the output is built from the records already stored.
 \end{itemize}
 
 \subsubsection{Local Functions}
-None, this module is a getter and has no write capabilities.
+\begin{itemize}
+    \item needsRefresh(userID: int) $\longrightarrow \mathbb{B}$: true iff $\mathit{now}() - \mathit{lastSync}(\mathrm{userID}) \geq \textsf{RefreshRate}$, meaning new fitness data should be read before the output is built.
+\end{itemize}
 
 \section{MIS of Goals Module} \label{misGoal}
 
 This module is M5 in the Module Guide.
 
 \subsection{Module}
-Goals (M5)
+Goals
 
 \subsection{Uses}
 \begin{itemize}
@@ -766,23 +876,24 @@ None.
 
 \subsubsection{Exported Access Programs}
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{4.4cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
 createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
 deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
-updateGoalMeasurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoalMst & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
 updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
 collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -823,7 +934,7 @@ None, information will be stored in the database (Persistence Module)
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input.
 \end{itemize}
 
-\noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
+\noindent updateGoalMst(userID, goalID, activityMeasurement):
 \begin{itemize}
 \item transition: updates the measurement on an already started goal. 
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
@@ -833,31 +944,27 @@ None, information will be stored in the database (Persistence Module)
 \begin{itemize}
 \item transition: updates the period of an already started goal.
 \item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
-\end{itemize}.
+\end{itemize}
 
 \noindent collectReward(userID, goalID):
 \begin{itemize}
 \item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
-\end{itemize}.
+\end{itemize}
 
 
 \subsubsection{Local Functions}
-\begin{tabular}{p{3.4cm} p{4cm} p{6cm}}
-\hline
-\textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
-\hline
-checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ current goal activity measurement values, then the goal is complete. \\
-isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
-\hline
-\end{tabular}
+\begin{itemize}
+    \item checkGoalComp(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: the goal is complete if the user activity $\geq$ the current goal activity measurement value.
+    \item isLocked(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: true iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.
+\end{itemize}
 
 \section{MIS of Currency Ledger Module} \label{misCur}
 
 This module is M6 in the Module Guide.
 
 \subsection{Module}
-Currency Ledger Module
+Currency Ledger
 
 \subsection{Uses}
 \begin{itemize}
@@ -868,25 +975,38 @@ Currency Ledger Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-None, information will be store in the database (Persistence Module) and the Currency Ledger Module will rely on the database for information retrieval 
+None. The module uses the following local constant, which is not exported.\\
+
+\noindent
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+MinBalance & 0 & The lowest balance a user's account can hold\\
+\bottomrule
+\end{tabularx}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{2.8cm}
-  >{\raggedright\arraybackslash}p{5.0cm}
-  >{\raggedright\arraybackslash}p{2.0cm}
-  >{\raggedright\arraybackslash}p{3.3cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{4.2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getBalance & UserID: int & acctBalance: BigDecimal & NoAccount \\
+getBalance & UserID: int & acctBalance: BigDecimal & NoAccount, InvalidBalance \\
 addBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\ 
 subtractBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -916,26 +1036,26 @@ The Currency Module will rely on:
 \noindent getBalance(userID)
 \begin{itemize}
     \item output: returns the user's current account balance
-    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidBalance $\longrightarrow$ balance for user  $p.\mathit{user}$ $<$ 0
 \end{itemize}
 
 \noindent addBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
-    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added
     \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \noindent subtractBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
-    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted
     \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \subsubsection{Local Functions}
 \begin{itemize}
-    \item \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
+    \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
 \end{itemize}
 
 \section{MIS of Asset Module} \label{misAsset}
@@ -1485,7 +1605,6 @@ units.
   executed at a price that is no longer current.
 \end{itemize}
 
-\newpage
 \section{MIS of Portfolio Module} \label{misPort}
 
 This module is M9 in the Module Guide.
@@ -1808,7 +1927,6 @@ value is exact to the cent.
   Module.
 \end{itemize}
 
-\newpage
 \section{MIS of Leaderboard and Friends Module} \label{misLead}
 
 This module is M10 in the Module Guide.
@@ -2217,7 +2335,6 @@ the standings are requested, so they follow each member's latest progress
   measured by the Goals Module from the user's recorded activity.
 \end{itemize}
 
-\newpage
 \section{MIS of Progress Reporting Module} \label{misProg}
 
 This module is M11 in the Module Guide.
@@ -2615,7 +2732,6 @@ refreshScreen & currentScreen: String & N/A & NetworkError \\
   \item showEmptyState() $\rightarrow$ N/A: Displays a message when no content is available.
 \end{itemize}
 
-\newpage
 \section{MIS of Notification Module} \label{misNoti}
 
 This module is M13 in the Module Guide.
@@ -2963,7 +3079,6 @@ system is not affected.
   every message before release (test-UHR-POL-01).
 \end{itemize}
 
-\newpage
 \section{MIS of Market Simulation Module} \label{misMkt}
 
 This module is M14 in the Module Guide.
@@ -3343,7 +3458,6 @@ the demonstration data script (TRN-03).
   \citet{Merton1976}.
 \end{itemize}
 
-\newpage
 \section{MIS of API Client Module} \label{misAPI}
 
 This module is M15 in the Module Guide.
@@ -3662,7 +3776,6 @@ $\mathit{op}$ (PR-SL-01).
   A random value that identifies this installation.
 \end{itemize}
 
-\newpage
 \section{MIS of Authentication and Security Module} \label{misAuth}
 
 This module is M16 in the Module Guide.
@@ -4087,6 +4200,7 @@ $\mathit{commonPasswords}$ are held in memory and are set by init.
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
 
+\newpage
 \section{Appendix --- Generative AI Use Disclosure}
 
 \subsection{AI Tools Used}
