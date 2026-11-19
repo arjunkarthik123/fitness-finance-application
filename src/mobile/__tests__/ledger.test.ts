@@ -43,7 +43,14 @@ describe('addBalance', () => {
     ]);
   });
 
-  it.each([-1, 1.5, NaN, Infinity])(
+  it('keeps two-decimal amounts exact', async () => {
+    await addBalance(0.1, credit('a'));
+    expect(await addBalance(0.2, credit('b'))).toBe(0.3);
+    expect(await addBalance(37.11, credit('c'))).toBe(37.41);
+    expect(await getBalance()).toBe(37.41);
+  });
+
+  it.each([-1, -0.01, 1.005, 0.001, NaN, Infinity])(
     'throws InvalidAmount for %p and changes nothing',
     async (n) => {
       await expect(addBalance(n, credit('a'))).rejects.toEqual(ledgerError('InvalidAmount'));
@@ -76,19 +83,24 @@ describe('subtractBalance', () => {
     expect((await listLedgerEntries())[0]).toMatchObject({ key: 'buy:1', amount: -30 });
   });
 
+  it('debits a quote total with cents (3 × 12.37 FLX)', async () => {
+    expect(await subtractBalance(37.11, debit('buy:1'))).toBe(62.89);
+    expect((await listLedgerEntries())[0]).toMatchObject({ amount: -37.11 });
+  });
+
   it('can spend the whole balance', async () => {
     expect(await subtractBalance(100, debit('buy:1'))).toBe(0);
   });
 
   it('refuses a debit that would go below 0 and changes nothing', async () => {
-    await expect(subtractBalance(101, debit('buy:1'))).rejects.toEqual(
+    await expect(subtractBalance(100.01, debit('buy:1'))).rejects.toEqual(
       ledgerError('InsufficientFunds'),
     );
     expect(await getBalance()).toBe(100);
     expect(await listLedgerEntries()).toHaveLength(1);
   });
 
-  it.each([-1, 2.5])('throws InvalidAmount for %p and changes nothing', async (n) => {
+  it.each([-1, 2.555])('throws InvalidAmount for %p and changes nothing', async (n) => {
     await expect(subtractBalance(n, debit('buy:1'))).rejects.toEqual(ledgerError('InvalidAmount'));
     expect(await getBalance()).toBe(100);
   });

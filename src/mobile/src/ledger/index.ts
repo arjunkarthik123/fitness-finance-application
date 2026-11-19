@@ -1,5 +1,7 @@
 /**
- * Currency Ledger (MIS M6): the user's coin balance and every change to it.
+ * Currency Ledger (MIS M6): the user's FLX balance and every change to it.
+ *
+ * Amounts are FLX with at most two decimal places (the MIS `Amount` type).
  *
  * For the PoC this runs on the device on top of @/persistence. Long term the
  * ledger lives on the server (data on the phone can be tampered with), and
@@ -42,20 +44,20 @@ export type BalanceChange = {
    * was already applied changes nothing, so retries are safe.
    */
   key: string;
-  /** Why the coins moved, e.g. `steps-reward` or `asset-buy`. */
+  /** Why the FLX moved, e.g. `steps-reward` or `asset-buy`. */
   reason: string;
 };
 
-/** The current balance in whole coins. */
+/** The current balance in FLX. */
 export async function getBalance(tx?: Transaction): Promise<number> {
-  const balance = await sumLedgerEntries(tx);
+  const balance = round2(await sumLedgerEntries(tx));
   if (balance < MIN_BALANCE) {
     throw new LedgerError('InvalidBalance', `Balance is ${balance}, below ${MIN_BALANCE}.`);
   }
   return balance;
 }
 
-/** Credits `amount` coins and returns the new balance. */
+/** Credits `amount` FLX and returns the new balance. */
 export function addBalance(
   amount: number,
   change: BalanceChange,
@@ -65,7 +67,7 @@ export function addBalance(
 }
 
 /**
- * Debits `amount` coins and returns the new balance. Throws
+ * Debits `amount` FLX and returns the new balance. Throws
  * `InsufficientFunds`, changing nothing, if the balance would go below 0.
  */
 export function subtractBalance(
@@ -87,7 +89,10 @@ async function apply(
   amount: number = delta,
 ): Promise<number> {
   if (!validAmount(amount)) {
-    throw new LedgerError('InvalidAmount', `Amount must be a whole number ≥ 0, got ${amount}.`);
+    throw new LedgerError(
+      'InvalidAmount',
+      `Amount must be ≥ 0 FLX with at most two decimal places, got ${amount}.`,
+    );
   }
   if (!tx) {
     return withTransaction((own) => apply(delta, change, own, amount));
@@ -98,16 +103,24 @@ async function apply(
   if (amount === 0 || (await getLedgerEntry(change.key, tx))) {
     return balance;
   }
-  if (balance + delta < MIN_BALANCE) {
+  const next = round2(balance + delta);
+  if (next < MIN_BALANCE) {
     throw new LedgerError(
       'InsufficientFunds',
-      `Cannot take ${amount} coins from a balance of ${balance}.`,
+      `Cannot take ${amount} FLX from a balance of ${balance} FLX.`,
     );
   }
   await insertLedgerEntry({ key: change.key, amount: delta, reason: change.reason }, tx);
-  return balance + delta;
+  return next;
 }
 
 function validAmount(amount: number): boolean {
-  return Number.isSafeInteger(amount) && amount >= 0;
+  // Tolerance for binary floats, e.g. 37.11 * 100 = 3711.0000000000005.
+  const twoDecimals = Math.abs(Math.round(amount * 100) - amount * 100) < 1e-6;
+  return Number.isFinite(amount) && amount >= 0 && twoDecimals;
+}
+
+/** Rounds to two decimal places, clearing float noise from sums like 0.1 + 0.2. */
+function round2(x: number): number {
+  return Math.round(x * 100) / 100;
 }

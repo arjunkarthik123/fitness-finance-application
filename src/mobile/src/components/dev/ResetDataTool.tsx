@@ -1,7 +1,7 @@
 /**
  * DEV ONLY. Shows what the app has stored on the device and wipes it (steps,
  * ledger, balance) so the demo can be re-recorded from zero. "Add 10 test
- * coins" exists to check data survives an app restart before anything real
+ * FLX" exists to check data survives an app restart before anything real
  * writes to the ledger. Only ever load this through a `__DEV__`-guarded
  * `require` (see src/app/(tabs)/activity.tsx) so release bundles drop it.
  */
@@ -50,15 +50,17 @@ export function ResetDataTool({ style }: { style?: StyleProp<ViewStyle> }) {
         DEV ONLY: App data
       </AppText>
       <AppText testID="stored-data">
-        {stored ? `Balance: ${stored.balance} coins · Saved days: ${stored.days}` : 'Loading…'}
+        {stored
+          ? `Balance: ${stored.balance.toFixed(2)} FLX · Saved days: ${stored.days}`
+          : 'Loading…'}
       </AppText>
       <Button
-        label="Add 10 test coins"
+        label="Add 10 test FLX"
         variant="secondary"
         onPress={() =>
           run(
             () => addBalance(10, { key: `dev-test:${Date.now()}`, reason: 'dev-test' }),
-            'Added 10 coins.',
+            'Added 10 FLX.',
           )
         }
       />
