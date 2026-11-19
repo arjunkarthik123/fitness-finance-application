@@ -660,8 +660,8 @@ User and Onboarding Module
 
 \subsubsection{Exported Constants}
 
-None, the following uses the following local constant which is not exported.
-\noindent
+None. The module uses the following local constant, which is not exported.\\
+
 \begin{tabularx}{\textwidth}{
   >{\raggedright\arraybackslash}p{3.4cm}
   >{\raggedright\arraybackslash}p{3cm}
@@ -786,7 +786,7 @@ Activity
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-None. The module uses the following local constant, which is not exported.
+None. The module uses the following local constant, which is not exported.\\
 
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
@@ -889,7 +889,7 @@ None.
 getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
 createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
 deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
-updateGoal\-Measurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoalMst & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
 updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
 collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
@@ -934,7 +934,7 @@ None, information will be stored in the database (Persistence Module)
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input.
 \end{itemize}
 
-\noindent updateGoalMeasurement(userID, goalID, activityMeasurement):
+\noindent updateGoalMst(userID, goalID, activityMeasurement):
 \begin{itemize}
 \item transition: updates the measurement on an already started goal. 
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidActivityMeasurement $\longrightarrow$ the measurement value inputted is activityMeasurement $<$ 0, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
@@ -955,7 +955,7 @@ None, information will be stored in the database (Persistence Module)
 
 \subsubsection{Local Functions}
 \begin{itemize}
-    \item checkGoalCompletion(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: the goal is complete if the user activity $\geq$ the current goal activity measurement value.
+    \item checkGoalComp(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: the goal is complete if the user activity $\geq$ the current goal activity measurement value.
     \item isLocked(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: true iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.
 \end{itemize}
 
@@ -975,6 +975,8 @@ Currency Ledger
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+None. The module uses the following local constant, which is not exported.\\
+
 \noindent
 \begin{tabularx}{\textwidth}{
   >{\raggedright\arraybackslash}p{3.4cm}
