@@ -784,17 +784,7 @@ Activity
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-\noindent
-\begin{tabularx}{\textwidth}{
-  >{\raggedright\arraybackslash}p{3.4cm}
-  >{\raggedright\arraybackslash}p{3cm}
-  >{\raggedright\arraybackslash}X}
-\toprule
-\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
-\midrule
-RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
-\bottomrule
-\end{tabularx}
+None. 
 
 \subsubsection{Exported Access Programs}
 \begin{center}
@@ -941,18 +931,10 @@ None, information will be stored in the database (Persistence Module)
 
 
 \subsubsection{Local Functions}
-\noindent
-\begin{tabularx}{\textwidth}{
-  >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{4.4cm}
-  >{\raggedright\arraybackslash}X}
-\hline
-\textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
-\hline
-checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ Current goal activity measurement values, then the goal is complete. \\
-isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
-\hline
-\end{tabularx}
+\begin{itemize}
+    \item checkGoalCompletion(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: the goal is complete if the user activity $\geq$ the current goal activity measurement value.
+    \item isLocked(userID: int, goalID: int) $\longrightarrow \mathbb{B}$: true iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.
+\end{itemize}
 
 \section{MIS of Currency Ledger Module} \label{misCur}
 
