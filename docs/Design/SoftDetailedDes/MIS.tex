@@ -659,37 +659,40 @@ User and Onboarding Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\noindent
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Name} & \textbf{Value} &\textbf{Meaning}\\
 \midrule
 MinAge & 18 & Minimum age to register (years)\\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.9cm}
-  >{\raggedright\arraybackslash}p{4.5cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.8cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{2.6cm}
+  >{\raggedright\arraybackslash}p{4.4cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-% Account (login itself is in M16)
 register & email: String, password: string, dob: Date & UserID & InvalidEmail, EmailTaken, Underage, WeakPassword \\
 getUserProfile & $p$: Principal & UserProfile & NoAccount \\
 updateUserPassword & $p$: Principal, password: string, newPassword: string & N/A & NoAccount, InvalidCredentials, WeakPassword \\
 updateUserEmail & $p$: Principal, email: string, newEmail: string & N/A & NoAccount, InvalidEmail, EmailTaken \\
-% Onboarding answers
 submitFinance & $p$: Principal, financeAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
 submitFitness & $p$: Principal, fitnessAnswers: list[string] & N/A & NoAccount, InvalidResponse \\
 isOnboarded & $p$: Principal & $\mathbb{B}$ & NoAccount \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -769,7 +772,7 @@ The User and Onboarding Module will rely on:
 This module is M4 in the Module Guide.
 
 \subsection{Module}
-Activity
+Activity 
 
 \subsection{Uses}
 \begin{itemize}
@@ -781,28 +784,33 @@ Activity
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-\begin{tabular}{p{4cm} p{3cm} p{6cm}}
+\noindent
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
 \midrule
 RefreshRate & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 
 \subsubsection{Exported Access Programs}
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{4.6cm}
+  >{\raggedright\arraybackslash}p{3.8cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\longrightarrow$ value: int] & NoAccount, InvalidDate\\
+getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\rightarrow$ value: int] & NoAccount, InvalidDate\\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -839,7 +847,7 @@ None, this module is a getter and has no write capabilities.
 This module is M5 in the Module Guide.
 
 \subsection{Module}
-Goals (M5)
+Goals
 
 \subsection{Uses}
 \begin{itemize}
@@ -855,23 +863,24 @@ None.
 
 \subsubsection{Exported Access Programs}
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{3.1cm}
-  >{\raggedright\arraybackslash}p{5.3cm}
-  >{\raggedright\arraybackslash}p{2.4cm}
-  >{\raggedright\arraybackslash}p{3.6cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{4.4cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getAllGoals & userID: int & goalMap: Map[activityType: string $\longrightarrow$ activityMeasurement: int] & NoAccount \\
-createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\longrightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
+getAllGoals & userID: int & goalMap: Map[activityType: string $\rightarrow$ activityMeasurement: int] & NoAccount \\
+createGoal & userID: int, activityType: string, activityMeasurement: int, period: startDate $\rightarrow$ endDate & goalID: int & NoAccount, InvalidActivityType, InvalidActivityMeasurement, InvalidPeriod \\
 deleteGoal & userID: int, goalID: int & N/A & NoAccount, NoGoal \\
-updateGoalMeasurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
+updateGoal\-Measurement & userID: int, goalID: int, activityMeasurement: int & N/A & NoAccount, NoGoal, InvalidActivityMeasurement, GoalLocked\\
 updateGoalPeriod & userID: int, goalID: int, period: period & N/A & NoAccount, NoGoal, InvalidPeriod, GoalLocked\\
 collectReward & userID: int, goalID: int & N/A & NoAccount, NoGoal, GoalLocked \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -922,31 +931,35 @@ None, information will be stored in the database (Persistence Module)
 \begin{itemize}
 \item transition: updates the period of an already started goal.
 \item exception: NoGoal $\longrightarrow$ no goalID found that matches the input, InvalidPeriod $\longrightarrow$ the period ends before it starts, GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
-\end{itemize}.
+\end{itemize}
 
 \noindent collectReward(userID, goalID):
 \begin{itemize}
 \item transition: notifies to the Currency Ledger Module to add the reward to the user's account. After a goal is completed and the reward collected, the goal will no longer be accessible for anything but viewing.  
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, NoGoal $\longrightarrow$ no goalID found that matches the input,  GoalLocked $\longrightarrow$ if the goalID is locked the goal is no longer able to be changed.
-\end{itemize}.
+\end{itemize}
 
 
 \subsubsection{Local Functions}
-\begin{tabular}{p{3.4cm} p{4cm} p{6cm}}
+\noindent
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{4.4cm}
+  >{\raggedright\arraybackslash}X}
 \hline
 \textbf{Name} & \textbf{Type} & \textbf{Meaning}\\
 \hline
-checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ current goal activity measurement values, then the goal is complete. \\
+checkGoalCompletion & $\mathbb{BB}$ & If the user activity $\geq$ Current goal activity measurement values, then the goal is complete. \\
 isLocked & userID: int $\times$ goalID: int $\rightarrow \mathbb{B}$ & True iff the goal's reward has been collected (its status is rewarded). A locked goal can only be viewed.\\
 \hline
-\end{tabular}
+\end{tabularx}
 
 \section{MIS of Currency Ledger Module} \label{misCur}
 
 This module is M6 in the Module Guide.
 
 \subsection{Module}
-Currency Ledger Module
+Currency Ledger
 
 \subsection{Uses}
 \begin{itemize}
@@ -962,12 +975,13 @@ None, information will be store in the database (Persistence Module) and the Cur
 \subsubsection{Exported Access Programs}
 
 \begin{center}
+\small
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{
-  >{\raggedright\arraybackslash}p{2.8cm}
-  >{\raggedright\arraybackslash}p{5.0cm}
-  >{\raggedright\arraybackslash}p{2.0cm}
-  >{\raggedright\arraybackslash}p{3.3cm}}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}p{3.6cm}
+  >{\raggedright\arraybackslash}p{4.2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
@@ -975,7 +989,7 @@ getBalance & UserID: int & acctBalance: BigDecimal & NoAccount \\
 addBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\ 
 subtractBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection{Semantics}
@@ -1024,7 +1038,7 @@ The Currency Module will rely on:
 
 \subsubsection{Local Functions}
 \begin{itemize}
-    \item \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
+    \item validAmount(amount: BigDecimal) $\longrightarrow \mathbb{B}$: ensures amount is valid (ammount $\geq$ 0). 
 \end{itemize}
 
 \section{MIS of Asset Module} \label{misAsset}
