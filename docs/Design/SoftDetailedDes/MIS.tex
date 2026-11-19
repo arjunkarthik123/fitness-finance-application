@@ -659,6 +659,8 @@ User and Onboarding Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+
+None, the following uses the following local constant which is not exported.
 \noindent
 \begin{tabularx}{\textwidth}{
   >{\raggedright\arraybackslash}p{3.4cm}
@@ -784,7 +786,18 @@ Activity
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-None. 
+None. The module uses the following local constant, which is not exported.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l >{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Constant} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+\textsf{RefreshRate} & 120 seconds & The amount of time between a sync call to update the fitness data shown in the app from the outside source tracking the activity \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsubsection{Exported Access Programs}
 \begin{center}
@@ -806,7 +819,10 @@ getActiviy & userID: int, date: Date & activityStats: Map[activity: string $\rig
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None, the persistence module will store user activity records.
+The user activity records are stored by the Persistence Module. For each user, the Persistence Module also stores:
+\begin{itemize}
+    \item $\mathit{lastSync}$: UserID $\rightarrow$ Time, the time new fitness data was last read from the Fitness Integration Module for that user. It is the start of time for a user whose data has never been read.
+\end{itemize}
 
 \subsubsection{Environment Variables}
 \begin{itemize}
@@ -823,14 +839,18 @@ The Activity Module will rely on:
 
 \subsubsection{Access Routine Semantics}
 
-\noindent getActiviy(userID):
+\noindent getActiviy(userID, date):
 \begin{itemize}
-\item output: returns a map of activity and tracked data attached to that activity.
+\item transition: if needsRefresh(userID), new fitness data is read with fetchActivities($\mathit{lastSync}$(userID)) and fetchDailySteps($\mathit{lastSync}$(userID)) from the Fitness Integration Module, the new records are stored through the Persistence Module, and $\mathit{lastSync}$(userID) := $\mathit{now}()$. Otherwise, no new data is read and the stored records are used.
+\item output: returns a map of activity and tracked data attached to that activity on $\mathbf{date}$, from the stored records.
 \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidDate $\longrightarrow$ checks to ensure a valid date has been entered
+\item If the Fitness Integration Module raises ReadError, $\mathit{lastSync}$(userID) is not changed and the output is built from the records already stored.
 \end{itemize}
 
 \subsubsection{Local Functions}
-None, this module is a getter and has no write capabilities.
+\begin{itemize}
+    \item needsRefresh(userID: int) $\longrightarrow \mathbb{B}$: true iff $\mathit{now}() - \mathit{lastSync}(\mathrm{userID}) \geq \textsf{RefreshRate}$, meaning new fitness data should be read before the output is built.
+\end{itemize}
 
 \section{MIS of Goals Module} \label{misGoal}
 
@@ -952,7 +972,17 @@ Currency Ledger
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-None, information will be store in the database (Persistence Module) and the Currency Ledger Module will rely on the database for information retrieval 
+\noindent
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{3.4cm}
+  >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Name} & \textbf{Value} & \textbf{Meaning}\\
+\midrule
+MinBalance & 0 & The lowest balance a user's account can hold\\
+\bottomrule
+\end{tabularx}
 
 \subsubsection{Exported Access Programs}
 
@@ -967,7 +997,7 @@ None, information will be store in the database (Persistence Module) and the Cur
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-getBalance & UserID: int & acctBalance: BigDecimal & NoAccount \\
+getBalance & UserID: int & acctBalance: BigDecimal & NoAccount, InvalidBalance \\
 addBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\ 
 subtractBalance & UserID: int, amount: BigDecimal & acctBalance: BigDecimal & NoAccount, InvalidAmount \\
 \hline
@@ -1001,20 +1031,20 @@ The Currency Module will rely on:
 \noindent getBalance(userID)
 \begin{itemize}
     \item output: returns the user's current account balance
-    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$
+    \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidBalance $\longrightarrow$ balance for user  $p.\mathit{user}$ $<$ 0
 \end{itemize}
 
 \noindent addBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is added to the account balance $\longrightarrow$ balance := balance + amount
-    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added. 
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been added
     \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
 \noindent subtractBalance(userID, amount)
 \begin{itemize}
     \item transition: $\mathbf{amount}$ is removed from the account balance $\longrightarrow$ balance := balance - amount
-    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted. 
+    \item output: returns the user's new account balance after $\mathbf{amount}$ has been subtracted
     \item exception: NoAccount $\longrightarrow$ no account found for $p.\mathit{user}$, InvalidAmount $\longrightarrow$ amount $<$ 0
 \end{itemize}
 
