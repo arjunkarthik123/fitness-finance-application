@@ -79,9 +79,6 @@ found at \url{https://github.com/arjunkarthik123/fitness-finance-application}.
 
 \section{Notation}
 
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
-
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
 \cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
@@ -98,6 +95,7 @@ The following table summarizes the primitive data types used by \progname.
 \toprule 
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
+boolean & $\mathbb{B}$ & a value in $\{\mathit{true}, \mathit{false}\}$\\
 character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
@@ -115,6 +113,70 @@ are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
 The symbol $\bot$ means that there is no value, so a value of type $T \cup
 \{\bot\}$ is either a $T$ or absent.
+
+\noindent
+The derived data types are written as follows:
+\begin{itemize}
+\item \textbf{Sequences:} ``seq of $T$'' or ``sequence of $T$'' is a sequence
+  whose elements are of type $T$. A sequence is written $\langle a_1, \ldots,
+  a_n \rangle$, and $\langle f(x) \mid x \in S \rangle$ is the sequence of
+  $f(x)$ for each $x$ in $S$.
+\item \textbf{Strings:} String is a sequence of char.
+\item \textbf{Sets:} ``set of $T$'' is a set whose elements are of type $T$. A
+  set is written $\{a_1, \ldots, a_n\}$, and $\{x \in S \mid P(x)\}$ is the
+  set of elements of $S$ for which $P(x)$ is true.
+\item \textbf{Tuples:} ``tuple of ($f_1$: $T_1$, \ldots, $f_n$: $T_n$)'' is a
+  tuple with fields $f_1$ to $f_n$ of types $T_1$ to $T_n$. The field $f$ of a
+  tuple $t$ is written $t.f$.
+\item \textbf{Maps:} Map is a set of key and value pairs in which each key
+  appears at most once.
+\item \textbf{Enumerated types:} a type written as a set of names, such as
+  FitnessSource $= \{\mathrm{healthConnect}, \mathrm{garmin}\}$, has exactly
+  those values. Enumerated values and exception names are written in upright
+  text, for example $\mathrm{garmin}$ and $\mathrm{ReadError}$.
+\item \textbf{Generic types:} $T$ stands for any type, given where the module
+  is used.
+\end{itemize}
+
+\noindent
+The following symbols and conventions are used throughout this document:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\noindent
+\begin{tabular}{l p{10cm}}
+\toprule
+\textbf{Notation} & \textbf{Meaning}\\
+\midrule
+$f: T_1 \times T_2 \rightarrow T$ & $f$ is a function that takes a $T_1$ and
+  a $T_2$ and returns a $T$. A function with no inputs is written $f:
+  \rightarrow T$\\
+$f(x) \equiv e$ & $f(x)$ is defined to be $e$ (used for local functions)\\
+$x := e$ & $x$ is assigned the value of $e$. $\mathit{out} := e$ gives the
+  output of an access program\\
+$c \Rightarrow r$ & if $c$ is true, then $r$ (used for transitions,
+  exceptions and conditional rules)\\
+$\land$ ($\wedge$), $\lor$ ($\vee$), $\lnot$ ($\neg$) & logical and, or, not\\
+$\in$, $\notin$ & is, or is not, an element of\\
+$\cup$, $\subseteq$, $\emptyset$ & set union, subset, the empty set\\
+$|s|$ & the number of elements in the sequence or set $s$, or the length of
+  the String $s$\\
+$\sum_{x \in S} f(x)$ & the sum of $f(x)$ over every $x$ in $S$\\
+$\max$, $\min$ & the larger, or smaller, of the given values\\
+$\textsf{Name}$ & a symbolic constant. Constants that share a name with an
+  SRS constant have the value given in the SRS\\
+- & in an access program table, the program has no inputs, no output, or no
+  exceptions\\
+(SEC-INT-01) & a requirement in the SRS, or a test case in the VnV Plan when
+  prefixed by test-, that the specification satisfies\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+Each access program is specified by its transition (the change to the state
+variables and environment variables), its output, and its exceptions. A part
+that does not apply is left out.
 
 \section{Module Decomposition}
 
