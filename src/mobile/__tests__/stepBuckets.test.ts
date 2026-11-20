@@ -1,4 +1,9 @@
-import { rejectReason, toDailySteps, type StepInterval } from '@/integrations/stepBuckets';
+import {
+  MAX_CADENCE,
+  rejectReason,
+  toDailySteps,
+  type StepInterval,
+} from '@/integrations/stepBuckets';
 
 const PHONE = 'com.example.phone';
 const WATCH = 'com.example.watch';
@@ -53,19 +58,28 @@ describe('toDailySteps', () => {
     expect(total([rec(PHONE, 8, 9, 3000), manual])).toBe(3000);
   });
 
-  it('drops physically impossible records', () => {
-    const tooFast = rec(PHONE, 8, 8.25, 50_000); // ~3,300 steps a minute
-    expect(rejectReason(tooFast)).toBe('implausible-rate');
+  it('drops invalid records', () => {
     expect(rejectReason(rec(PHONE, 9, 9, 10))).toBe('invalid-interval');
-    expect(total([tooFast, rec(PHONE, 9, 9.5, 2000)])).toBe(2000);
+  });
+
+  it('flags records faster than MaxCadence (250 steps/min)', () => {
+    expect(MAX_CADENCE).toBe(250);
+    expect(rejectReason(rec(PHONE, 8, 9, 250 * 60))).toBeNull();
+    expect(rejectReason(rec(PHONE, 8, 9, 250 * 60 + 60))).toBe('implausible-rate');
+  });
+
+  it('reports fast records as unverified steps instead of counting them', () => {
+    const tooFast = rec(PHONE, 8, 8.25, 50_000);
+    const [day] = toDailySteps([tooFast, rec(PHONE, 9, 9.5, 2000)], since, now, 'healthConnect');
+    expect(day).toMatchObject({ steps: 2000, unverifiedSteps: 50_000 });
   });
 
   it('splits a record that crosses midnight between the two days', () => {
     const overnight = rec(PHONE, 23.5, 24.5, 1000, { day: 5 }); // 23:30 Nov 5 to 00:30 Nov 6
     const days = toDailySteps([overnight], new Date(2026, 10, 5), now, 'healthConnect');
     expect(days).toEqual([
-      { source: 'healthConnect', date: '2026-11-05', steps: 500 },
-      { source: 'healthConnect', date: '2026-11-06', steps: 500 },
+      { source: 'healthConnect', date: '2026-11-05', steps: 500, unverifiedSteps: 0 },
+      { source: 'healthConnect', date: '2026-11-06', steps: 500, unverifiedSteps: 0 },
     ]);
   });
 

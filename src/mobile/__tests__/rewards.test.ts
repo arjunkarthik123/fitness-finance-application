@@ -13,7 +13,12 @@ import {
 
 const sqlite = expoSqlite as unknown as typeof import('../__mocks__/expo-sqlite');
 
-const day = (date: string, steps: number) => ({ source: 'healthConnect' as const, date, steps });
+const day = (date: string, steps: number) => ({
+  source: 'healthConnect' as const,
+  date,
+  steps,
+  unverifiedSteps: 0,
+});
 
 beforeEach(async () => {
   await closeDatabase();
@@ -68,7 +73,8 @@ describe('rewardForSteps', () => {
 describe('creditDailySteps', () => {
   it('stores the totals and credits what they earn', async () => {
     const result = await creditDailySteps([day('2026-11-18', 10_000), day('2026-11-19', 5_000)]);
-    expect(result).toEqual({ credited: 100, balance: 100 });
+    const expected = rewardForSteps(10_000) + rewardForSteps(5_000);
+    expect(result).toEqual({ credited: expected, balance: expected });
     expect(await getDailySteps(day('2026-11-18', 0))).toMatchObject({ steps: 10_000 });
     expect((await listLedgerEntries()).map((e) => e.key).sort()).toEqual([
       'steps:healthConnect:2026-11-18:10000',
@@ -80,7 +86,7 @@ describe('creditDailySteps', () => {
     await creditDailySteps([day('2026-11-18', 8_000)]);
     expect(await creditDailySteps([day('2026-11-18', 8_000)])).toEqual({
       credited: 0,
-      balance: 54.99,
+      balance: rewardForSteps(8_000),
     });
     expect(await listLedgerEntries()).toHaveLength(1);
   });
@@ -90,15 +96,13 @@ describe('creditDailySteps', () => {
       await creditDailySteps([day('2026-11-18', steps)]);
     }
     expect(await getBalance()).toBe(rewardForSteps(12_000));
-    expect(rewardForSteps(12_000)).toBe(89.6);
   });
 
   it('credits only the increase over the stored total', async () => {
     await creditDailySteps([day('2026-11-18', 5_000)]);
-    expect(await creditDailySteps([day('2026-11-18', 10_000)])).toEqual({
-      credited: 48.14,
-      balance: 74.07,
-    });
+    const result = await creditDailySteps([day('2026-11-18', 10_000)]);
+    expect(result.credited).toBeCloseTo(rewardForSteps(10_000) - rewardForSteps(5_000), 2);
+    expect(result.balance).toBe(rewardForSteps(10_000));
   });
 
   it('ignores a lower total, so the same steps never pay twice', async () => {

@@ -36,7 +36,7 @@ src/app/                 Screens. Every file is a route (Expo Router).
   order.tsx              Buy/sell market order
 src/components/          Shared UI (WireframeScreen is the placeholder used by every screen)
 src/services/api.ts      Typed client for the API (reads EXPO_PUBLIC_API_URL)
-src/integrations/        Health Connect, Strava, Garmin stubs behind one FitnessIntegration interface
+src/integrations/        Health Connect (and a Garmin stub) behind one FitnessIntegration interface
 src/persistence/         On-device SQLite storage (MIS M2): step totals, ledger entries
 src/theme/               Colors and spacing tokens (replace with values from Figma)
 __tests__/               Jest unit tests

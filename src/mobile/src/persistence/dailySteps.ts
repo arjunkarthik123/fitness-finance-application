@@ -3,7 +3,10 @@ import { dailyStepsKey } from '@/integrations/sync';
 
 import { executor, type Transaction } from './database';
 
-export type StoredDailySteps = DailySteps & { key: string; updatedAt: string };
+export type StoredDailySteps = Omit<DailySteps, 'unverifiedSteps'> & {
+  key: string;
+  updatedAt: string;
+};
 
 type Row = { key: string; source: string; date: string; steps: number; updated_at: string };
 
@@ -28,7 +31,7 @@ export async function getDailySteps(
 
 /** Stores a day's total, replacing any earlier total for the same source and day. */
 export async function saveDailySteps(
-  day: DailySteps,
+  day: Omit<DailySteps, 'unverifiedSteps'>,
   tx?: Transaction,
   now: Date = new Date(),
 ): Promise<void> {
