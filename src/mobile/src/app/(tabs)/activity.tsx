@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 
-import { HealthConnectSyncPreview } from '@/components/HealthConnectSyncPreview';
+import { StepSync } from '@/components/StepSync';
 import { AppText, Button, Card, Screen } from '@/components/ui';
 import {
   getHealthConnectStatus,
@@ -22,12 +22,14 @@ const ResetDataTool: typeof import('@/components/dev/ResetDataTool').ResetDataTo
     require('@/components/dev/ResetDataTool').ResetDataTool
   : null;
 
-type ConnectionState = HealthConnectStatus | 'checking' | 'connected' | 'not-connected';
+type ConnectionState = HealthConnectStatus | 'checking' | 'connected' | 'not-connected' | 'denied';
 
 const MESSAGES: Record<ConnectionState, string> = {
   checking: 'Checking Health Connect…',
   connected: 'Health Connect is connected.',
   'not-connected': 'Health Connect is not connected yet.',
+  denied:
+    'Flexin needs permission to read your steps and workouts. Tap Connect to try again, or allow it in the Health Connect app.',
   available: 'Health Connect is not connected yet.',
   unavailable: 'Health Connect is not available on this device.',
   'update-required': 'Update the Health Connect app to connect it.',
@@ -41,9 +43,10 @@ async function checkConnection(): Promise<ConnectionState> {
   return (await hasHealthConnectPermissions()) ? 'connected' : 'not-connected';
 }
 
-// TODO(#329): replace with the full Activity screen (sync, steps, history).
 export default function ActivityScreen() {
   const [state, setState] = useState<ConnectionState>('checking');
+  // Bumped when dev tools change stored data, so StepSync reloads the balance.
+  const [dataVersion, setDataVersion] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,14 +59,16 @@ export default function ActivityScreen() {
   }, []);
 
   const connect = async () => {
+    let granted = false;
     try {
-      await healthConnect.requestPermissions();
+      granted = await healthConnect.requestPermissions();
     } finally {
-      setState(await checkConnection());
+      const next = await checkConnection();
+      setState(next === 'not-connected' && !granted ? 'denied' : next);
     }
   };
 
-  const canConnect = state === 'not-connected' || state === 'available';
+  const canConnect = state === 'not-connected' || state === 'available' || state === 'denied';
 
   return (
     <Screen>
@@ -76,9 +81,9 @@ export default function ActivityScreen() {
           </AppText>
         </Link>
       </Card>
-      {state === 'connected' && <HealthConnectSyncPreview />}
+      {state === 'connected' && <StepSync key={dataVersion} />}
       {HealthConnectSeedTool && state === 'connected' && <HealthConnectSeedTool />}
-      {ResetDataTool && <ResetDataTool />}
+      {ResetDataTool && <ResetDataTool onChange={() => setDataVersion((v) => v + 1)} />}
     </Screen>
   );
 }
