@@ -19,7 +19,14 @@ async function loadStored(): Promise<Stored> {
   return { balance, days: days.length };
 }
 
-export function ResetDataTool({ style }: { style?: StyleProp<ViewStyle> }) {
+export function ResetDataTool({
+  style,
+  onChange,
+}: {
+  style?: StyleProp<ViewStyle>;
+  /** Called after the stored data changes. */
+  onChange?: () => void;
+}) {
   const [stored, setStored] = useState<Stored | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -39,6 +46,7 @@ export function ResetDataTool({ style }: { style?: StyleProp<ViewStyle> }) {
       await action();
       setStored(await loadStored());
       setMessage(done);
+      onChange?.();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     }
