@@ -147,7 +147,7 @@ describe('fetchDailySteps', () => {
       .mockResolvedValueOnce({ records: [steps(12, 13, 500)] });
 
     await expect(healthConnect.fetchDailySteps(SINCE)).resolves.toEqual([
-      { source: 'healthConnect', date: '2026-11-06', steps: 1500 },
+      { source: 'healthConnect', date: '2026-11-06', steps: 1500, unverifiedSteps: 0 },
     ]);
     expect(readRecords).toHaveBeenCalledTimes(2);
     expect(jest.mocked(readRecords).mock.calls[1][1]).toMatchObject({ pageToken: 'page-2' });
