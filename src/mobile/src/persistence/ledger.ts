@@ -8,9 +8,9 @@ import { executor, type Transaction } from './database';
 export type NewLedgerEntry = {
   /** Unique id for this change. Inserting a key that is already stored does nothing. */
   key: string;
-  /** Whole coins: positive credits, negative debits. */
+  /** FLX, at most two decimal places: positive credits, negative debits. */
   amount: number;
-  /** Why the coins moved, e.g. `steps-reward` or `asset-buy`. */
+  /** Why the FLX moved, e.g. `steps-reward` or `asset-buy`. */
   reason: string;
 };
 
