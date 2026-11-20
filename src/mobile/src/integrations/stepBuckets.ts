@@ -5,7 +5,8 @@
  * Health Connect's aggregate query dedupes sources but cannot drop manual
  * entries, so we read raw records and dedupe ourselves:
  *
- * 1. Drop manual entries and physically impossible records.
+ * 1. Drop manual entries and invalid records. Records faster than MaxCadence
+ *    are set aside as unverified steps.
  * 2. Split each short ("fine") record over 15-minute buckets in proportion to
  *    time overlap; per bucket, sum each source and keep the highest source. Two
  *    devices recording the same walk count once; phone-in-the-morning plus
@@ -24,8 +25,8 @@ export const BUCKET_MS = 15 * 60 * 1000;
 /** Records longer than this are coarse (step 3). */
 export const COARSE_RECORD_MS = 60 * 60 * 1000;
 
-/** Faster than an elite sprint cadence: treated as invalid data, not steps. */
-export const MAX_STEPS_PER_MINUTE = 300;
+/** SRS MaxCadence: faster than a person can sustain, so the steps are unverified. */
+export const MAX_CADENCE = 250;
 
 export type StepInterval = {
   /** Package name of the app that wrote the record (Health Connect `dataOrigin`). */
@@ -45,7 +46,7 @@ export function rejectReason(interval: StepInterval): RejectReason | null {
   if (ms <= 0 || !Number.isFinite(interval.count) || interval.count < 0) {
     return 'invalid-interval';
   }
-  if (interval.count / (ms / 60_000) > MAX_STEPS_PER_MINUTE) return 'implausible-rate';
+  if (interval.count / (ms / 60_000) > MAX_CADENCE) return 'implausible-rate';
   return null;
 }
 
@@ -105,7 +106,8 @@ export function bucketSteps(intervals: StepInterval[]): Map<number, number> {
 
 /**
  * Daily totals for every local day from `since` to `now` inclusive (days with
- * no steps are 0), deduplicated across source apps.
+ * no steps are 0), deduplicated across source apps. Steps from records faster
+ * than MaxCadence go to `unverifiedSteps` on the day the record started.
  */
 export function toDailySteps(
   intervals: StepInterval[],
@@ -114,8 +116,10 @@ export function toDailySteps(
   source: FitnessSource,
 ): DailySteps[] {
   const totals = new Map<string, number>();
+  const unverified = new Map<string, number>();
   for (const day = new Date(since); toLocalDate(day) <= toLocalDate(now);) {
     totals.set(toLocalDate(day), 0);
+    unverified.set(toLocalDate(day), 0);
     day.setDate(day.getDate() + 1);
     day.setHours(0, 0, 0, 0);
   }
@@ -123,5 +127,14 @@ export function toDailySteps(
     const date = toLocalDate(new Date(b * BUCKET_MS));
     if (totals.has(date)) totals.set(date, (totals.get(date) ?? 0) + steps);
   }
-  return [...totals].map(([date, steps]) => ({ source, date, steps: Math.round(steps) }));
+  for (const i of intervals.filter((v) => rejectReason(v) === 'implausible-rate')) {
+    const date = toLocalDate(i.start);
+    if (unverified.has(date)) unverified.set(date, (unverified.get(date) ?? 0) + i.count);
+  }
+  return [...totals].map(([date, steps]) => ({
+    source,
+    date,
+    steps: Math.round(steps),
+    unverifiedSteps: Math.round(unverified.get(date) ?? 0),
+  }));
 }

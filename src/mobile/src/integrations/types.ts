@@ -1,5 +1,5 @@
 /** Where a piece of fitness data came from. */
-export type FitnessSource = 'device' | 'healthConnect' | 'strava' | 'garmin';
+export type FitnessSource = 'healthConnect' | 'garmin';
 
 /** A workout as reported by any fitness source, before currency is awarded. */
 export type ActivitySample = {
@@ -9,9 +9,6 @@ export type ActivitySample = {
   type: string;
   startTime: Date;
   endTime: Date;
-  steps?: number;
-  distanceMeters?: number;
-  averageHeartRate?: number;
 };
 
 /**
@@ -23,7 +20,10 @@ export type DailySteps = {
   source: FitnessSource;
   /** Local calendar date on the device, `YYYY-MM-DD`. */
   date: string;
+  /** Verified steps: the only ones that earn currency. */
   steps: number;
+  /** Steps from records faster than MaxCadence. Reported, but earn nothing (SEC-INT-01). */
+  unverifiedSteps: number;
 };
 
 /** Common interface every fitness integration implements. */
