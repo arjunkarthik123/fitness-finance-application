@@ -2,9 +2,13 @@ import * as expoSqlite from 'expo-sqlite';
 
 import {
   getDailySteps,
+  getHoldingTotals,
   getLedgerEntry,
+  insertHoldingChange,
   insertLedgerEntry,
   listDailySteps,
+  listHoldingChanges,
+  listHoldingTotals,
   listLedgerEntries,
   resetDatabase,
   saveDailySteps,
@@ -37,7 +41,7 @@ describe('schema', () => {
       "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
     );
     expect(tables.map((t) => t.name)).toEqual(
-      expect.arrayContaining(['daily_steps', 'ledger_entries']),
+      expect.arrayContaining(['daily_steps', 'holding_changes', 'ledger_entries']),
     );
     expect(await db.getFirstAsync('PRAGMA user_version')).toEqual({
       user_version: SCHEMA_VERSION,
@@ -114,6 +118,54 @@ describe('ledger entries', () => {
       'sumLedgerEntries',
     ]);
     expect(names).not.toContain('getDatabase');
+  });
+});
+
+describe('holding changes', () => {
+  const buy = { asset: 'FLEX', units: 3, total: 30, cost: 30, realized: 0 };
+  const sell = { asset: 'FLEX', units: -1, total: 15, cost: -10, realized: 5 };
+
+  it('sums changes per asset and lists them newest first', async () => {
+    await insertHoldingChange(buy);
+    await insertHoldingChange(sell);
+    await insertHoldingChange({ ...buy, asset: 'BOND', units: 1, total: 8, cost: 8 });
+
+    expect(await getHoldingTotals('FLEX')).toEqual({
+      asset: 'FLEX',
+      units: 2,
+      cost: 20,
+      realized: 5,
+    });
+    expect((await listHoldingTotals()).map((t) => t.asset)).toEqual(['BOND', 'FLEX']);
+    expect((await listHoldingChanges({ asset: 'FLEX' })).map((c) => c.units)).toEqual([-1, 3]);
+    expect(await listHoldingChanges()).toHaveLength(3);
+  });
+
+  it('gives zero totals for an asset never traded', async () => {
+    expect(await getHoldingTotals('NONE')).toEqual({
+      asset: 'NONE',
+      units: 0,
+      cost: 0,
+      realized: 0,
+    });
+  });
+
+  it('rejects a change of zero units or a negative total', async () => {
+    await expect(insertHoldingChange({ ...buy, units: 0 })).rejects.toThrow();
+    await expect(insertHoldingChange({ ...buy, total: -1 })).rejects.toThrow();
+  });
+
+  it('offers no way to change or remove a holding change', () => {
+    expect(
+      Object.keys(persistence)
+        .filter((n) => /holding/i.test(n))
+        .sort(),
+    ).toEqual([
+      'getHoldingTotals',
+      'insertHoldingChange',
+      'listHoldingChanges',
+      'listHoldingTotals',
+    ]);
   });
 });
 

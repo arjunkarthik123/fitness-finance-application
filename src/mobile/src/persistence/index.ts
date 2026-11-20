@@ -10,6 +10,15 @@
 export { resetDatabase, withTransaction, type Transaction } from './database';
 export { getDailySteps, listDailySteps, saveDailySteps, type StoredDailySteps } from './dailySteps';
 export {
+  getHoldingTotals,
+  insertHoldingChange,
+  listHoldingChanges,
+  listHoldingTotals,
+  type HoldingChange,
+  type HoldingTotals,
+  type NewHoldingChange,
+} from './holdings';
+export {
   getLedgerEntry,
   insertLedgerEntry,
   listLedgerEntries,

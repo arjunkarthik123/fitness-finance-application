@@ -26,6 +26,21 @@ export const MIGRATIONS: readonly string[] = [
     created_at TEXT NOT NULL
   );
   `,
+  // 2: portfolio holdings (MIS M9).
+  `
+  -- Every buy and sell of an asset. Rows are only ever inserted, so the units
+  -- held, their cost and the lifetime gain on each asset are sums over this.
+  CREATE TABLE holding_changes (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    asset      TEXT NOT NULL,                       -- asset id, e.g. "FLEX"
+    units      INTEGER NOT NULL CHECK (units <> 0), -- whole units: positive bought, negative sold
+    total      REAL NOT NULL CHECK (total >= 0),    -- FLX paid (buy) or received (sell)
+    cost       REAL NOT NULL,                       -- FLX change to the cost of the units held: +paid on a buy, -the sold units' share on a sell
+    realized   REAL NOT NULL,                       -- FLX gain (negative: loss) the sale realized; 0 for a buy
+    created_at TEXT NOT NULL
+  );
+  CREATE INDEX holding_changes_asset ON holding_changes (asset);
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;
