@@ -9,8 +9,8 @@ import { getDailySteps, saveDailySteps, withTransaction } from '@/persistence';
 
 export const HEALTHY_DAILY_ACTIVITY = 10_000;
 export const CAP_STEPS = 1.5 * HEALTHY_DAILY_ACTIVITY;
-/** Placeholder until the economy's scale is agreed; rewards scale with it. */
-export const DAILY_EARN_CAP = 100;
+/** Agreed at 200 FLX for now; every reward scales with it. */
+export const DAILY_EARN_CAP = 200;
 
 /** Smoothstep S-curve: 0 at 0 steps, `cap` from CAP_STEPS on (PR-SC-01). */
 export function rewardForSteps(steps: number, cap: number = DAILY_EARN_CAP): number {
