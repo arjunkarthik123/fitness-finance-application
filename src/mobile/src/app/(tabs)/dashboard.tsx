@@ -11,6 +11,7 @@ export default function DashboardScreen() {
         'Fitness and finance goal progress',
       ]}
       links={[
+        { label: 'Portfolio (test)', href: '/portfolio' },
         { label: 'Log activity', href: '/activity' },
         { label: 'Go to the Exchange', href: '/exchange' },
       ]}
