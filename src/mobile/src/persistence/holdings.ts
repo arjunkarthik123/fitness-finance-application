@@ -7,8 +7,8 @@
 import { executor, type Transaction } from './database';
 
 export type NewHoldingChange = {
-  /** Asset id, e.g. `FLEX`. */
-  asset: string;
+  /** Asset id (MIS AssetID, a whole number). */
+  asset: number;
   /** Whole units: positive bought, negative sold. */
   units: number;
   /** FLX paid for a buy or received for a sale, at most two decimal places. */
@@ -23,7 +23,7 @@ export type HoldingChange = NewHoldingChange & { id: number; createdAt: string }
 
 /** One asset's changes summed. All zero for an asset never traded. */
 export type HoldingTotals = {
-  asset: string;
+  asset: number;
   /** Units held now. */
   units: number;
   /** What was paid for the units held now. */
@@ -34,7 +34,7 @@ export type HoldingTotals = {
 
 type Row = {
   id: number;
-  asset: string;
+  asset: number;
   units: number;
   total: number;
   cost: number;
@@ -82,7 +82,7 @@ export async function insertHoldingChange(
 
 /** Every change, newest first. With `asset`, only that asset's. */
 export async function listHoldingChanges(
-  options: { asset?: string } = {},
+  options: { asset?: number } = {},
   tx?: Transaction,
 ): Promise<HoldingChange[]> {
   const db = await executor(tx);
@@ -97,7 +97,7 @@ export async function listHoldingChanges(
 }
 
 /** One asset's totals. All zero if it was never traded. */
-export async function getHoldingTotals(asset: string, tx?: Transaction): Promise<HoldingTotals> {
+export async function getHoldingTotals(asset: number, tx?: Transaction): Promise<HoldingTotals> {
   const row = await (
     await executor(tx)
   ).getFirstAsync<HoldingTotals>(`${TOTALS} WHERE asset = ? GROUP BY asset`, asset);

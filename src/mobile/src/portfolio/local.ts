@@ -1,3 +1,11 @@
+/**
+ * The Portfolio running on the device (BACKEND=local). This is the code that
+ * moves to the Java backend later: the same rules, with its data stored
+ * through `@/persistence` here and through JPA there.
+ *
+ * Uses (MIS M9): Market Simulation for prices (a placeholder in `prices.ts`
+ * for now), Currency Ledger for the cash balance, Persistence for storage.
+ */
 import { getBalance } from '@/ledger';
 import {
   getHoldingTotals,
@@ -8,60 +16,15 @@ import {
   type Transaction,
 } from '@/persistence';
 
-/** An asset's id, e.g. `FLEX`. Will come from the Asset module once it exists. */
-export type AssetId = string;
-
-/** The current price of one unit of an asset, in FLX. */
-export type PriceLookup = (asset: AssetId) => number;
-
-/** One asset the user holds, or once held. Amounts are FLX, two decimal places. */
-export type Holding = {
-  asset: AssetId;
-  /** Whole units held now. 0 for an asset that was sold out. */
-  qty: number;
-  /** What the user paid for the units held now. */
-  cost: number;
-  /** Current price of one unit. */
-  price: number;
-  /** Current value of the units held: `qty * price`. */
-  value: number;
-  /** Unrealized gain on the units held: `value - cost`. Negative for a loss. */
-  gain: number;
-  /** Gain realized by every sale of this asset so far. */
-  realized: number;
-  /** Gain over the asset's whole history: `realized + gain`. */
-  lifetimeGain: number;
-};
-
-/** The portfolio as a whole (MIS getSummary). Amounts are FLX. */
-export type Summary = {
-  /** Uninvested FLX: the ledger balance. */
-  cash: number;
-  /** Current value of all holdings. */
-  invested: number;
-  /** `cash + invested`. */
-  total: number;
-  /** What was paid for all holdings. */
-  cost: number;
-  /** `invested - cost`. */
-  unrealized: number;
-  /** Gain realized by every sale so far, across all assets. */
-  realized: number;
-  /** `realized + unrealized`. */
-  lifetimeGain: number;
-};
-
-export type PortfolioErrorCode = 'InvalidQuantity' | 'InvalidAmount' | 'InsufficientUnits';
-
-export class PortfolioError extends Error {
-  constructor(
-    readonly code: PortfolioErrorCode,
-    message: string,
-  ) {
-    super(message);
-    this.name = 'PortfolioError';
-  }
-}
+import { getPrice } from './prices';
+import {
+  PortfolioError,
+  type AssetId,
+  type Holding,
+  type HoldingsOptions,
+  type PortfolioClient,
+  type Summary,
+} from './types';
 
 /** Units are whole shares only: no fractions. */
 function checkQuantity(qty: number): void {
@@ -126,9 +89,16 @@ function toHolding(totals: HoldingTotals, price: number): Holding {
   };
 }
 
+async function valued(totals: HoldingTotals): Promise<Holding> {
+  return toHolding(totals, (await getPrice(totals.asset)).price);
+}
+
 /** Runs `task` in the caller's transaction if given, else in a new one. */
 const inTransaction = <T>(tx: Transaction | undefined, task: (tx: Transaction) => Promise<T>) =>
   tx ? task(tx) : withTransaction(task);
+
+// --- Backend-only programs (MIS: not available through the API) ---------------
+// Called by the Transaction Order module inside the transaction of a trade.
 
 /** Whole units of `asset` held now. 0 if none. */
 export async function getUnits(asset: AssetId, tx?: Transaction): Promise<number> {
@@ -170,7 +140,7 @@ export async function removeUnits(
     if (held.units < qty) {
       throw new PortfolioError(
         'InsufficientUnits',
-        `Cannot sell ${qty} ${asset}: only ${held.units} held.`,
+        `Cannot sell ${qty} of asset ${asset}: only ${held.units} held.`,
       );
     }
     const share = costOf(held.units, round2(held.cost), qty);
@@ -184,31 +154,19 @@ export async function removeUnits(
   });
 }
 
-/** One asset's holding at `price`, with its lifetime gain. Works for assets sold out or never held. */
-export async function getHolding(asset: AssetId, price: number): Promise<Holding> {
-  return toHolding(await getHoldingTotals(asset), price);
+// --- Programs a user can request (the PortfolioClient) --------------------------
+
+async function getHoldings(options: HoldingsOptions = {}): Promise<Holding[]> {
+  const totals = (await listHoldingTotals()).filter((t) => options.includeSold || t.units > 0);
+  return Promise.all(totals.map(valued));
 }
 
-/**
- * Every asset held now, by asset id. With `includeSold`, also assets that were
- * sold out, so their lifetime gain can still be shown.
- */
-export async function getHoldings(
-  priceOf: PriceLookup,
-  options: { includeSold?: boolean } = {},
-): Promise<Holding[]> {
-  const totals = await listHoldingTotals();
-  return totals
-    .filter((t) => options.includeSold || t.units > 0)
-    .map((t) => toHolding(t, t.units > 0 ? priceOf(t.asset) : 0));
+async function getHolding(asset: AssetId): Promise<Holding> {
+  return valued(await getHoldingTotals(asset));
 }
 
-/** The portfolio as a whole: cash from the Currency Ledger plus every holding. */
-export async function getSummary(priceOf: PriceLookup): Promise<Summary> {
-  const [cash, holdings] = await Promise.all([
-    getBalance(),
-    getHoldings(priceOf, { includeSold: true }),
-  ]);
+async function getSummary(): Promise<Summary> {
+  const [cash, holdings] = await Promise.all([getBalance(), getHoldings({ includeSold: true })]);
   const sum = (pick: (h: Holding) => number) =>
     round2(holdings.reduce((acc, h) => acc + pick(h), 0));
   const invested = sum((h) => h.value);
@@ -225,3 +183,5 @@ export async function getSummary(priceOf: PriceLookup): Promise<Summary> {
     lifetimeGain: round2(realized + unrealized),
   };
 }
+
+export const localPortfolio: PortfolioClient = { getHoldings, getHolding, getSummary };

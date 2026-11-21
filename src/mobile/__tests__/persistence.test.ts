@@ -122,28 +122,28 @@ describe('ledger entries', () => {
 });
 
 describe('holding changes', () => {
-  const buy = { asset: 'FLEX', units: 3, total: 30, cost: 30, realized: 0 };
-  const sell = { asset: 'FLEX', units: -1, total: 15, cost: -10, realized: 5 };
+  const buy = { asset: 2, units: 3, total: 30, cost: 30, realized: 0 };
+  const sell = { asset: 2, units: -1, total: 15, cost: -10, realized: 5 };
 
   it('sums changes per asset and lists them newest first', async () => {
     await insertHoldingChange(buy);
     await insertHoldingChange(sell);
-    await insertHoldingChange({ ...buy, asset: 'BOND', units: 1, total: 8, cost: 8 });
+    await insertHoldingChange({ ...buy, asset: 1, units: 1, total: 8, cost: 8 });
 
-    expect(await getHoldingTotals('FLEX')).toEqual({
-      asset: 'FLEX',
+    expect(await getHoldingTotals(2)).toEqual({
+      asset: 2,
       units: 2,
       cost: 20,
       realized: 5,
     });
-    expect((await listHoldingTotals()).map((t) => t.asset)).toEqual(['BOND', 'FLEX']);
-    expect((await listHoldingChanges({ asset: 'FLEX' })).map((c) => c.units)).toEqual([-1, 3]);
+    expect((await listHoldingTotals()).map((t) => t.asset)).toEqual([1, 2]);
+    expect((await listHoldingChanges({ asset: 2 })).map((c) => c.units)).toEqual([-1, 3]);
     expect(await listHoldingChanges()).toHaveLength(3);
   });
 
   it('gives zero totals for an asset never traded', async () => {
-    expect(await getHoldingTotals('NONE')).toEqual({
-      asset: 'NONE',
+    expect(await getHoldingTotals(99)).toEqual({
+      asset: 99,
       units: 0,
       cost: 0,
       realized: 0,

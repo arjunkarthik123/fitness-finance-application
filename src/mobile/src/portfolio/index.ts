@@ -1,31 +1,38 @@
 /**
  * Portfolio (MIS M9): what the user holds, what they paid for it and the
- * gain or loss on each asset over its lifetime. For the PoC it is stored on
- * the device through `@/persistence`.
+ * gain or loss on each asset over its lifetime. Units are whole shares;
+ * amounts are FLX with at most two decimal places, like the Currency Ledger.
+ *
+ * Screens use `portfolio` only. By default it runs on the device
+ * (`local.ts`). Set EXPO_PUBLIC_BACKEND=api in `.env` to send the same calls
+ * to the Spring API instead (`remote.ts`, endpoints in PORTFOLIO_ENDPOINTS).
+ * Screens don't change either way.
+ *
+ * getUnits, addUnits and removeUnits are backend-only (MIS: not available
+ * through the API). Only the Transaction Order module calls them, in the same
+ * transaction as its ledger debit or credit.
  *
  * Differences from the MIS for the PoC:
- * - One user per device, so there is no UserID, create or NoPortfolio.
- * - Prices are passed in (a PriceLookup) until the Market Simulation module exists.
- * - There is no getValueHistory yet: it needs past prices from Market Simulation.
- *
- * Units are whole shares; amounts are FLX with at most two decimal places,
- * like the Currency Ledger.
- *
- * Only the Transaction Order flow should call addUnits and removeUnits, in the
- * same transaction as its ledger debit or credit.
+ * - One user per device, so there is no UserID, create, NoPortfolio or `opened`.
+ * - Prices come from a placeholder (`prices.ts`) until Market Simulation exists.
+ * - There is no getValueHistory yet: it needs past prices and earnings over time.
  */
+import { localPortfolio } from './local';
+import { remotePortfolio } from './remote';
+import type { PortfolioClient } from './types';
+
+export const portfolio: PortfolioClient =
+  process.env.EXPO_PUBLIC_BACKEND === 'api' ? remotePortfolio : localPortfolio;
+
+export { addUnits, costOf, getUnits, removeUnits } from './local';
+export { getPrice, PLACEHOLDER_ASSETS, type PlaceholderAsset } from './prices';
+export { PORTFOLIO_ENDPOINTS } from './remote';
 export {
-  addUnits,
-  costOf,
-  getHolding,
-  getHoldings,
-  getSummary,
-  getUnits,
   PortfolioError,
-  removeUnits,
   type AssetId,
   type Holding,
+  type HoldingsOptions,
+  type PortfolioClient,
   type PortfolioErrorCode,
-  type PriceLookup,
   type Summary,
-} from './portfolio';
+} from './types';

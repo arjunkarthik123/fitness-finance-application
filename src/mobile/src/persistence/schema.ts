@@ -32,7 +32,7 @@ export const MIGRATIONS: readonly string[] = [
   -- held, their cost and the lifetime gain on each asset are sums over this.
   CREATE TABLE holding_changes (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    asset      TEXT NOT NULL,                       -- asset id, e.g. "FLEX"
+    asset      INTEGER NOT NULL,                    -- asset id (Asset module)
     units      INTEGER NOT NULL CHECK (units <> 0), -- whole units: positive bought, negative sold
     total      REAL NOT NULL CHECK (total >= 0),    -- FLX paid (buy) or received (sell)
     cost       REAL NOT NULL,                       -- FLX change to the cost of the units held: +paid on a buy, -the sold units' share on a sell
