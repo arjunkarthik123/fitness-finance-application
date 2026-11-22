@@ -9,6 +9,7 @@
  */
 export { resetDatabase, withTransaction, type Transaction } from './database';
 export { getDailySteps, listDailySteps, saveDailySteps, type StoredDailySteps } from './dailySteps';
+export { getGoalReward, insertGoalReward, type GoalReward } from './goalRewards';
 export {
   getHoldingTotals,
   insertHoldingChange,
