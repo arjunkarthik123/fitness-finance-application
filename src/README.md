@@ -79,7 +79,8 @@ app from the Play Store first.
    Run it again whenever the phone is reconnected.
 5. **Try it.** Activity tab → **Connect** → grant access → **Sync**. On a device with no real
    steps (a tablet, an emulator), use **Seed test data** on the same screen to write a week of
-   sample steps, including one manual entry that should not count. **Clear test data** removes
+   sample steps. Flexin uses Health Connect's own daily totals, so the app should match
+   Health Connect → Data and access → Activity → Steps exactly. **Clear test data** removes
    only records this app wrote. Clear it before comparing against real steps, because the seed
    writes records for today too.
 

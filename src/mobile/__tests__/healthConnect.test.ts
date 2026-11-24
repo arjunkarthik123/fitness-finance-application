@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import {
+  aggregateGroupByPeriod,
   ExerciseType,
   getGrantedPermissions,
   getSdkStatus,
-  readRecords,
   RecordingMethod,
   requestPermission,
   SdkAvailabilityStatus,
@@ -16,7 +16,6 @@ import {
   healthConnect,
   HealthConnectReadError,
   toActivitySample,
-  toStepInterval,
 } from '@/integrations/healthConnect';
 
 // react-native-health-connect is mocked automatically by __mocks__/.
@@ -24,11 +23,11 @@ const NOW = new Date(2026, 10, 6, 14, 0);
 const SINCE = new Date(2026, 10, 6);
 const at = (hour: number) => new Date(2026, 10, 6, hour).toISOString();
 
-const steps = (startHour: number, endHour: number, count: number, method?: RecordingMethod) => ({
-  startTime: at(startHour),
-  endTime: at(endHour),
-  count,
-  metadata: { dataOrigin: 'com.example.phone', recordingMethod: method },
+/** One day of Health Connect's daily totals, as aggregateGroupByPeriod returns it. */
+const dayTotal = (date: string, count: number) => ({
+  startTime: `${date}T00:00`,
+  endTime: `${date}T23:59:59.999`,
+  result: { COUNT_TOTAL: count, dataOrigins: ['com.example.phone'] },
 });
 
 beforeEach(() => {
@@ -83,27 +82,6 @@ describe('permissions', () => {
   });
 });
 
-describe('toStepInterval', () => {
-  it('maps a record and flags manual entries', () => {
-    const manual = toStepInterval(steps(8, 9, 500, RecordingMethod.RECORDING_METHOD_MANUAL_ENTRY));
-    expect(manual).toEqual({
-      origin: 'com.example.phone',
-      start: new Date(at(8)),
-      end: new Date(at(9)),
-      count: 500,
-      manualEntry: true,
-    });
-    const auto = toStepInterval(
-      steps(8, 9, 500, RecordingMethod.RECORDING_METHOD_AUTOMATICALLY_RECORDED),
-    );
-    expect(auto.manualEntry).toBe(false);
-  });
-
-  it('uses "unknown" when the record has no origin', () => {
-    expect(toStepInterval({ startTime: at(8), endTime: at(9), count: 1 }).origin).toBe('unknown');
-  });
-});
-
 describe('toActivitySample', () => {
   const session = {
     startTime: at(18),
@@ -139,37 +117,33 @@ describe('fetchDailySteps', () => {
   const grantAll = () =>
     jest.mocked(getGrantedPermissions).mockResolvedValueOnce(HEALTH_CONNECT_PERMISSIONS);
 
-  it('follows page tokens until every page is read', async () => {
+  it("returns Health Connect's daily totals for each day since `since`", async () => {
     grantAll();
     jest
-      .mocked(readRecords)
-      .mockResolvedValueOnce({ records: [steps(8, 9, 1000)], pageToken: 'page-2' })
-      .mockResolvedValueOnce({ records: [steps(12, 13, 500)] });
+      .mocked(aggregateGroupByPeriod)
+      .mockResolvedValueOnce([dayTotal('2026-11-04', 7000), dayTotal('2026-11-06', 5557)]);
 
-    await expect(healthConnect.fetchDailySteps(SINCE)).resolves.toEqual([
-      { source: 'healthConnect', date: '2026-11-06', steps: 1500, unverifiedSteps: 0 },
+    await expect(healthConnect.fetchDailySteps(new Date(2026, 10, 4))).resolves.toEqual([
+      { source: 'healthConnect', date: '2026-11-04', steps: 7000, unverifiedSteps: 0 },
+      { source: 'healthConnect', date: '2026-11-05', steps: 0, unverifiedSteps: 0 },
+      { source: 'healthConnect', date: '2026-11-06', steps: 5557, unverifiedSteps: 0 },
     ]);
-    expect(readRecords).toHaveBeenCalledTimes(2);
-    expect(jest.mocked(readRecords).mock.calls[1][1]).toMatchObject({ pageToken: 'page-2' });
-  });
-
-  it('leaves manual entries out of the total', async () => {
-    grantAll();
-    jest.mocked(readRecords).mockResolvedValueOnce({
-      records: [
-        steps(8, 9, 1000),
-        steps(10, 11, 5000, RecordingMethod.RECORDING_METHOD_MANUAL_ENTRY),
-      ],
+    expect(aggregateGroupByPeriod).toHaveBeenCalledWith({
+      recordType: 'Steps',
+      timeRangeFilter: {
+        operator: 'between',
+        startTime: new Date(2026, 10, 4).toISOString(),
+        endTime: NOW.toISOString(),
+      },
+      timeRangeSlicer: { period: 'DAYS', length: 1 },
     });
-    const [today] = await healthConnect.fetchDailySteps(SINCE);
-    expect(today.steps).toBe(1000);
   });
 
   it('throws a readable error without permission', async () => {
     const result = healthConnect.fetchDailySteps(SINCE);
     await expect(result).rejects.toBeInstanceOf(HealthConnectReadError);
     await expect(result).rejects.toThrow('permission');
-    expect(readRecords).not.toHaveBeenCalled();
+    expect(aggregateGroupByPeriod).not.toHaveBeenCalled();
   });
 
   it('throws a readable error when Health Connect is unavailable', async () => {
