@@ -36,7 +36,9 @@ src/app/                 Screens. Every file is a route (Expo Router).
   order.tsx              Buy/sell market order
 src/components/          Shared UI (WireframeScreen is the placeholder used by every screen)
 src/services/api.ts      Typed client for the API (reads EXPO_PUBLIC_API_URL)
-src/integrations/        Health Connect, Strava, Garmin stubs behind one FitnessIntegration interface
+src/integrations/        Health Connect (and a Garmin stub) behind one FitnessIntegration interface
+src/ledger/              Currency Ledger (MIS M6): FLX balance, getBalance / addBalance / subtractBalance
+src/rewards/             Step rewards: daily step totals → FLX, capped at DAILY_EARN_CAP
 src/persistence/         On-device SQLite storage (MIS M2): step totals, ledger entries
 src/theme/               Colors and spacing tokens (replace with values from Figma)
 __tests__/               Jest unit tests
@@ -114,10 +116,11 @@ Needs JDK 21 and the Android SDK (Android Studio installs both, or use the comma
 ### Data on the device
 
 For the PoC the app has no backend: everything it stores (daily step totals and ledger entries)
-is in an SQLite database on the phone, `flexin.db`, through `expo-sqlite`. Screens and
-other modules only use `src/persistence/`, so storage can move to the API later without changing
-them. `expo-sqlite` is a native module, so pull and rebuild the dev build
-(`npx expo run:android --device`) after it is added. It does not run on web.
+is in an SQLite database on the phone, `flexin.db`, through `expo-sqlite`. Screens call
+`@/ledger` and `@/rewards`, never `@/persistence`: those modules become API calls later, so
+screens don't change when the data moves to the server. `expo-sqlite` is a native module, so
+pull and rebuild the dev build (`npx expo run:android --device`) after it is added. It does not
+run on web.
 
 - **Schema changes:** append a migration to `MIGRATIONS` in `src/persistence/schema.ts`. Never
   edit one that is already on main. The database's `user_version` records which have run.

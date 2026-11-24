@@ -10,6 +10,7 @@ import {
   rewardMultiplier,
   type Goal,
 } from '@/goals';
+import type { FitnessSource } from '@/integrations/types';
 import { getBalance } from '@/ledger';
 import { getGoalReward, listLedgerEntries, saveDailySteps } from '@/persistence';
 import { closeDatabase } from '@/persistence/database';
@@ -20,7 +21,7 @@ const sqlite = expoSqlite as unknown as typeof import('../__mocks__/expo-sqlite'
 const NOW = new Date(2026, 10, 18, 12);
 const goal: Goal = currentGoal(NOW);
 
-const steps = (date: string, count: number, source: 'healthConnect' | 'device' = 'healthConnect') =>
+const steps = (date: string, count: number, source: FitnessSource = 'healthConnect') =>
   saveDailySteps({ source, date, steps: count });
 
 beforeEach(async () => {
@@ -98,7 +99,7 @@ describe('getGoalStatus', () => {
 
   it('counts the highest total per day across sources, not the sum', async () => {
     await steps('2026-11-16', 10_000, 'healthConnect');
-    await steps('2026-11-16', 8_000, 'device');
+    await steps('2026-11-16', 8_000, 'garmin');
     expect((await getGoalStatus(goal)).progress).toBe(10_000);
   });
 
