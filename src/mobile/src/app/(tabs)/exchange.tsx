@@ -1,4 +1,4 @@
-import { Stack, useFocusEffect } from 'expo-router';
+import { Link, Stack, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
@@ -50,16 +50,24 @@ export default function ExchangeScreen() {
       {visible.map((item) => (
         <Card key={item.id} testID={`asset-${item.symbol}`}>
           <View style={styles.assetRow}>
-            <View style={styles.assetInfo}>
-              <AppText variant="label">
-                {item.symbol} · {item.name}
-              </AppText>
-              <AppText tone="muted">
-                {item.type} · Yield {item.yield}%
-              </AppText>
-              <AppText>{(prices[item.id] ?? item.startPrice).toFixed(2)} FLX</AppText>
-              <AppText tone="muted">{item.available} available</AppText>
-            </View>
+            <Link href={{ pathname: '/invest/[symbol]', params: { symbol: item.symbol } }} asChild>
+              <Pressable
+                accessibilityRole="link"
+                accessibilityLabel={`View ${item.symbol} price history`}
+                style={({ pressed }) => [styles.assetInfo, pressed && styles.pressed]}
+                testID={`asset-link-${item.symbol}`}
+              >
+                <AppText variant="label">
+                  {item.symbol} · {item.name}
+                </AppText>
+                <AppText tone="muted">
+                  {item.type} · Yield {item.yield}%
+                </AppText>
+                <AppText>{(prices[item.id] ?? item.startPrice).toFixed(2)} FLX</AppText>
+                <AppText tone="muted">{item.available} available</AppText>
+                <AppText tone="primary">View history ›</AppText>
+              </Pressable>
+            </Link>
             <Pressable
               accessibilityRole="button"
               disabled={item.available === 0}
@@ -122,4 +130,5 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   disabled: { opacity: 0.5 },
+  pressed: { opacity: 0.7 },
 });
