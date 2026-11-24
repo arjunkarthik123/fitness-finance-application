@@ -1,8 +1,10 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 
+import { useBalance } from '@/components/Balance';
 import { StepSync } from '@/components/StepSync';
 import { AppText, Button, Card, Screen } from '@/components/ui';
+import { showDevTools } from '@/config/devTools';
 import {
   getHealthConnectStatus,
   hasHealthConnectPermissions,
@@ -10,17 +12,19 @@ import {
   type HealthConnectStatus,
 } from '@/integrations/healthConnect';
 
-// Dev-only seed tool. The __DEV__ guard around require() lets the release bundler
-// drop the module entirely, so no seed code ships in production.
+// Dev-only tools, behind the dev-tools flag so the release bundler drops them
+// entirely and no seed code ships in production.
 const HealthConnectSeedTool:
-  typeof import('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool | null = __DEV__
-  ? // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool
-  : null;
-const ResetDataTool: typeof import('@/components/dev/ResetDataTool').ResetDataTool | null = __DEV__
-  ? // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require('@/components/dev/ResetDataTool').ResetDataTool
-  : null;
+  typeof import('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool | null =
+  showDevTools
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('@/components/dev/HealthConnectSeedTool').HealthConnectSeedTool
+    : null;
+const ResetDataTool: typeof import('@/components/dev/ResetDataTool').ResetDataTool | null =
+  showDevTools
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('@/components/dev/ResetDataTool').ResetDataTool
+    : null;
 
 type ConnectionState = HealthConnectStatus | 'checking' | 'connected' | 'not-connected' | 'denied';
 
@@ -45,6 +49,7 @@ async function checkConnection(): Promise<ConnectionState> {
 
 export default function ActivityScreen() {
   const [state, setState] = useState<ConnectionState>('checking');
+  const { refresh: refreshBalance } = useBalance();
   // Bumped when dev tools change stored data, so StepSync reloads the balance.
   const [dataVersion, setDataVersion] = useState(0);
 
@@ -71,7 +76,7 @@ export default function ActivityScreen() {
   const canConnect = state === 'not-connected' || state === 'available' || state === 'denied';
 
   return (
-    <Screen>
+    <Screen testID="activity-screen">
       <Card>
         <AppText testID="health-connect-status">{MESSAGES[state]}</AppText>
         {canConnect && <Button label="Connect Health Connect" onPress={connect} />}
@@ -83,7 +88,14 @@ export default function ActivityScreen() {
       </Card>
       {state === 'connected' && <StepSync key={dataVersion} />}
       {HealthConnectSeedTool && state === 'connected' && <HealthConnectSeedTool />}
-      {ResetDataTool && <ResetDataTool onChange={() => setDataVersion((v) => v + 1)} />}
+      {ResetDataTool && (
+        <ResetDataTool
+          onChange={() => {
+            setDataVersion((v) => v + 1);
+            void refreshBalance();
+          }}
+        />
+      )}
     </Screen>
   );
 }

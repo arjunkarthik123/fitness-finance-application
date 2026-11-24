@@ -5,7 +5,7 @@ describe('Smoke', () => {
     await device.launchApp();
   });
 
-  it('opens on the login screen', async () => {
-    await expect(element(by.text('Log In')).atIndex(0)).toBeVisible();
+  it('opens on the Activity tab', async () => {
+    await expect(element(by.id('activity-screen'))).toBeVisible();
   });
 });

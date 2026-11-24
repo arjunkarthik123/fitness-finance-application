@@ -1,6 +1,7 @@
 import { Redirect } from 'expo-router';
 
-// TODO: send signed-in users to /dashboard once auth exists.
+// PoC: one demo user and no login yet, so open straight on the Activity tab.
+// TODO: send signed-out users to /login once auth exists.
 export default function Index() {
-  return <Redirect href="/login" />;
+  return <Redirect href="/activity" />;
 }

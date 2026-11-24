@@ -14,11 +14,13 @@ import {
   type StepsRecord,
 } from 'react-native-health-connect';
 
+import { showDevTools } from '@/config/devTools';
+
 import { healthConnect } from './healthConnect';
 import { toLocalDate } from './sync';
 
-/** True only in development (Metro) builds; release builds strip the seed UI. */
-export const isSeedToolEnabled = __DEV__;
+/** Follows the dev-tools flag: off in release builds and when dev tools are switched off. */
+export const isSeedToolEnabled = showDevTools;
 
 export const SEED_DAYS = 7;
 
