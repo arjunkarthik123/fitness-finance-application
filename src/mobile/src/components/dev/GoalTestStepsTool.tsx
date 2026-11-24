@@ -20,7 +20,9 @@ export function GoalTestStepsTool({ onChange }: { onChange: () => void }) {
     try {
       const day = { source: 'garmin' as const, date: toLocalDate(new Date()) };
       const stored = (await getDailySteps(day))?.steps ?? 0;
-      const { credited } = await creditDailySteps([{ ...day, steps: stored + STEP, unverifiedSteps: 0 }]);
+      const { credited } = await creditDailySteps([
+        { ...day, steps: stored + STEP, unverifiedSteps: 0 },
+      ]);
       setMessage(
         `Today: ${(stored + STEP).toLocaleString('en-US')} test steps (+${credited.toFixed(2)} FLX step reward).`,
       );
