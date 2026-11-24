@@ -1,5 +1,5 @@
 /**
- * The hardcoded assets running on the device (BACKEND=local). 
+ * The hardcoded assets running on the device (BACKEND=local).
  * This is the code that will move to the database later. The assets
  * stored here are dummy assests for POC demo purposes only and will
  * be replaced with real assets in the future. The assets are stored

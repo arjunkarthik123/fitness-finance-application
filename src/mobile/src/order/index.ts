@@ -1,15 +1,15 @@
 /**
- * Transaction Order Module (MIS M8): this module provides functionality for 
- * performing exchange transactions (buy or sell assets). 
- * The price of each asset is expressed in FLX with at most 
+ * Transaction Order Module (MIS M8): this module provides functionality for
+ * performing exchange transactions (buy or sell assets).
+ * The price of each asset is expressed in FLX with at most
  * two decimal places.
- * 
+ *
  * This module handles the transaction process and leaves the FLX
- * balance changes to the Ledger module. 
+ * balance changes to the Ledger module.
  *
  * The POC is only concerned with the basic functionality of
  * purchasing and selling assets, ensuring that the FLX balance
- * is checked for a valid purchase, and reflected accurately and 
+ * is checked for a valid purchase, and reflected accurately and
  * accorindgly after transactions.
  */
 import { asset } from '@/asset';
