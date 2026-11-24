@@ -54,28 +54,67 @@ real UI as each screen gets built.
   committed.
 - `npm run lint`, `npm run typecheck`, `npm test`, `npm run format`.
 
-### Installing the dev build
+### Running on your phone
 
-Health Connect is built into Android 14 and later. On older phones, install the Health Connect
-app from the Play Store first.
+Needs an Android phone (Android 8 or later) and a USB cable that carries data. Health Connect is
+built into Android 14 and later; on older phones, install the Health Connect app from the Play
+Store first.
 
-1. **Turn on USB debugging.** Settings → About phone, tap **Build number** 7 times (on Samsung
-   it is under Software information). Then Developer options → **USB debugging**.
-2. **Plug the phone in** and accept the "Allow USB debugging?" prompt. If no prompt appears,
-   set the USB mode to File transfer or try another cable. `adb devices` should list the phone
-   as `device`.
-3. **Build and install** from `src/mobile`:
+**One-time setup on your computer**
+
+1. Install the toolchain from [INSTALL.md](../INSTALL.md) step 1 (`mise install` gives Node 22
+   and JDK 21).
+2. Install [Android Studio](https://developer.android.com/studio) and open it once so it
+   downloads the Android SDK. You don't need to open the project in it.
+3. Set two environment variables, then open a new terminal:
+   - `ANDROID_HOME`: the SDK folder (Windows `%LOCALAPPDATA%\Android\Sdk`, macOS
+     `~/Library/Android/sdk`).
+   - `JAVA_HOME`: JDK 21 (`mise where java` prints it).
+
+   Add `$ANDROID_HOME/platform-tools` to your `PATH` so `adb` works.
+4. From `src/mobile`, run `npm install`.
+
+**One-time setup on the phone**
+
+5. Settings → About phone, tap **Build number** 7 times (on Samsung it is under Software
+   information). Then Settings → Developer options → turn on **USB debugging**.
+
+**Every time**
+
+6. **Plug the phone in and unlock it.** Accept the "Allow USB debugging?" prompt and tick
+   *Always allow from this computer*. Check with `adb devices`: the phone must show as
+   `device`. `unauthorized` means the prompt wasn't accepted; unplug, replug and look at the
+   phone. Nothing listed means a charge-only cable, or USB mode needs to be **File transfer**.
+7. **Build and install** from `src/mobile`:
 
    ```sh
+   git pull
    npx expo run:android --device
    ```
 
-   The first build takes 5–10 minutes. Samsung phones may ask to allow the install over USB.
-   This also starts Metro.
-4. **Point the phone at Metro.** If the app says it can't reach the development server, run
-   `adb reverse tcp:8081 tcp:8081` and open `http://localhost:8081` in the dev client.
-   Run it again whenever the phone is reconnected.
-5. **Try it.** Activity tab → **Connect** → grant access → **Sync**. On a device with no real
+   Pick your phone if asked. The first build takes 5–10 minutes; later ones are much faster.
+   Samsung phones may ask to allow the install over USB. This also starts Metro, the dev
+   server the app loads its code from, so leave the terminal open.
+8. **If the app can't reach the development server,** run `adb reverse tcp:8081 tcp:8081` and
+   reopen the app. Do this again whenever you replug the phone.
+
+After the first install, if you only changed JavaScript/TypeScript you can just run
+`npx expo start` and open the Flexin app on the phone. Rebuild with step 7 after pulling
+changes that add a native package or touch `app.json`.
+
+**If the build fails**
+
+- **Windows, `Filename longer than 260 characters` or ninja `mkdir` errors:** the ninja that
+  ships with the SDK's CMake 3.22.1 can't handle long paths. Download
+  [ninja 1.12 or later](https://github.com/ninja-build/ninja/releases) and replace
+  `%LOCALAPPDATA%\Android\Sdk\cmake\3.22.1\bin\ninja.exe` with it (keep the old one as
+  `ninja.exe.bak`). Reinstalling CMake from the SDK Manager undoes this.
+- **`SDK location not found` or `JAVA_HOME is not set`:** step 3 didn't take; open a new
+  terminal and check `echo $ANDROID_HOME` / `java -version` (should say 21).
+- **`INSTALL_FAILED_UPDATE_INCOMPATIBLE`:** an older Flexin build signed differently is on the
+  phone. Uninstall it and run step 7 again.
+
+**Try it.** Activity tab → **Connect** → grant access → **Sync**. On a device with no real
    steps (a tablet, an emulator), use **Seed test data** on the same screen to write a week of
    sample steps, including one manual entry that should not count. **Clear test data** removes
    only records this app wrote. Clear it before comparing against real steps, because the seed
