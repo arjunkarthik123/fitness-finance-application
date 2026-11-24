@@ -1,6 +1,7 @@
 /**
- * Portfolio: current holdings with shares owned, value and lifetime gain.
- * Selling goes through the Transaction Order module, so the FLX is credited.
+ * Portfolio: holdings with their value and unrealized gain, the gain realized
+ * by sales (assets sold out included, via the summary), and the lifetime total. Selling goes
+ * through the Transaction Order module, so the FLX is credited.
  */
 import { Link, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -11,7 +12,7 @@ import { formatFlx, useBalance } from '@/components/Balance';
 import { AppText, Button, Card, Screen } from '@/components/ui';
 import { showDevTools } from '@/config/devTools';
 import { sellAsset } from '@/order';
-import { portfolio, type AssetId, type Holding } from '@/portfolio';
+import { portfolio, type AssetId, type Holding, type Summary } from '@/portfolio';
 import { spacing } from '@/theme';
 
 const PortfolioTestTool:
@@ -28,13 +29,20 @@ const symbolOf = (asset: AssetId) => ASSETS.find((a) => a.id === asset)?.symbol 
 
 export default function PortfolioScreen() {
   const [holdings, setHoldings] = useState<Holding[] | null>(null);
+  const [summary, setSummary] = useState<Summary | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [selling, setSelling] = useState<AssetId | null>(null);
   const { refresh } = useBalance();
 
   const load = useCallback(async () => {
     try {
-      setHoldings(await portfolio.getHoldings());
+      // includeSold: assets sold out still mean the summary has history to show.
+      const [all, totals] = await Promise.all([
+        portfolio.getHoldings({ includeSold: true }),
+        portfolio.getSummary(),
+      ]);
+      setHoldings(all);
+      setSummary(totals);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     }
@@ -60,29 +68,41 @@ export default function PortfolioScreen() {
     await Promise.all([load(), refresh()]);
   };
 
-  const total = holdings?.reduce((sum, h) => sum + h.value, 0) ?? 0;
-  const lifetime = holdings?.reduce((sum, h) => sum + h.lifetimeGain, 0) ?? 0;
+  const held = holdings?.filter((h) => h.qty > 0) ?? [];
+  const everTraded = !!holdings?.length;
 
   return (
     <Screen testID="portfolio-screen">
       {holdings === null && <AppText tone="muted">Loading…</AppText>}
-      {holdings?.length === 0 && (
+      {holdings && held.length === 0 && (
         <Card testID="portfolio-empty">
-          <AppText variant="label">No assets yet</AppText>
-          <AppText tone="muted">Spend the FLX you earn from steps on the Exchange.</AppText>
+          <AppText variant="label">{everTraded ? 'No assets held' : 'No assets yet'}</AppText>
+          <AppText tone="muted">
+            {everTraded
+              ? 'You sold everything. Buy again on the Exchange.'
+              : 'Spend the FLX you earn from steps on the Exchange.'}
+          </AppText>
           <Link href="/exchange" asChild>
             <Button label="Go to the Exchange" />
           </Link>
         </Card>
       )}
-      {!!holdings?.length && (
+      {everTraded && summary && (
         <Card testID="portfolio-total">
           <AppText variant="label">Total value</AppText>
-          <AppText variant="title">{formatFlx(total)}</AppText>
-          <AppText tone="muted">Lifetime gain {signed(Math.round(lifetime * 100) / 100)}</AppText>
+          <AppText variant="title">{formatFlx(summary.invested)}</AppText>
+          <AppText tone="muted" testID="portfolio-unrealized">
+            Unrealized {signed(summary.unrealized)} on assets held
+          </AppText>
+          <AppText tone="muted" testID="portfolio-realized">
+            Realized {signed(summary.realized)} from sales
+          </AppText>
+          <AppText variant="label" testID="portfolio-lifetime">
+            Lifetime gain {signed(summary.lifetimeGain)}
+          </AppText>
         </Card>
       )}
-      {holdings?.map((h) => (
+      {held.map((h) => (
         <Card key={h.asset} testID={`holding-${symbolOf(h.asset)}`}>
           <View style={styles.row}>
             <View style={styles.info}>
@@ -92,7 +112,10 @@ export default function PortfolioScreen() {
               <AppText>
                 Value {formatFlx(h.value)} ({formatFlx(h.price)} each)
               </AppText>
-              <AppText tone="muted">Lifetime gain {signed(h.lifetimeGain)}</AppText>
+              <AppText tone="muted">Unrealized {signed(h.gain)}</AppText>
+              {h.realized !== 0 && (
+                <AppText tone="muted">Realized {signed(h.realized)} from sales</AppText>
+              )}
             </View>
             <Button
               label={selling === h.asset ? 'Selling…' : 'Sell 1'}
