@@ -1,7 +1,7 @@
 /**
  * DEV ONLY. Buttons that write and clear Health Connect test data on devices
- * that record no real steps. Only ever load this through `__DEV__`-guarded
- * `require` (see src/app/(tabs)/activity.tsx) so release bundles drop it.
+ * that record no real steps. Only ever load this through the `showDevTools`
+ * flag (see src/config/devTools.ts) so release bundles drop it.
  */
 import { useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';

@@ -2,7 +2,7 @@
  * DEV ONLY. Adds test steps for today so the goal's reward tiers can be tried
  * on an emulator with no real steps. The steps go through creditDailySteps
  * like a real sync, so they also earn the usual step reward. Only ever load
- * this through a `__DEV__`-guarded `require` (see src/app/(tabs)/goals.tsx).
+ * this through the `showDevTools` flag (see src/config/devTools.ts).
  */
 import { useState } from 'react';
 

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 
+import { formatFlx, useBalance } from '@/components/Balance';
 import { AppText, Button, Card } from '@/components/ui';
 import { healthConnect, HealthConnectReadError } from '@/integrations/healthConnect';
 import { toLocalDate } from '@/integrations/sync';
 import type { DailySteps } from '@/integrations/types';
-import { getBalance } from '@/ledger';
 import { creditDailySteps } from '@/rewards';
 import { spacing } from '@/theme';
 
@@ -13,23 +13,13 @@ const DAYS = 7;
 
 type Synced = { days: DailySteps[]; credited: number };
 
-/** Balance, Sync button, today's steps and the last 7 days. */
+/** Sync button, today's steps and the last 7 days. The balance is in the header. */
 export function StepSync() {
-  const [balance, setBalance] = useState<number | null>(null);
   const [synced, setSynced] = useState<Synced | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    getBalance().then(
-      (b) => !cancelled && setBalance(b),
-      (e: unknown) => !cancelled && setError(messageOf(e)),
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { refresh } = useBalance();
 
   const sync = async () => {
     setSyncing(true);
@@ -40,7 +30,7 @@ export function StepSync() {
       since.setHours(0, 0, 0, 0);
       const days = await healthConnect.fetchDailySteps(since);
       const result = await creditDailySteps(days);
-      setBalance(result.balance);
+      void refresh();
       setSynced({ days, credited: result.credited });
     } catch (e) {
       setError(messageOf(e));
@@ -54,20 +44,15 @@ export function StepSync() {
 
   return (
     <>
-      <Card testID="balance">
-        <AppText variant="label">Balance</AppText>
-        <AppText variant="title">{balance === null ? '…' : `${balance.toFixed(2)} FLX`}</AppText>
+      <Card testID="steps">
+        <Button label={syncing ? 'Syncing…' : 'Sync steps'} onPress={sync} disabled={syncing} />
         {synced && (
           <AppText tone="muted" testID="credited">
             {synced.credited > 0
-              ? `+${synced.credited.toFixed(2)} FLX from this sync`
+              ? `+${formatFlx(synced.credited)} from this sync`
               : 'No new steps since the last sync.'}
           </AppText>
         )}
-      </Card>
-
-      <Card testID="steps">
-        <Button label={syncing ? 'Syncing…' : 'Sync steps'} onPress={sync} disabled={syncing} />
         {error && <AppText tone="todo">{error}</AppText>}
         {!synced && !error && (
           <AppText tone="muted">Tap Sync to read your steps from Health Connect.</AppText>

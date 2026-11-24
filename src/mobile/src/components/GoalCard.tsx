@@ -2,11 +2,12 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { formatFlx, useBalance } from '@/components/Balance';
 import { AppText, Button, Card } from '@/components/ui';
 import { collectReward, getGoalStatus, REWARD_TIERS, type GoalStatus } from '@/goals';
 import { colors, radius, spacing } from '@/theme';
 
-const flx = (amount: number) => `${amount.toFixed(2)} FLX`;
+const flx = formatFlx;
 const pct = (share: number) => `${Math.floor(share * 100)}%`;
 const count = (n: number) => n.toLocaleString('en-US');
 
@@ -17,6 +18,7 @@ const count = (n: number) => n.toLocaleString('en-US');
 export function GoalCard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [status, setStatus] = useState<GoalStatus | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { refresh } = useBalance();
 
   const load = useCallback(async () => {
     try {
@@ -35,12 +37,12 @@ export function GoalCard({ refreshKey = 0 }: { refreshKey?: number }) {
 
   const collect = async () => {
     try {
-      const { credited, balance } = await collectReward();
-      setMessage(`Collected ${flx(credited)}. Balance ${flx(balance)}.`);
+      const { credited } = await collectReward();
+      setMessage(`Collected ${flx(credited)}.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     }
-    await load();
+    await Promise.all([load(), refresh()]);
   };
 
   if (!status) {

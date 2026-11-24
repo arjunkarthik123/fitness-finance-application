@@ -122,6 +122,29 @@ describe('creditDailySteps', () => {
     expect(await getDailySteps(day('2026-11-18', 0))).toMatchObject({ steps: 20_000 });
   });
 
+  it('pays a day once across sources, from its highest total', async () => {
+    await creditDailySteps([day('2026-11-18', 9_000)]);
+    // A second source counting the same walk, lower: stored, but earns nothing.
+    expect(await creditDailySteps([{ ...day('2026-11-18', 6_000), source: 'garmin' }])).toEqual({
+      credited: 0,
+      balance: rewardForSteps(9_000),
+    });
+    // Higher: earns only the increase over the day's best total.
+    await creditDailySteps([{ ...day('2026-11-18', 12_000), source: 'garmin' }]);
+    expect(await getBalance()).toBe(rewardForSteps(12_000));
+    expect(await getDailySteps({ source: 'garmin', date: '2026-11-18' })).toMatchObject({
+      steps: 12_000,
+    });
+  });
+
+  it('never pays more than DailyEarnCap for a day across sources', async () => {
+    await creditDailySteps([
+      day('2026-11-18', 15_000),
+      { ...day('2026-11-18', 20_000), source: 'garmin' },
+    ]);
+    expect(await getBalance()).toBe(DAILY_EARN_CAP);
+  });
+
   it('caps each day separately', async () => {
     const result = await creditDailySteps([day('2026-11-18', 30_000), day('2026-11-19', 30_000)]);
     expect(result.balance).toBe(2 * DAILY_EARN_CAP);

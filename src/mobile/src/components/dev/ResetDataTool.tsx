@@ -2,8 +2,8 @@
  * DEV ONLY. Shows what the app has stored on the device and wipes it (steps,
  * ledger, balance) so the demo can be re-recorded from zero. "Add 10 test
  * FLX" exists to check data survives an app restart before anything real
- * writes to the ledger. Only ever load this through a `__DEV__`-guarded
- * `require` (see src/app/(tabs)/activity.tsx) so release bundles drop it.
+ * writes to the ledger. Only ever load this through the `showDevTools` flag
+ * (see src/config/devTools.ts) so release bundles drop it.
  */
 import { useEffect, useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
+import { formatFlx, useBalance } from '@/components/Balance';
 import { GoalCard } from '@/components/GoalCard';
 import { AppText, Button, Card, Screen } from '@/components/ui';
+import { showDevTools } from '@/config/devTools';
 import { currentGoal } from '@/goals';
 import {
   getHealthConnectStatus,
@@ -10,9 +12,9 @@ import {
 } from '@/integrations/healthConnect';
 import { creditDailySteps } from '@/rewards';
 
-// Dev-only tool; the __DEV__ guard lets the release bundler drop it.
+// Dev-only tool, behind the dev-tools flag so release bundles drop it.
 const GoalTestStepsTool:
-  typeof import('@/components/dev/GoalTestStepsTool').GoalTestStepsTool | null = __DEV__
+  typeof import('@/components/dev/GoalTestStepsTool').GoalTestStepsTool | null = showDevTools
   ? // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('@/components/dev/GoalTestStepsTool').GoalTestStepsTool
   : null;
@@ -27,7 +29,11 @@ export default function GoalsScreen() {
   const [connected, setConnected] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const refresh = () => setRefreshKey((k) => k + 1);
+  const { refresh: refreshBalance } = useBalance();
+  const refresh = () => {
+    setRefreshKey((k) => k + 1);
+    void refreshBalance();
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +52,7 @@ export default function GoalsScreen() {
     try {
       const since = new Date(`${currentGoal().period.start}T00:00:00`);
       const { credited } = await creditDailySteps(await healthConnect.fetchDailySteps(since));
-      setMessage(`Synced. Step rewards +${credited.toFixed(2)} FLX.`);
+      setMessage(`Synced. Step rewards +${formatFlx(credited)}.`);
       refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
