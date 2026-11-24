@@ -14,7 +14,7 @@
  */
 import { asset } from '@/asset';
 import { addBalance, getBalance, subtractBalance } from '@/ledger';
-import { getPrice } from '@/portfolio/prices';
+import { getPrice } from '@/market';
 import { addUnits, removeUnits } from '@/portfolio';
 import { getLedgerEntry, withTransaction } from '@/persistence';
 
