@@ -4,7 +4,7 @@
  * For POC purposes:
  * The current market will operate to increase or decrease the value of assets by a
  * random factor between 0.8 - 1.2 each tick (produced manually by the user during the
- * demo or each "naturally" each hour).
+ * demo or each "naturally" every 15 minutes).
  * This module will be studied by the team to ensure a fair, but balanced game environment
  * that will be used to practice good good investing habits.
  * Geometric Brownian Motion - model used for stock prices (https://stats.libretexts.org/Bookshelves/Probability_Theory/Probability_Mathematical_Statistics_and_Stochastic_Processes_(Siegrist)/18%3A_Brownian_Motion/18.04%3A_Geometric_Brownian_Motion)
