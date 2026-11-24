@@ -3,8 +3,8 @@ import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { asset, type Asset } from '@/asset';
-import { AppText, Card, Screen } from '@/components/ui';
-import { getPrice } from '@/portfolio';
+import { AppText, Button, Card, Screen } from '@/components/ui';
+import { getPrice, tick } from '@/market';
 import { colors, spacing } from '@/theme';
 
 export default function ExchangeScreen() {
@@ -24,7 +24,13 @@ export default function ExchangeScreen() {
     }
   }, []);
 
-  useFocusEffect(useCallback(() => void load(), [load]));
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+      // Leaving the screen clears its message, such as the last market move.
+      return () => setMessage(null);
+    }, [load]),
+  );
 
   const visible = assets.filter((item) =>
     `${item.symbol} ${item.name} ${item.type}`.toLowerCase().includes(search.toLowerCase()),
@@ -81,6 +87,21 @@ export default function ExchangeScreen() {
       ))}
       {visible.length === 0 && <AppText tone="muted">No assets match your search.</AppText>}
       {message && <AppText tone="muted">{message}</AppText>}
+      <Button
+        label="Simulate market tick"
+        variant="secondary"
+        onPress={() => {
+          const moves = tick()
+            .map(({ asset: id, factor }) => {
+              const symbol = assets.find((item) => item.id === id)?.symbol ?? `#${id}`;
+              return `${symbol} ×${factor.toFixed(2)}`;
+            })
+            .join(', ');
+          setMessage(`Market prices moved: ${moves}.`);
+          void load();
+        }}
+        testID="market-tick"
+      />
     </Screen>
   );
 }

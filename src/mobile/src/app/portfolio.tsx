@@ -1,7 +1,7 @@
 /**
  * TEST SCREEN for the Portfolio module: shows the current holdings, each with
  * shares owned, value and lifetime gain. The test buttons call addUnits and
- * removeUnits directly at the placeholder price, so they don't move any FLX.
+ * removeUnits directly at the current market price, so they don't move any FLX.
  * Replace this with the real Portfolio screen once Exchange and Transaction
  * Order exist.
  */
@@ -9,23 +9,16 @@ import { Stack, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { ASSETS } from '@/asset';
 import { AppText, Button, Card, Screen } from '@/components/ui';
-import {
-  addUnits,
-  getPrice,
-  PLACEHOLDER_ASSETS,
-  portfolio,
-  removeUnits,
-  type AssetId,
-  type Holding,
-} from '@/portfolio';
+import { getPrice } from '@/market';
+import { addUnits, portfolio, removeUnits, type AssetId, type Holding } from '@/portfolio';
 import { spacing } from '@/theme';
 
 const flx = (amount: number) => `${amount.toFixed(2)} FLX`;
 const signed = (amount: number) =>
   amount > 0 ? `+${flx(amount)}` : amount < 0 ? `−${flx(-amount)}` : flx(0);
-const symbolOf = (asset: AssetId) =>
-  PLACEHOLDER_ASSETS.find((a) => a.id === asset)?.symbol ?? `#${asset}`;
+const symbolOf = (asset: AssetId) => ASSETS.find((a) => a.id === asset)?.symbol ?? `#${asset}`;
 
 export default function PortfolioTestScreen() {
   const [holdings, setHoldings] = useState<Holding[] | null>(null);
@@ -88,7 +81,7 @@ export default function PortfolioTestScreen() {
         <AppText variant="label" tone="todo">
           TEST: add or sell shares (no FLX moves)
         </AppText>
-        {PLACEHOLDER_ASSETS.map((a) => (
+        {ASSETS.map((a) => (
           <View key={a.id} style={styles.row}>
             <AppText style={styles.symbol}>{a.symbol}</AppText>
             <Button label="Buy 1" onPress={() => trade(a.id, 'buy')} testID={`buy-${a.symbol}`} />

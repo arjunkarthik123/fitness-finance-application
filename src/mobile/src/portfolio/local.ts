@@ -3,8 +3,8 @@
  * moves to the Java backend later: the same rules, with its data stored
  * through `@/persistence` here and through JPA there.
  *
- * Uses (MIS M9): Market Simulation for prices (a placeholder in `prices.ts`
- * for now), Currency Ledger for the cash balance, Persistence for storage.
+ * Uses (MIS M9): Market Simulation for prices (`@/market`),
+ * Currency Ledger for the cash balance, Persistence for storage.
  */
 import { getBalance } from '@/ledger';
 import {
@@ -16,7 +16,7 @@ import {
   type Transaction,
 } from '@/persistence';
 
-import { getPrice } from './prices';
+import { getPrice } from '@/market';
 import {
   PortfolioError,
   type AssetId,
