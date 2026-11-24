@@ -9,18 +9,13 @@
  * (`getPrice(a)` → `{ asset, time, price }`), so nothing else changes.
  */
 import type { AssetId } from './types';
+import { ASSETS } from '@/asset';
 
 const TICK_INTERVAL_MS = 15 * 60 * 1000;
 const MIN_PRICE = 0.01;
 
-export type PlaceholderAsset = { id: AssetId; symbol: string; name: string; startPrice: number };
-
-export const PLACEHOLDER_ASSETS: readonly PlaceholderAsset[] = [
-  { id: 1, symbol: 'FLEX', name: "Flexin' Fitness Co.", startPrice: 12.5 },
-  { id: 2, symbol: 'STRD', name: 'Stride Treasury Bond', startPrice: 25 },
-  { id: 3, symbol: 'RUN', name: 'Runners Index ETF', startPrice: 40 },
-  { id: 4, symbol: 'GAIN', name: 'Gains Growth Fund', startPrice: 8.75 },
-];
+export type PlaceholderAsset = (typeof ASSETS)[number];
+export const PLACEHOLDER_ASSETS: readonly PlaceholderAsset[] = ASSETS;
 
 /** An asset's price, in FLX, from `time` until the next tick (MIS PricePoint). */
 export type PricePoint = { asset: AssetId; time: Date; price: number };
