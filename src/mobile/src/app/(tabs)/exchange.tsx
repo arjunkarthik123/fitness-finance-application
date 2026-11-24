@@ -6,6 +6,7 @@ import { asset, type Asset } from '@/asset';
 import { formatFlx, useBalance } from '@/components/Balance';
 import { AppText, Button, Card, Screen } from '@/components/ui';
 import { getPrice, tick } from '@/market';
+import { buyAsset } from '@/order';
 import { colors, spacing } from '@/theme';
 
 export default function ExchangeScreen() {
@@ -90,7 +91,6 @@ export default function ExchangeScreen() {
               onPress={() =>
                 void (async () => {
                   try {
-                    const { buyAsset } = await import('@/order');
                     const { total } = await buyAsset(item.id, 1, `${item.id}-${Date.now()}`);
                     setMessage(`Bought 1 ${item.symbol} for ${formatFlx(total)}.`);
                     await Promise.all([load(), refresh()]);
