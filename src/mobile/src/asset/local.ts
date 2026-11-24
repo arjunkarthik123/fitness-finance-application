@@ -1,3 +1,12 @@
+/**
+ * The hardcoded assets running on the device (BACKEND=local).
+ * This is the code that will move to the database later. The assets
+ * stored here are dummy assests for POC demo purposes only and will
+ * be replaced with real assets in the future. The assets are stored
+ * in the `ASSETS` array, and the available supply is derived from the
+ * outstanding units held in the portfolio.
+ */
+
 import { listHoldingTotals } from '@/persistence';
 
 import { AssetError, type Asset, type AssetClient, type AssetId } from './types';
