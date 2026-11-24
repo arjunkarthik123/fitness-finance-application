@@ -9,7 +9,7 @@ import { buyAsset, sellAsset } from '@/order';
 
 const sqlite = expoSqlite as unknown as typeof import('../__mocks__/expo-sqlite');
 
-jest.mock('@/portfolio/prices', () => ({
+jest.mock('@/market', () => ({
   getPrice: async (id: number) => ({
     asset: id,
     time: new Date(0),

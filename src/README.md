@@ -85,6 +85,32 @@ To check the result, compare the app's totals with Health Connect → Data and a
 Activity → Steps. Match against Health Connect, not the source app: Samsung Health writes to
 Health Connect in batches, so it can be a little ahead.
 
+### Running on an emulator (no phone)
+
+Needs JDK 21 and the Android SDK (Android Studio installs both, or use the command-line tools).
+
+1. Install the SDK packages and accept the licences:
+
+   ```sh
+   sdkmanager --licenses
+   sdkmanager "platform-tools" "emulator" "build-tools;37.0.0" "platforms;android-36" \
+     "system-images;android-36;google_apis;arm64-v8a"
+   ```
+
+   Use `x86_64` instead of `arm64-v8a` on an Intel Mac or PC. Google APIs images from API 34 on
+   include Health Connect.
+2. Create and start a virtual device:
+
+   ```sh
+   avdmanager create avd -n Flexin_API_36 -k "system-images;android-36;google_apis;arm64-v8a" -d pixel_7
+   emulator -avd Flexin_API_36
+   ```
+
+3. From `src/mobile`, with `JAVA_HOME` and `ANDROID_HOME` set, run `npx expo run:android`.
+4. Skip login, then open the **Goals** tab. **Add 5,000 steps today** (dev builds only) adds test
+   steps so the reward tiers can be tried without a real step count. **Reset data** on the
+   Activity tab starts over.
+
 ### Data on the device
 
 For the PoC the app has no backend: everything it stores (daily step totals and ledger entries)

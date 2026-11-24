@@ -12,6 +12,7 @@ export default function DashboardScreen() {
       ]}
       links={[
         { label: 'Portfolio (test)', href: '/portfolio' },
+        { label: 'Weekly goal', href: '/goals' },
         { label: 'Log activity', href: '/activity' },
         { label: 'Go to the Exchange', href: '/exchange' },
       ]}
