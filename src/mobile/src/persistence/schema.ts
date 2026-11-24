@@ -41,6 +41,14 @@ export const MIGRATIONS: readonly string[] = [
   );
   CREATE INDEX holding_changes_asset ON holding_changes (asset);
   `,
+  // 3: collected goal rewards (MIS M5). A row locks its goal.
+  `
+  CREATE TABLE goal_rewards (
+    goal_id      TEXT PRIMARY KEY NOT NULL, -- e.g. "weekly-steps:2026-11-16"
+    amount       REAL NOT NULL CHECK (amount > 0),
+    collected_at TEXT NOT NULL
+  );
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;
