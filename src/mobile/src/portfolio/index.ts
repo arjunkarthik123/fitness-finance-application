@@ -14,7 +14,7 @@
  *
  * Differences from the MIS for the PoC:
  * - One user per device, so there is no UserID, create, NoPortfolio or `opened`.
- * - Prices come from a placeholder (`prices.ts`) until Market Simulation exists.
+ * - Prices come from the Market Simulation POC (`@/market`).
  * - There is no getValueHistory yet: it needs past prices and earnings over time.
  */
 import { localPortfolio } from './local';
@@ -25,7 +25,6 @@ export const portfolio: PortfolioClient =
   process.env.EXPO_PUBLIC_BACKEND === 'api' ? remotePortfolio : localPortfolio;
 
 export { addUnits, costOf, getUnits, removeUnits } from './local';
-export { getPrice, PLACEHOLDER_ASSETS, type PlaceholderAsset } from './prices';
 export { PORTFOLIO_ENDPOINTS } from './remote';
 export {
   PortfolioError,

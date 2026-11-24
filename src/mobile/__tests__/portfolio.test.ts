@@ -9,9 +9,9 @@ import { localPortfolio } from '@/portfolio/local';
 // expo-sqlite is mocked automatically by __mocks__/ (sql.js in memory).
 const sqlite = expoSqlite as unknown as typeof import('../__mocks__/expo-sqlite');
 
-// Fixed prices instead of the placeholder market's moving ones.
+// Fixed prices instead of the market's random ones.
 const mockPrices = new Map<number, number>();
-jest.mock('@/portfolio/prices', () => ({
+jest.mock('@/market', () => ({
   getPrice: async (asset: number) => ({ asset, time: new Date(0), price: mockPrices.get(asset) }),
 }));
 
