@@ -37,6 +37,7 @@ const level = new Map<AssetId, number>();
 let history: PricePoint[] = [];
 let lastTick: number | null = null;
 
+/** Round to nearest whole cent */
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
 function drawFactor(): number {
