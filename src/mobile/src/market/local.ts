@@ -1,18 +1,15 @@
 /**
- * The Market Simulation running on the device. Every asset in the catalogue
- * has one market price, whether or not anyone holds it, so the Exchange
- * (unowned assets) and the Portfolio (owned assets) always see the same price.
- *
- * POC price model: each tick multiplies an asset's price by a random factor
- * between 0.8 and 1.2. The MIS model (correlated returns, downturns,
- * dividends) replaces `nextLevel` later without changing the access programs.
- *
- * Ticks run lazily: whenever a price is read, the market first catches up on
- * every TickInterval that has passed since the last tick. `tick()` forces one
- * extra tick right away, for demos and tests.
- *
- * State lives in memory for the POC, so prices restart from each asset's
- * start price when the app restarts.
+ * The Market Module (Market Simulator) will create a life-like market to emulate
+ * the growth and decline of securities in the stock market.
+ * For POC purposes:
+ * The current market will operate to increase or decrease the value of assets by a
+ * random factor between 0.8 - 1.2 each tick (produced manually by the user during the
+ * demo or each "naturally" every 15 minutes).
+ * This module will be studied by the team to ensure a fair, but balanced game environment
+ * that will be used to practice good good investing habits.
+ * Geometric Brownian Motion - model used for stock prices (https://stats.libretexts.org/Bookshelves/Probability_Theory/Probability_Mathematical_Statistics_and_Stochastic_Processes_(Siegrist)/18%3A_Brownian_Motion/18.04%3A_Geometric_Brownian_Motion)
+ * Merton-jump diffusion - will be able to create unpredictable behaviour (https://www.maxmatsuda.com/Papers/Intro/Intro%20to%20MJD%20Matsuda.pdf)
+ * Markov Chain - controlling the overall flow (https://www.quantt.co.uk/resources/markov-chain-explained)
  */
 import { ASSETS } from '@/asset';
 
@@ -24,6 +21,7 @@ import {
   type TickFactor,
 } from './types';
 
+/** Every 15 minutes the market will update (natural update) */
 export const TICK_INTERVAL_MS = 15 * 60 * 1000;
 export const MIN_PRICE = 0.01;
 export const MIN_FACTOR = 0.8;
@@ -32,18 +30,21 @@ export const MAX_FACTOR = 1.2;
 const defaultEnvironment: MarketEnvironment = { now: () => new Date(), random: Math.random };
 let env = defaultEnvironment;
 
-/** Unrounded price of each asset, used by the price model (MIS `level`). */
+/** AssetID mapped to the unrounded price of the asset. */
 const level = new Map<AssetId, number>();
-/** Every published price, in time order (MIS `history`). */
+
+/** Every published price, in time order. */
 let history: PricePoint[] = [];
 let lastTick: number | null = null;
 
+/** Round to nearest whole cent */
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
 function drawFactor(): number {
   return MIN_FACTOR + (MAX_FACTOR - MIN_FACTOR) * env.random();
 }
 
+/** Add the new price to the history */
 function publish(asset: AssetId, time: number): void {
   const price = Math.max(MIN_PRICE, round2(level.get(asset)!));
   history.push({ asset, time: new Date(time), price });
@@ -59,6 +60,7 @@ export function init(): void {
   }
 }
 
+/** Moves each asset forward based in the tick factor, updates and saves the prices and time */
 function runTick(time: number): TickFactor[] {
   const factors: TickFactor[] = [];
   for (const asset of ASSETS) {
@@ -90,6 +92,7 @@ export function tick(): TickFactor[] {
   return runTick(Math.max(env.now().getTime(), lastTick!));
 }
 
+/** Returns the latest price of a singular asset*/
 function latest(asset: AssetId): PricePoint {
   for (let i = history.length - 1; i >= 0; i--) {
     if (history[i].asset === asset) return history[i];
@@ -97,7 +100,7 @@ function latest(asset: AssetId): PricePoint {
   throw new MarketError('UnknownAsset', `No asset with id ${asset}.`);
 }
 
-/** The current price of `asset`. */
+/** The current price of `asset`, (singular asset). */
 export async function getPrice(asset: AssetId): Promise<PricePoint> {
   if (!ASSETS.some((candidate) => candidate.id === asset)) {
     throw new MarketError('UnknownAsset', `No asset with id ${asset}.`);
