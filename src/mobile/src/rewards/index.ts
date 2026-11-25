@@ -5,7 +5,13 @@
 import { dailyStepsKey } from '@/integrations/sync';
 import type { DailySteps } from '@/integrations/types';
 import { addBalance, getBalance } from '@/ledger';
-import { getDailySteps, saveDailySteps, withTransaction } from '@/persistence';
+import {
+  getDailySteps,
+  listDailySteps,
+  saveDailySteps,
+  withTransaction,
+  type Transaction,
+} from '@/persistence';
 
 export const HEALTHY_DAILY_ACTIVITY = 10_000;
 export const CAP_STEPS = 1.5 * HEALTHY_DAILY_ACTIVITY;
@@ -21,8 +27,10 @@ export function rewardForSteps(steps: number, cap: number = DAILY_EARN_CAP): num
 export type CreditResult = { credited: number; balance: number };
 
 /**
- * Stores each day's total and credits reward(new) − reward(stored), so
- * repeat syncs earn nothing (PR-PA-02). Lower totals are ignored.
+ * Stores each source's daily total. A day earns reward(highest total across
+ * sources), so two sources counting the same walk never pass DailyEarnCap
+ * together; each sync credits only the increase, so repeat syncs earn nothing
+ * (PR-PA-02). Lower totals are ignored.
  */
 export async function creditDailySteps(days: DailySteps[]): Promise<CreditResult> {
   return withTransaction(async (tx) => {
@@ -31,8 +39,10 @@ export async function creditDailySteps(days: DailySteps[]): Promise<CreditResult
       const stored = (await getDailySteps(day, tx))?.steps ?? 0;
       if (day.steps <= stored) continue;
 
+      const best = await highestTotal(day.date, tx);
       await saveDailySteps(day, tx);
-      const earned = round2(rewardForSteps(day.steps) - rewardForSteps(stored));
+      if (day.steps <= best) continue;
+      const earned = round2(rewardForSteps(day.steps) - rewardForSteps(best));
       if (earned > 0) {
         await addBalance(
           earned,
@@ -44,6 +54,12 @@ export async function creditDailySteps(days: DailySteps[]): Promise<CreditResult
     }
     return { credited, balance: await getBalance(tx) };
   });
+}
+
+/** The highest stored total for `date` across every source, or 0. */
+async function highestTotal(date: string, tx: Transaction): Promise<number> {
+  const stored = await listDailySteps({ since: date }, tx);
+  return Math.max(0, ...stored.filter((d) => d.date === date).map((d) => d.steps));
 }
 
 function round2(x: number): number {

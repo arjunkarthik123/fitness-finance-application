@@ -1,4 +1,5 @@
 import {
+  aggregateGroupByPeriod,
   ExerciseType,
   getGrantedPermissions,
   getSdkStatus,
@@ -12,7 +13,7 @@ import {
 } from 'react-native-health-connect';
 import { Platform } from 'react-native';
 
-import { toDailySteps, type StepInterval } from './stepBuckets';
+import { toLocalDate } from './sync';
 import type { ActivitySample, DailySteps, FitnessIntegration } from './types';
 
 /**
@@ -60,17 +61,6 @@ export class HealthConnectReadError extends Error {}
 const isManualEntry = (method?: RecordingMethod) =>
   method === RecordingMethod.RECORDING_METHOD_MANUAL_ENTRY;
 
-/** Maps a Health Connect steps record to the source-independent interval type. */
-export function toStepInterval(record: RecordResult<'Steps'>): StepInterval {
-  return {
-    origin: record.metadata?.dataOrigin ?? 'unknown',
-    start: new Date(record.startTime),
-    end: new Date(record.endTime),
-    count: record.count,
-    manualEntry: isManualEntry(record.metadata?.recordingMethod),
-  };
-}
-
 const EXERCISE_NAMES = new Map<number, string>(
   Object.entries(ExerciseType).map(([name, value]) => [value, name.toLowerCase()]),
 );
@@ -90,18 +80,23 @@ export function toActivitySample(record: RecordResult<'ExerciseSession'>): Activ
   };
 }
 
-/** Reads every record of `type` between `since` and now, following page tokens. */
-async function readAll<T extends 'Steps' | 'ExerciseSession'>(
-  type: T,
-  since: Date,
-  now: Date,
-): Promise<RecordResult<T>[]> {
+/** Throws a HealthConnectReadError unless Health Connect is available and readable. */
+async function ensureReadable(): Promise<void> {
   if (!(await healthConnect.isAvailable())) {
     throw new HealthConnectReadError('Health Connect is not available on this device.');
   }
   if (!(await hasHealthConnectPermissions())) {
     throw new HealthConnectReadError('Flexin does not have permission to read Health Connect.');
   }
+}
+
+/** Reads every record of `type` between `since` and now, following page tokens. */
+async function readAll<T extends 'ExerciseSession'>(
+  type: T,
+  since: Date,
+  now: Date,
+): Promise<RecordResult<T>[]> {
+  await ensureReadable();
   const records: RecordResult<T>[] = [];
   let pageToken: string | undefined;
   do {
@@ -138,12 +133,39 @@ export const healthConnect: FitnessIntegration = {
     const records = await readAll('ExerciseSession', since, new Date());
     return records.map(toActivitySample).filter((s): s is ActivitySample => s !== null);
   },
+  /**
+   * Health Connect's own daily totals, the same numbers its Steps screen shows:
+   * it removes duplicates across apps by the user's app priority. Every local
+   * day from `since` to today is returned, 0 when there are no steps.
+   */
   async fetchDailySteps(since: Date): Promise<DailySteps[]> {
+    await ensureReadable();
     const now = new Date();
-    const records = await readAll('Steps', since, now);
-    // TODO(#333): restrict to trusted dataOrigins once known; recordingMethod is
-    // self-reported by the writing app, so it alone cannot stop spoofed steps.
-    return toDailySteps(records.map(toStepInterval), since, now, 'healthConnect');
+    // TODO(#333): pass dataOriginFilter with the trusted step apps once known.
+    const groups = await aggregateGroupByPeriod({
+      recordType: 'Steps',
+      timeRangeFilter: {
+        operator: 'between',
+        startTime: since.toISOString(),
+        endTime: now.toISOString(),
+      },
+      timeRangeSlicer: { period: 'DAYS', length: 1 },
+    });
+    // Group start times are local date-times ("2026-11-24T00:00").
+    const totals = new Map(groups.map((g) => [g.startTime.slice(0, 10), g.result.COUNT_TOTAL]));
+    const days: DailySteps[] = [];
+    for (const day = new Date(since); toLocalDate(day) <= toLocalDate(now);) {
+      const date = toLocalDate(day);
+      days.push({
+        source: 'healthConnect',
+        date,
+        steps: Math.round(totals.get(date) ?? 0),
+        unverifiedSteps: 0,
+      });
+      day.setDate(day.getDate() + 1);
+      day.setHours(0, 0, 0, 0);
+    }
+    return days;
   },
 };
 

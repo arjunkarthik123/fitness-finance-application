@@ -23,6 +23,11 @@ module.exports = defineConfig([
               group: ['@/persistence/*', '**/persistence/*'],
               message: 'Import from @/persistence, not its files.',
             },
+            {
+              // Dev tools load only through a showDevTools-guarded require (src/config/devTools.ts).
+              group: ['@/components/dev/*', '**/components/dev/*'],
+              message: 'Load dev tools with a showDevTools-guarded require, not an import.',
+            },
           ],
         },
       ],
